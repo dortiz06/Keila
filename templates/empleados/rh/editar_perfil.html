@@ -67,23 +67,6 @@
                                 </div>
                             </div>
 
-                            <!-- Dirección -->
-                            <div class="mb-4">
-                                <div class="mb-3">
-                                    <label for="{{ form.direccion.id_for_label }}" class="form-label">
-                                        <i class="fas fa-map-marker-alt me-1"></i>{{ form.direccion.label }}
-                                    </label>
-                                    {{ form.direccion }}
-                                    {% if form.direccion.errors %}
-                                        <div class="text-danger">
-                                            {% for error in form.direccion.errors %}
-                                                <small>{{ error }}</small>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                    <div class="form-text">Dirección completa de residencia</div>
-                                </div>
-                            </div>
 
                             <!-- Información del Perfil Actual -->
                             <div class="row mb-4">
@@ -148,7 +131,6 @@
                                 <h6><i class="fas fa-check-circle text-success me-2"></i>Campos Editables</h6>
                                 <ul class="list-unstyled">
                                     <li>• Teléfono de contacto</li>
-                                    <li>• Dirección de residencia</li>
                                     <li>• Fecha de nacimiento</li>
                                 </ul>
                             </div>

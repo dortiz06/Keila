@@ -15,7 +15,7 @@
             </div>
 
             <div class="row">
-                <div class="col-lg-8">
+                <div class="col-12 col-lg-8">
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0"><i class="fas fa-edit me-2"></i>Información del Usuario</h5>
@@ -222,33 +222,19 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="{{ form.salario.id_for_label }}" class="form-label">
-                                                <i class="fas fa-dollar-sign me-1"></i>{{ form.salario.label }}
+                                            <label for="{{ form.jefe_area.id_for_label }}" class="form-label">
+                                                <i class="fas fa-user-tie me-1"></i>{{ form.jefe_area.label }}
                                             </label>
-                                            {{ form.salario }}
-                                            {% if form.salario.errors %}
+                                            {{ form.jefe_area }}
+                                            {% if form.jefe_area.errors %}
                                                 <div class="text-danger">
-                                                    {% for error in form.salario.errors %}
+                                                    {% for error in form.jefe_area.errors %}
                                                         <small>{{ error }}</small>
                                                     {% endfor %}
                                                 </div>
                                             {% endif %}
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="{{ form.supervisor.id_for_label }}" class="form-label">
-                                        <i class="fas fa-user-tie me-1"></i>{{ form.supervisor.label }}
-                                    </label>
-                                    {{ form.supervisor }}
-                                    {% if form.supervisor.errors %}
-                                        <div class="text-danger">
-                                            {% for error in form.supervisor.errors %}
-                                                <small>{{ error }}</small>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
                                 </div>
 
                                 <hr>
@@ -288,20 +274,6 @@
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="{{ form.direccion.id_for_label }}" class="form-label">
-                                        <i class="fas fa-map-marker-alt me-1"></i>{{ form.direccion.label }}
-                                    </label>
-                                    {{ form.direccion }}
-                                    {% if form.direccion.errors %}
-                                        <div class="text-danger">
-                                            {% for error in form.direccion.errors %}
-                                                <small>{{ error }}</small>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-
                                 <div class="d-flex justify-content-between">
                                     <a href="{% url 'empleados:gestion_usuarios' %}" class="btn btn-secondary">
                                         <i class="fas fa-times me-1"></i>Cancelar
@@ -316,7 +288,7 @@
                 </div>
 
                 <!-- Panel lateral con información -->
-                <div class="col-lg-4">
+                <div class="col-12 col-lg-4 mt-4 mt-lg-0">
                     <div class="card">
                         <div class="card-header">
                             <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Información Importante</h5>

@@ -44,32 +44,88 @@ def dashboard(request):
 
 @login_required
 def admin_dashboard(request):
-    """Dashboard para administradores"""
+    """Dashboard para administradores con vista completa del sistema"""
     perfil = get_user_profile(request.user)
     if not perfil or not perfil.es_admin():
         raise PermissionDenied
     
-    # Estadísticas generales
-    stats = {
-        'total_empleados': Perfil.objects.filter(activo=True).count(),
-        'total_departamentos': Departamento.objects.filter(activo=True).count(),
-        'solicitudes_pendientes': SolicitudVacaciones.objects.filter(
-            estado__in=['PENDIENTE_JEFE', 'PENDIENTE_RH']
-        ).count(),
-        'solicitudes_este_mes': SolicitudVacaciones.objects.filter(
-            fecha_solicitud__month=timezone.now().month
-        ).count(),
+    # === ESTADÍSTICAS DE EMPLEADOS Y DEPARTAMENTOS ===
+    total_empleados = Perfil.objects.filter(activo=True).count()
+    total_departamentos = Departamento.objects.filter(activo=True).count()
+    empleados_por_tipo = {
+        'empleados': Perfil.objects.filter(tipo_perfil='EMPLEADO', activo=True).count(),
+        'jefes': Perfil.objects.filter(tipo_perfil='JEFE_AREA', activo=True).count(),
+        'rh': Perfil.objects.filter(tipo_perfil='RH', activo=True).count(),
+        'sistemas': Perfil.objects.filter(tipo_perfil='SISTEMAS', activo=True).count(),
     }
     
-    # Solicitudes recientes
+    # === ESTADÍSTICAS DE VACACIONES ===
+    solicitudes_pendientes_jefe = SolicitudVacaciones.objects.filter(estado='PENDIENTE_JEFE').count()
+    solicitudes_pendientes_rh = SolicitudVacaciones.objects.filter(estado='PENDIENTE_RH').count()
+    solicitudes_aprobadas_mes = SolicitudVacaciones.objects.filter(
+        estado='APROBADO_RH',
+        fecha_aprobacion_rh__month=timezone.now().month
+    ).count()
+    solicitudes_rechazadas_mes = SolicitudVacaciones.objects.filter(
+        estado__in=['RECHAZADO_JEFE', 'RECHAZADO_RH'],
+        fecha_solicitud__month=timezone.now().month
+    ).count()
+    
+    # === ESTADÍSTICAS DE TICKETS IT ===
+    tickets_pendientes = Ticket.objects.filter(estado='PENDIENTE').count()
+    tickets_en_proceso = Ticket.objects.filter(estado='EN_PROCESO').count()
+    tickets_resueltos_hoy = Ticket.objects.filter(
+        estado='RESUELTO',
+        fecha_resolucion__date=timezone.now().date()
+    ).count()
+    tickets_cancelados_hoy = Ticket.objects.filter(
+        estado='CANCELADO',
+        fecha_actualizacion__date=timezone.now().date()
+    ).count()
+    
+    # === ESTADÍSTICAS DE EQUIPOS ===
+    equipos_disponibles = Equipo.objects.filter(estado='DISPONIBLE').count()
+    equipos_asignados = Equipo.objects.filter(estado='ASIGNADO').count()
+    equipos_en_reparacion = Equipo.objects.filter(estado='EN_REPARACION').count()
+    equipos_baja = Equipo.objects.filter(estado='BAJA').count()
+    total_equipos = Equipo.objects.count()
+    
+    # === SOLICITUDES RECIENTES DE VACACIONES ===
     solicitudes_recientes = SolicitudVacaciones.objects.filter(
         estado__in=['PENDIENTE_JEFE', 'PENDIENTE_RH']
-    ).order_by('-fecha_solicitud')[:10]
+    ).select_related('empleado', 'empleado__departamento').order_by('-fecha_solicitud')[:8]
+    
+    # === TICKETS RECIENTES ===
+    tickets_recientes = Ticket.objects.all().select_related('empleado', 'asignado_a').order_by('-fecha_creacion')[:8]
+    
+    # === EQUIPOS RECIÉN ASIGNADOS ===
+    asignaciones_recientes = AsignacionEquipo.objects.filter(
+        fecha_devolucion__isnull=True
+    ).select_related('equipo', 'equipo__categoria', 'empleado').order_by('-fecha_asignacion')[:5]
     
     context = {
-        'stats': stats,
-        'solicitudes_recientes': solicitudes_recientes,
         'perfil': perfil,
+        'stats': {
+            'total_empleados': total_empleados,
+            'total_departamentos': total_departamentos,
+            'empleados_por_tipo': empleados_por_tipo,
+            'solicitudes_pendientes_jefe': solicitudes_pendientes_jefe,
+            'solicitudes_pendientes_rh': solicitudes_pendientes_rh,
+            'solicitudes_aprobadas_mes': solicitudes_aprobadas_mes,
+            'solicitudes_rechazadas_mes': solicitudes_rechazadas_mes,
+            'tickets_pendientes': tickets_pendientes,
+            'tickets_en_proceso': tickets_en_proceso,
+            'tickets_resueltos_hoy': tickets_resueltos_hoy,
+            'tickets_cancelados_hoy': tickets_cancelados_hoy,
+            'equipos_disponibles': equipos_disponibles,
+            'equipos_asignados': equipos_asignados,
+            'equipos_en_reparacion': equipos_en_reparacion,
+            'equipos_baja': equipos_baja,
+            'total_equipos': total_equipos,
+        },
+        'solicitudes_recientes': solicitudes_recientes,
+        'tickets_recientes': tickets_recientes,
+        'asignaciones_recientes': asignaciones_recientes,
     }
     return render(request, 'empleados/admin/dashboard.html', context)
 
@@ -728,6 +784,7 @@ def asignar_equipo(request):
         if form.is_valid():
             asignacion = form.save(commit=False)
             asignacion.asignado_por = perfil
+            asignacion.fecha_asignacion = timezone.now().date()  # Establecer fecha automáticamente
             asignacion.save()
             
             # Actualizar estado del equipo

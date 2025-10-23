@@ -14,7 +14,7 @@ urlpatterns = [
     path('logout/', auth_views.logout_view, name='logout'),
     
     # === DASHBOARDS POR PERFIL ===
-    path('admin/', views.admin_dashboard, name='admin_dashboard'),
+    path('administrador/', views.admin_dashboard, name='admin_dashboard'),
     path('rh/', views.rh_dashboard, name='rh_dashboard'),
     path('jefe/', views.jefe_dashboard, name='jefe_dashboard'),
     path('empleado/', views.empleado_dashboard, name='empleado_dashboard'),

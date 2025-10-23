@@ -22,13 +22,11 @@ class Perfil(models.Model):
     fecha_contratacion = models.DateField(verbose_name="Fecha de Contratación")
     numero_empleado = models.CharField(max_length=20, unique=True, verbose_name="Número de Empleado")
     puesto = models.CharField(max_length=100, verbose_name="Puesto")
-    salario = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Salario")
     supervisor = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Supervisor")
     activo = models.BooleanField(default=True, verbose_name="Activo")
     
     # Información personal adicional
     telefono = models.CharField(max_length=15, blank=True, verbose_name="Teléfono")
-    direccion = models.TextField(blank=True, verbose_name="Dirección")
     fecha_nacimiento = models.DateField(null=True, blank=True, verbose_name="Fecha de Nacimiento")
     
     # Información de vacaciones
@@ -772,6 +770,5 @@ def crear_perfil_usuario(sender, instance, created, **kwargs):
                 tipo_perfil='EMPLEADO',  # Default
                 fecha_contratacion=date.today(),
                 numero_empleado=f"EMP{instance.id:04d}",
-                puesto="Por definir",
-                salario=0.00  # Valor por defecto
+                puesto="Por definir"
             )

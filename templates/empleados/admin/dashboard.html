@@ -5,70 +5,457 @@
 
 {% block content %}
 <div class="container-fluid">
-    <h1>Dashboard Administrador</h1>
-    <p>Bienvenido, {{ perfil.nombre_completo }}</p>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-crown me-2 text-warning"></i>Dashboard Administrador</h1>
+        <p class="text-muted">Bienvenido, {{ perfil.nombre_completo }}</p>
+    </div>
     
-    <div class="row">
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Total Empleados</h5>
-                    <p class="card-text">{{ stats.total_empleados }}</p>
-                </div>
-            </div>
+    <!-- Botones de Acción Rápida -->
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">
+            <h5><i class="fas fa-bolt me-2"></i>Accesos Rápidos</h5>
         </div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Departamentos</h5>
-                    <p class="card-text">{{ stats.total_departamentos }}</p>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-2 mb-2">
+                    <a href="{% url 'empleados:gestion_usuarios' %}" class="btn btn-outline-primary w-100">
+                        <i class="fas fa-users me-1"></i>Gestión Usuarios
+                    </a>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Solicitudes Pendientes</h5>
-                    <p class="card-text">{{ stats.solicitudes_pendientes }}</p>
+                <div class="col-md-2 mb-2">
+                    <a href="{% url 'empleados:crear_usuario' %}" class="btn btn-outline-info w-100">
+                        <i class="fas fa-user-plus me-1"></i>Crear Usuario
+                    </a>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Solicitudes Este Mes</h5>
-                    <p class="card-text">{{ stats.solicitudes_este_mes }}</p>
+                <div class="col-md-2 mb-2">
+                    <a href="{% url 'empleados:gestionar_tickets' %}" class="btn btn-outline-warning w-100">
+                        <i class="fas fa-ticket-alt me-1"></i>Tickets IT
+                    </a>
+                </div>
+                <div class="col-md-2 mb-2">
+                    <a href="{% url 'empleados:inventario_equipos' %}" class="btn btn-outline-success w-100">
+                        <i class="fas fa-laptop me-1"></i>Inventario
+                    </a>
+                </div>
+                <div class="col-md-2 mb-2">
+                    <a href="/admin/" class="btn btn-outline-danger w-100">
+                        <i class="fas fa-database me-1"></i>Admin Django
+                    </a>
+                </div>
+                <div class="col-md-2 mb-2">
+                    <a href="{% url 'empleados:gestion_departamentos' %}" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-building me-1"></i>Departamentos
+                    </a>
                 </div>
             </div>
         </div>
     </div>
     
+    <!-- MÓDULO 1: ESTADÍSTICAS DE EMPLEADOS Y DEPARTAMENTOS -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5><i class="fas fa-users me-2"></i>Empleados y Departamentos</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-users fa-2x text-primary mb-2"></i>
+                            <h3 class="text-primary">{{ stats.total_empleados }}</h3>
+                            <p class="mb-0 text-muted">Total Empleados</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-building fa-2x text-info mb-2"></i>
+                            <h3 class="text-info">{{ stats.total_departamentos }}</h3>
+                            <p class="mb-0 text-muted">Departamentos</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-user-tie fa-2x text-warning mb-2"></i>
+                            <h3 class="text-warning">{{ stats.empleados_por_tipo.jefes }}</h3>
+                            <p class="mb-0 text-muted">Jefes de Área</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-cogs fa-2x text-success mb-2"></i>
+                            <h3 class="text-success">{{ stats.empleados_por_tipo.sistemas }}</h3>
+                            <p class="mb-0 text-muted">Personal IT</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MÓDULO 2: ESTADÍSTICAS DE VACACIONES -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h5><i class="fas fa-calendar-alt me-2"></i>Módulo de Vacaciones</h5>
+        </div>
+        <div class="card-body">
+    <div class="row">
+        <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+                            <h3 class="text-warning">{{ stats.solicitudes_pendientes_jefe }}</h3>
+                            <p class="mb-0 text-muted">Pendientes Jefe</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-hourglass-half fa-2x text-info mb-2"></i>
+                            <h3 class="text-info">{{ stats.solicitudes_pendientes_rh }}</h3>
+                            <p class="mb-0 text-muted">Pendientes RH</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                            <h3 class="text-success">{{ stats.solicitudes_aprobadas_mes }}</h3>
+                            <p class="mb-0 text-muted">Aprobadas Este Mes</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                <div class="card-body">
+                            <i class="fas fa-times-circle fa-2x text-danger mb-2"></i>
+                            <h3 class="text-danger">{{ stats.solicitudes_rechazadas_mes }}</h3>
+                            <p class="mb-0 text-muted">Rechazadas Este Mes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MÓDULO 3: ESTADÍSTICAS DE TICKETS IT -->
+    <div class="card mb-4">
+        <div class="card-header bg-warning text-dark">
+            <h5><i class="fas fa-ticket-alt me-2"></i>Módulo de Tickets IT</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-exclamation-triangle fa-2x text-warning mb-2"></i>
+                            <h3 class="text-warning">{{ stats.tickets_pendientes }}</h3>
+                            <p class="mb-0 text-muted">Tickets Pendientes</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-sync-alt fa-2x text-info mb-2"></i>
+                            <h3 class="text-info">{{ stats.tickets_en_proceso }}</h3>
+                            <p class="mb-0 text-muted">En Proceso</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-check-double fa-2x text-success mb-2"></i>
+                            <h3 class="text-success">{{ stats.tickets_resueltos_hoy }}</h3>
+                            <p class="mb-0 text-muted">Resueltos Hoy</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+                    <div class="card text-center">
+                <div class="card-body">
+                            <i class="fas fa-archive fa-2x text-danger mb-2"></i>
+                            <h3 class="text-danger">{{ stats.tickets_cancelados_hoy }}</h3>
+                            <p class="mb-0 text-muted">Cancelados Hoy</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MÓDULO 4: ESTADÍSTICAS DE EQUIPOS -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h5><i class="fas fa-laptop me-2"></i>Módulo de Equipos e Inventario</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-warehouse fa-2x mb-2 text-info"></i>
+                            <h3 class="text-info">{{ stats.total_equipos }}</h3>
+                            <p class="mb-0 text-muted">Total Equipos</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                            <h3 class="text-success">{{ stats.equipos_disponibles }}</h3>
+                            <p class="mb-0 text-muted">Disponibles</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-user-check fa-2x text-primary mb-2"></i>
+                            <h3 class="text-primary">{{ stats.equipos_asignados }}</h3>
+                            <p class="mb-0 text-muted">Asignados</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <i class="fas fa-wrench fa-2x text-warning mb-2"></i>
+                            <h3 class="text-warning">{{ stats.equipos_en_reparacion }}</h3>
+                            <p class="mb-0 text-muted">En Reparación</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- TABLA 1: SOLICITUDES DE VACACIONES RECIENTES -->
     <div class="row mt-4">
         <div class="col-12">
-            <h3>Solicitudes Recientes</h3>
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5><i class="fas fa-calendar-check me-2"></i>Solicitudes de Vacaciones Pendientes</h5>
+                </div>
+                <div class="card-body">
+                    {% if solicitudes_recientes %}
+                        <div class="table-responsive">
+                            <table class="table table-hover table-sm">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="d-none d-md-table-cell"><i class="fas fa-user me-1"></i>Empleado</th>
+                                        <th class="d-table-cell d-md-none"><i class="fas fa-user me-1"></i>Empleado</th>
+                                        <th class="d-none d-lg-table-cell"><i class="fas fa-building me-1"></i>Departamento</th>
+                                        <th class="d-none d-md-table-cell"><i class="fas fa-calendar me-1"></i>Período</th>
+                                        <th class="d-table-cell d-md-none"><i class="fas fa-calendar me-1"></i>Período</th>
+                                        <th><i class="fas fa-hashtag me-1"></i>Días</th>
+                                        <th class="d-none d-sm-table-cell"><i class="fas fa-tag me-1"></i>Tipo</th>
+                                        <th><i class="fas fa-info-circle me-1"></i>Estado</th>
+                                        <th class="d-none d-lg-table-cell"><i class="fas fa-clock me-1"></i>Solicitado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for solicitud in solicitudes_recientes %}
+                                    <tr>
+                                        <td class="d-none d-md-table-cell">
+                                            <strong>{{ solicitud.empleado.nombre_completo }}</strong>
+                                        </td>
+                                        <td class="d-table-cell d-md-none">
+                                            <strong>{{ solicitud.empleado.nombre_completo }}</strong>
+                                            <br><small class="text-muted">{{ solicitud.fecha_solicitud|date:"d/m/Y" }}</small>
+                                        </td>
+                                        <td class="d-none d-lg-table-cell">
+                                            {% if solicitud.empleado.departamento %}
+                                                <span class="badge bg-info">{{ solicitud.empleado.departamento.nombre }}</span>
+                                            {% else %}
+                                                <span class="text-muted">Sin departamento</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="d-none d-md-table-cell">
+                                            <small>{{ solicitud.fecha_inicio|date:"d/m/Y" }}</small><br>
+                                            <small class="text-muted">hasta {{ solicitud.fecha_fin|date:"d/m/Y" }}</small>
+                                        </td>
+                                        <td class="d-table-cell d-md-none">
+                                            <small>{{ solicitud.fecha_inicio|date:"d/m" }} - {{ solicitud.fecha_fin|date:"d/m" }}</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-primary">{{ solicitud.dias_solicitados }} día{{ solicitud.dias_solicitados|pluralize }}</span>
+                                        </td>
+                                        <td class="d-none d-sm-table-cell">
+                                            <span class="badge bg-{% if solicitud.tipo == 'NORMAL' %}success{% elif solicitud.tipo == 'EXTRAORDINARIA' %}warning{% else %}danger{% endif %}">
+                                                {{ solicitud.get_tipo_display }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if solicitud.estado == 'PENDIENTE_JEFE' %}
+                                                <span class="badge bg-warning text-dark">
+                                                    <i class="fas fa-clock me-1"></i><span class="d-none d-sm-inline">Pendiente Jefe</span><span class="d-inline d-sm-none">P. Jefe</span>
+                                                </span>
+                                            {% elif solicitud.estado == 'PENDIENTE_RH' %}
+                                                <span class="badge bg-info">
+                                                    <i class="fas fa-hourglass-half me-1"></i><span class="d-none d-sm-inline">Pendiente RH</span><span class="d-inline d-sm-none">P. RH</span>
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="d-none d-lg-table-cell"><small>{{ solicitud.fecha_solicitud|date:"d/m/Y H:i" }}</small></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                            <p class="text-muted">No hay solicitudes de vacaciones pendientes</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- TABLA 2: TICKETS RECIENTES -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5><i class="fas fa-headset me-2"></i>Tickets IT Recientes</h5>
+                </div>
+                <div class="card-body">
+                    {% if tickets_recientes %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Solicitante</th>
+                                        <th>Tipo</th>
+                                        <th>Prioridad</th>
+                                        <th>Estado</th>
+                                        <th>Técnico Asignado</th>
+                                        <th>Fecha Creación</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for ticket in tickets_recientes %}
+                                    <tr>
+                                        <td><strong>{{ ticket.codigo }}</strong></td>
+                                        <td>{{ ticket.empleado.nombre_completo }}</td>
+                                        <td><span class="badge bg-secondary">{{ ticket.get_tipo_display }}</span></td>
+                                        <td>
+                                            {% if ticket.prioridad == 'URGENTE' %}
+                                                <span class="badge bg-danger">{{ ticket.get_prioridad_display }}</span>
+                                            {% elif ticket.prioridad == 'ALTA' %}
+                                                <span class="badge bg-warning text-dark">{{ ticket.get_prioridad_display }}</span>
+                                            {% elif ticket.prioridad == 'MEDIA' %}
+                                                <span class="badge bg-info">{{ ticket.get_prioridad_display }}</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">{{ ticket.get_prioridad_display }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if ticket.estado == 'PENDIENTE' %}
+                                                <span class="badge bg-warning text-dark">Pendiente</span>
+                                            {% elif ticket.estado == 'EN_PROCESO' %}
+                                                <span class="badge bg-info">En Proceso</span>
+                                            {% elif ticket.estado == 'RESUELTO' %}
+                                                <span class="badge bg-success">Resuelto</span>
+                                            {% elif ticket.estado == 'CANCELADO' %}
+                                                <span class="badge bg-secondary">Cancelado</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if ticket.asignado_a %}
+                                                <span class="badge bg-primary">{{ ticket.asignado_a.nombre_completo }}</span>
+                                            {% else %}
+                                                <span class="text-muted">Sin asignar</span>
+                                            {% endif %}
+                                        </td>
+                                        <td><small>{{ ticket.fecha_creacion|date:"d/m/Y H:i" }}</small></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No hay tickets registrados</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- TABLA 3: EQUIPOS RECIÉN ASIGNADOS -->
+    <div class="row mt-4 mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5><i class="fas fa-box-open me-2"></i>Equipos Recién Asignados</h5>
+                </div>
+                <div class="card-body">
+                    {% if asignaciones_recientes %}
             <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Empleado</th>
-                            <th>Fecha Inicio</th>
-                            <th>Fecha Fin</th>
-                            <th>Estado</th>
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Categoría</th>
+                                        <th>Equipo</th>
+                                        <th>Código Inventario</th>
+                                        <th>Asignado a</th>
+                                        <th>Fecha Asignación</th>
+                                        <th>Condición</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for solicitud in solicitudes_recientes %}
-                        <tr>
-                            <td>{{ solicitud.empleado.nombre_completo }}</td>
-                            <td>{{ solicitud.fecha_inicio }}</td>
-                            <td>{{ solicitud.fecha_fin }}</td>
-                            <td>{{ solicitud.get_estado_display }}</td>
+                                    {% for asignacion in asignaciones_recientes %}
+                                    <tr>
+                                        <td>
+                                            <i class="fas fa-laptop me-1" style="color: #6f42c1;"></i>
+                                            <strong>{{ asignacion.equipo.categoria.nombre }}</strong>
+                                        </td>
+                                        <td>{{ asignacion.equipo.marca }} {{ asignacion.equipo.modelo }}</td>
+                                        <td><span class="badge bg-secondary">{{ asignacion.equipo.codigo_inventario }}</span></td>
+                                        <td>
+                                            <i class="fas fa-user me-1 text-primary"></i>
+                                            {{ asignacion.empleado.nombre_completo }}
+                                        </td>
+                                        <td><small>{{ asignacion.fecha_asignacion|date:"d/m/Y H:i" }}</small></td>
+                                        <td>
+                                            {% if asignacion.condicion_entrega %}
+                                                <span class="badge bg-success">{{ asignacion.condicion_entrega }}</span>
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-box fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No hay equipos asignados recientemente</p>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
+
+
+

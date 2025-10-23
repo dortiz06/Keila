@@ -92,7 +92,6 @@
                             <p><strong>Fecha de Ingreso:</strong><br>{{ empleado.fecha_ingreso|date:"d/m/Y" }}</p>
                         </div>
                         <div class="col-md-6">
-                            <p><strong>Salario:</strong><br>${{ empleado.salario|floatformat:2 }}</p>
                             {% if empleado.supervisor %}
                             <p><strong>Supervisor:</strong><br>{{ empleado.supervisor.nombre_completo }}</p>
                             {% endif %}

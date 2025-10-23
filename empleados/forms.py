@@ -35,25 +35,14 @@ class UsuarioConPerfilForm(UserCreationForm):
     )
     numero_empleado = forms.CharField(max_length=20, label='Número de Empleado')
     puesto = forms.CharField(max_length=100, label='Puesto')
-    salario = forms.DecimalField(
-        max_digits=10, 
-        decimal_places=2, 
-        label='Salario',
-        help_text='Salario mensual'
-    )
-    supervisor = forms.ModelChoiceField(
+    jefe_area = forms.ModelChoiceField(
         queryset=Perfil.objects.filter(activo=True, tipo_perfil__in=['JEFE_AREA', 'ADMIN']),
-        label='Supervisor',
+        label='Jefe de Área',
         required=False
     )
     
     # Información personal adicional
     telefono = forms.CharField(max_length=15, label='Teléfono', required=False)
-    direccion = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': 3}), 
-        label='Dirección', 
-        required=False
-    )
     fecha_nacimiento = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'date'}),
         label='Fecha de Nacimiento',
@@ -97,20 +86,19 @@ class UsuarioConPerfilForm(UserCreationForm):
         if commit:
             user.save()
             
-            # Crear perfil
-            perfil = Perfil.objects.create(
-                usuario=user,
-                tipo_perfil=self.cleaned_data['tipo_perfil'],
-                departamento=self.cleaned_data.get('departamento'),
-                fecha_contratacion=self.cleaned_data['fecha_contratacion'],
-                numero_empleado=self.cleaned_data['numero_empleado'],
-                puesto=self.cleaned_data['puesto'],
-                salario=self.cleaned_data['salario'],
-                supervisor=self.cleaned_data.get('supervisor'),
-                telefono=self.cleaned_data.get('telefono', ''),
-                direccion=self.cleaned_data.get('direccion', ''),
-                fecha_nacimiento=self.cleaned_data.get('fecha_nacimiento')
-            )
+            # El perfil se crea automáticamente por el signal
+            # Solo actualizamos los campos específicos del perfil
+            if hasattr(user, 'perfil'):
+                perfil = user.perfil
+                perfil.tipo_perfil = self.cleaned_data['tipo_perfil']
+                perfil.departamento = self.cleaned_data.get('departamento')
+                perfil.fecha_contratacion = self.cleaned_data['fecha_contratacion']
+                perfil.numero_empleado = self.cleaned_data['numero_empleado']
+                perfil.puesto = self.cleaned_data['puesto']
+                perfil.supervisor = self.cleaned_data.get('jefe_area')
+                perfil.telefono = self.cleaned_data.get('telefono', '')
+                perfil.fecha_nacimiento = self.cleaned_data.get('fecha_nacimiento')
+                perfil.save()
         
         return user
 
@@ -237,14 +225,12 @@ class EditarPerfilForm(forms.ModelForm):
     
     class Meta:
         model = Perfil
-        fields = ['telefono', 'direccion', 'fecha_nacimiento']
+        fields = ['telefono', 'fecha_nacimiento']
         widgets = {
             'fecha_nacimiento': forms.DateInput(attrs={'type': 'date'}),
-            'direccion': forms.Textarea(attrs={'rows': 3}),
         }
         labels = {
             'telefono': 'Teléfono',
-            'direccion': 'Dirección',
             'fecha_nacimiento': 'Fecha de Nacimiento',
         }
 
@@ -371,11 +357,10 @@ class AsignacionEquipoForm(forms.ModelForm):
     
     class Meta:
         model = AsignacionEquipo
-        fields = ['equipo', 'empleado', 'fecha_asignacion', 'condicion_entrega', 'observaciones']
+        fields = ['equipo', 'empleado', 'condicion_entrega', 'observaciones']
         widgets = {
             'equipo': forms.Select(attrs={'class': 'form-control'}),
             'empleado': forms.Select(attrs={'class': 'form-control'}),
-            'fecha_asignacion': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'condicion_entrega': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Ej: Nuevo, Usado - Buen estado, etc.'
@@ -385,7 +370,6 @@ class AsignacionEquipoForm(forms.ModelForm):
         labels = {
             'equipo': 'Equipo',
             'empleado': 'Empleado',
-            'fecha_asignacion': 'Fecha de Asignación',
             'condicion_entrega': 'Condición al Entregar',
             'observaciones': 'Observaciones',
         }
@@ -396,8 +380,6 @@ class AsignacionEquipoForm(forms.ModelForm):
         self.fields['equipo'].queryset = Equipo.objects.filter(estado='DISPONIBLE')
         # Solo mostrar empleados activos
         self.fields['empleado'].queryset = Perfil.objects.filter(activo=True)
-        # Fecha de asignación por defecto hoy
-        self.fields['fecha_asignacion'].initial = timezone.now().date()
         # Hacer opcional observaciones
         self.fields['observaciones'].required = False
 
