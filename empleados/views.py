@@ -550,7 +550,17 @@ def crear_ticket(request):
             ticket.empleado = perfil
             ticket.save()
             messages.success(request, f'Ticket {ticket.codigo} creado exitosamente.')
-            return redirect('empleados:mis_tickets')
+            # Redirección basada en el tipo de perfil
+            if perfil.es_sistemas():
+                return redirect('empleados:sistemas_dashboard')
+            elif perfil.es_admin():
+                return redirect('empleados:admin_dashboard')
+            elif perfil.es_rh():
+                return redirect('empleados:rh_dashboard')
+            elif perfil.es_jefe_area():
+                return redirect('empleados:jefe_dashboard')
+            else:
+                return redirect('empleados:mis_tickets')
     else:
         form = TicketForm(empleado=perfil)
     
@@ -709,7 +719,17 @@ def resolver_ticket(request, ticket_id):
                 ticket.fecha_resolucion = timezone.now()
             ticket.save()
             messages.success(request, f'Ticket {ticket.codigo} actualizado correctamente.')
-            return redirect('empleados:gestionar_tickets')
+            # Redirección basada en el tipo de perfil
+            if perfil.es_sistemas():
+                return redirect('empleados:sistemas_dashboard')
+            elif perfil.es_admin():
+                return redirect('empleados:admin_dashboard')
+            elif perfil.es_rh():
+                return redirect('empleados:rh_dashboard')
+            elif perfil.es_jefe_area():
+                return redirect('empleados:jefe_dashboard')
+            else:
+                return redirect('empleados:gestionar_tickets')
     else:
         form = TicketResolucionForm(instance=ticket)
     
@@ -763,7 +783,17 @@ def agregar_equipo(request):
         if form.is_valid():
             equipo = form.save()
             messages.success(request, f'Equipo {equipo.codigo_inventario} agregado exitosamente.')
-            return redirect('empleados:inventario_equipos')
+            # Redirección basada en el tipo de perfil
+            if perfil.es_sistemas():
+                return redirect('empleados:sistemas_dashboard')
+            elif perfil.es_admin():
+                return redirect('empleados:admin_dashboard')
+            elif perfil.es_rh():
+                return redirect('empleados:rh_dashboard')
+            elif perfil.es_jefe_area():
+                return redirect('empleados:jefe_dashboard')
+            else:
+                return redirect('empleados:inventario_equipos')
     else:
         form = EquipoForm()
     
@@ -799,7 +829,17 @@ def asignar_equipo(request):
             equipo.save()
             
             messages.success(request, f'Equipo {equipo.codigo_inventario} asignado a {asignacion.empleado.nombre_completo}.')
-            return redirect('empleados:inventario_equipos')
+            # Redirección basada en el tipo de perfil
+            if perfil.es_sistemas():
+                return redirect('empleados:sistemas_dashboard')
+            elif perfil.es_admin():
+                return redirect('empleados:admin_dashboard')
+            elif perfil.es_rh():
+                return redirect('empleados:rh_dashboard')
+            elif perfil.es_jefe_area():
+                return redirect('empleados:jefe_dashboard')
+            else:
+                return redirect('empleados:inventario_equipos')
     else:
         form = AsignacionEquipoForm()
     
@@ -834,7 +874,17 @@ def devolver_equipo(request, asignacion_id):
             equipo.save()
             
             messages.success(request, f'Devolución de equipo {equipo.codigo_inventario} registrada correctamente.')
-            return redirect('empleados:inventario_equipos')
+            # Redirección basada en el tipo de perfil
+            if perfil.es_sistemas():
+                return redirect('empleados:sistemas_dashboard')
+            elif perfil.es_admin():
+                return redirect('empleados:admin_dashboard')
+            elif perfil.es_rh():
+                return redirect('empleados:rh_dashboard')
+            elif perfil.es_jefe_area():
+                return redirect('empleados:jefe_dashboard')
+            else:
+                return redirect('empleados:inventario_equipos')
     else:
         form = DevolucionEquipoForm(instance=asignacion)
     
