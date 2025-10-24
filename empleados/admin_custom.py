@@ -37,7 +37,7 @@ class PerfilAdmin(admin.ModelAdmin):
             'fields': ('usuario', 'numero_empleado', 'tipo_perfil', 'activo')
         }),
         ('Información Laboral', {
-            'fields': ('departamento', 'puesto', 'salario', 'supervisor')
+            'fields': ('departamento', 'puesto', 'supervisor')
         }),
         ('Fechas Importantes', {
             'fields': ('fecha_contratacion', 'fecha_nacimiento', 'antiguedad_display'),
@@ -57,7 +57,7 @@ class PerfilAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
         ('Información de Contacto', {
-            'fields': ('telefono', 'direccion'),
+            'fields': ('telefono',),
             'classes': ('collapse',)
         }),
         ('Auditoría', {
