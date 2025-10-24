@@ -542,7 +542,7 @@ def crear_ticket(request):
             ticket.empleado = perfil
             ticket.save()
             messages.success(request, f'Ticket {ticket.codigo} creado exitosamente.')
-            return redirect('mis_tickets')
+            return redirect('empleados:mis_tickets')
     else:
         form = TicketForm(empleado=perfil)
     
@@ -677,7 +677,7 @@ def asignar_ticket(request, ticket_id):
     ticket.save()
     
     messages.success(request, f'Ticket {ticket.codigo} asignado correctamente.')
-    return redirect('gestionar_tickets')
+    return redirect('empleados:gestionar_tickets')
 
 
 @login_required
@@ -701,7 +701,7 @@ def resolver_ticket(request, ticket_id):
                 ticket.fecha_resolucion = timezone.now()
             ticket.save()
             messages.success(request, f'Ticket {ticket.codigo} actualizado correctamente.')
-            return redirect('gestionar_tickets')
+            return redirect('empleados:gestionar_tickets')
     else:
         form = TicketResolucionForm(instance=ticket)
     
@@ -755,7 +755,7 @@ def agregar_equipo(request):
         if form.is_valid():
             equipo = form.save()
             messages.success(request, f'Equipo {equipo.codigo_inventario} agregado exitosamente.')
-            return redirect('inventario_equipos')
+            return redirect('empleados:inventario_equipos')
     else:
         form = EquipoForm()
     
@@ -791,7 +791,7 @@ def asignar_equipo(request):
             equipo.save()
             
             messages.success(request, f'Equipo {equipo.codigo_inventario} asignado a {asignacion.empleado.nombre_completo}.')
-            return redirect('inventario_equipos')
+            return redirect('empleados:inventario_equipos')
     else:
         form = AsignacionEquipoForm()
     
@@ -826,7 +826,7 @@ def devolver_equipo(request, asignacion_id):
             equipo.save()
             
             messages.success(request, f'Devolución de equipo {equipo.codigo_inventario} registrada correctamente.')
-            return redirect('inventario_equipos')
+            return redirect('empleados:inventario_equipos')
     else:
         form = DevolucionEquipoForm(instance=asignacion)
     
