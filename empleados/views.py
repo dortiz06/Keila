@@ -169,13 +169,12 @@ def jefe_dashboard(request):
     if not perfil or not perfil.es_jefe_area():
         raise PermissionDenied
     
-    # Solicitudes de empleados del departamento
+    # Solicitudes de todos los empleados (jefes pueden gestionar cualquier departamento)
     solicitudes_pendientes = SolicitudVacaciones.objects.filter(
-        empleado__departamento=perfil.departamento,
         estado='PENDIENTE_JEFE'
     ).order_by('-fecha_solicitud')
     
-    # Estadísticas del departamento
+    # Estadísticas generales (jefes pueden ver estadísticas de todos los departamentos)
     empleados_departamento = Perfil.objects.filter(
         departamento=perfil.departamento,
         activo=True
@@ -185,7 +184,6 @@ def jefe_dashboard(request):
         'empleados_departamento': empleados_departamento.count(),
         'solicitudes_pendientes': solicitudes_pendientes.count(),
         'aprobadas_este_mes': SolicitudVacaciones.objects.filter(
-            empleado__departamento=perfil.departamento,
             estado='APROBADO_JEFE',
             fecha_aprobacion_jefe__month=timezone.now().month
         ).count(),
@@ -381,9 +379,7 @@ def aprobar_jefe(request, solicitud_id):
     
     solicitud = get_object_or_404(SolicitudVacaciones, id=solicitud_id)
     
-    # Verificar que el empleado pertenece al departamento del jefe
-    if solicitud.empleado.departamento != perfil.departamento:
-        raise PermissionDenied
+    # Los jefes pueden aprobar solicitudes de cualquier departamento
     
     if request.method == 'POST':
         form = AprobacionJefeForm(request.POST, solicitud=solicitud)
