@@ -146,9 +146,9 @@
                                         <td>{{ ticket.fecha_creacion|date:"d/m/Y H:i" }}</td>
                                         <td>
                                             {% if ticket.estado == 'PENDIENTE' %}
-                                                <button class="btn btn-sm btn-success disabled" disabled>Asignarme</button>
+                                                <button class="btn btn-sm btn-outline-success" disabled style="opacity: 0.5; cursor: not-allowed;">Asignarme</button>
                                             {% elif ticket.estado == 'EN_PROCESO' %}
-                                                <button class="btn btn-sm btn-primary disabled" disabled>Resolver</button>
+                                                <button class="btn btn-sm btn-outline-primary" disabled style="opacity: 0.5; cursor: not-allowed;">Resolver</button>
                                             {% endif %}
                                         </td>
                                     </tr>
