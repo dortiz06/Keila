@@ -806,250 +806,135 @@ INFO 2025-10-24 10:35:35,086 basehttp 8303 6162411520 "POST / HTTP/1.1" 302 0
 INFO 2025-10-24 10:35:35,097 basehttp 8303 6162411520 "GET /empleado/ HTTP/1.1" 200 22148
 WARNING 2025-10-24 10:35:35,135 log 8303 6162411520 Not Found: /images/dash/fondoAzul.jpg
 WARNING 2025-10-24 10:35:35,136 basehttp 8303 6162411520 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
-INFO 2025-10-24 10:40:04,168 autoreload 39905 8334657536 Watching for file changes with StatReloader
-INFO 2025-10-24 10:40:04,168 autoreload 39907 8334657536 Watching for file changes with StatReloader
-INFO 2025-10-24 10:40:04,168 autoreload 39906 8334657536 Watching for file changes with StatReloader
-INFO 2025-10-24 10:46:44,675 basehttp 39905 6197637120 "GET /sistemas/ HTTP/1.1" 302 0
-INFO 2025-10-24 10:46:44,688 basehttp 39905 6197637120 "GET /?next=/sistemas/ HTTP/1.1" 200 30533
-INFO 2025-10-24 10:46:44,742 basehttp 39905 6197637120 "GET /static/css/global_styles.css HTTP/1.1" 200 2543
-WARNING 2025-10-24 10:46:44,759 log 39905 6197637120 Not Found: /images/dash/fondoAzul.jpg
-WARNING 2025-10-24 10:46:44,760 basehttp 39905 6197637120 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
-INFO 2025-10-24 10:47:01,885 basehttp 39905 6197637120 "POST /?next=/sistemas/ HTTP/1.1" 200 26357
-INFO 2025-10-24 10:47:20,471 basehttp 39905 6197637120 "POST /?next=/sistemas/ HTTP/1.1" 302 0
-INFO 2025-10-24 10:47:20,488 basehttp 39905 6197637120 "GET /sistemas/ HTTP/1.1" 200 20009
-INFO 2025-10-24 10:47:54,962 basehttp 39905 6197637120 "GET /dashboard/ HTTP/1.1" 302 0
-INFO 2025-10-24 10:47:54,982 basehttp 39905 6197637120 "GET /administrador/ HTTP/1.1" 200 29273
-INFO 2025-10-24 10:47:55,013 basehttp 39905 6197637120 "GET /static/css/global_styles.css HTTP/1.1" 304 0
-INFO 2025-10-24 11:29:52,809 basehttp 39905 6197637120 "GET /administrador/ HTTP/1.1" 200 29273
-INFO 2025-10-24 11:29:52,849 basehttp 39905 6197637120 "GET /static/css/global_styles.css HTTP/1.1" 304 0
-WARNING 2025-10-24 11:29:52,871 log 39905 6197637120 Not Found: /images/dash/fondoAzul.jpg
-WARNING 2025-10-24 11:29:52,872 basehttp 39905 6197637120 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
-INFO 2025-10-24 11:31:16,797 basehttp 39905 6197637120 "GET /usuarios/ HTTP/1.1" 200 32321
-INFO 2025-10-24 11:31:29,276 basehttp 39905 6197637120 "GET /usuarios/crear/ HTTP/1.1" 200 30808
-INFO 2025-10-24 11:31:34,004 basehttp 39905 6197637120 "GET /dashboard/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:31:34,025 basehttp 39905 6197637120 "GET /administrador/ HTTP/1.1" 200 29273
-INFO 2025-10-24 11:31:35,449 basehttp 39905 6197637120 "GET /admin/ HTTP/1.1" 200 14263
-INFO 2025-10-24 11:31:37,476 basehttp 39905 6197637120 "GET /admin/empleados/perfil/ HTTP/1.1" 200 21525
-INFO 2025-10-24 11:31:37,515 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:31:46,174 basehttp 39905 6197637120 "GET /admin/empleados/perfil/add/ HTTP/1.1" 200 32054
-INFO 2025-10-24 11:31:46,210 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:31:59,642 basehttp 39905 6197637120 "GET /admin/empleados/departamento/ HTTP/1.1" 200 15535
-INFO 2025-10-24 11:31:59,679 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:32:01,937 basehttp 39905 6197637120 "GET /admin/empleados/departamento/add/ HTTP/1.1" 200 15983
-INFO 2025-10-24 11:32:01,974 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:32:16,550 basehttp 39905 6214463488 "POST /admin/empleados/departamento/add/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:32:16,568 basehttp 39905 6214463488 "GET /admin/empleados/departamento/ HTTP/1.1" 200 16189
-INFO 2025-10-24 11:32:16,597 basehttp 39905 6214463488 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:32:27,701 basehttp 39905 6231289856 "GET /admin/empleados/departamento/add/ HTTP/1.1" 200 15983
-INFO 2025-10-24 11:32:27,738 basehttp 39905 6231289856 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:32:33,635 basehttp 39905 6197637120 "POST /admin/empleados/departamento/add/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:32:33,655 basehttp 39905 6197637120 "GET /admin/empleados/departamento/ HTTP/1.1" 200 16621
-INFO 2025-10-24 11:32:33,687 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:32:47,928 basehttp 39905 6214463488 "GET /admin/empleados/perfil/ HTTP/1.1" 200 21666
-INFO 2025-10-24 11:32:47,965 basehttp 39905 6214463488 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:32:49,923 basehttp 39905 6214463488 "GET /admin/empleados/perfil/add/ HTTP/1.1" 200 32131
-INFO 2025-10-24 11:32:49,947 basehttp 39905 6214463488 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:32:57,178 basehttp 39905 6197637120 "GET /admin/auth/user/add/?_to_field=id&_popup=1 HTTP/1.1" 200 8250
-INFO 2025-10-24 11:32:57,259 basehttp 39905 6214463488 "GET /static/admin/css/unusable_password_field.css HTTP/1.1" 200 663
-INFO 2025-10-24 11:32:57,259 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:32:57,261 basehttp 39905 6197637120 "GET /static/admin/js/unusable_password_field.js HTTP/1.1" 200 1480
-INFO 2025-10-24 11:33:14,707 basehttp 39905 6197637120 "POST /admin/auth/user/add/?_to_field=id&_popup=1 HTTP/1.1" 200 336
-INFO 2025-10-24 11:33:14,752 basehttp 39905 6197637120 "GET /static/admin/js/popup_response.js HTTP/1.1" 200 532
-INFO 2025-10-24 11:34:01,103 basehttp 39905 6197637120 "POST /admin/empleados/perfil/add/ HTTP/1.1" 200 32691
-INFO 2025-10-24 11:34:01,129 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:34:05,323 basehttp 39905 6197637120 "POST /admin/empleados/perfil/add/ HTTP/1.1" 200 32540
-INFO 2025-10-24 11:34:05,341 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:34:09,760 basehttp 39905 6197637120 "GET /admin/empleados/perfil/ HTTP/1.1" 200 22534
-INFO 2025-10-24 11:34:09,792 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:34:12,812 basehttp 39905 6197637120 "GET /admin/empleados/perfil/5/change/ HTTP/1.1" 200 33680
-INFO 2025-10-24 11:34:12,842 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:34:18,933 basehttp 39905 6197637120 "GET /admin/empleados/perfil/ HTTP/1.1" 200 22534
-INFO 2025-10-24 11:34:18,972 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:34:20,109 basehttp 39905 6197637120 "GET /admin/empleados/perfil/ HTTP/1.1" 200 22534
-INFO 2025-10-24 11:34:20,127 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:34:21,300 basehttp 39905 6197637120 "GET /admin/empleados/perfil/5/change/ HTTP/1.1" 200 33680
-INFO 2025-10-24 11:34:21,332 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:34:28,288 basehttp 39905 6197637120 "POST /admin/empleados/perfil/5/change/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:34:28,310 basehttp 39905 6197637120 "GET /admin/empleados/perfil/ HTTP/1.1" 200 22756
-INFO 2025-10-24 11:34:28,338 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:34:35,377 basehttp 39905 6197637120 "GET /admin/empleados/perfil/3/change/ HTTP/1.1" 200 33700
-INFO 2025-10-24 11:34:35,403 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:34:43,167 basehttp 39905 6197637120 "GET /admin/empleados/perfil/ HTTP/1.1" 200 22544
-INFO 2025-10-24 11:34:43,201 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:34:44,569 basehttp 39905 6197637120 "GET /admin/empleados/perfil/5/change/ HTTP/1.1" 200 33700
-INFO 2025-10-24 11:34:44,601 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:34:52,850 basehttp 39905 6197637120 "POST /admin/empleados/perfil/5/change/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:34:52,870 basehttp 39905 6197637120 "GET /admin/empleados/perfil/ HTTP/1.1" 200 22764
-INFO 2025-10-24 11:34:52,898 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:35:09,746 basehttp 39905 6197637120 "GET /admin/auth/user/ HTTP/1.1" 200 17664
-INFO 2025-10-24 11:35:09,786 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:35:13,877 basehttp 39905 6197637120 "GET /admin/empleados/perfil/ HTTP/1.1" 200 22552
-INFO 2025-10-24 11:35:13,913 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:35:16,000 basehttp 39905 6197637120 "GET /admin/empleados/perfil/4/change/ HTTP/1.1" 200 33722
-INFO 2025-10-24 11:35:16,040 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:35:53,920 basehttp 39905 6197637120 "POST /admin/empleados/perfil/4/change/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:35:53,942 basehttp 39905 6197637120 "GET /admin/empleados/perfil/ HTTP/1.1" 200 22810
-INFO 2025-10-24 11:35:53,975 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:36:05,867 basehttp 39905 6197637120 "GET /admin/empleados/perfil/3/change/ HTTP/1.1" 200 33708
-INFO 2025-10-24 11:36:05,900 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:36:08,394 basehttp 39905 6197637120 "GET /admin/empleados/perfil/3/delete/ HTTP/1.1" 200 11798
-INFO 2025-10-24 11:36:08,428 basehttp 39905 6197637120 "GET /static/admin/js/cancel.js HTTP/1.1" 200 884
-INFO 2025-10-24 11:36:09,519 basehttp 39905 6197637120 "POST /admin/empleados/perfil/3/delete/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:36:09,536 basehttp 39905 6197637120 "GET /admin/empleados/perfil/ HTTP/1.1" 200 21866
-INFO 2025-10-24 11:36:09,564 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:36:11,449 basehttp 39905 6197637120 "GET /admin/empleados/perfil/5/change/ HTTP/1.1" 200 33661
-INFO 2025-10-24 11:36:11,487 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:36:43,432 basehttp 39905 6197637120 "POST /admin/empleados/perfil/5/change/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:36:43,453 basehttp 39905 6197637120 "GET /admin/empleados/perfil/ HTTP/1.1" 200 21915
-INFO 2025-10-24 11:36:43,486 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:36:47,970 basehttp 39905 6197637120 "GET /admin/empleados/perfil/4/change/ HTTP/1.1" 200 33707
-INFO 2025-10-24 11:36:48,003 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:37:00,259 basehttp 39905 6197637120 "POST /admin/empleados/perfil/4/change/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:37:00,282 basehttp 39905 6197637120 "GET /admin/empleados/perfil/ HTTP/1.1" 200 21930
-INFO 2025-10-24 11:37:00,313 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:37:21,850 basehttp 39905 6197637120 "GET /admin/auth/user/ HTTP/1.1" 200 17664
-INFO 2025-10-24 11:37:21,885 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:37:24,121 basehttp 39905 6197637120 "GET /admin/auth/user/add/ HTTP/1.1" 200 16557
-INFO 2025-10-24 11:37:24,154 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:37:53,506 basehttp 39905 6197637120 "POST /admin/auth/user/add/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:37:53,529 basehttp 39905 6197637120 "GET /admin/auth/user/6/change/ HTTP/1.1" 200 29158
-INFO 2025-10-24 11:37:53,561 basehttp 39905 6214463488 "GET /static/admin/js/SelectBox.js HTTP/1.1" 200 4530
-INFO 2025-10-24 11:37:53,561 basehttp 39905 6231289856 "GET /static/admin/js/SelectFilter2.js HTTP/1.1" 200 15845
-INFO 2025-10-24 11:37:53,562 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:37:53,593 basehttp 39905 6231289856 "GET /static/admin/img/icon-clock.svg HTTP/1.1" 200 677
-INFO 2025-10-24 11:37:53,593 basehttp 39905 6197637120 "GET /static/admin/img/selector-icons.svg HTTP/1.1" 200 3291
-INFO 2025-10-24 11:38:28,645 basehttp 39905 6197637120 "POST /admin/auth/user/6/change/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:38:28,658 basehttp 39905 6197637120 "GET /admin/auth/user/ HTTP/1.1" 200 18319
-INFO 2025-10-24 11:38:28,690 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:38:31,440 basehttp 39905 6197637120 "GET /admin/empleados/perfil/ HTTP/1.1" 200 22576
-INFO 2025-10-24 11:38:31,475 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:38:34,909 basehttp 39905 6197637120 "GET / HTTP/1.1" 302 0
-INFO 2025-10-24 11:38:34,926 basehttp 39905 6197637120 "GET /dashboard/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:38:34,935 basehttp 39905 6197637120 "GET /logout/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:38:34,942 basehttp 39905 6197637120 "GET / HTTP/1.1" 200 26742
-INFO 2025-10-24 11:38:34,970 basehttp 39905 6197637120 "GET /static/css/global_styles.css HTTP/1.1" 304 0
-WARNING 2025-10-24 11:38:34,979 log 39905 6197637120 Not Found: /images/dash/fondoAzul.jpg
-WARNING 2025-10-24 11:38:34,980 basehttp 39905 6197637120 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
-INFO 2025-10-24 11:38:43,089 basehttp 39905 6197637120 "POST / HTTP/1.1" 302 0
-INFO 2025-10-24 11:38:43,104 basehttp 39905 6197637120 "GET /administrador/ HTTP/1.1" 200 29271
-INFO 2025-10-24 11:38:47,431 basehttp 39905 6197637120 "GET /usuarios/crear/ HTTP/1.1" 200 30883
-INFO 2025-10-24 11:38:54,578 basehttp 39905 6197637120 "GET /usuarios/ HTTP/1.1" 200 35842
-INFO 2025-10-24 11:38:57,029 basehttp 39905 6197637120 "GET /perfil/ HTTP/1.1" 200 24963
-INFO 2025-10-24 11:38:59,340 basehttp 39905 6197637120 "GET /dashboard/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:38:59,357 basehttp 39905 6197637120 "GET /administrador/ HTTP/1.1" 200 29271
-INFO 2025-10-24 11:39:00,110 basehttp 39905 6197637120 "GET /usuarios/ HTTP/1.1" 200 35842
-INFO 2025-10-24 11:39:06,939 basehttp 39905 6197637120 "GET /usuarios/6/editar/ HTTP/1.1" 200 23008
-INFO 2025-10-24 11:39:11,865 basehttp 39905 6197637120 "GET /usuarios/ HTTP/1.1" 200 35842
-INFO 2025-10-24 11:39:13,961 basehttp 39905 6197637120 "GET /admin/empleados/perfil/6/change/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:39:13,976 basehttp 39905 6197637120 "GET /admin/login/?next=/admin/empleados/perfil/6/change/ HTTP/1.1" 200 3792
-INFO 2025-10-24 11:39:14,055 basehttp 39905 6197637120 "GET /static/admin/css/login.css HTTP/1.1" 200 951
-INFO 2025-10-24 11:39:22,456 basehttp 39905 6197637120 "POST /admin/login/?next=/admin/empleados/perfil/6/change/ HTTP/1.1" 200 4038
-INFO 2025-10-24 11:39:30,018 basehttp 39905 6197637120 "POST /admin/login/?next=/admin/empleados/perfil/6/change/ HTTP/1.1" 200 4038
-INFO 2025-10-24 11:39:31,971 basehttp 39905 6197637120 "GET /admin/login/?next=/admin/empleados/perfil/6/change/ HTTP/1.1" 200 3792
-WARNING 2025-10-24 11:39:36,143 log 39905 6197637120 Forbidden (Permission denied): /rh/
-Traceback (most recent call last):
-  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
-    response = get_response(request)
-  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
-    response = wrapped_callback(request, *callback_args, **callback_kwargs)
-  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
-    return view_func(request, *args, **kwargs)
-  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/views.py", line 139, in rh_dashboard
-    raise PermissionDenied
-django.core.exceptions.PermissionDenied
-WARNING 2025-10-24 11:39:36,147 basehttp 39905 6197637120 "GET /rh/ HTTP/1.1" 403 15249
-INFO 2025-10-24 11:39:37,196 basehttp 39905 6197637120 "GET /dashboard/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:39:37,215 basehttp 39905 6197637120 "GET /administrador/ HTTP/1.1" 200 29271
-INFO 2025-10-24 11:39:40,923 basehttp 39905 6197637120 "GET /admin/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:39:40,930 basehttp 39905 6197637120 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 3740
-INFO 2025-10-24 11:39:50,801 basehttp 39905 6197637120 "POST /admin/login/?next=/admin/ HTTP/1.1" 200 3986
-INFO 2025-10-24 11:40:12,513 basehttp 39905 6197637120 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 3740
-INFO 2025-10-24 11:40:18,009 basehttp 39905 6197637120 "GET /usuarios/crear/ HTTP/1.1" 200 30461
-INFO 2025-10-24 11:40:49,978 basehttp 39905 6197637120 "GET /perfil/ HTTP/1.1" 200 24963
-INFO 2025-10-24 11:40:50,798 basehttp 39905 6197637120 "GET /logout/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:40:50,808 basehttp 39905 6197637120 "GET / HTTP/1.1" 200 26355
-INFO 2025-10-24 11:40:59,008 basehttp 39905 6197637120 "POST / HTTP/1.1" 302 0
-INFO 2025-10-24 11:40:59,023 basehttp 39905 6197637120 "GET /empleado/ HTTP/1.1" 200 22469
-INFO 2025-10-24 11:41:13,585 basehttp 39905 6197637120 "GET /perfil/ HTTP/1.1" 200 25239
-WARNING 2025-10-24 11:41:15,817 log 39905 6197637120 Forbidden (Permission denied): /usuarios/
-Traceback (most recent call last):
-  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
-    response = get_response(request)
-  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
-    response = wrapped_callback(request, *callback_args, **callback_kwargs)
-  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
-    return view_func(request, *args, **kwargs)
-  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/views.py", line 256, in gestion_usuarios
-    raise PermissionDenied
-django.core.exceptions.PermissionDenied
-WARNING 2025-10-24 11:41:15,818 basehttp 39905 6197637120 "GET /usuarios/ HTTP/1.1" 403 15249
-INFO 2025-10-24 11:41:20,612 basehttp 39905 6197637120 "GET /vacaciones/solicitar/ HTTP/1.1" 200 26640
-INFO 2025-10-24 11:41:23,484 basehttp 39905 6197637120 "GET /perfil/ HTTP/1.1" 200 25239
-INFO 2025-10-24 11:41:31,190 basehttp 39905 6197637120 "GET /vacaciones/solicitar/ HTTP/1.1" 200 26217
-INFO 2025-10-24 11:41:32,156 basehttp 39905 6197637120 "GET /empleado/ HTTP/1.1" 200 22469
-INFO 2025-10-24 11:41:34,245 basehttp 39905 6197637120 "GET /logout/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:41:34,249 basehttp 39905 6197637120 "GET / HTTP/1.1" 200 26355
-INFO 2025-10-24 11:41:41,635 basehttp 39905 6197637120 "POST / HTTP/1.1" 302 0
-INFO 2025-10-24 11:41:41,650 basehttp 39905 6197637120 "GET /administrador/ HTTP/1.1" 200 29271
-INFO 2025-10-24 11:41:50,978 basehttp 39905 6197637120 "GET /admin/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:41:50,986 basehttp 39905 6197637120 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 3864
-INFO 2025-10-24 11:41:59,357 basehttp 39905 6197637120 "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:41:59,366 basehttp 39905 6197637120 "GET /admin/ HTTP/1.1" 200 15640
-INFO 2025-10-24 11:42:03,242 basehttp 39905 6197637120 "GET /admin/empleados/perfil/ HTTP/1.1" 200 22576
-INFO 2025-10-24 11:42:03,275 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:44:38,361 basehttp 39905 6197637120 "GET /admin/empleados/perfil/6/change/ HTTP/1.1" 200 33740
-INFO 2025-10-24 11:44:38,394 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:45:24,459 basehttp 39905 6197637120 "POST /admin/empleados/perfil/6/change/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:45:24,475 basehttp 39905 6197637120 "GET /admin/empleados/perfil/ HTTP/1.1" 200 22814
-INFO 2025-10-24 11:45:24,502 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:45:29,422 basehttp 39905 6197637120 "GET /admin/empleados/perfil/4/change/ HTTP/1.1" 200 33796
-INFO 2025-10-24 11:45:29,454 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:45:45,977 basehttp 39905 6197637120 "POST /admin/empleados/perfil/4/change/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:45:46,001 basehttp 39905 6197637120 "GET /admin/empleados/perfil/ HTTP/1.1" 200 22809
-INFO 2025-10-24 11:45:46,032 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:45:56,223 basehttp 39905 6197637120 "GET /admin/empleados/perfil/1/change/ HTTP/1.1" 200 33744
-INFO 2025-10-24 11:45:56,255 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:46:11,534 basehttp 39905 6197637120 "GET /admin/auth/user/ HTTP/1.1" 200 18125
-INFO 2025-10-24 11:46:11,567 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:46:14,534 basehttp 39905 6197637120 "GET /admin/auth/user/add/ HTTP/1.1" 200 16557
-INFO 2025-10-24 11:46:14,571 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:46:29,784 basehttp 39905 6197637120 "POST /admin/auth/user/add/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:46:29,801 basehttp 39905 6197637120 "GET /admin/auth/user/7/change/ HTTP/1.1" 200 29158
-INFO 2025-10-24 11:46:29,832 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:48:36,650 basehttp 39905 6197637120 "POST /admin/auth/user/7/change/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:48:36,660 basehttp 39905 6197637120 "GET /admin/auth/user/ HTTP/1.1" 200 18793
-INFO 2025-10-24 11:48:36,687 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:48:38,522 basehttp 39905 6197637120 "GET /admin/empleados/perfil/ HTTP/1.1" 200 23471
-INFO 2025-10-24 11:48:38,556 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:48:40,486 basehttp 39905 6197637120 "GET /admin/empleados/perfil/add/ HTTP/1.1" 200 32351
-INFO 2025-10-24 11:48:40,521 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:49:57,042 basehttp 39905 6197637120 "POST /admin/empleados/perfil/add/ HTTP/1.1" 200 32685
-INFO 2025-10-24 11:49:57,070 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:50:01,169 basehttp 39905 6197637120 "GET /admin/empleados/perfil/ HTTP/1.1" 200 23471
-INFO 2025-10-24 11:50:01,198 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:50:05,651 basehttp 39905 6197637120 "GET /admin/empleados/perfil/7/change/ HTTP/1.1" 200 33861
-INFO 2025-10-24 11:50:05,684 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:50:25,782 basehttp 39905 6197637120 "POST /admin/empleados/perfil/7/change/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:50:25,802 basehttp 39905 6197637120 "GET /admin/empleados/perfil/ HTTP/1.1" 200 23707
-INFO 2025-10-24 11:50:25,834 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:50:42,747 basehttp 39905 6197637120 "GET /admin/empleados/perfil/5/change/ HTTP/1.1" 200 33843
-INFO 2025-10-24 11:50:42,780 basehttp 39905 6197637120 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
-INFO 2025-10-24 11:50:53,680 basehttp 39905 6197637120 "GET / HTTP/1.1" 302 0
-INFO 2025-10-24 11:50:53,686 basehttp 39905 6197637120 "GET /dashboard/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:50:53,692 basehttp 39905 6197637120 "GET /logout/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:50:53,697 basehttp 39905 6197637120 "GET / HTTP/1.1" 200 26742
-INFO 2025-10-24 11:50:53,723 basehttp 39905 6197637120 "GET /static/css/global_styles.css HTTP/1.1" 304 0
-WARNING 2025-10-24 11:50:53,734 log 39905 6197637120 Not Found: /images/dash/fondoAzul.jpg
-WARNING 2025-10-24 11:50:53,735 basehttp 39905 6197637120 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
-INFO 2025-10-24 11:51:04,718 basehttp 39905 6197637120 "POST / HTTP/1.1" 302 0
-INFO 2025-10-24 11:51:04,728 basehttp 39905 6197637120 "GET /sistemas/ HTTP/1.1" 200 20009
-INFO 2025-10-24 11:51:17,093 basehttp 39905 6197637120 "GET /perfil/ HTTP/1.1" 200 24994
-INFO 2025-10-24 11:51:18,208 basehttp 39905 6197637120 "GET /perfil/ HTTP/1.1" 200 24994
-INFO 2025-10-24 11:51:19,242 basehttp 39905 6197637120 "GET /dashboard/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:51:19,256 basehttp 39905 6197637120 "GET /sistemas/ HTTP/1.1" 200 20009
-INFO 2025-10-24 11:51:20,804 basehttp 39905 6197637120 "GET /empleado/ HTTP/1.1" 200 22471
-INFO 2025-10-24 11:55:51,723 basehttp 39905 6197637120 "GET /empleado/ HTTP/1.1" 200 21959
-WARNING 2025-10-24 11:55:51,753 log 39905 6197637120 Not Found: /images/dash/fondoAzul.jpg
-WARNING 2025-10-24 11:55:51,753 basehttp 39905 6197637120 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
-INFO 2025-10-24 11:55:56,163 basehttp 39905 6197637120 "GET /dashboard/ HTTP/1.1" 302 0
-INFO 2025-10-24 11:55:56,177 basehttp 39905 6197637120 "GET /sistemas/ HTTP/1.1" 200 20009
+INFO 2025-10-24 10:41:34,141 autoreload 8985 8413071360 Watching for file changes with StatReloader
+INFO 2025-10-24 10:43:33,120 basehttp 8985 6197981184 "GET / HTTP/1.1" 302 0
+INFO 2025-10-24 10:43:33,126 basehttp 8985 6197981184 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-24 10:43:33,141 basehttp 8985 6197981184 "GET /empleado/ HTTP/1.1" 200 22148
+INFO 2025-10-24 10:43:33,262 basehttp 8985 6197981184 "GET /static/css/global_styles.css HTTP/1.1" 304 0
+WARNING 2025-10-24 10:43:33,293 log 8985 6197981184 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 10:43:33,293 basehttp 8985 6197981184 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 10:43:37,277 basehttp 8985 6197981184 "GET /empleado/ HTTP/1.1" 200 22148
+INFO 2025-10-24 10:43:37,312 basehttp 8985 6197981184 "GET /static/css/global_styles.css HTTP/1.1" 304 0
+WARNING 2025-10-24 10:43:37,335 log 8985 6197981184 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 10:43:37,335 basehttp 8985 6197981184 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 10:45:59,799 autoreload 9242 8413071360 Watching for file changes with StatReloader
+INFO 2025-10-24 10:46:02,739 basehttp 9242 6162624512 "GET /empleado/ HTTP/1.1" 200 22149
+WARNING 2025-10-24 10:46:02,843 log 9242 6162624512 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 10:46:02,843 basehttp 9242 6162624512 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 10:46:53,003 basehttp 9242 6162624512 "GET /empleado/ HTTP/1.1" 200 22178
+WARNING 2025-10-24 10:46:53,044 log 9242 6162624512 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 10:46:53,044 basehttp 9242 6162624512 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 10:48:31,508 basehttp 9242 6162624512 "GET /logout/ HTTP/1.1" 302 0
+INFO 2025-10-24 10:48:31,523 basehttp 9242 6179450880 "GET / HTTP/1.1" 200 26738
+WARNING 2025-10-24 10:48:31,532 log 9242 6162624512 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 10:48:31,532 basehttp 9242 6162624512 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 10:48:31,558 basehttp 9242 6179450880 "GET /static/css/global_styles.css HTTP/1.1" 304 0
+INFO 2025-10-24 10:48:40,531 basehttp 9242 6162624512 "POST / HTTP/1.1" 302 0
+INFO 2025-10-24 10:48:40,551 basehttp 9242 6179450880 "GET /administrador/ HTTP/1.1" 200 29303
+WARNING 2025-10-24 10:48:40,596 log 9242 6162624512 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 10:48:40,596 basehttp 9242 6162624512 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 10:50:46,236 basehttp 9242 6162624512 "GET /administrador/ HTTP/1.1" 200 29303
+WARNING 2025-10-24 10:50:46,279 log 9242 6162624512 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 10:50:46,279 basehttp 9242 6162624512 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 10:52:17,944 autoreload 9519 8413071360 Watching for file changes with StatReloader
+INFO 2025-10-24 10:52:20,812 basehttp 9519 6123466752 "GET /administrador/ HTTP/1.1" 200 28257
+WARNING 2025-10-24 10:52:20,855 log 9519 6123466752 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 10:52:20,855 basehttp 9519 6123466752 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 11:02:22,175 autoreload 9810 8413071360 Watching for file changes with StatReloader
+INFO 2025-10-24 11:02:26,481 basehttp 9810 6161657856 "GET /administrador/ HTTP/1.1" 200 28257
+INFO 2025-10-24 11:02:26,499 basehttp 9810 6161657856 "GET /static/css/global_styles.css HTTP/1.1" 200 3674
+WARNING 2025-10-24 11:02:26,521 log 9810 6161657856 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 11:02:26,521 basehttp 9810 6161657856 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 11:02:33,065 basehttp 9810 6161657856 "GET /perfil/ HTTP/1.1" 200 25322
+WARNING 2025-10-24 11:02:33,131 log 9810 6161657856 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 11:02:33,132 basehttp 9810 6161657856 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 11:08:30,637 basehttp 9810 6161657856 "GET /administrador/ HTTP/1.1" 200 28257
+INFO 2025-10-24 11:08:30,684 basehttp 9810 6161657856 "GET /static/css/global_styles.css HTTP/1.1" 304 0
+WARNING 2025-10-24 11:08:30,709 log 9810 6161657856 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 11:08:30,709 basehttp 9810 6161657856 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 11:12:21,234 basehttp 9810 6161657856 "GET /administrador/ HTTP/1.1" 200 28257
+INFO 2025-10-24 11:12:21,272 basehttp 9810 6161657856 "GET /static/css/global_styles.css HTTP/1.1" 200 2543
+WARNING 2025-10-24 11:12:21,296 log 9810 6161657856 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 11:12:21,297 basehttp 9810 6161657856 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 11:17:54,446 basehttp 9810 6161657856 "GET /administrador/ HTTP/1.1" 200 28257
+INFO 2025-10-24 11:17:54,466 basehttp 9810 6161657856 "GET /static/css/global_styles.css HTTP/1.1" 200 2543
+WARNING 2025-10-24 11:17:54,494 log 9810 6161657856 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 11:17:54,494 basehttp 9810 6161657856 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 11:25:36,396 basehttp 9810 6161657856 "GET /administrador/ HTTP/1.1" 200 28171
+INFO 2025-10-24 11:25:36,431 basehttp 9810 6161657856 "GET /static/css/global_styles.css HTTP/1.1" 304 0
+WARNING 2025-10-24 11:25:36,455 log 9810 6161657856 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 11:25:36,456 basehttp 9810 6161657856 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 11:28:53,579 basehttp 9810 6161657856 "GET /admin/ HTTP/1.1" 200 14389
+INFO 2025-10-24 11:28:53,582 basehttp 9810 6178484224 "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-10-24 11:28:53,583 basehttp 9810 6195310592 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-10-24 11:28:53,584 basehttp 9810 6228963328 "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-10-24 11:28:53,584 basehttp 9810 6212136960 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-10-24 11:28:53,584 basehttp 9810 6245789696 "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+INFO 2025-10-24 11:28:53,588 basehttp 9810 6161657856 "GET /static/admin/img/icon-yes.svg HTTP/1.1" 304 0
+INFO 2025-10-24 11:28:53,589 basehttp 9810 6195310592 "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-10-24 11:28:53,589 basehttp 9810 6212136960 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+INFO 2025-10-24 11:28:53,589 basehttp 9810 6178484224 "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-10-24 11:28:53,590 basehttp 9810 6228963328 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+INFO 2025-10-24 11:28:56,203 basehttp 9810 6161657856 "GET /admin/auth/user/ HTTP/1.1" 200 17221
+INFO 2025-10-24 11:28:56,205 basehttp 9810 6245789696 "GET /static/admin/css/changelists.css HTTP/1.1" 304 0
+INFO 2025-10-24 11:28:56,207 basehttp 9810 6195310592 "GET /static/admin/js/prepopulate.js HTTP/1.1" 304 0
+INFO 2025-10-24 11:28:56,207 basehttp 9810 6212136960 "GET /static/admin/js/filters.js HTTP/1.1" 304 0
+INFO 2025-10-24 11:28:56,208 basehttp 9810 6178484224 "GET /static/admin/img/search.svg HTTP/1.1" 304 0
+INFO 2025-10-24 11:28:56,208 basehttp 9810 6228963328 "GET /static/admin/img/icon-no.svg HTTP/1.1" 304 0
+INFO 2025-10-24 11:28:56,211 basehttp 9810 6161657856 "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 304 0
+INFO 2025-10-24 11:28:56,215 basehttp 9810 6245789696 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 304 0
+INFO 2025-10-24 11:28:56,216 basehttp 9810 6212136960 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+INFO 2025-10-24 11:28:56,217 basehttp 9810 6195310592 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
+INFO 2025-10-24 11:28:56,227 basehttp 9810 6228963328 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-10-24 11:28:56,227 basehttp 9810 6161657856 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-10-24 11:28:56,229 basehttp 9810 6178484224 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-24 11:28:56,230 basehttp 9810 6245789696 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-10-24 11:28:56,231 basehttp 9810 6212136960 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-10-24 11:28:56,232 basehttp 9810 6195310592 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-10-24 11:28:56,271 basehttp 9810 6228963328 "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+INFO 2025-10-24 11:29:00,153 basehttp 9810 6178484224 "GET /admin/auth/user/4/change/ HTTP/1.1" 200 28987
+INFO 2025-10-24 11:29:00,531 basehttp 9810 6245789696 "GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+INFO 2025-10-24 11:29:00,531 basehttp 9810 6212136960 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-24 11:29:00,531 basehttp 9810 6195310592 "GET /static/admin/js/calendar.js HTTP/1.1" 200 9141
+INFO 2025-10-24 11:29:00,532 basehttp 9810 6228963328 "GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 200 19319
+INFO 2025-10-24 11:29:00,533 basehttp 9810 6161657856 "GET /static/admin/js/SelectBox.js HTTP/1.1" 200 4530
+INFO 2025-10-24 11:29:00,533 basehttp 9810 6178484224 "GET /static/admin/js/SelectFilter2.js HTTP/1.1" 200 15845
+INFO 2025-10-24 11:29:00,538 basehttp 9810 6195310592 "GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+INFO 2025-10-24 11:29:00,539 basehttp 9810 6245789696 "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+INFO 2025-10-24 11:29:00,540 basehttp 9810 6212136960 "GET /static/admin/css/widgets.css HTTP/1.1" 200 11973
+INFO 2025-10-24 11:29:00,573 basehttp 9810 6228963328 "GET /static/admin/img/selector-icons.svg HTTP/1.1" 200 3291
+INFO 2025-10-24 11:29:00,576 basehttp 9810 6178484224 "GET /static/admin/img/icon-clock.svg HTTP/1.1" 200 677
+INFO 2025-10-24 11:29:00,576 basehttp 9810 6161657856 "GET /static/admin/img/icon-calendar.svg HTTP/1.1" 200 1086
+INFO 2025-10-24 11:29:04,711 basehttp 9810 6195310592 "POST /admin/logout/ HTTP/1.1" 302 0
+INFO 2025-10-24 11:29:04,717 basehttp 9810 6245789696 "GET / HTTP/1.1" 200 25890
+INFO 2025-10-24 11:29:04,752 basehttp 9810 6212136960 "GET /static/css/global_styles.css HTTP/1.1" 304 0
+WARNING 2025-10-24 11:29:04,778 log 9810 6228963328 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 11:29:04,778 basehttp 9810 6228963328 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 11:29:08,877 basehttp 9810 6178484224 "POST / HTTP/1.1" 302 0
+INFO 2025-10-24 11:29:08,888 basehttp 9810 6161657856 "GET /empleado/ HTTP/1.1" 200 22092
+WARNING 2025-10-24 11:29:08,942 log 9810 6195310592 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 11:29:08,942 basehttp 9810 6195310592 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 12:39:06,427 autoreload 10745 8413071360 Watching for file changes with StatReloader
+INFO 2025-10-24 12:39:19,667 basehttp 10745 6191132672 "GET /empleado/ HTTP/1.1" 302 0
+INFO 2025-10-24 12:39:19,684 basehttp 10745 6191132672 "GET /?next=/empleado/ HTTP/1.1" 200 26289
+INFO 2025-10-24 12:39:20,009 basehttp 10745 6191132672 "GET /static/css/mobile-optimizations.css HTTP/1.1" 304 0
+INFO 2025-10-24 12:39:20,009 basehttp 10745 6224785408 "GET /static/images/logos/logo-keila.png HTTP/1.1" 304 0
+INFO 2025-10-24 12:39:20,013 basehttp 10745 6207959040 "GET /static/css/global_styles.css HTTP/1.1" 200 2545
+INFO 2025-10-24 12:39:20,037 basehttp 10745 6191132672 "GET /static/images/dash/fondoAzul.jpg HTTP/1.1" 200 706557
+INFO 2025-10-24 12:39:20,044 basehttp 10745 6224785408 "GET /static/images/login/login1.jpg HTTP/1.1" 200 4261392
+WARNING 2025-10-24 12:39:20,258 log 10745 6241611776 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-10-24 12:39:20,259 basehttp 10745 6241611776 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 10889
+WARNING 2025-10-24 12:39:20,332 log 10745 6241611776 Not Found: /apple-touch-icon.png
+WARNING 2025-10-24 12:39:20,332 basehttp 10745 6241611776 "GET /apple-touch-icon.png HTTP/1.1" 404 10853
+INFO 2025-10-24 12:39:25,360 basehttp 10745 6207959040 "POST /?next=/empleado/ HTTP/1.1" 302 0
+INFO 2025-10-24 12:39:25,374 basehttp 10745 6191132672 "GET /empleado/ HTTP/1.1" 200 22084
+INFO 2025-10-24 12:39:43,575 basehttp 10745 6207959040 "GET /perfil/ HTTP/1.1" 200 25502
+INFO 2025-10-24 12:39:43,609 basehttp 10745 6191132672 "GET /static/css/global_styles.css HTTP/1.1" 304 0
+INFO 2025-10-24 12:39:51,750 basehttp 10745 6207959040 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-24 12:39:51,770 basehttp 10745 6191132672 "GET /empleado/ HTTP/1.1" 200 22084
+INFO 2025-10-24 12:39:56,370 basehttp 10745 6207959040 "GET /perfil/ HTTP/1.1" 200 25502
+INFO 2025-10-24 12:40:19,876 basehttp 10745 6224785408 "GET /tickets/crear/ HTTP/1.1" 200 20150
+INFO 2025-10-24 12:40:20,209 basehttp 10745 6207959040 "GET /static/css/global_styles.css HTTP/1.1" 304 0
+INFO 2025-10-24 12:40:28,606 basehttp 10745 6224785408 "GET /perfil/ HTTP/1.1" 200 25502
+INFO 2025-10-24 12:40:30,490 basehttp 10745 6191132672 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-24 12:40:30,518 basehttp 10745 6224785408 "GET /empleado/ HTTP/1.1" 200 22084
