@@ -285,3 +285,344 @@ INFO 2025-10-23 13:16:28,270 basehttp 38189 6233944064 "GET /dashboard/ HTTP/1.1
 INFO 2025-10-23 13:16:28,294 basehttp 38189 6250770432 "GET /empleado/ HTTP/1.1" 200 21648
 WARNING 2025-10-23 14:51:43,332 log 38181 6158888960 Forbidden (CSRF token from POST incorrect.): /
 WARNING 2025-10-23 14:51:43,333 basehttp 38181 6158888960 "POST / HTTP/1.1" 403 2514
+WARNING 2025-10-23 14:59:07,241 log 38181 6158888960 Forbidden (CSRF token from POST incorrect.): /
+WARNING 2025-10-23 14:59:07,243 basehttp 38181 6158888960 "POST / HTTP/1.1" 403 2514
+INFO 2025-10-23 15:06:47,854 autoreload 39866 8793786368 Watching for file changes with StatReloader
+INFO 2025-10-23 15:07:03,858 basehttp 38189 6200291328 "GET /admin/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:07:03,867 basehttp 38189 6200291328 "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4227
+INFO 2025-10-23 15:07:03,897 basehttp 38189 6200291328 "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-10-23 15:07:03,901 basehttp 38189 6250770432 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-10-23 15:07:03,902 basehttp 38189 6200291328 "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-10-23 15:07:03,902 basehttp 38189 6284423168 "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-10-23 15:07:03,903 basehttp 38189 6233944064 "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-10-23 15:07:03,904 basehttp 38189 6217117696 "GET /static/admin/css/login.css HTTP/1.1" 200 951
+INFO 2025-10-23 15:07:03,904 basehttp 38189 6267596800 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-10-23 15:07:08,967 basehttp 38189 6250770432 "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:07:08,975 basehttp 38189 6200291328 "GET /admin/ HTTP/1.1" 200 12051
+INFO 2025-10-23 15:07:08,983 basehttp 38189 6233944064 "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+INFO 2025-10-23 15:07:08,992 basehttp 38189 6284423168 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+INFO 2025-10-23 15:07:08,993 basehttp 38189 6217117696 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+INFO 2025-10-23 15:07:11,583 basehttp 38189 6250770432 "GET / HTTP/1.1" 302 0
+INFO 2025-10-23 15:07:11,599 basehttp 38189 6233944064 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:07:11,615 basehttp 38189 6284423168 "GET /empleado/ HTTP/1.1" 200 21648
+INFO 2025-10-23 15:07:11,617 basehttp 38189 6217117696 "GET /static/css/mobile-optimizations.css HTTP/1.1" 304 0
+INFO 2025-10-23 15:07:20,834 basehttp 38189 6200291328 "GET /admin/empleados/perfil/ HTTP/1.1" 200 18474
+INFO 2025-10-23 15:07:20,852 basehttp 38189 6250770432 "GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+INFO 2025-10-23 15:07:20,856 basehttp 38189 6284423168 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-10-23 15:07:20,859 basehttp 38189 6267596800 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-10-23 15:07:20,860 basehttp 38189 6200291328 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-10-23 15:07:20,861 basehttp 38189 6250770432 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-10-23 15:07:20,862 basehttp 38189 6233944064 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:07:20,863 basehttp 38189 6284423168 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-10-23 15:07:20,865 basehttp 38189 6267596800 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-10-23 15:07:20,866 basehttp 38189 6217117696 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-10-23 15:07:20,867 basehttp 38189 6250770432 "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2025-10-23 15:07:20,867 basehttp 38189 6200291328 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-10-23 15:07:20,873 basehttp 38189 6233944064 "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+INFO 2025-10-23 15:07:20,898 basehttp 38189 6284423168 "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+INFO 2025-10-23 15:07:20,973 basehttp 38189 6267596800 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+INFO 2025-10-23 15:07:27,815 basehttp 38189 6250770432 "GET /admin/auth/user/ HTTP/1.1" 200 15872
+INFO 2025-10-23 15:07:27,843 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:07:27,852 basehttp 38189 6233944064 "GET /static/admin/img/icon-yes.svg HTTP/1.1" 304 0
+INFO 2025-10-23 15:07:27,863 basehttp 38189 6284423168 "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+INFO 2025-10-23 15:07:29,675 basehttp 38189 6217117696 "GET /admin/empleados/perfil/ HTTP/1.1" 200 18474
+INFO 2025-10-23 15:07:29,696 basehttp 38189 6250770432 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:07:35,775 basehttp 38189 6233944064 "GET /admin/empleados/perfil/add/ HTTP/1.1" 200 32922
+INFO 2025-10-23 15:07:36,140 basehttp 38189 6284423168 "GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+INFO 2025-10-23 15:07:36,146 basehttp 38189 6217117696 "GET /static/admin/js/calendar.js HTTP/1.1" 200 9141
+INFO 2025-10-23 15:07:36,150 basehttp 38189 6267596800 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:07:36,151 basehttp 38189 6250770432 "GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 200 19319
+INFO 2025-10-23 15:07:36,156 basehttp 38189 6200291328 "GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 200 392
+INFO 2025-10-23 15:07:36,160 basehttp 38189 6233944064 "GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+INFO 2025-10-23 15:07:36,162 basehttp 38189 6217117696 "GET /static/admin/css/widgets.css HTTP/1.1" 200 11973
+INFO 2025-10-23 15:07:36,163 basehttp 38189 6284423168 "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+INFO 2025-10-23 15:07:36,198 basehttp 38189 6267596800 "GET /static/admin/img/icon-calendar.svg HTTP/1.1" 200 1086
+INFO 2025-10-23 15:07:39,936 basehttp 38189 6200291328 "GET /admin/empleados/departamento/add/ HTTP/1.1" 200 15840
+INFO 2025-10-23 15:07:40,284 basehttp 38189 6233944064 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:08:05,183 basehttp 38189 6284423168 - Broken pipe from ('127.0.0.1', 57935)
+INFO 2025-10-23 15:08:05,210 basehttp 38189 6267596800 - Broken pipe from ('127.0.0.1', 57934)
+INFO 2025-10-23 15:09:44,117 basehttp 38189 6200291328 "POST /admin/empleados/departamento/add/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:09:44,131 basehttp 38189 6200291328 "GET /admin/empleados/departamento/ HTTP/1.1" 200 15294
+INFO 2025-10-23 15:09:44,150 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:10:06,584 basehttp 38189 6200291328 "GET /admin/empleados/departamento/add/ HTTP/1.1" 200 15840
+INFO 2025-10-23 15:10:06,606 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:10:20,357 basehttp 38189 6200291328 "POST /admin/empleados/departamento/add/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:10:20,373 basehttp 38189 6200291328 "GET /admin/empleados/departamento/ HTTP/1.1" 200 15758
+INFO 2025-10-23 15:10:20,390 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:10:30,581 basehttp 38189 6200291328 "GET /admin/empleados/departamento/add/ HTTP/1.1" 200 15840
+INFO 2025-10-23 15:10:30,586 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:11:19,167 basehttp 38189 6217117696 "POST /admin/logout/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:11:19,175 basehttp 38189 6217117696 "GET / HTTP/1.1" 200 25658
+INFO 2025-10-23 15:11:19,209 basehttp 38189 6217117696 "GET /static/images/logos/logo-keila.png HTTP/1.1" 200 282180
+INFO 2025-10-23 15:11:19,241 basehttp 38189 6217117696 "GET /static/images/login/login1.jpg HTTP/1.1" 200 4261392
+INFO 2025-10-23 15:11:26,889 basehttp 38189 6217117696 "POST / HTTP/1.1" 302 0
+INFO 2025-10-23 15:11:26,908 basehttp 38189 6217117696 "GET /empleado/ HTTP/1.1" 200 21648
+INFO 2025-10-23 15:15:00,771 basehttp 38189 6217117696 "GET /logout/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:15:00,780 basehttp 38189 6217117696 "GET / HTTP/1.1" 200 26423
+INFO 2025-10-23 15:15:11,564 basehttp 38189 6217117696 "GET /perfil/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:15:11,574 basehttp 38189 6217117696 "GET /?next=/perfil/ HTTP/1.1" 200 25658
+INFO 2025-10-23 15:15:14,521 basehttp 38189 6217117696 "GET /perfil/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:15:14,531 basehttp 38189 6217117696 "GET /?next=/perfil/ HTTP/1.1" 200 25658
+INFO 2025-10-23 15:15:20,334 basehttp 38189 6217117696 "POST /?next=/perfil/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:15:20,350 basehttp 38189 6217117696 "GET /perfil/ HTTP/1.1" 200 25294
+INFO 2025-10-23 15:15:23,142 basehttp 38189 6217117696 "GET /admin/ HTTP/1.1" 200 12945
+INFO 2025-10-23 15:15:28,013 basehttp 38189 6217117696 "GET /admin/empleados/perfil/ HTTP/1.1" 200 18875
+INFO 2025-10-23 15:15:28,036 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:15:33,832 basehttp 38189 6217117696 "GET /admin/empleados/perfil/1/change/ HTTP/1.1" 200 34481
+INFO 2025-10-23 15:15:33,855 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:15:55,597 basehttp 38189 6217117696 "POST /admin/empleados/perfil/1/change/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:15:55,615 basehttp 38189 6217117696 "GET /admin/empleados/perfil/ HTTP/1.1" 200 19098
+INFO 2025-10-23 15:15:55,633 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:16:00,301 basehttp 38189 6217117696 "GET /admin/auth/user/ HTTP/1.1" 200 15872
+INFO 2025-10-23 15:16:00,326 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:16:08,555 basehttp 38189 6217117696 "GET /admin/empleados/departamento/ HTTP/1.1" 200 15538
+INFO 2025-10-23 15:16:08,578 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:16:10,278 basehttp 38189 6217117696 "GET /admin/empleados/perfil/ HTTP/1.1" 200 18888
+INFO 2025-10-23 15:16:10,286 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:16:13,748 basehttp 38189 6200291328 "GET /admin/empleados/perfil/add/ HTTP/1.1" 200 33011
+INFO 2025-10-23 15:16:13,769 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:16:18,241 basehttp 38189 6200291328 "GET /admin/auth/user/add/?_to_field=id&_popup=1 HTTP/1.1" 200 8250
+INFO 2025-10-23 15:16:18,595 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:16:18,598 basehttp 38189 6200291328 "GET /static/admin/css/unusable_password_field.css HTTP/1.1" 200 663
+INFO 2025-10-23 15:16:18,599 basehttp 38189 6217117696 "GET /static/admin/js/unusable_password_field.js HTTP/1.1" 200 1480
+INFO 2025-10-23 15:16:46,925 basehttp 38189 6200291328 "POST /admin/auth/user/add/?_to_field=id&_popup=1 HTTP/1.1" 200 337
+INFO 2025-10-23 15:16:46,930 basehttp 38189 6217117696 "GET /static/admin/js/popup_response.js HTTP/1.1" 200 532
+INFO 2025-10-23 15:17:19,275 basehttp 38189 6217117696 "GET /static/admin/img/calendar-icons.svg HTTP/1.1" 200 2455
+INFO 2025-10-23 15:18:22,578 basehttp 38189 6217117696 "POST /admin/empleados/perfil/add/ HTTP/1.1" 200 33712
+INFO 2025-10-23 15:18:22,599 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:18:29,386 basehttp 38189 6217117696 "POST /admin/empleados/perfil/add/ HTTP/1.1" 200 33712
+INFO 2025-10-23 15:18:29,411 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:18:34,653 basehttp 38189 6217117696 "GET /admin/auth/user/ HTTP/1.1" 200 16318
+INFO 2025-10-23 15:18:34,659 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:18:34,684 basehttp 38189 6217117696 "GET /static/admin/img/icon-no.svg HTTP/1.1" 200 560
+INFO 2025-10-23 15:18:38,127 basehttp 38189 6217117696 "GET /admin/auth/user/2/change/ HTTP/1.1" 200 28921
+INFO 2025-10-23 15:18:38,149 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:18:38,154 basehttp 38189 6217117696 "GET /static/admin/js/SelectBox.js HTTP/1.1" 200 4530
+INFO 2025-10-23 15:18:38,155 basehttp 38189 6200291328 "GET /static/admin/js/SelectFilter2.js HTTP/1.1" 200 15845
+INFO 2025-10-23 15:18:38,189 basehttp 38189 6217117696 "GET /static/admin/img/selector-icons.svg HTTP/1.1" 200 3291
+INFO 2025-10-23 15:18:38,192 basehttp 38189 6200291328 "GET /static/admin/img/icon-clock.svg HTTP/1.1" 200 677
+INFO 2025-10-23 15:18:43,742 basehttp 38189 6217117696 "POST /admin/auth/user/2/change/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:18:43,758 basehttp 38189 6200291328 "GET /admin/auth/user/ HTTP/1.1" 200 16512
+INFO 2025-10-23 15:18:43,774 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:18:54,814 basehttp 38189 6217117696 "GET /admin/empleados/perfil/add/ HTTP/1.1" 200 33088
+INFO 2025-10-23 15:18:54,820 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:18:57,374 basehttp 38189 6217117696 "GET /admin/auth/user/add/?_to_field=id&_popup=1 HTTP/1.1" 200 8250
+INFO 2025-10-23 15:18:57,388 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:19:12,374 basehttp 38189 6217117696 "POST /admin/auth/user/add/?_to_field=id&_popup=1 HTTP/1.1" 200 8552
+INFO 2025-10-23 15:19:12,400 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:20:40,765 autoreload 40163 8793786368 Watching for file changes with StatReloader
+INFO 2025-10-23 15:21:20,275 basehttp 38189 6200291328 "GET /admin/auth/user/ HTTP/1.1" 200 16781
+INFO 2025-10-23 15:21:20,282 basehttp 38189 6233944064 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:21:24,699 basehttp 38189 6233944064 "GET /admin/auth/user/3/change/ HTTP/1.1" 200 28967
+INFO 2025-10-23 15:21:25,051 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:21:33,570 basehttp 38189 6233944064 "POST /admin/auth/user/3/change/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:21:33,586 basehttp 38189 6200291328 "GET /admin/auth/user/ HTTP/1.1" 200 16960
+INFO 2025-10-23 15:21:33,604 basehttp 38189 6233944064 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:21:40,728 basehttp 38189 6233944064 "GET /admin/auth/user/1/change/ HTTP/1.1" 200 29018
+INFO 2025-10-23 15:21:41,068 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:22:46,347 basehttp 38189 6200291328 "POST /admin/auth/user/1/change/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:22:46,359 basehttp 38189 6200291328 "GET /admin/auth/user/ HTTP/1.1" 200 16966
+INFO 2025-10-23 15:22:46,375 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:22:48,911 basehttp 38189 6200291328 "GET /admin/auth/user/2/change/ HTTP/1.1" 200 28921
+INFO 2025-10-23 15:22:48,935 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:23:06,631 basehttp 38189 6200291328 "POST /admin/auth/user/2/change/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:23:06,647 basehttp 38189 6200291328 "GET /admin/auth/user/ HTTP/1.1" 200 16962
+INFO 2025-10-23 15:23:06,663 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:23:13,281 basehttp 38189 6200291328 "GET /admin/auth/user/ HTTP/1.1" 200 16768
+INFO 2025-10-23 15:23:13,286 basehttp 38189 6233944064 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:23:22,672 basehttp 38189 6233944064 "GET /admin/empleados/perfil/add/ HTTP/1.1" 200 33166
+INFO 2025-10-23 15:23:22,678 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:23:25,705 basehttp 38189 6233944064 "GET /admin/auth/user/add/?_to_field=id&_popup=1 HTTP/1.1" 200 8250
+INFO 2025-10-23 15:23:25,710 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:24:05,350 basehttp 38189 6200291328 "POST /admin/auth/user/add/?_to_field=id&_popup=1 HTTP/1.1" 200 338
+INFO 2025-10-23 15:24:59,870 basehttp 38189 6233944064 "POST /admin/empleados/perfil/add/ HTTP/1.1" 200 33847
+INFO 2025-10-23 15:24:59,891 basehttp 38189 6233944064 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:25:05,982 basehttp 38189 6233944064 "GET /admin/empleados/perfil/ HTTP/1.1" 200 21499
+INFO 2025-10-23 15:25:06,004 basehttp 38189 6233944064 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:25:15,113 basehttp 38189 6233944064 "GET /admin/empleados/perfil/4/change/ HTTP/1.1" 200 34717
+INFO 2025-10-23 15:25:15,462 basehttp 38189 6233944064 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:25:33,955 basehttp 38189 6233944064 "GET /admin/empleados/perfil/4/history/ HTTP/1.1" 200 10779
+INFO 2025-10-23 15:25:38,782 basehttp 38189 6233944064 "GET /admin/auth/user/ HTTP/1.1" 200 17215
+INFO 2025-10-23 15:25:38,791 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:25:40,544 basehttp 38189 6200291328 "GET /admin/auth/user/4/change/ HTTP/1.1" 200 28925
+INFO 2025-10-23 15:25:40,888 basehttp 38189 6233944064 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:25:56,816 basehttp 38189 6200291328 "POST /admin/auth/user/4/change/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:25:56,832 basehttp 38189 6233944064 "GET /admin/auth/user/ HTTP/1.1" 200 17419
+INFO 2025-10-23 15:25:56,849 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:26:16,995 basehttp 38189 6200291328 "GET /admin/empleados/configuracionsistema/ HTTP/1.1" 200 12287
+INFO 2025-10-23 15:26:17,320 basehttp 38189 6233944064 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:26:18,963 basehttp 38189 6233944064 "GET /admin/empleados/categoriaequipo/ HTTP/1.1" 200 12931
+INFO 2025-10-23 15:26:19,288 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:26:24,179 basehttp 38189 6200291328 "GET /admin/empleados/asignacionequipo/ HTTP/1.1" 200 14147
+INFO 2025-10-23 15:26:24,499 basehttp 38189 6233944064 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:26:28,044 basehttp 38189 6233944064 "GET /admin/auth/group/ HTTP/1.1" 200 12158
+INFO 2025-10-23 15:26:28,367 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:26:29,385 basehttp 38189 6200291328 "GET /admin/auth/user/ HTTP/1.1" 200 17224
+INFO 2025-10-23 15:26:29,393 basehttp 38189 6233944064 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:26:32,120 basehttp 38189 6233944064 "GET / HTTP/1.1" 302 0
+INFO 2025-10-23 15:26:32,131 basehttp 38189 6200291328 "GET /dashboard/ HTTP/1.1" 302 0
+WARNING 2025-10-23 15:26:32,139 log 38189 6233944064 Forbidden (Permission denied): /empleado/
+Traceback (most recent call last):
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py", line 208, in empleado_dashboard
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+WARNING 2025-10-23 15:26:32,141 basehttp 38189 6233944064 "GET /empleado/ HTTP/1.1" 403 14961
+INFO 2025-10-23 15:26:36,588 basehttp 38189 6233944064 "GET /logout/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:26:36,596 basehttp 38189 6200291328 "GET / HTTP/1.1" 200 26067
+INFO 2025-10-23 15:26:44,180 basehttp 38189 6233944064 "POST / HTTP/1.1" 302 0
+INFO 2025-10-23 15:26:44,196 basehttp 38189 6200291328 "GET /empleado/ HTTP/1.1" 200 21645
+INFO 2025-10-23 15:26:58,182 basehttp 38189 6200291328 "GET /perfil/ HTTP/1.1" 200 25271
+INFO 2025-10-23 15:26:59,700 basehttp 38189 6200291328 "GET /admin/ HTTP/1.1" 200 12174
+INFO 2025-10-23 15:27:03,765 basehttp 38189 6200291328 "GET /admin/auth/user/ HTTP/1.1" 200 17221
+INFO 2025-10-23 15:27:03,772 basehttp 38189 6233944064 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:27:07,495 basehttp 38189 6233944064 "GET /admin/auth/user/3/change/ HTTP/1.1" 200 28974
+INFO 2025-10-23 15:27:07,518 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:28:13,536 basehttp 38189 6200291328 "GET /admin/auth/user/ HTTP/1.1" 200 17221
+INFO 2025-10-23 15:28:13,542 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:28:38,941 basehttp 38189 6217117696 "GET /admin/empleados/perfil/ HTTP/1.1" 200 21515
+INFO 2025-10-23 15:28:38,947 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:28:42,368 basehttp 38189 6200291328 "GET /admin/auth/user/ HTTP/1.1" 200 17221
+INFO 2025-10-23 15:28:42,375 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:29:02,890 basehttp 38189 6217117696 "GET /admin/empleados/perfil/ HTTP/1.1" 200 21515
+INFO 2025-10-23 15:29:02,896 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:29:07,799 basehttp 38189 6200291328 "GET /admin/empleados/perfil/add/ HTTP/1.1" 200 33253
+INFO 2025-10-23 15:29:07,806 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:29:30,092 basehttp 38189 6217117696 "GET /admin/auth/user/ HTTP/1.1" 200 17221
+INFO 2025-10-23 15:29:30,097 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:29:32,430 basehttp 38189 6200291328 "GET /admin/auth/user/add/ HTTP/1.1" 200 16557
+INFO 2025-10-23 15:29:32,456 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:29:38,023 basehttp 38189 6217117696 "GET /admin/empleados/perfil/ HTTP/1.1" 200 21515
+INFO 2025-10-23 15:29:38,030 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:29:40,085 basehttp 38189 6200291328 "GET /admin/empleados/perfil/add/ HTTP/1.1" 200 33253
+INFO 2025-10-23 15:29:40,091 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:30:16,079 basehttp 38189 6200291328 "GET /admin/empleados/perfil/ HTTP/1.1" 200 21515
+INFO 2025-10-23 15:30:16,083 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:30:18,279 basehttp 38189 6217117696 "GET /admin/empleados/perfil/3/change/ HTTP/1.1" 200 34726
+INFO 2025-10-23 15:30:18,633 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:30:27,516 basehttp 38189 6200291328 "GET /admin/empleados/perfil/3/change/ HTTP/1.1" 200 34726
+INFO 2025-10-23 15:30:27,543 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:30:36,523 basehttp 38189 6200291328 "POST /admin/empleados/perfil/3/change/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:30:36,545 basehttp 38189 6217117696 "GET /admin/empleados/perfil/ HTTP/1.1" 200 21737
+INFO 2025-10-23 15:30:36,562 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:30:39,932 basehttp 38189 6200291328 "GET / HTTP/1.1" 302 0
+INFO 2025-10-23 15:30:39,943 basehttp 38189 6217117696 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:30:39,964 basehttp 38189 6200291328 "GET /administrador/ HTTP/1.1" 200 27137
+INFO 2025-10-23 15:30:50,876 basehttp 38189 6200291328 "GET /perfil/ HTTP/1.1" 200 25004
+INFO 2025-10-23 15:30:59,195 basehttp 38189 6200291328 "GET /perfil/ HTTP/1.1" 200 25004
+INFO 2025-10-23 15:31:03,073 basehttp 38189 6217117696 "GET /admin/empleados/perfil/ HTTP/1.1" 200 21525
+INFO 2025-10-23 15:31:05,021 basehttp 38189 6217117696 "GET /admin/empleados/perfil/3/change/ HTTP/1.1" 200 34746
+INFO 2025-10-23 15:31:05,041 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:31:17,335 basehttp 38189 6217117696 "GET /admin/empleados/perfil/3/change/ HTTP/1.1" 200 34746
+INFO 2025-10-23 15:31:18,055 basehttp 38189 6200291328 "GET /admin/empleados/perfil/ HTTP/1.1" 200 21525
+INFO 2025-10-23 15:31:22,928 basehttp 38189 6217117696 "GET /admin/empleados/perfil/ HTTP/1.1" 200 21525
+INFO 2025-10-23 15:31:22,935 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:31:27,738 basehttp 38189 6217117696 "GET / HTTP/1.1" 302 0
+INFO 2025-10-23 15:31:27,752 basehttp 38189 6200291328 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:31:27,770 basehttp 38189 6217117696 "GET /administrador/ HTTP/1.1" 200 27137
+INFO 2025-10-23 15:31:35,098 basehttp 38189 6217117696 "GET /admin/empleados/perfil/3/change/ HTTP/1.1" 200 34746
+INFO 2025-10-23 15:31:35,105 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:31:39,950 basehttp 38189 6217117696 "POST /admin/empleados/perfil/3/change/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:31:39,970 basehttp 38189 6200291328 "GET /admin/empleados/perfil/ HTTP/1.1" 200 21722
+INFO 2025-10-23 15:31:39,988 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:31:44,438 basehttp 38189 6217117696 "GET / HTTP/1.1" 302 0
+INFO 2025-10-23 15:31:44,450 basehttp 38189 6200291328 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:31:44,468 basehttp 38189 6217117696 "GET /empleado/ HTTP/1.1" 200 21645
+INFO 2025-10-23 15:31:49,565 basehttp 38189 6217117696 "GET /admin/empleados/perfil/3/change/ HTTP/1.1" 200 34726
+INFO 2025-10-23 15:31:49,573 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:31:56,939 basehttp 38189 6217117696 "POST /admin/empleados/perfil/3/change/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:31:56,960 basehttp 38189 6200291328 "GET /admin/empleados/perfil/ HTTP/1.1" 200 21731
+INFO 2025-10-23 15:31:56,976 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:31:58,333 basehttp 38189 6217117696 "GET / HTTP/1.1" 302 0
+INFO 2025-10-23 15:31:58,341 basehttp 38189 6200291328 "GET /dashboard/ HTTP/1.1" 302 0
+WARNING 2025-10-23 15:31:58,349 log 38189 6217117696 Forbidden (Permission denied): /empleado/
+Traceback (most recent call last):
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py", line 208, in empleado_dashboard
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+WARNING 2025-10-23 15:31:58,350 basehttp 38189 6217117696 "GET /empleado/ HTTP/1.1" 403 14961
+INFO 2025-10-23 15:32:03,026 basehttp 38189 6217117696 "GET /perfil/ HTTP/1.1" 200 25004
+INFO 2025-10-23 15:32:07,486 basehttp 38189 6217117696 "GET /dashboard/ HTTP/1.1" 302 0
+WARNING 2025-10-23 15:32:07,497 log 38189 6200291328 Forbidden (Permission denied): /empleado/
+Traceback (most recent call last):
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py", line 208, in empleado_dashboard
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+WARNING 2025-10-23 15:32:07,499 basehttp 38189 6200291328 "GET /empleado/ HTTP/1.1" 403 14961
+INFO 2025-10-23 15:32:14,917 basehttp 38189 6200291328 "GET /dashboard/ HTTP/1.1" 302 0
+WARNING 2025-10-23 15:32:14,928 log 38189 6217117696 Forbidden (Permission denied): /empleado/
+Traceback (most recent call last):
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py", line 208, in empleado_dashboard
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+WARNING 2025-10-23 15:32:14,929 basehttp 38189 6217117696 "GET /empleado/ HTTP/1.1" 403 14961
+WARNING 2025-10-23 15:32:18,998 log 38189 6200291328 Forbidden (Permission denied): /empleado/
+Traceback (most recent call last):
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py", line 208, in empleado_dashboard
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+WARNING 2025-10-23 15:32:18,999 basehttp 38189 6200291328 "GET /empleado/ HTTP/1.1" 403 14961
+INFO 2025-10-23 15:32:19,805 basehttp 38189 6217117696 "GET /admin/empleados/perfil/ HTTP/1.1" 200 21521
+INFO 2025-10-23 15:32:21,970 basehttp 38189 6217117696 "GET /admin/empleados/perfil/3/change/ HTTP/1.1" 200 34738
+INFO 2025-10-23 15:32:21,975 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:32:26,599 basehttp 38189 6217117696 "POST /admin/empleados/perfil/3/change/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:32:26,619 basehttp 38189 6200291328 "GET /admin/empleados/perfil/ HTTP/1.1" 200 21746
+INFO 2025-10-23 15:32:26,636 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:32:28,598 basehttp 38189 6217117696 "GET / HTTP/1.1" 302 0
+INFO 2025-10-23 15:32:28,609 basehttp 38189 6200291328 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:32:28,621 basehttp 38189 6217117696 "GET /rh/ HTTP/1.1" 200 16258
+INFO 2025-10-23 15:32:40,664 basehttp 38189 6217117696 "GET /admin/empleados/perfil/3/change/ HTTP/1.1" 200 34758
+INFO 2025-10-23 15:32:40,672 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:32:47,279 basehttp 38189 6217117696 "POST /admin/empleados/perfil/3/change/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:32:47,300 basehttp 38189 6200291328 "GET /admin/empleados/perfil/ HTTP/1.1" 200 21737
+INFO 2025-10-23 15:32:47,316 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:32:49,269 basehttp 38189 6217117696 "GET / HTTP/1.1" 302 0
+INFO 2025-10-23 15:32:49,281 basehttp 38189 6200291328 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:32:49,294 basehttp 38189 6217117696 "GET /jefe/ HTTP/1.1" 200 16272
+INFO 2025-10-23 15:33:09,415 basehttp 38189 6217117696 "GET /admin/empleados/perfil/3/change/ HTTP/1.1" 200 34746
+INFO 2025-10-23 15:33:09,423 basehttp 38189 6200291328 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:33:16,486 basehttp 38189 6217117696 "POST /admin/empleados/perfil/3/change/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:33:16,506 basehttp 38189 6200291328 "GET /admin/empleados/perfil/ HTTP/1.1" 200 21737
+INFO 2025-10-23 15:33:16,524 basehttp 38189 6217117696 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-23 15:33:18,447 basehttp 38189 6217117696 "GET / HTTP/1.1" 302 0
+INFO 2025-10-23 15:33:18,459 basehttp 38189 6200291328 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:33:18,471 basehttp 38189 6217117696 "GET /administrador/ HTTP/1.1" 200 27137
+INFO 2025-10-23 15:43:51,947 basehttp 38189 6200291328 "GET /logout/ HTTP/1.1" 302 0
+INFO 2025-10-23 15:43:51,951 basehttp 38189 6200291328 "GET / HTTP/1.1" 200 26067
+INFO 2025-10-23 15:43:51,981 basehttp 38189 6200291328 "GET /static/css/mobile-optimizations.css HTTP/1.1" 304 0
+INFO 2025-10-23 15:43:51,983 basehttp 38189 6217117696 "GET /static/images/logos/logo-keila.png HTTP/1.1" 304 0
+INFO 2025-10-23 15:43:52,010 basehttp 38189 6200291328 "GET /static/images/login/login1.jpg HTTP/1.1" 304 0
+INFO 2025-10-23 16:26:38,038 basehttp 38189 6200291328 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-23 16:26:38,046 basehttp 38189 6200291328 "GET /?next=/dashboard/ HTTP/1.1" 200 25658
+INFO 2025-10-23 16:26:38,085 basehttp 38189 6200291328 "GET /static/css/mobile-optimizations.css HTTP/1.1" 304 0
+INFO 2025-10-23 16:26:38,089 basehttp 38189 6200291328 "GET /static/images/logos/logo-keila.png HTTP/1.1" 304 0
+INFO 2025-10-23 16:26:38,131 basehttp 38189 6200291328 "GET /static/images/login/login1.jpg HTTP/1.1" 304 0

@@ -7,9 +7,9 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'rh_project.settings')
 django.setup()
 
 User = get_user_model()
-username = 'Sistemas'
-email = 'sistemas@example.com'  # Puedes cambiar esto si es necesario
-password = 'Keila2025'
+username = 'admin'
+email = 'admin@example.com'  # Puedes cambiar esto si es necesario
+password = 'admin123'
 
 if not User.objects.filter(username=username).exists():
     print(f'Creando superusuario {username}...')
