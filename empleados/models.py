@@ -28,6 +28,8 @@ class Perfil(models.Model):
     # Información personal adicional
     telefono = models.CharField(max_length=15, blank=True, verbose_name="Teléfono")
     fecha_nacimiento = models.DateField(null=True, blank=True, verbose_name="Fecha de Nacimiento")
+    salario = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Salario")
+    direccion = models.CharField(max_length=255, blank=True, verbose_name="Dirección")
     
     # Información de vacaciones
     dias_vacaciones_anuales = models.PositiveIntegerField(default=20, verbose_name="Días de Vacaciones Anuales")
