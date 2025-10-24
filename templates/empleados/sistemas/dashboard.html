@@ -102,7 +102,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="fas fa-tools me-2"></i>Tickets en Proceso</h5>
+                    <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Tickets Recientes</h5>
                 </div>
                 <div class="card-body">
                     {% if tickets_recientes %}
@@ -146,9 +146,9 @@
                                         <td>{{ ticket.fecha_creacion|date:"d/m/Y H:i" }}</td>
                                         <td>
                                             {% if ticket.estado == 'PENDIENTE' %}
-                                                <a href="{% url 'empleados:asignar_ticket' ticket.id %}" class="btn btn-sm btn-success">Asignarme</a>
+                                                <button class="btn btn-sm btn-success disabled" disabled>Asignarme</button>
                                             {% elif ticket.estado == 'EN_PROCESO' %}
-                                                <a href="{% url 'empleados:resolver_ticket' ticket.id %}" class="btn btn-sm btn-primary">Resolver</a>
+                                                <button class="btn btn-sm btn-primary disabled" disabled>Resolver</button>
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -157,7 +157,7 @@
                             </table>
                         </div>
                     {% else %}
-                        <p class="text-muted mb-0">No hay tickets en proceso</p>
+                        <p class="text-muted mb-0">No hay tickets pendientes</p>
                     {% endif %}
                 </div>
             </div>
