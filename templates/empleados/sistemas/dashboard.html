@@ -50,10 +50,11 @@
         </div>
     </div>
     
-    <!-- Accesos Rápidos -->
-    <div class="row mb-4">
+    <!-- Contenedor para Accesos Rápidos y Tickets Recientes -->
+    <div class="row mt-4">
+        <!-- Sección de Accesos Rápidos -->
         <div class="col-12">
-            <div class="card">
+            <div class="card mb-4">
                 <div class="card-header bg-dark text-white">
                     <h5 class="mb-0"><i class="fas fa-tasks me-2"></i>Accesos Rápidos</h5>
                 </div>
@@ -85,10 +86,10 @@
         </div>
     </div>
     
-    <!-- Tickets Recientes -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
+    <div class="row mt-4">
+        <!-- Sección de Tickets Recientes -->
+        <div class="col-12 col-sm-6 col-lg-8 mb-4">
+            <div class="card h-100 square-container">
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Tickets Recientes</h5>
                 </div>
@@ -144,8 +145,18 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="mt-3 text-center">
+                            <a href="{% url 'empleados:gestionar_tickets' %}" class="btn btn-sm btn-outline-primary">Ver todos los Tickets</a>
+                        </div>
                     {% else %}
-                        <p class="text-muted mb-0">No hay tickets pendientes</p>
+                        <div class="text-center py-3">
+                            <i class="fas fa-ticket-alt fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No hay tickets recientes</h5>
+                            <p class="text-muted">Crea un nuevo ticket o gestiona los existentes.</p>
+                            <a href="{% url 'empleados:crear_ticket' %}" class="btn btn-sm btn-success">
+                                <i class="fas fa-plus me-1"></i>Crear Ticket
+                            </a>
+                        </div>
                     {% endif %}
                 </div>
             </div>

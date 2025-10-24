@@ -36,33 +36,47 @@
     </div>
     
     <div class="row mt-4">
-        <div class="col-12">
-            <h3>Solicitudes Pendientes de Aprobación</h3>
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Empleado</th>
-                            <th>Fecha Inicio</th>
-                            <th>Fecha Fin</th>
-                            <th>Días</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for solicitud in solicitudes_pendientes %}
-                        <tr>
-                            <td>{{ solicitud.empleado.nombre_completo }}</td>
-                            <td>{{ solicitud.fecha_inicio }}</td>
-                            <td>{{ solicitud.fecha_fin }}</td>
-                            <td>{{ solicitud.dias_solicitados }}</td>
-                            <td>
-                                <a href="{% url 'empleados:aprobar_jefe' solicitud.id %}" class="btn btn-sm btn-primary">Revisar</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+        <div class="col-12 col-sm-6 col-lg-4 mb-4">
+            <div class="card h-100 square-container">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-clipboard-list me-2"></i>Solicitudes Pendientes de Aprobación</h5>
+                </div>
+                <div class="card-body">
+                    {% if solicitudes_pendientes %}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Empleado</th>
+                                    <th>Días</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for solicitud in solicitudes_pendientes %}
+                                <tr>
+                                    <td>
+                                        <i class="fas fa-user me-1"></i>{{ solicitud.empleado.nombre_completo }} <br>
+                                        <small class="text-muted">{{ solicitud.fecha_inicio|date:"d/m/Y" }} - {{ solicitud.fecha_fin|date:"d/m/Y" }}</small>
+                                    </td>
+                                    <td><span class="badge bg-warning">{{ solicitud.dias_solicitados }}</span></td>
+                                    <td>
+                                        <a href="{% url 'empleados:aprobar_jefe' solicitud.id %}" class="btn btn-sm btn-primary">Revisar</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <a href="{% url 'empleados:solicitudes_jefe' %}" class="btn btn-sm btn-outline-primary mt-3">Ver todas las solicitudes</a>
+                    {% else %}
+                        <div class="text-center py-3">
+                            <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                            <h5 class="text-muted">No hay solicitudes de vacaciones pendientes</h5>
+                            <p class="text-muted">Todas las solicitudes han sido revisadas.</p>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>

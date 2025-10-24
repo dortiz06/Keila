@@ -626,3 +626,183 @@ INFO 2025-10-23 16:26:38,046 basehttp 38189 6200291328 "GET /?next=/dashboard/ H
 INFO 2025-10-23 16:26:38,085 basehttp 38189 6200291328 "GET /static/css/mobile-optimizations.css HTTP/1.1" 304 0
 INFO 2025-10-23 16:26:38,089 basehttp 38189 6200291328 "GET /static/images/logos/logo-keila.png HTTP/1.1" 304 0
 INFO 2025-10-23 16:26:38,131 basehttp 38189 6200291328 "GET /static/images/login/login1.jpg HTTP/1.1" 304 0
+INFO 2025-10-24 08:52:07,532 autoreload 5857 8413071360 Watching for file changes with StatReloader
+INFO 2025-10-24 08:52:58,059 autoreload 5925 8413071360 Watching for file changes with StatReloader
+INFO 2025-10-24 08:53:00,705 basehttp 5925 6165245952 "GET / HTTP/1.1" 200 25658
+INFO 2025-10-24 08:53:00,761 basehttp 5925 6165245952 "GET /static/css/mobile-optimizations.css HTTP/1.1" 304 0
+INFO 2025-10-24 08:53:00,762 basehttp 5925 6182072320 "GET /static/images/logos/logo-keila.png HTTP/1.1" 304 0
+INFO 2025-10-24 08:53:00,791 basehttp 5925 6165245952 "GET /static/images/login/login1.jpg HTTP/1.1" 304 0
+WARNING 2025-10-24 08:53:00,818 log 5925 6182072320 Not Found: /favicon.ico
+WARNING 2025-10-24 08:53:00,818 basehttp 5925 6182072320 "GET /favicon.ico HTTP/1.1" 404 10826
+WARNING 2025-10-24 08:53:01,038 log 5925 6198898688 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-10-24 08:53:01,043 log 5925 6215725056 Not Found: /apple-touch-icon.png
+WARNING 2025-10-24 08:53:01,048 log 5925 6232551424 Not Found: /favicon.ico
+WARNING 2025-10-24 08:53:01,048 basehttp 5925 6198898688 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 10889
+WARNING 2025-10-24 08:53:01,048 basehttp 5925 6215725056 "GET /apple-touch-icon.png HTTP/1.1" 404 10853
+WARNING 2025-10-24 08:53:01,048 basehttp 5925 6232551424 "GET /favicon.ico HTTP/1.1" 404 10826
+INFO 2025-10-24 08:53:03,897 basehttp 5925 6165245952 "POST / HTTP/1.1" 302 0
+WARNING 2025-10-24 08:53:03,905 log 5925 6182072320 Forbidden (Permission denied): /empleado/
+Traceback (most recent call last):
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py", line 208, in empleado_dashboard
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+WARNING 2025-10-24 08:53:03,907 basehttp 5925 6182072320 "GET /empleado/ HTTP/1.1" 403 14961
+INFO 2025-10-24 08:53:06,581 basehttp 5925 6182072320 "GET /logout/ HTTP/1.1" 302 0
+INFO 2025-10-24 08:53:06,595 basehttp 5925 6165245952 "GET / HTTP/1.1" 200 26423
+INFO 2025-10-24 08:53:33,781 basehttp 5925 6182072320 "POST / HTTP/1.1" 302 0
+INFO 2025-10-24 08:53:33,801 basehttp 5925 6165245952 "GET /administrador/ HTTP/1.1" 200 27137
+INFO 2025-10-24 08:53:36,520 basehttp 5925 6165245952 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-24 08:53:36,546 basehttp 5925 6182072320 "GET /administrador/ HTTP/1.1" 200 27137
+INFO 2025-10-24 08:53:46,399 basehttp 5925 6182072320 "GET /admin/ HTTP/1.1" 200 14389
+INFO 2025-10-24 08:53:46,775 basehttp 5925 6165245952 "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-10-24 08:53:46,775 basehttp 5925 6182072320 "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-10-24 08:53:46,783 basehttp 5925 6215725056 "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-10-24 08:53:46,783 basehttp 5925 6165245952 "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-10-24 08:53:46,783 basehttp 5925 6198898688 "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-10-24 08:53:46,783 basehttp 5925 6249377792 "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+INFO 2025-10-24 08:53:46,784 basehttp 5925 6232551424 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-10-24 08:53:46,801 basehttp 5925 6182072320 "GET /static/admin/img/icon-yes.svg HTTP/1.1" 304 0
+INFO 2025-10-24 08:53:46,803 basehttp 5925 6215725056 "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+INFO 2025-10-24 08:53:46,805 basehttp 5925 6165245952 "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+INFO 2025-10-24 08:53:49,025 basehttp 5925 6249377792 "GET /admin/auth/user/ HTTP/1.1" 200 17221
+INFO 2025-10-24 08:53:49,382 basehttp 5925 6165245952 "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-10-24 08:53:49,382 basehttp 5925 6232551424 "GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+INFO 2025-10-24 08:53:49,382 basehttp 5925 6198898688 "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-10-24 08:53:49,384 basehttp 5925 6182072320 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-10-24 08:53:49,385 basehttp 5925 6249377792 "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-10-24 08:53:49,386 basehttp 5925 6165245952 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-10-24 08:53:49,386 basehttp 5925 6198898688 "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-10-24 08:53:49,386 basehttp 5925 6249377792 "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2025-10-24 08:53:49,386 basehttp 5925 6232551424 "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-10-24 08:53:49,388 basehttp 5925 6215725056 "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-10-24 08:53:49,388 basehttp 5925 6182072320 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-10-24 08:53:49,389 basehttp 5925 6165245952 "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+INFO 2025-10-24 08:53:49,390 basehttp 5925 6198898688 "GET /static/admin/img/icon-no.svg HTTP/1.1" 200 560
+INFO 2025-10-24 08:53:49,419 basehttp 5925 6232551424 "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+INFO 2025-10-24 08:53:49,420 basehttp 5925 6249377792 "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+INFO 2025-10-24 08:53:49,421 basehttp 5925 6215725056 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+INFO 2025-10-24 08:53:54,715 basehttp 5925 6182072320 "POST /admin/logout/ HTTP/1.1" 302 0
+INFO 2025-10-24 08:53:54,722 basehttp 5925 6165245952 "GET / HTTP/1.1" 200 25658
+INFO 2025-10-24 08:54:37,624 basehttp 5925 6165245952 "POST / HTTP/1.1" 302 0
+INFO 2025-10-24 08:54:37,636 basehttp 5925 6165245952 "GET /empleado/ HTTP/1.1" 200 21647
+INFO 2025-10-24 09:14:36,062 autoreload 6312 8413071360 Watching for file changes with StatReloader
+INFO 2025-10-24 09:14:37,739 basehttp 6312 6196916224 "GET / HTTP/1.1" 302 0
+INFO 2025-10-24 09:14:37,744 basehttp 6312 6196916224 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-24 09:14:37,762 basehttp 6312 6196916224 "GET /empleado/ HTTP/1.1" 200 21653
+INFO 2025-10-24 09:14:43,697 basehttp 6312 6196916224 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-24 09:14:43,719 basehttp 6312 6196916224 "GET /empleado/ HTTP/1.1" 200 21653
+INFO 2025-10-24 09:14:45,425 basehttp 6312 6196916224 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-24 09:14:45,444 basehttp 6312 6196916224 "GET /empleado/ HTTP/1.1" 200 21653
+INFO 2025-10-24 09:14:47,165 basehttp 6312 6196916224 "GET /logout/ HTTP/1.1" 302 0
+INFO 2025-10-24 09:14:47,178 basehttp 6312 6196916224 "GET / HTTP/1.1" 200 26425
+INFO 2025-10-24 09:14:56,813 basehttp 6312 6196916224 "POST / HTTP/1.1" 302 0
+INFO 2025-10-24 09:14:56,832 basehttp 6312 6196916224 "GET /administrador/ HTTP/1.1" 200 27143
+INFO 2025-10-24 09:36:31,477 autoreload 6818 8413071360 Watching for file changes with StatReloader
+INFO 2025-10-24 09:36:33,512 basehttp 6818 6131134464 "GET / HTTP/1.1" 302 0
+INFO 2025-10-24 09:36:33,518 basehttp 6818 6131134464 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-24 09:36:33,535 basehttp 6818 6131134464 "GET /administrador/ HTTP/1.1" 200 27221
+INFO 2025-10-24 09:36:33,560 basehttp 6818 6131134464 "GET /static/css/global_styles.css HTTP/1.1" 200 1637
+WARNING 2025-10-24 09:36:33,586 log 6818 6131134464 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 09:36:33,586 basehttp 6818 6131134464 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 09:36:44,195 basehttp 6818 6131134464 "GET /logout/ HTTP/1.1" 302 0
+INFO 2025-10-24 09:36:44,209 basehttp 6818 6131134464 "GET / HTTP/1.1" 200 26504
+WARNING 2025-10-24 09:36:44,265 log 6818 6131134464 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 09:36:44,266 basehttp 6818 6131134464 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 09:36:49,747 basehttp 6818 6131134464 "POST / HTTP/1.1" 302 0
+INFO 2025-10-24 09:36:49,758 basehttp 6818 6131134464 "GET /empleado/ HTTP/1.1" 200 21731
+WARNING 2025-10-24 09:36:49,798 log 6818 6131134464 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 09:36:49,798 basehttp 6818 6131134464 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 09:45:23,905 autoreload 7136 8413071360 Watching for file changes with StatReloader
+INFO 2025-10-24 09:45:26,062 basehttp 7136 6202175488 "GET / HTTP/1.1" 302 0
+INFO 2025-10-24 09:45:26,069 basehttp 7136 6202175488 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-24 09:45:26,086 basehttp 7136 6202175488 "GET /empleado/ HTTP/1.1" 200 21935
+INFO 2025-10-24 09:45:26,114 basehttp 7136 6202175488 "GET /static/css/global_styles.css HTTP/1.1" 200 1571
+WARNING 2025-10-24 09:45:26,143 log 7136 6202175488 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 09:45:26,143 basehttp 7136 6202175488 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 09:45:31,653 basehttp 7136 6202175488 "GET / HTTP/1.1" 302 0
+INFO 2025-10-24 09:45:31,660 basehttp 7136 6202175488 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-24 09:45:31,670 basehttp 7136 6202175488 "GET /empleado/ HTTP/1.1" 200 21935
+WARNING 2025-10-24 09:45:31,761 log 7136 6202175488 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 09:45:31,761 basehttp 7136 6202175488 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 09:45:35,918 basehttp 7136 6202175488 "GET / HTTP/1.1" 302 0
+INFO 2025-10-24 09:45:35,924 basehttp 7136 6202175488 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-24 09:45:35,934 basehttp 7136 6202175488 "GET /empleado/ HTTP/1.1" 200 21935
+WARNING 2025-10-24 09:45:36,013 log 7136 6202175488 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 09:45:36,014 basehttp 7136 6202175488 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 09:45:41,138 basehttp 7136 6202175488 "GET /empleado/ HTTP/1.1" 200 21935
+INFO 2025-10-24 09:45:41,169 basehttp 7136 6202175488 "GET /static/css/global_styles.css HTTP/1.1" 200 1571
+WARNING 2025-10-24 09:45:41,193 log 7136 6202175488 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 09:45:41,193 basehttp 7136 6202175488 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 09:48:55,914 autoreload 7367 8413071360 Watching for file changes with StatReloader
+INFO 2025-10-24 09:48:58,490 basehttp 7367 6132969472 "GET / HTTP/1.1" 302 0
+INFO 2025-10-24 09:48:58,498 basehttp 7367 6132969472 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-24 09:48:58,555 basehttp 7367 6132969472 "GET /empleado/ HTTP/1.1" 200 21935
+INFO 2025-10-24 09:48:58,574 basehttp 7367 6132969472 "GET /static/css/global_styles.css HTTP/1.1" 200 1914
+WARNING 2025-10-24 09:48:58,604 log 7367 6132969472 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 09:48:58,604 basehttp 7367 6132969472 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 09:49:00,624 basehttp 7367 6132969472 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-24 09:49:00,648 basehttp 7367 6132969472 "GET /empleado/ HTTP/1.1" 200 21935
+INFO 2025-10-24 09:49:00,680 basehttp 7367 6132969472 "GET /static/css/global_styles.css HTTP/1.1" 304 0
+WARNING 2025-10-24 09:49:00,701 log 7367 6132969472 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 09:49:00,701 basehttp 7367 6132969472 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 09:49:07,187 basehttp 7367 6132969472 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-24 09:49:07,205 basehttp 7367 6132969472 "GET /empleado/ HTTP/1.1" 200 21935
+INFO 2025-10-24 09:49:07,243 basehttp 7367 6132969472 "GET /static/css/global_styles.css HTTP/1.1" 304 0
+WARNING 2025-10-24 09:49:07,267 log 7367 6132969472 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 09:49:07,268 basehttp 7367 6132969472 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 09:49:09,723 basehttp 7367 6132969472 "GET /perfil/ HTTP/1.1" 200 25558
+INFO 2025-10-24 09:49:10,075 basehttp 7367 6132969472 "GET /static/css/global_styles.css HTTP/1.1" 304 0
+WARNING 2025-10-24 09:49:10,103 log 7367 6132969472 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 09:49:10,103 basehttp 7367 6132969472 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 09:49:13,734 basehttp 7367 6132969472 "GET /logout/ HTTP/1.1" 302 0
+INFO 2025-10-24 09:49:13,743 basehttp 7367 6132969472 "GET / HTTP/1.1" 200 26707
+INFO 2025-10-24 09:49:13,778 basehttp 7367 6132969472 "GET /static/css/global_styles.css HTTP/1.1" 304 0
+WARNING 2025-10-24 09:49:13,806 log 7367 6132969472 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 09:49:13,806 basehttp 7367 6132969472 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 09:50:33,906 autoreload 7588 8413071360 Watching for file changes with StatReloader
+INFO 2025-10-24 09:50:35,378 basehttp 7588 6202290176 "GET / HTTP/1.1" 200 25946
+INFO 2025-10-24 09:50:35,456 basehttp 7588 6219116544 "GET /static/css/global_styles.css HTTP/1.1" 200 2203
+INFO 2025-10-24 09:50:35,457 basehttp 7588 6202290176 "GET /static/css/mobile-optimizations.css HTTP/1.1" 200 6183
+INFO 2025-10-24 09:50:35,461 basehttp 7588 6219116544 "GET /static/images/logos/logo-keila.png HTTP/1.1" 200 282180
+WARNING 2025-10-24 09:50:36,212 log 7588 6202290176 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 09:50:36,212 basehttp 7588 6202290176 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 09:50:36,221 basehttp 7588 6219116544 "GET /static/images/login/login1.jpg HTTP/1.1" 200 4261392
+INFO 2025-10-24 09:53:59,433 basehttp 7588 6202290176 "POST / HTTP/1.1" 302 0
+INFO 2025-10-24 09:53:59,459 basehttp 7588 6202290176 "GET /administrador/ HTTP/1.1" 200 27425
+INFO 2025-10-24 09:53:59,475 basehttp 7588 6202290176 "GET /static/css/global_styles.css HTTP/1.1" 304 0
+WARNING 2025-10-24 09:53:59,501 log 7588 6202290176 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 09:53:59,501 basehttp 7588 6202290176 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 10:13:57,004 autoreload 8060 8413071360 Watching for file changes with StatReloader
+INFO 2025-10-24 10:14:01,381 basehttp 8060 6170816512 "GET /administrador/ HTTP/1.1" 200 29643
+INFO 2025-10-24 10:14:01,421 basehttp 8060 6170816512 "GET /static/css/global_styles.css HTTP/1.1" 200 2543
+WARNING 2025-10-24 10:14:01,445 log 8060 6170816512 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 10:14:01,445 basehttp 8060 6170816512 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 10:17:05,273 autoreload 8303 8413071360 Watching for file changes with StatReloader
+INFO 2025-10-24 10:17:08,719 basehttp 8303 6162411520 "GET /administrador/ HTTP/1.1" 200 29273
+INFO 2025-10-24 10:17:08,755 basehttp 8303 6162411520 "GET /static/css/global_styles.css HTTP/1.1" 304 0
+WARNING 2025-10-24 10:17:08,778 log 8303 6162411520 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 10:17:08,778 basehttp 8303 6162411520 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 10:35:07,734 basehttp 8303 6162411520 "GET /perfil/ HTTP/1.1" 200 25292
+INFO 2025-10-24 10:35:07,760 basehttp 8303 6162411520 "GET /static/css/global_styles.css HTTP/1.1" 304 0
+WARNING 2025-10-24 10:35:07,790 log 8303 6162411520 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 10:35:07,791 basehttp 8303 6162411520 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+INFO 2025-10-24 10:35:27,129 basehttp 8303 6162411520 "GET /logout/ HTTP/1.1" 302 0
+INFO 2025-10-24 10:35:27,140 basehttp 8303 6162411520 "GET / HTTP/1.1" 200 26708
+WARNING 2025-10-24 10:35:27,196 log 8303 6162411520 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 10:35:27,196 basehttp 8303 6162411520 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868
+WARNING 2025-10-24 10:35:27,516 log 8303 6179237888 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-10-24 10:35:27,519 log 8303 6196064256 Not Found: /apple-touch-icon.png
+WARNING 2025-10-24 10:35:27,522 log 8303 6212890624 Not Found: /favicon.ico
+WARNING 2025-10-24 10:35:27,522 basehttp 8303 6179237888 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 10889
+WARNING 2025-10-24 10:35:27,522 basehttp 8303 6196064256 "GET /apple-touch-icon.png HTTP/1.1" 404 10853
+WARNING 2025-10-24 10:35:27,522 basehttp 8303 6212890624 "GET /favicon.ico HTTP/1.1" 404 10826
+INFO 2025-10-24 10:35:35,086 basehttp 8303 6162411520 "POST / HTTP/1.1" 302 0
+INFO 2025-10-24 10:35:35,097 basehttp 8303 6162411520 "GET /empleado/ HTTP/1.1" 200 22148
+WARNING 2025-10-24 10:35:35,135 log 8303 6162411520 Not Found: /images/dash/fondoAzul.jpg
+WARNING 2025-10-24 10:35:35,136 basehttp 8303 6162411520 "GET /images/dash/fondoAzul.jpg HTTP/1.1" 404 10868

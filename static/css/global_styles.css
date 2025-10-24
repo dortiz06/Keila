@@ -1,0 +1,94 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    background-color: transparent; /* Asegura que el html y body sean transparentes */
+}
+
+body {
+    background-image: url('../../images/dash/fondoAzul.jpg');
+    background-size: cover;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex-grow: 1; /* Permite que el contenido principal ocupe el espacio disponible */
+    background-color: transparent; /* Asegura que el main sea transparente y permita ver el fondo */
+}
+
+/* Asegurar que el footer sea transparente o se adapte */
+.footer {
+    background: transparent !important;
+    color: var(--dark-text); /* Ajusta el color del texto si es necesario */
+    padding: 2rem 0;
+    margin-top: auto; /* Empuja el footer hacia abajo */
+}
+
+@media (max-width: 768px) {
+    body {
+        background-size: cover;
+        background-position: bottom center;
+    }
+}
+
+/* Estilos para el efecto Glassmorphism */
+.alert {
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
+    display: flex;
+    flex-direction: column;
+}
+
+.card-body {
+    flex-grow: 1;
+    overflow: auto; /* Permite desplazamiento si el contenido excede el tamaño */
+}
+
+.square-container {
+    aspect-ratio: 1 / 1; /* Hace que el contenedor sea cuadrado */
+    max-height: 400px; /* Limita la altura máxima para que no se estire demasiado */
+}
+
+.card-header {
+    background: rgba(0, 56, 168, 0.7) !important; /* Usar el azul rey de la empresa con transparencia */
+}
+
+.table-responsive {
+    backdrop-filter: blur(8px);
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.table thead th {
+    background: rgba(30, 58, 138, 0.7) !important; /* Indigo profundo con transparencia */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.table tbody tr {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.3) !important;
+}
