@@ -5,7 +5,7 @@ html, body {
 }
 
 body {
-    background-image: url('../../images/dash/fondoAzul.jpg');
+    background-image: url('/static/images/dash/fondoAzul.jpg');
     background-size: cover;
     background-position: bottom center;
     background-repeat: no-repeat;

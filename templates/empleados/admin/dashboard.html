@@ -100,96 +100,92 @@
     
     <div class="row mt-4">
         <!-- MÓDULO 2: ESTADÍSTICAS DE VACACIONES -->
-        <div class="col-12 col-sm-6 col-lg-4 mb-4">
-            <div class="card h-100 square-container">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Módulo de Vacaciones</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12 col-md-6 mb-3">
-                            <div class="card text-center h-100">
-                                <div class="card-body">
-                                    <i class="fas fa-clock fa-2x text-warning mb-2"></i>
-                                    <h3 class="text-warning">{{ stats.solicitudes_pendientes_jefe }}</h3>
-                                    <p class="mb-0 text-muted">Pendientes Jefe</p>
-                                </div>
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5><i class="fas fa-calendar-alt me-2"></i>Módulo de Vacaciones</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+                                <h3 class="text-warning">{{ stats.solicitudes_pendientes_jefe }}</h3>
+                                <p class="mb-0 text-muted">Pendientes Jefe</p>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6 mb-3">
-                            <div class="card text-center h-100">
-                                <div class="card-body">
-                                    <i class="fas fa-hourglass-half fa-2x text-info mb-2"></i>
-                                    <h3 class="text-info">{{ stats.solicitudes_pendientes_rh }}</h3>
-                                    <p class="mb-0 text-muted">Pendientes RH</p>
-                                </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-hourglass-half fa-2x text-info mb-2"></i>
+                                <h3 class="text-info">{{ stats.solicitudes_pendientes_rh }}</h3>
+                                <p class="mb-0 text-muted">Pendientes RH</p>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6 mb-3">
-                            <div class="card text-center h-100">
-                                <div class="card-body">
-                                    <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
-                                    <h3 class="text-success">{{ stats.solicitudes_aprobadas_mes }}</h3>
-                                    <p class="mb-0 text-muted">Aprobadas Este Mes</p>
-                                </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                                <h3 class="text-success">{{ stats.solicitudes_aprobadas_mes }}</h3>
+                                <p class="mb-0 text-muted">Aprobadas Este Mes</p>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6 mb-3">
-                            <div class="card text-center h-100">
-                                <div class="card-body">
-                                    <i class="fas fa-times-circle fa-2x text-danger mb-2"></i>
-                                    <h3 class="text-danger">{{ stats.solicitudes_rechazadas_mes }}</h3>
-                                    <p class="mb-0 text-muted">Rechazadas Este Mes</p>
-                                </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-times-circle fa-2x text-danger mb-2"></i>
+                                <h3 class="text-danger">{{ stats.solicitudes_rechazadas_mes }}</h3>
+                                <p class="mb-0 text-muted">Rechazadas Este Mes</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
+    
         <!-- MÓDULO 3: ESTADÍSTICAS DE TICKETS IT -->
-        <div class="col-12 col-sm-6 col-lg-4 mb-4">
-            <div class="card h-100 square-container">
-                <div class="card-header bg-warning text-dark">
-                    <h5 class="mb-0"><i class="fas fa-ticket-alt me-2"></i>Módulo de Tickets IT</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12 col-md-6 mb-3">
-                            <div class="card text-center h-100">
-                                <div class="card-body">
-                                    <i class="fas fa-exclamation-triangle fa-2x text-warning mb-2"></i>
-                                    <h3 class="text-warning">{{ stats.tickets_pendientes }}</h3>
-                                    <p class="mb-0 text-muted">Tickets Pendientes</p>
-                                </div>
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5><i class="fas fa-ticket-alt me-2"></i>Módulo de Tickets IT</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-exclamation-triangle fa-2x text-warning mb-2"></i>
+                                <h3 class="text-warning">{{ stats.tickets_pendientes }}</h3>
+                                <p class="mb-0 text-muted">Tickets Pendientes</p>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6 mb-3">
-                            <div class="card text-center h-100">
-                                <div class="card-body">
-                                    <i class="fas fa-sync-alt fa-2x text-info mb-2"></i>
-                                    <h3 class="text-info">{{ stats.tickets_en_proceso }}</h3>
-                                    <p class="mb-0 text-muted">En Proceso</p>
-                                </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-sync-alt fa-2x text-info mb-2"></i>
+                                <h3 class="text-info">{{ stats.tickets_en_proceso }}</h3>
+                                <p class="mb-0 text-muted">En Proceso</p>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6 mb-3">
-                            <div class="card text-center h-100">
-                                <div class="card-body">
-                                    <i class="fas fa-check-double fa-2x text-success mb-2"></i>
-                                    <h3 class="text-success">{{ stats.tickets_resueltos_hoy }}</h3>
-                                    <p class="mb-0 text-muted">Resueltos Hoy</p>
-                                </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-check-double fa-2x text-success mb-2"></i>
+                                <h3 class="text-success">{{ stats.tickets_resueltos_hoy }}</h3>
+                                <p class="mb-0 text-muted">Resueltos Hoy</p>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6 mb-3">
-                            <div class="card text-center h-100">
-                                <div class="card-body">
-                                    <i class="fas fa-archive fa-2x text-danger mb-2"></i>
-                                    <h3 class="text-danger">{{ stats.tickets_cancelados_hoy }}</h3>
-                                    <p class="mb-0 text-muted">Cancelados Hoy</p>
-                                </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-archive fa-2x text-danger mb-2"></i>
+                                <h3 class="text-danger">{{ stats.tickets_cancelados_hoy }}</h3>
+                                <p class="mb-0 text-muted">Cancelados Hoy</p>
                             </div>
                         </div>
                     </div>
@@ -198,47 +194,45 @@
         </div>
         
         <!-- MÓDULO 4: ESTADÍSTICAS DE EQUIPOS -->
-        <div class="col-12 col-sm-6 col-lg-4 mb-4">
-            <div class="card h-100 square-container">
-                <div class="card-header bg-info text-white">
-                    <h5 class="mb-0"><i class="fas fa-laptop me-2"></i>Módulo de Equipos e Inventario</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12 col-md-6 mb-3">
-                            <div class="card text-center h-100">
-                                <div class="card-body">
-                                    <i class="fas fa-warehouse fa-2x mb-2 text-info"></i>
-                                    <h3 class="text-info">{{ stats.total_equipos }}</h3>
-                                    <p class="mb-0 text-muted">Total Equipos</p>
-                                </div>
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5><i class="fas fa-laptop me-2"></i>Módulo de Equipos e Inventario</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-warehouse fa-2x mb-2 text-info"></i>
+                                <h3 class="text-info">{{ stats.total_equipos }}</h3>
+                                <p class="mb-0 text-muted">Total Equipos</p>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6 mb-3">
-                            <div class="card text-center h-100">
-                                <div class="card-body">
-                                    <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
-                                    <h3 class="text-success">{{ stats.equipos_disponibles }}</h3>
-                                    <p class="mb-0 text-muted">Disponibles</p>
-                                </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                                <h3 class="text-success">{{ stats.equipos_disponibles }}</h3>
+                                <p class="mb-0 text-muted">Disponibles</p>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6 mb-3">
-                            <div class="card text-center h-100">
-                                <div class="card-body">
-                                    <i class="fas fa-user-check fa-2x text-primary mb-2"></i>
-                                    <h3 class="text-primary">{{ stats.equipos_asignados }}</h3>
-                                    <p class="mb-0 text-muted">Asignados</p>
-                                </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-user-check fa-2x text-primary mb-2"></i>
+                                <h3 class="text-primary">{{ stats.equipos_asignados }}</h3>
+                                <p class="mb-0 text-muted">Asignados</p>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6 mb-3">
-                            <div class="card text-center h-100">
-                                <div class="card-body">
-                                    <i class="fas fa-wrench fa-2x text-warning mb-2"></i>
-                                    <h3 class="text-warning">{{ stats.equipos_en_reparacion }}</h3>
-                                    <p class="mb-0 text-muted">En Reparación</p>
-                                </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-wrench fa-2x text-warning mb-2"></i>
+                                <h3 class="text-warning">{{ stats.equipos_en_reparacion }}</h3>
+                                <p class="mb-0 text-muted">En Reparación</p>
                             </div>
                         </div>
                     </div>

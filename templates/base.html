@@ -26,7 +26,6 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* background-color: var(--light-bg); */
             color: var(--dark-text);
             padding-top: 70px; /* Ajusta este valor según la altura real de tu navbar */
         }
@@ -35,7 +34,7 @@
             background: rgba(0, 56, 168, 0.9);
             backdrop-filter: saturate(140%) blur(8px);
             -webkit-backdrop-filter: saturate(140%) blur(8px);
-            box-shadow: 0 6px 20px rgba(2, 6, 23, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada */
             position: fixed;
             top: 0;
             width: 100%;
@@ -52,7 +51,6 @@
             border-radius: 18px;
             box-shadow: 0 10px 30px rgba(2, 6, 23, 0.06);
             transition: transform 0.25s ease, box-shadow 0.25s ease;
-            background: #ffffff;
         }
 
         .card:hover {
@@ -485,7 +483,7 @@
         <div class="container">
             <a class="navbar-brand" href="{% url 'empleados:dashboard' %}">
                 <i class="fas fa-users me-2"></i>
-                GK System
+                Sistema GK
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
