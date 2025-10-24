@@ -568,7 +568,7 @@ def detalle_ticket(request, ticket_id):
         return render(request, 'empleados/tickets/detalle_ticket.html', context)
     else:
         messages.error(request, 'No tienes permiso para ver este ticket.')
-        return redirect('empleado_dashboard')
+        return redirect('empleados:empleado_dashboard')
 
 
 @login_required
@@ -603,7 +603,7 @@ def dashboard_sistemas(request):
     # Verificar permisos
     if not (perfil.es_sistemas() or perfil.es_admin()):
         messages.error(request, 'No tienes permiso para acceder a esta sección.')
-        return redirect('empleado_dashboard')
+        return redirect('empleados:empleado_dashboard')
     
     # Estadísticas de tickets
     tickets_pendientes = Ticket.objects.filter(estado='PENDIENTE').count()
@@ -643,7 +643,7 @@ def gestionar_tickets(request):
     # Verificar permisos
     if not (perfil.es_sistemas() or perfil.es_admin()):
         messages.error(request, 'No tienes permiso para acceder a esta sección.')
-        return redirect('empleado_dashboard')
+        return redirect('empleados:empleado_dashboard')
     
     # Filtros
     estado_filtro = request.GET.get('estado', 'TODOS')
@@ -668,7 +668,7 @@ def asignar_ticket(request, ticket_id):
     # Verificar permisos
     if not (perfil.es_sistemas() or perfil.es_admin()):
         messages.error(request, 'No tienes permiso para realizar esta acción.')
-        return redirect('empleado_dashboard')
+        return redirect('empleados:empleado_dashboard')
     
     ticket = get_object_or_404(Ticket, id=ticket_id)
     ticket.asignado_a = perfil
@@ -689,7 +689,7 @@ def resolver_ticket(request, ticket_id):
     # Verificar permisos
     if not (perfil.es_sistemas() or perfil.es_admin()):
         messages.error(request, 'No tienes permiso para realizar esta acción.')
-        return redirect('empleado_dashboard')
+        return redirect('empleados:empleado_dashboard')
     
     ticket = get_object_or_404(Ticket, id=ticket_id)
     
@@ -722,7 +722,7 @@ def inventario_equipos(request):
     # Verificar permisos
     if not (perfil.es_sistemas() or perfil.es_admin() or perfil.es_rh()):
         messages.error(request, 'No tienes permiso para acceder a esta sección.')
-        return redirect('empleado_dashboard')
+        return redirect('empleados:empleado_dashboard')
     
     equipos = Equipo.objects.all().select_related('categoria').order_by('-fecha_adquisicion')
     
@@ -748,7 +748,7 @@ def agregar_equipo(request):
     # Verificar permisos
     if not (perfil.es_sistemas() or perfil.es_admin()):
         messages.error(request, 'No tienes permiso para realizar esta acción.')
-        return redirect('empleado_dashboard')
+        return redirect('empleados:empleado_dashboard')
     
     if request.method == 'POST':
         form = EquipoForm(request.POST)
@@ -775,7 +775,7 @@ def asignar_equipo(request):
     # Verificar permisos
     if not (perfil.es_sistemas() or perfil.es_admin() or perfil.es_rh()):
         messages.error(request, 'No tienes permiso para realizar esta acción.')
-        return redirect('empleado_dashboard')
+        return redirect('empleados:empleado_dashboard')
     
     if request.method == 'POST':
         form = AsignacionEquipoForm(request.POST)
@@ -811,7 +811,7 @@ def devolver_equipo(request, asignacion_id):
     # Verificar permisos
     if not (perfil.es_sistemas() or perfil.es_admin() or perfil.es_rh()):
         messages.error(request, 'No tienes permiso para realizar esta acción.')
-        return redirect('empleado_dashboard')
+        return redirect('empleados:empleado_dashboard')
     
     asignacion = get_object_or_404(AsignacionEquipo, id=asignacion_id)
     
