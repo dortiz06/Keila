@@ -364,10 +364,18 @@ def solicitar_vacaciones(request):
         empleado=perfil
     ).order_by('-fecha_solicitud')[:5]
     
+    # Verificar si puede solicitar vacaciones extraordinarias
+    puede_solicitar_extraordinarias = (
+        perfil.dias_vacaciones_disponibles >= 1 or 
+        perfil.dias_vacaciones_extraordinarios_disponibles >= 1
+    )
+    
     context = {
         'form': form,
         'perfil': perfil,
         'solicitudes_recientes': solicitudes_recientes,
+        'puede_solicitar_extraordinarias': puede_solicitar_extraordinarias,
+        'dias_extraordinarios_disponibles': perfil.dias_vacaciones_extraordinarios_disponibles,
     }
     return render(request, 'empleados/empleado/solicitar_vacaciones.html', context)
 
