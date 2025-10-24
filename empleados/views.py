@@ -467,9 +467,7 @@ def gestion_departamentos(request):
     if not perfil or not (perfil.es_rh() or perfil.es_admin()):
         raise PermissionDenied
     
-    departamentos = Departamento.objects.filter(activo=True).annotate(
-        empleados_count=Count('perfil')
-    )
+    departamentos = Departamento.objects.filter(activo=True)
     
     context = {
         'departamentos': departamentos,
