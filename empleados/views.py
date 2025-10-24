@@ -38,6 +38,8 @@ def dashboard(request):
         return redirect('empleados:rh_dashboard')
     elif perfil.es_jefe_area():
         return redirect('empleados:jefe_dashboard')
+    elif perfil.es_sistemas():
+        return redirect('empleados:sistemas_dashboard')
     else:
         return redirect('empleados:empleado_dashboard')
 

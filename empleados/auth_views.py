@@ -39,6 +39,8 @@ def login_view(request):
                                 next_url = 'empleados:rh_dashboard'
                             elif perfil.es_jefe_area():
                                 next_url = 'empleados:jefe_dashboard'
+                            elif perfil.es_sistemas():
+                                next_url = 'empleados:sistemas_dashboard'
                             else:
                                 next_url = 'empleados:empleado_dashboard'
                         except Perfil.DoesNotExist:
