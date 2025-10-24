@@ -202,9 +202,9 @@ def jefe_dashboard(request):
 
 @login_required
 def empleado_dashboard(request):
-    """Dashboard para Empleados"""
+    """Dashboard para Empleados y personal de sistemas"""
     perfil = get_user_profile(request.user)
-    if not perfil or not perfil.es_empleado():
+    if not perfil or not (perfil.es_empleado() or perfil.es_sistemas()):
         raise PermissionDenied
     
     # Solicitudes del empleado
@@ -343,9 +343,9 @@ def editar_perfil(request, perfil_id):
 
 @login_required
 def solicitar_vacaciones(request):
-    """Solicitar vacaciones - Solo empleados"""
+    """Solicitar vacaciones - Empleados y personal de sistemas"""
     perfil = get_user_profile(request.user)
-    if not perfil or not perfil.es_empleado():
+    if not perfil or not (perfil.es_empleado() or perfil.es_sistemas()):
         raise PermissionDenied
     
     if request.method == 'POST':
