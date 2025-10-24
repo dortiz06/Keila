@@ -621,8 +621,8 @@ def dashboard_sistemas(request):
         fecha_resolucion__date=timezone.now().date()
     ).count()
     
-    # Tickets recientes
-    tickets_recientes = Ticket.objects.all().order_by('-fecha_creacion')[:10]
+    # Tickets recientes - Solo los que están en proceso (con botón Resolver)
+    tickets_recientes = Ticket.objects.filter(estado='EN_PROCESO').order_by('-fecha_creacion')[:10]
     
     # Estadísticas de equipos
     equipos_disponibles = Equipo.objects.filter(estado='DISPONIBLE').count()
