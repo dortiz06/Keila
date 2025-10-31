@@ -223,16 +223,64 @@
     </div>
 </div>
 
+<!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const fechaInicio = document.getElementById('{{ form.fecha_inicio.id_for_label }}');
-    const fechaFin = document.getElementById('{{ form.fecha_fin.id_for_label }}');
+    const fechaInicioInput = document.getElementById('{{ form.fecha_inicio.id_for_label }}');
+    const fechaFinInput = document.getElementById('{{ form.fecha_fin.id_for_label }}');
+    
+    // Inicializar Flatpickr para Fecha de Inicio
+    const fechaInicio = flatpickr(fechaInicioInput, {
+        dateFormat: 'd/m/Y',
+        altInput: false,
+        locale: 'es',
+        minDate: 'today',
+        onChange: function(selectedDates, dateStr, instance) {
+            calcularDias();
+            // Actualizar el valor en formato YYYY-MM-DD para el backend
+            if (selectedDates.length > 0) {
+                const date = selectedDates[0];
+                const yyyy = date.getFullYear();
+                const mm = String(date.getMonth() + 1).padStart(2, '0');
+                const dd = String(date.getDate()).padStart(2, '0');
+                fechaInicioInput.setAttribute('data-date-value', `${yyyy}-${mm}-${dd}`);
+            }
+        }
+    });
+    
+    // Inicializar Flatpickr para Fecha de Fin
+    const fechaFin = flatpickr(fechaFinInput, {
+        dateFormat: 'd/m/Y',
+        altInput: false,
+        locale: 'es',
+        minDate: 'today',
+        onChange: function(selectedDates, dateStr, instance) {
+            calcularDias();
+            // Actualizar el valor en formato YYYY-MM-DD para el backend
+            if (selectedDates.length > 0) {
+                const date = selectedDates[0];
+                const yyyy = date.getFullYear();
+                const mm = String(date.getMonth() + 1).padStart(2, '0');
+                const dd = String(date.getDate()).padStart(2, '0');
+                fechaFinInput.setAttribute('data-date-value', `${yyyy}-${mm}-${dd}`);
+            }
+        }
+    });
     
     // Calcular días automáticamente
     function calcularDias() {
-        if (fechaInicio.value && fechaFin.value) {
-            const inicio = new Date(fechaInicio.value);
-            const fin = new Date(fechaFin.value);
+        const inicioStr = fechaInicioInput.getAttribute('data-date-value');
+        const finStr = fechaFinInput.getAttribute('data-date-value');
+        
+        if (inicioStr && finStr) {
+            const inicio = new Date(inicioStr);
+            const fin = new Date(finStr);
             const diffTime = Math.abs(fin - inicio);
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
             
@@ -242,20 +290,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 infoDiv = document.createElement('div');
                 infoDiv.id = 'dias-info';
                 infoDiv.className = 'alert alert-info mt-2';
-                fechaFin.parentNode.appendChild(infoDiv);
+                fechaFinInput.parentNode.appendChild(infoDiv);
             }
             infoDiv.innerHTML = `<i class="fas fa-info-circle me-1"></i>Días solicitados: <strong>${diffDays}</strong>`;
         }
     }
     
-    fechaInicio.addEventListener('change', calcularDias);
-    fechaFin.addEventListener('change', calcularDias);
-    
-    // Validación del formulario
+    // Convertir valores DD/MM/YYYY a YYYY-MM-DD antes de enviar el formulario
     document.getElementById('solicitudForm').addEventListener('submit', function(e) {
-        if (fechaInicio.value && fechaFin.value) {
-            const inicio = new Date(fechaInicio.value);
-            const fin = new Date(fechaFin.value);
+        const inicioStr = fechaInicioInput.getAttribute('data-date-value');
+        const finStr = fechaFinInput.getAttribute('data-date-value');
+        
+        if (inicioStr && finStr) {
+            // Establecer los valores en formato YYYY-MM-DD para el backend
+            fechaInicioInput.value = inicioStr;
+            fechaFinInput.value = finStr;
+            
+            const inicio = new Date(inicioStr);
+            const fin = new Date(finStr);
             const hoy = new Date();
             hoy.setHours(0, 0, 0, 0);
             

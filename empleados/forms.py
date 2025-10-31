@@ -115,8 +115,16 @@ class SolicitudVacacionesForm(forms.ModelForm):
         model = SolicitudVacaciones
         fields = ['fecha_inicio', 'fecha_fin', 'tipo', 'motivo']
         widgets = {
-            'fecha_inicio': forms.DateInput(attrs={'type': 'date'}),
-            'fecha_fin': forms.DateInput(attrs={'type': 'date'}),
+            'fecha_inicio': forms.DateInput(attrs={
+                'type': 'text',
+                'class': 'form-control datepicker-ddmm',
+                'placeholder': 'DD/MM/YYYY'
+            }),
+            'fecha_fin': forms.DateInput(attrs={
+                'type': 'text',
+                'class': 'form-control datepicker-ddmm',
+                'placeholder': 'DD/MM/YYYY'
+            }),
             'motivo': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Describe el motivo de tu solicitud de vacaciones...'}),
         }
         labels = {
