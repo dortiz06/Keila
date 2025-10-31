@@ -343,9 +343,9 @@ def editar_perfil(request, perfil_id):
 
 @login_required
 def solicitar_vacaciones(request):
-    """Solicitar vacaciones - Empleados y personal de sistemas"""
+    """Solicitar vacaciones - Empleados, RH y personal de sistemas"""
     perfil = get_user_profile(request.user)
-    if not perfil or not (perfil.es_empleado() or perfil.es_sistemas()):
+    if not perfil or not (perfil.es_empleado() or perfil.es_sistemas() or perfil.es_rh()):
         raise PermissionDenied
     
     if request.method == 'POST':
@@ -355,7 +355,8 @@ def solicitar_vacaciones(request):
             solicitud.empleado = perfil
             solicitud.save()
             messages.success(request, 'Solicitud de vacaciones enviada exitosamente.')
-            return redirect('empleados:empleado_dashboard')
+            # Redirigir al panel correspondiente del usuario
+            return redirect('empleados:dashboard')
     else:
         form = SolicitudVacacionesForm(empleado=perfil)
     
