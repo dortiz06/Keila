@@ -1520,3 +1520,109 @@ INFO 2025-10-31 10:23:12,993 autoreload 80811 8334657536 /Users/macbook/Desktop/
 INFO 2025-10-31 10:23:13,248 autoreload 80859 8334657536 Watching for file changes with StatReloader
 INFO 2025-10-31 10:23:13,255 autoreload 80861 8334657536 Watching for file changes with StatReloader
 INFO 2025-10-31 10:23:13,255 autoreload 80860 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:24:09,226 basehttp 80860 6132396032 "GET /rh/ HTTP/1.1" 200 19982
+INFO 2025-10-31 10:24:11,766 basehttp 80860 6149222400 "GET /vacaciones/solicitar/ HTTP/1.1" 200 30089
+WARNING 2025-10-31 10:24:11,773 basehttp 80860 6132396032 "GET /static/js/date-format.js HTTP/1.1" 404 1978
+INFO 2025-10-31 10:24:26,579 basehttp 80860 6149222400 "POST /vacaciones/solicitar/ HTTP/1.1" 302 0
+INFO 2025-10-31 10:24:26,586 basehttp 80860 6149222400 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-10-31 10:24:26,595 basehttp 80860 6149222400 "GET /rh/ HTTP/1.1" 200 19982
+INFO 2025-10-31 10:24:39,019 basehttp 80860 6149222400 "GET /logout/ HTTP/1.1" 302 0
+INFO 2025-10-31 10:24:39,024 basehttp 80860 6149222400 "GET / HTTP/1.1" 200 26677
+WARNING 2025-10-31 10:24:39,271 log 80860 6132396032 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-10-31 10:24:39,271 log 80860 6166048768 Not Found: /apple-touch-icon.png
+WARNING 2025-10-31 10:24:39,272 log 80860 6182875136 Not Found: /favicon.ico
+WARNING 2025-10-31 10:24:39,272 basehttp 80860 6132396032 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 10889
+WARNING 2025-10-31 10:24:39,272 basehttp 80860 6182875136 "GET /favicon.ico HTTP/1.1" 404 10826
+WARNING 2025-10-31 10:24:39,272 basehttp 80860 6166048768 "GET /apple-touch-icon.png HTTP/1.1" 404 10853
+INFO 2025-10-31 10:24:47,115 basehttp 80860 6149222400 "POST / HTTP/1.1" 302 0
+ERROR 2025-10-31 10:24:47,154 log 80860 6149222400 Internal Server Error: /jefe/
+Traceback (most recent call last):
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/views.py", line 200, in jefe_dashboard
+    return render(request, 'empleados/jefe/dashboard.html', context)
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/template/defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/template/base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/template/base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/template/defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/urls/base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "/Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/.venv/lib/python3.13/site-packages/django/urls/resolvers.py", line 831, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'solicitudes_jefe' not found. 'solicitudes_jefe' is not a valid view function or pattern name.
+ERROR 2025-10-31 10:24:47,158 basehttp 80860 6149222400 "GET /jefe/ HTTP/1.1" 500 176932
+INFO 2025-10-31 10:26:18,943 autoreload 80859 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/views.py changed, reloading.
+INFO 2025-10-31 10:26:18,944 autoreload 80861 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/views.py changed, reloading.
+INFO 2025-10-31 10:26:18,956 autoreload 80860 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/views.py changed, reloading.
+INFO 2025-10-31 10:26:19,418 autoreload 84585 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:26:19,418 autoreload 84584 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:26:19,418 autoreload 84583 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:26:22,578 autoreload 84583 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/urls.py changed, reloading.
+INFO 2025-10-31 10:26:22,580 autoreload 84584 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/urls.py changed, reloading.
+INFO 2025-10-31 10:26:22,585 autoreload 84585 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/urls.py changed, reloading.
+INFO 2025-10-31 10:26:22,881 autoreload 84736 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:26:22,881 autoreload 84737 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:26:22,885 autoreload 84738 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:26:25,045 autoreload 84738 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/views.py changed, reloading.
+INFO 2025-10-31 10:26:25,045 autoreload 84736 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/views.py changed, reloading.
+INFO 2025-10-31 10:26:25,046 autoreload 84737 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/views.py changed, reloading.
+INFO 2025-10-31 10:26:25,271 autoreload 84768 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:26:25,271 autoreload 84769 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:26:25,273 autoreload 84770 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:26:35,527 autoreload 84770 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/urls.py changed, reloading.
+INFO 2025-10-31 10:26:35,533 autoreload 84768 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/urls.py changed, reloading.
+INFO 2025-10-31 10:26:35,538 autoreload 84769 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/urls.py changed, reloading.
+INFO 2025-10-31 10:26:35,819 autoreload 85003 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:26:35,819 autoreload 85004 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:26:35,819 autoreload 85005 8334657536 Watching for file changes with StatReloader

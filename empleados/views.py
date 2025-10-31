@@ -422,6 +422,49 @@ def aprobar_jefe(request, solicitud_id):
 
 
 @login_required
+def solicitudes_jefe(request):
+    """Listar todas las solicitudes de vacaciones para jefe de área"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not perfil.es_jefe_area():
+        raise PermissionDenied
+    
+    # Obtener todas las solicitudes (jefes pueden ver todas)
+    solicitudes = SolicitudVacaciones.objects.all().select_related(
+        'empleado', 'empleado__departamento'
+    ).order_by('-fecha_solicitud')
+    
+    # Filtros
+    estado_actual = request.GET.get('estado', '')
+    busqueda_actual = request.GET.get('busqueda', '')
+    
+    # Filtrar por estado
+    if estado_actual == 'P':
+        solicitudes = solicitudes.filter(estado='PENDIENTE_JEFE')
+    elif estado_actual == 'A':
+        solicitudes = solicitudes.filter(estado__in=['APROBADO_JEFE', 'APROBADO_RH'])
+    elif estado_actual == 'R':
+        solicitudes = solicitudes.filter(estado__in=['RECHAZADO_JEFE', 'RECHAZADO_RH'])
+    
+    # Filtrar por búsqueda de empleado
+    if busqueda_actual:
+        solicitudes = solicitudes.filter(
+            empleado__user__first_name__icontains=busqueda_actual
+        ) | solicitudes.filter(
+            empleado__user__last_name__icontains=busqueda_actual
+        ) | solicitudes.filter(
+            empleado__nombre_completo__icontains=busqueda_actual
+        )
+    
+    context = {
+        'solicitudes': solicitudes,
+        'estado_actual': estado_actual,
+        'busqueda_actual': busqueda_actual,
+        'perfil': perfil,
+    }
+    return render(request, 'empleados/solicitudes_jefe.html', context)
+
+
+@login_required
 def aprobar_rh(request, solicitud_id):
     """Aprobar/rechazar solicitud por RH"""
     perfil = get_user_profile(request.user)

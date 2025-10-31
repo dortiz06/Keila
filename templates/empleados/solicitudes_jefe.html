@@ -122,8 +122,8 @@
                                         <small class="text-muted">{{ solicitud.fecha_solicitud|time:"H:i" }}</small>
                                     </td>
                                     <td>
-                                        {% if solicitud.estado == 'P' %}
-                                            <a href="{% url 'aprobar_jefe' solicitud.id %}" class="btn btn-sm btn-primary">
+                                        {% if solicitud.estado == 'PENDIENTE_JEFE' %}
+                                            <a href="{% url 'empleados:aprobar_jefe' solicitud.id %}" class="btn btn-sm btn-primary">
                                                 <i class="fas fa-check me-1"></i>Revisar
                                             </a>
                                         {% else %}
@@ -147,7 +147,7 @@
                             {% endif %}
                         </p>
                         {% if estado_actual or busqueda_actual %}
-                            <a href="{% url 'solicitudes_jefe' %}" class="btn btn-outline-primary">
+                            <a href="{% url 'empleados:solicitudes_jefe' %}" class="btn btn-outline-primary">
                                 <i class="fas fa-refresh me-1"></i>Limpiar Filtros
                             </a>
                         {% endif %}
@@ -160,11 +160,8 @@
         <div class="row mt-4">
             <div class="col-12">
                 <div class="d-flex justify-content-between">
-                    <a href="{% url 'panel_jefe' %}" class="btn btn-outline-secondary">
+                    <a href="{% url 'empleados:jefe_dashboard' %}" class="btn btn-outline-secondary">
                         <i class="fas fa-arrow-left me-1"></i>Volver al Panel
-                    </a>
-                    <a href="{% url 'vacaciones' %}" class="btn btn-outline-primary">
-                        <i class="fas fa-list me-1"></i>Ver Todas las Vacaciones
                     </a>
                 </div>
             </div>

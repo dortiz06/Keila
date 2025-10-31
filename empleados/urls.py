@@ -28,6 +28,7 @@ urlpatterns = [
     path('vacaciones/solicitar/', views.solicitar_vacaciones, name='solicitar_vacaciones'),
     path('vacaciones/<int:solicitud_id>/aprobar-jefe/', views.aprobar_jefe, name='aprobar_jefe'),
     path('vacaciones/<int:solicitud_id>/aprobar-rh/', views.aprobar_rh, name='aprobar_rh'),
+    path('vacaciones/solicitudes-jefe/', views.solicitudes_jefe, name='solicitudes_jefe'),
     
     # === GESTIÓN DE DEPARTAMENTOS ===
     path('departamentos/', views.gestion_departamentos, name='gestion_departamentos'),
