@@ -150,7 +150,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-check form-check-card mb-3">
-                                            <input class="form-check-input" type="radio" name="{{ form.accion.name }}" id="aprobar" value="aprobar" {% if form.accion.value == 'aprobar' %}checked{% endif %} required>
+                                            <input class="form-check-input" type="radio" name="accion" id="aprobar" value="aprobar" {% if form.accion.value == 'aprobar' %}checked{% endif %} required>
                                             <label class="form-check-label" for="aprobar">
                                                 <div class="card border-success">
                                                     <div class="card-body text-center">
@@ -164,7 +164,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-check form-check-card mb-3">
-                                            <input class="form-check-input" type="radio" name="{{ form.accion.name }}" id="rechazar" value="rechazar" {% if form.accion.value == 'rechazar' %}checked{% endif %} required>
+                                            <input class="form-check-input" type="radio" name="accion" id="rechazar" value="rechazar" {% if form.accion.value == 'rechazar' %}checked{% endif %} required>
                                             <label class="form-check-label" for="rechazar">
                                                 <div class="card border-danger">
                                                     <div class="card-body text-center">
@@ -184,7 +184,7 @@
                                 <label for="{{ form.comentario.id_for_label }}" class="form-label fw-bold">
                                     <i class="fas fa-comment me-1"></i>{{ form.comentario.label }}
                                 </label>
-                                <textarea name="{{ form.comentario.name }}" id="{{ form.comentario.id_for_label }}" 
+                                <textarea name="comentario" id="{{ form.comentario.id_for_label }}" 
                                           class="form-control" rows="3" 
                                           placeholder="Comentarios sobre la decisión...">{{ form.comentario.value|default:'' }}</textarea>
                                 {% if form.comentario.errors %}
@@ -210,7 +210,7 @@
                         
                         <script>
                         document.getElementById('aprobacionForm').addEventListener('submit', function(e) {
-                            const accionSeleccionada = document.querySelector('input[name="{{ form.accion.name }}"]:checked');
+                            const accionSeleccionada = document.querySelector('input[name="accion"]:checked');
                             if (!accionSeleccionada) {
                                 e.preventDefault();
                                 alert('Por favor, selecciona una acción (Aprobar o Rechazar) antes de enviar.');

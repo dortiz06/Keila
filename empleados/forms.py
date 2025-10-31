@@ -233,11 +233,12 @@ class AprobacionRHForm(forms.Form):
             ('aprobar', 'Aprobar Solicitud'),
             ('rechazar', 'Rechazar Solicitud'),
         ],
-        widget=forms.RadioSelect,
-        label='Acción'
+        widget=forms.RadioSelect,  # Mantener RadioSelect pero usar inputs personalizados en template
+        label='Acción',
+        required=True
     )
     comentario = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': 3, 'placeholder': 'Comentarios sobre la decisión...'}),
+        widget=forms.Textarea(attrs={'rows': 3, 'placeholder': 'Comentarios sobre la decisión...', 'class': 'form-control'}),
         label='Comentarios',
         required=False
     )
@@ -245,6 +246,8 @@ class AprobacionRHForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.solicitud = kwargs.pop('solicitud', None)
         super().__init__(*args, **kwargs)
+        # Hacer accion no requerido en el widget pero requerido en validación
+        self.fields['accion'].required = True
 
 
 class EditarPerfilForm(forms.ModelForm):
