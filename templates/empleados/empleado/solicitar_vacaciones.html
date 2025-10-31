@@ -235,12 +235,32 @@ document.addEventListener('DOMContentLoaded', function() {
     const fechaInicioInput = document.getElementById('{{ form.fecha_inicio.id_for_label }}');
     const fechaFinInput = document.getElementById('{{ form.fecha_fin.id_for_label }}');
     
+    // Convertir valores existentes de YYYY-MM-DD a DD/MM/YYYY si los hay
+    function convertirFechaAFormato(fechaStr) {
+        if (fechaStr && fechaStr.includes('-')) {
+            const parts = fechaStr.split('-');
+            if (parts.length === 3) {
+                return `${parts[2]}/${parts[1]}/${parts[0]}`;
+            }
+        }
+        return fechaStr;
+    }
+    
+    // Si hay valores iniciales en formato YYYY-MM-DD, convertirlos
+    if (fechaInicioInput.value && fechaInicioInput.value.includes('-')) {
+        fechaInicioInput.value = convertirFechaAFormato(fechaInicioInput.value);
+    }
+    if (fechaFinInput.value && fechaFinInput.value.includes('-')) {
+        fechaFinInput.value = convertirFechaAFormato(fechaFinInput.value);
+    }
+    
     // Inicializar Flatpickr para Fecha de Inicio
     const fechaInicio = flatpickr(fechaInicioInput, {
         dateFormat: 'd/m/Y',
         altInput: false,
         locale: 'es',
         minDate: 'today',
+        defaultDate: fechaInicioInput.value || null,
         onChange: function(selectedDates, dateStr, instance) {
             calcularDias();
             // Actualizar el valor en formato YYYY-MM-DD para el backend
@@ -260,6 +280,7 @@ document.addEventListener('DOMContentLoaded', function() {
         altInput: false,
         locale: 'es',
         minDate: 'today',
+        defaultDate: fechaFinInput.value || null,
         onChange: function(selectedDates, dateStr, instance) {
             calcularDias();
             // Actualizar el valor en formato YYYY-MM-DD para el backend
