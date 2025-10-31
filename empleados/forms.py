@@ -37,8 +37,10 @@ class UsuarioConPerfilForm(UserCreationForm):
     puesto = forms.CharField(max_length=100, label='Puesto')
     jefe_area = forms.ModelChoiceField(
         queryset=Perfil.objects.filter(activo=True, tipo_perfil__in=['JEFE_AREA', 'ADMIN']),
-        label='Jefe de Área',
-        required=False
+        label='Supervisor',
+        required=False,
+        empty_label='-------',
+        widget=forms.Select(attrs={'class': 'form-control'})
     )
     
     # Información personal adicional
@@ -58,6 +60,9 @@ class UsuarioConPerfilForm(UserCreationForm):
         # Hacer campos más amigables
         self.fields['username'].help_text = 'Nombre de usuario único para iniciar sesión'
         self.fields['password1'].help_text = 'Mínimo 8 caracteres'
+        # Personalizar cómo se muestran los jefes de área en el dropdown
+        if 'jefe_area' in self.fields:
+            self.fields['jefe_area'].label_from_instance = lambda obj: f"{obj.nombre_completo} - {obj.get_tipo_perfil_display()}"
     
     def clean_username(self):
         username = self.cleaned_data.get('username')

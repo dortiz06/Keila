@@ -127,6 +127,20 @@ class PerfilAdmin(admin.ModelAdmin):
             'usuario', 'departamento', 'supervisor'
         )
     
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        """Personalizar cómo se muestran los campos ForeignKey"""
+        if db_field.name == 'supervisor':
+            # Filtrar solo jefes de área y administradores
+            kwargs['queryset'] = Perfil.objects.filter(
+                activo=True, 
+                tipo_perfil__in=['JEFE_AREA', 'ADMIN']
+            )
+            # Personalizar cómo se muestra en el dropdown
+            field = super().formfield_for_foreignkey(db_field, request, **kwargs)
+            field.label_from_instance = lambda obj: f"{obj.nombre_completo} - {obj.get_tipo_perfil_display()}"
+            return field
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    
     actions = [
         'marcar_como_activos', 'marcar_como_inactivos', 'resetear_vacaciones',
         'simular_1_ano', 'simular_2_anos', 'simular_5_anos', 'actualizar_dias_vacaciones'
