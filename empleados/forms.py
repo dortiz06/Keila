@@ -6,6 +6,21 @@ from datetime import timedelta
 from .models import Perfil, Departamento, SolicitudVacaciones, Ticket, Equipo, AsignacionEquipo, CategoriaEquipo
 
 
+class DateInputDDMMYYYY(forms.DateInput):
+    """Widget personalizado para mostrar fechas en formato DD/MM/YYYY"""
+    input_type = 'date'
+    
+    def __init__(self, attrs=None):
+        default_attrs = {
+            'type': 'date',
+            'lang': 'es-MX',
+            'data-format': 'DD/MM/YYYY',
+        }
+        if attrs:
+            default_attrs.update(attrs)
+        super().__init__(default_attrs)
+
+
 class UsuarioConPerfilForm(UserCreationForm):
     """Formulario para crear usuario con perfil"""
     TIPOS_PERFIL = [
@@ -29,7 +44,7 @@ class UsuarioConPerfilForm(UserCreationForm):
         required=False
     )
     fecha_contratacion = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date'}),
+        widget=DateInputDDMMYYYY(),
         label='Fecha de Contratación',
         initial=timezone.now().date()
     )
@@ -46,7 +61,7 @@ class UsuarioConPerfilForm(UserCreationForm):
     # Información personal adicional
     telefono = forms.CharField(max_length=15, label='Teléfono', required=False)
     fecha_nacimiento = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date'}),
+        widget=DateInputDDMMYYYY(),
         label='Fecha de Nacimiento',
         required=False
     )
@@ -115,8 +130,8 @@ class SolicitudVacacionesForm(forms.ModelForm):
         model = SolicitudVacaciones
         fields = ['fecha_inicio', 'fecha_fin', 'tipo', 'motivo']
         widgets = {
-            'fecha_inicio': forms.DateInput(attrs={'type': 'date'}),
-            'fecha_fin': forms.DateInput(attrs={'type': 'date'}),
+            'fecha_inicio': DateInputDDMMYYYY(),
+            'fecha_fin': DateInputDDMMYYYY(),
             'motivo': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Describe el motivo de tu solicitud de vacaciones...'}),
         }
         labels = {
@@ -232,7 +247,7 @@ class EditarPerfilForm(forms.ModelForm):
         model = Perfil
         fields = ['telefono', 'fecha_nacimiento']
         widgets = {
-            'fecha_nacimiento': forms.DateInput(attrs={'type': 'date'}),
+            'fecha_nacimiento': DateInputDDMMYYYY(),
         }
         labels = {
             'telefono': 'Teléfono',
@@ -342,7 +357,7 @@ class EquipoForm(forms.ModelForm):
             'numero_serie': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Número de serie único'}),
             'codigo_inventario': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Código interno de inventario'}),
             'estado': forms.Select(attrs={'class': 'form-control'}),
-            'fecha_adquisicion': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'fecha_adquisicion': DateInputDDMMYYYY(attrs={'class': 'form-control'}),
             'observaciones': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
         labels = {
@@ -396,7 +411,7 @@ class DevolucionEquipoForm(forms.ModelForm):
         model = AsignacionEquipo
         fields = ['fecha_devolucion', 'condicion_devolucion', 'observaciones']
         widgets = {
-            'fecha_devolucion': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'fecha_devolucion': DateInputDDMMYYYY(attrs={'class': 'form-control'}),
             'condicion_devolucion': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Ej: Buen estado, Con daños menores, etc.'

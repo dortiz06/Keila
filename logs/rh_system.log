@@ -1376,3 +1376,59 @@ INFO 2025-10-31 10:06:21,875 basehttp 47227 6192492544 "GET /dashboard/ HTTP/1.1
 INFO 2025-10-31 10:06:21,886 basehttp 47227 6192492544 "GET /rh/ HTTP/1.1" 200 19982
 INFO 2025-10-31 10:06:23,011 basehttp 47227 6192492544 "GET /rh/ HTTP/1.1" 200 19982
 INFO 2025-10-31 10:06:36,187 basehttp 47227 6192492544 "GET /rh/ HTTP/1.1" 200 19982
+INFO 2025-10-31 10:08:28,965 basehttp 47227 6192492544 "GET /rh/ HTTP/1.1" 200 19982
+INFO 2025-10-31 10:08:30,584 basehttp 47227 6192492544 "GET /vacaciones/solicitar/ HTTP/1.1" 200 25141
+INFO 2025-10-31 10:11:12,969 autoreload 47227 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/rh_project/settings.py changed, reloading.
+INFO 2025-10-31 10:11:12,983 autoreload 47226 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/rh_project/settings.py changed, reloading.
+INFO 2025-10-31 10:11:12,990 autoreload 47225 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/rh_project/settings.py changed, reloading.
+INFO 2025-10-31 10:11:13,408 autoreload 65971 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:11:13,408 autoreload 65969 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:11:13,408 autoreload 65970 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:11:38,803 autoreload 65970 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/rh_project/settings.py changed, reloading.
+INFO 2025-10-31 10:11:38,805 autoreload 65969 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/rh_project/settings.py changed, reloading.
+INFO 2025-10-31 10:11:38,806 autoreload 65971 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/rh_project/settings.py changed, reloading.
+INFO 2025-10-31 10:11:39,201 autoreload 66441 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:11:39,201 autoreload 66440 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:11:39,201 autoreload 66439 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:11:46,452 autoreload 66441 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:11:46,452 autoreload 66440 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:11:46,464 autoreload 66439 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:11:46,727 autoreload 66545 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:11:46,729 autoreload 66546 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:11:46,736 autoreload 66547 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:11:51,893 autoreload 66547 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:11:51,895 autoreload 66546 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:11:51,895 autoreload 66545 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:11:52,178 autoreload 66713 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:11:52,178 autoreload 66711 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:11:52,178 autoreload 66712 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:11:55,338 autoreload 66713 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:11:55,363 autoreload 66711 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:11:55,371 autoreload 66712 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:11:55,570 autoreload 66758 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:11:55,611 autoreload 66759 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:11:55,618 autoreload 66760 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:12:01,676 autoreload 66758 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:12:01,724 autoreload 66759 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:12:01,752 autoreload 66760 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:12:01,929 autoreload 66934 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:12:01,968 autoreload 66935 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:12:01,988 autoreload 66936 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:12:05,009 autoreload 66934 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:12:05,042 autoreload 66935 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:12:05,065 autoreload 66936 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:12:05,260 autoreload 66977 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:12:05,294 autoreload 66978 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:12:05,318 autoreload 66979 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:12:08,335 autoreload 66977 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:12:08,390 autoreload 66979 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:12:08,398 autoreload 66978 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:12:08,565 autoreload 67019 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:12:08,624 autoreload 67021 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:12:08,626 autoreload 67025 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:12:19,711 autoreload 67019 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:12:19,821 autoreload 67025 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:12:19,824 autoreload 67021 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/forms.py changed, reloading.
+INFO 2025-10-31 10:12:20,040 autoreload 67345 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:12:20,046 autoreload 67347 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:12:20,047 autoreload 67346 8334657536 Watching for file changes with StatReloader
