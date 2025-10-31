@@ -17,6 +17,39 @@
         </div>
     </div>
     
+    <!-- Estado personal de vacaciones (igual que empleado) -->
+    <div class="alert alert-info">
+        <h6 class="mb-2">
+            <i class="fas fa-user-clock me-2"></i>
+            <strong>Tu Antigüedad:</strong> {{ perfil.antiguedad_detallada }}
+            {% if perfil.fecha_contratacion %}
+                <small class="text-muted">(desde {{ perfil.fecha_contratacion|date:"d/m/Y" }})</small>
+            {% endif %}
+        </h6>
+        <div class="row g-2">
+            {% if perfil.mostrar_seccion_ano_anterior %}
+            <div class="col-md-4">
+                <div class="p-2 bg-white rounded">
+                    <small class="text-muted">Año Anterior Completado</small>
+                    <div class="h5 mb-0 text-primary">{{ perfil.dias_ano_anterior_completado }} días</div>
+                </div>
+            </div>
+            {% endif %}
+            <div class="{% if perfil.mostrar_seccion_ano_anterior %}col-md-4{% else %}col-md-6{% endif %}">
+                <div class="p-2 bg-white rounded">
+                    <small class="text-muted">Acumulado este año (hoy)</small>
+                    <div class="h5 mb-0 text-primary">{{ perfil.calcular_dias_acumulados_hasta_hoy }} días</div>
+                </div>
+            </div>
+            <div class="{% if perfil.mostrar_seccion_ano_anterior %}col-md-4{% else %}col-md-6{% endif %}">
+                <div class="p-2 bg-white rounded">
+                    <small class="text-muted">Total proyectado disponible</small>
+                    <div class="h5 mb-0 text-success">{{ perfil.calcular_total_disponible_proyectado }} días</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-4">
             <div class="card">
@@ -42,6 +75,52 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Tarjetas de estado rápido (igual que empleado) -->
+    <div class="row mt-3">
+        <div class="col-6 col-md-3 mb-3">
+            <div class="card text-center h-100">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <i class="fas fa-calendar-check fa-2x text-success mb-2"></i>
+                    <h5 class="card-title small">Días Disponibles</h5>
+                    <h3 class="text-success">{{ perfil.dias_vacaciones_disponibles }}</h3>
+                    <small class="text-muted">disponibles</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+            <div class="card text-center h-100">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <i class="fas fa-calendar-minus fa-2x text-danger mb-2"></i>
+                    <h5 class="card-title small">Días Usados</h5>
+                    <h3 class="text-danger">{{ perfil.dias_vacaciones_usados }}</h3>
+                    <small class="text-muted">este año</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+            <div class="card text-center h-100">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+                    <h5 class="card-title small">Pendientes</h5>
+                    <h3 class="text-warning">{{ stats.solicitudes_pendientes }}</h3>
+                    <small class="text-muted">solicitudes</small>
+                </div>
+            </div>
+        </div>
+        {% if perfil.antiguedad_anos < 1 and perfil.dias_vacaciones_extraordinarios_disponibles > 0 %}
+        <div class="col-6 col-md-3 mb-3">
+            <div class="card text-center h-100">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <i class="fas fa-star fa-2x text-info mb-2"></i>
+                    <h5 class="card-title small">Extraordinarios</h5>
+                    <h3 class="text-info">{{ perfil.dias_vacaciones_extraordinarios_disponibles }}</h3>
+                    <small class="text-muted">disponibles</small>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
     
     <div class="row mt-4">
