@@ -169,8 +169,19 @@ class SolicitudVacacionesForm(forms.ModelForm):
                 raise forms.ValidationError('La fecha de fin debe ser posterior a la fecha de inicio.')
             
             # Validar que no sea en el pasado
+            # Usar solo la fecha sin hora para comparar correctamente
             hoy = timezone.now().date()
-            if fecha_inicio < hoy:
+            fecha_inicio_date = fecha_inicio if isinstance(fecha_inicio, timezone.datetime.date) else fecha_inicio
+            
+            # Asegurar que comparamos solo fechas (sin hora)
+            if isinstance(fecha_inicio_date, str):
+                from datetime import datetime
+                try:
+                    fecha_inicio_date = datetime.strptime(fecha_inicio_date, '%Y-%m-%d').date()
+                except ValueError:
+                    raise forms.ValidationError('Formato de fecha inválido.')
+            
+            if fecha_inicio_date < hoy:
                 raise forms.ValidationError('No puedes solicitar vacaciones para fechas pasadas.')
             
             # Calcular días solicitados (excluyendo domingos)
