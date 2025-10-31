@@ -92,29 +92,41 @@
                                         <span class="badge bg-primary fs-6">{{ solicitud.dias_solicitados }}</span>
                                     </td>
                                     <td>
-                                        {% if solicitud.tipo == 'N' %}
+                                        {% if solicitud.tipo == 'NORMAL' %}
                                             <span class="badge bg-success">
                                                 <i class="fas fa-check-circle me-1"></i>Normal
                                             </span>
-                                        {% else %}
+                                        {% elif solicitud.tipo == 'EXTRAORDINARIA' %}
                                             <span class="badge bg-warning">
                                                 <i class="fas fa-exclamation-triangle me-1"></i>Extraordinaria
                                             </span>
+                                        {% elif solicitud.tipo == 'EMERGENCIA' %}
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-exclamation-circle me-1"></i>Emergencia
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ solicitud.get_tipo_display }}</span>
                                         {% endif %}
                                     </td>
                                     <td>
-                                        {% if solicitud.estado == 'P' %}
+                                        {% if solicitud.estado == 'PENDIENTE_JEFE' %}
                                             <span class="badge bg-warning">
-                                                <i class="fas fa-clock me-1"></i>Pendiente
+                                                <i class="fas fa-clock me-1"></i>Pendiente Jefe
                                             </span>
-                                        {% elif solicitud.estado == 'A' %}
+                                        {% elif solicitud.estado == 'PENDIENTE_RH' %}
+                                            <span class="badge bg-info">
+                                                <i class="fas fa-clock me-1"></i>Pendiente RH
+                                            </span>
+                                        {% elif solicitud.estado == 'APROBADO_RH' %}
                                             <span class="badge bg-success">
                                                 <i class="fas fa-check me-1"></i>Aprobada
                                             </span>
-                                        {% elif solicitud.estado == 'R' %}
+                                        {% elif solicitud.estado == 'RECHAZADO_JEFE' or solicitud.estado == 'RECHAZADO_RH' %}
                                             <span class="badge bg-danger">
                                                 <i class="fas fa-times me-1"></i>Rechazada
                                             </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ solicitud.get_estado_display }}</span>
                                         {% endif %}
                                     </td>
                                     <td>
