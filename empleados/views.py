@@ -465,6 +465,59 @@ def solicitudes_jefe(request):
 
 
 @login_required
+def solicitudes_rh(request):
+    """Listar todas las solicitudes de vacaciones para RH"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not perfil.es_rh():
+        raise PermissionDenied
+    
+    # Obtener todas las solicitudes que han sido aprobadas por jefe y están pendientes de RH
+    solicitudes = SolicitudVacaciones.objects.filter(
+        estado='PENDIENTE_RH'
+    ).select_related(
+        'empleado', 'empleado__departamento'
+    ).order_by('-fecha_solicitud')
+    
+    # Filtros
+    estado_actual = request.GET.get('estado', '')
+    busqueda_actual = request.GET.get('busqueda', '')
+    
+    # Filtrar por estado (para ver también otras solicitudes si se desea)
+    if estado_actual == 'P':
+        solicitudes = solicitudes.filter(estado='PENDIENTE_RH')
+    elif estado_actual == 'A':
+        solicitudes = SolicitudVacaciones.objects.filter(estado='APROBADO_RH').select_related(
+            'empleado', 'empleado__departamento'
+        ).order_by('-fecha_solicitud')
+    elif estado_actual == 'R':
+        solicitudes = SolicitudVacaciones.objects.filter(estado='RECHAZADO_RH').select_related(
+            'empleado', 'empleado__departamento'
+        ).order_by('-fecha_solicitud')
+    elif estado_actual == 'TODAS':
+        solicitudes = SolicitudVacaciones.objects.all().select_related(
+            'empleado', 'empleado__departamento'
+        ).order_by('-fecha_solicitud')
+    
+    # Filtrar por búsqueda de empleado
+    if busqueda_actual:
+        solicitudes = solicitudes.filter(
+            empleado__user__first_name__icontains=busqueda_actual
+        ) | solicitudes.filter(
+            empleado__user__last_name__icontains=busqueda_actual
+        ) | solicitudes.filter(
+            empleado__nombre_completo__icontains=busqueda_actual
+        )
+    
+    context = {
+        'solicitudes': solicitudes,
+        'estado_actual': estado_actual,
+        'busqueda_actual': busqueda_actual,
+        'perfil': perfil,
+    }
+    return render(request, 'empleados/rh/solicitudes_rh.html', context)
+
+
+@login_required
 def aprobar_rh(request, solicitud_id):
     """Aprobar/rechazar solicitud por RH"""
     perfil = get_user_profile(request.user)

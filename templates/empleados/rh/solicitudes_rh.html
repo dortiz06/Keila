@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Solicitudes de Vacaciones - Panel RH{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="page-header">
+        <div class="container">
+            <h1><i class="fas fa-clipboard-list me-3"></i>Solicitudes de Vacaciones</h1>
+            <p>Gestiona las solicitudes de vacaciones de todos los empleados</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Filtros -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="estado" class="form-label">Estado</label>
+                        <select name="estado" id="estado" class="form-select">
+                            <option value="">Pendientes RH (por defecto)</option>
+                            <option value="P" {% if estado_actual == 'P' %}selected{% endif %}>Pendiente RH</option>
+                            <option value="A" {% if estado_actual == 'A' %}selected{% endif %}>Aprobadas</option>
+                            <option value="R" {% if estado_actual == 'R' %}selected{% endif %}>Rechazadas</option>
+                            <option value="TODAS" {% if estado_actual == 'TODAS' %}selected{% endif %}>Todas las solicitudes</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="busqueda" class="form-label">Buscar empleado</label>
+                        <input type="text" name="busqueda" id="busqueda" class="form-control" 
+                               placeholder="Nombre, apellido..." value="{{ busqueda_actual }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search me-1"></i>Filtrar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Lista de Solicitudes -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-list me-2"></i>
+                    Solicitudes de Vacaciones
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if solicitudes %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Empleado</th>
+                                    <th>Período de Vacaciones</th>
+                                    <th>Días</th>
+                                    <th>Tipo</th>
+                                    <th>Estado</th>
+                                    <th>Fecha Solicitud</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for solicitud in solicitudes %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar me-3">
+                                                {{ solicitud.empleado.nombre|first }}{{ solicitud.empleado.apellido_paterno|first }}
+                                            </div>
+                                            <div>
+                                                <strong>{{ solicitud.empleado.nombre_completo }}</strong><br>
+                                                <small class="text-muted">{{ solicitud.empleado.puesto }}</small><br>
+                                                <small class="text-muted">{{ solicitud.empleado.departamento.nombre }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <strong>{{ solicitud.fecha_inicio|date:"d/m/Y" }}</strong><br>
+                                            <small class="text-muted">hasta {{ solicitud.fecha_fin|date:"d/m/Y" }}</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary fs-6">{{ solicitud.dias_solicitados }}</span>
+                                    </td>
+                                    <td>
+                                        {% if solicitud.tipo == 'NORMAL' %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check-circle me-1"></i>Normal
+                                            </span>
+                                        {% elif solicitud.tipo == 'EXTRAORDINARIA' %}
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-exclamation-triangle me-1"></i>Extraordinaria
+                                            </span>
+                                        {% elif solicitud.tipo == 'EMERGENCIA' %}
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-exclamation-circle me-1"></i>Emergencia
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ solicitud.get_tipo_display }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if solicitud.estado == 'PENDIENTE_JEFE' %}
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-clock me-1"></i>Pendiente Jefe
+                                            </span>
+                                        {% elif solicitud.estado == 'PENDIENTE_RH' %}
+                                            <span class="badge bg-info">
+                                                <i class="fas fa-clock me-1"></i>Pendiente RH
+                                            </span>
+                                        {% elif solicitud.estado == 'APROBADO_RH' %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check me-1"></i>Aprobada
+                                            </span>
+                                        {% elif solicitud.estado == 'RECHAZADO_JEFE' or solicitud.estado == 'RECHAZADO_RH' %}
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-times me-1"></i>Rechazada
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ solicitud.get_estado_display }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ solicitud.fecha_solicitud|date:"d/m/Y" }}<br>
+                                        <small class="text-muted">{{ solicitud.fecha_solicitud|time:"H:i" }}</small>
+                                    </td>
+                                    <td>
+                                        {% if solicitud.estado == 'PENDIENTE_RH' %}
+                                            <a href="{% url 'empleados:aprobar_rh' solicitud.id %}" class="btn btn-sm btn-primary">
+                                                <i class="fas fa-check me-1"></i>Revisar
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted">Procesada</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+                        <h5>No hay solicitudes</h5>
+                        <p class="text-muted">
+                            {% if estado_actual or busqueda_actual %}
+                                No se encontraron solicitudes con los filtros aplicados.
+                            {% else %}
+                                No tienes solicitudes de vacaciones pendientes para revisar.
+                            {% endif %}
+                        </p>
+                        {% if estado_actual or busqueda_actual %}
+                            <a href="{% url 'empleados:solicitudes_rh' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-refresh me-1"></i>Limpiar Filtros
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Navegación -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'empleados:rh_dashboard' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>Volver al Panel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.table th {
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    color: white;
+    border: none;
+    font-weight: 600;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(59, 130, 246, 0.08);
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
+}
+
+.badge {
+    font-size: 0.8rem;
+    padding: 0.5em 0.75em;
+}
+</style>
+{% endblock %}
+
