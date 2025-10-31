@@ -1731,3 +1731,23 @@ INFO 2025-10-31 10:30:09,960 autoreload 89430 8334657536 /Users/macbook/Desktop/
 INFO 2025-10-31 10:30:10,243 autoreload 89449 8334657536 Watching for file changes with StatReloader
 INFO 2025-10-31 10:30:10,243 autoreload 89447 8334657536 Watching for file changes with StatReloader
 INFO 2025-10-31 10:30:10,245 autoreload 89448 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:30:38,631 autoreload 89449 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/urls.py changed, reloading.
+INFO 2025-10-31 10:30:38,648 autoreload 89447 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/urls.py changed, reloading.
+INFO 2025-10-31 10:30:38,657 autoreload 89448 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/urls.py changed, reloading.
+INFO 2025-10-31 10:30:38,976 autoreload 90116 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:30:38,976 autoreload 90115 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:30:38,976 autoreload 90114 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:30:41,239 basehttp 90115 6130675712 "GET /rh/ HTTP/1.1" 200 20998
+INFO 2025-10-31 10:30:45,563 basehttp 90115 6130675712 "GET /vacaciones/1/aprobar-rh/ HTTP/1.1" 200 28561
+INFO 2025-10-31 10:32:46,062 autoreload 90116 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/views.py changed, reloading.
+INFO 2025-10-31 10:32:46,064 autoreload 90115 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/views.py changed, reloading.
+INFO 2025-10-31 10:32:46,065 autoreload 90114 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/views.py changed, reloading.
+INFO 2025-10-31 10:32:46,679 autoreload 92682 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:32:46,679 autoreload 92684 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:32:46,679 autoreload 92683 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:32:47,844 autoreload 92682 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/views.py changed, reloading.
+INFO 2025-10-31 10:32:47,845 autoreload 92683 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/views.py changed, reloading.
+INFO 2025-10-31 10:32:47,845 autoreload 92684 8334657536 /Users/macbook/Desktop/SIU/Automatizaci-n-de-RH-/empleados/views.py changed, reloading.
+INFO 2025-10-31 10:32:48,087 autoreload 92706 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:32:48,087 autoreload 92707 8334657536 Watching for file changes with StatReloader
+INFO 2025-10-31 10:32:48,088 autoreload 92708 8334657536 Watching for file changes with StatReloader

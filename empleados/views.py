@@ -529,21 +529,29 @@ def aprobar_rh(request, solicitud_id):
     if request.method == 'POST':
         form = AprobacionRHForm(request.POST, solicitud=solicitud)
         if form.is_valid():
-            accion = form.cleaned_data['accion']
-            comentario = form.cleaned_data['comentario']
+            accion = form.cleaned_data.get('accion')
+            comentario = form.cleaned_data.get('comentario', '')
             
             if accion == 'aprobar':
                 if solicitud.aprobar_por_rh(perfil, comentario):
                     messages.success(request, 'Solicitud aprobada exitosamente.')
                 else:
-                    messages.error(request, 'No se pudo aprobar la solicitud.')
-            else:
+                    messages.error(request, 'No se pudo aprobar la solicitud. La solicitud puede que ya haya sido procesada o no esté en estado PENDIENTE_RH.')
+            elif accion == 'rechazar':
                 if solicitud.rechazar_por_rh(perfil, comentario):
                     messages.success(request, 'Solicitud rechazada.')
                 else:
-                    messages.error(request, 'No se pudo rechazar la solicitud.')
+                    messages.error(request, 'No se pudo rechazar la solicitud. La solicitud puede que ya haya sido procesada o no esté en estado PENDIENTE_RH.')
+            else:
+                messages.error(request, 'Acción no válida. Por favor selecciona aprobar o rechazar.')
             
             return redirect('empleados:rh_dashboard')
+        else:
+            # Si el formulario no es válido, mostrar errores
+            messages.error(request, 'Por favor, completa todos los campos requeridos correctamente.')
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field}: {error}')
     else:
         form = AprobacionRHForm(solicitud=solicitud)
     
