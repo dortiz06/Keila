@@ -149,32 +149,28 @@
                                 {% endif %}
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <div class="form-check form-check-card mb-3">
-                                            <input class="form-check-input" type="radio" name="accion" id="aprobar" value="aprobar" {% if form.accion.value == 'aprobar' %}checked{% endif %} required>
-                                            <label class="form-check-label" for="aprobar">
-                                                <div class="card border-success">
-                                                    <div class="card-body text-center">
-                                                        <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
-                                                        <h6 class="text-success">Aprobar Solicitud</h6>
-                                                        <small class="text-muted">La solicitud será aprobada definitivamente</small>
-                                                    </div>
+                                        <label class="form-check-card mb-3 d-block" for="aprobar" style="cursor: pointer;">
+                                            <input class="form-check-input" type="radio" name="accion" id="aprobar" value="aprobar" {% if form.accion.value == 'aprobar' %}checked{% endif %} required style="position: absolute; opacity: 0;">
+                                            <div class="card border-success" id="card-aprobar">
+                                                <div class="card-body text-center">
+                                                    <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                                                    <h6 class="text-success">Aprobar Solicitud</h6>
+                                                    <small class="text-muted">La solicitud será aprobada definitivamente</small>
                                                 </div>
-                                            </label>
-                                        </div>
+                                            </div>
+                                        </label>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="form-check form-check-card mb-3">
-                                            <input class="form-check-input" type="radio" name="accion" id="rechazar" value="rechazar" {% if form.accion.value == 'rechazar' %}checked{% endif %} required>
-                                            <label class="form-check-label" for="rechazar">
-                                                <div class="card border-danger">
-                                                    <div class="card-body text-center">
-                                                        <i class="fas fa-times-circle fa-2x text-danger mb-2"></i>
-                                                        <h6 class="text-danger">Rechazar Solicitud</h6>
-                                                        <small class="text-muted">La solicitud será rechazada definitivamente</small>
-                                                    </div>
+                                        <label class="form-check-card mb-3 d-block" for="rechazar" style="cursor: pointer;">
+                                            <input class="form-check-input" type="radio" name="accion" id="rechazar" value="rechazar" {% if form.accion.value == 'rechazar' %}checked{% endif %} required style="position: absolute; opacity: 0;">
+                                            <div class="card border-danger" id="card-rechazar">
+                                                <div class="card-body text-center">
+                                                    <i class="fas fa-times-circle fa-2x text-danger mb-2"></i>
+                                                    <h6 class="text-danger">Rechazar Solicitud</h6>
+                                                    <small class="text-muted">La solicitud será rechazada definitivamente</small>
                                                 </div>
-                                            </label>
-                                        </div>
+                                            </div>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -209,17 +205,64 @@
                         </form>
                         
                         <script>
-                        document.getElementById('aprobacionForm').addEventListener('submit', function(e) {
-                            const accionSeleccionada = document.querySelector('input[name="accion"]:checked');
-                            if (!accionSeleccionada) {
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const form = document.getElementById('aprobacionForm');
+                            const submitBtn = document.getElementById('submitBtn');
+                            const radioAprobar = document.getElementById('aprobar');
+                            const radioRechazar = document.getElementById('rechazar');
+                            const cardAprobar = document.getElementById('card-aprobar');
+                            const cardRechazar = document.getElementById('card-rechazar');
+                            
+                            // Hacer que los cards sean clickeables
+                            cardAprobar.addEventListener('click', function(e) {
                                 e.preventDefault();
-                                alert('Por favor, selecciona una acción (Aprobar o Rechazar) antes de enviar.');
-                                return false;
+                                radioAprobar.checked = true;
+                                updateCardStyles();
+                            });
+                            
+                            cardRechazar.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                radioRechazar.checked = true;
+                                updateCardStyles();
+                            });
+                            
+                            // Actualizar estilos cuando cambia la selección
+                            radioAprobar.addEventListener('change', updateCardStyles);
+                            radioRechazar.addEventListener('change', updateCardStyles);
+                            
+                            function updateCardStyles() {
+                                if (radioAprobar.checked) {
+                                    cardAprobar.style.borderWidth = '3px';
+                                    cardAprobar.style.boxShadow = '0 0 0 0.2rem rgba(25, 135, 84, 0.25)';
+                                    cardAprobar.style.backgroundColor = 'rgba(25, 135, 84, 0.05)';
+                                    cardRechazar.style.borderWidth = '1px';
+                                    cardRechazar.style.boxShadow = 'none';
+                                    cardRechazar.style.backgroundColor = 'transparent';
+                                } else if (radioRechazar.checked) {
+                                    cardRechazar.style.borderWidth = '3px';
+                                    cardRechazar.style.boxShadow = '0 0 0 0.2rem rgba(220, 53, 69, 0.25)';
+                                    cardRechazar.style.backgroundColor = 'rgba(220, 53, 69, 0.05)';
+                                    cardAprobar.style.borderWidth = '1px';
+                                    cardAprobar.style.boxShadow = 'none';
+                                    cardAprobar.style.backgroundColor = 'transparent';
+                                }
                             }
                             
-                            const submitBtn = document.getElementById('submitBtn');
-                            submitBtn.disabled = true;
-                            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Procesando...';
+                            // Inicializar estilos
+                            updateCardStyles();
+                            
+                            // Validar antes de enviar
+                            form.addEventListener('submit', function(e) {
+                                const accionSeleccionada = document.querySelector('input[name="accion"]:checked');
+                                if (!accionSeleccionada) {
+                                    e.preventDefault();
+                                    alert('Por favor, selecciona una acción (Aprobar o Rechazar) antes de enviar.');
+                                    return false;
+                                }
+                                
+                                submitBtn.disabled = true;
+                                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Procesando...';
+                            });
                         });
                         </script>
                     </div>
@@ -272,18 +315,35 @@
     font-weight: 600;
 }
 
-.form-check-card .form-check-input {
+.form-check-card input[type="radio"] {
     position: absolute;
     opacity: 0;
+    width: 0;
+    height: 0;
 }
 
-.form-check-card .form-check-input:checked + .form-check-label .card {
+.form-check-card input[type="radio"]:checked ~ #card-aprobar,
+.form-check-card input[type="radio"]:checked ~ #card-rechazar {
     border-width: 3px;
-    box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
 }
 
-.form-check-card .form-check-input:checked + .form-check-label .card.border-danger {
+.form-check-card input[type="radio"]#aprobar:checked ~ #card-aprobar {
+    box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+    background-color: rgba(25, 135, 84, 0.05);
+}
+
+.form-check-card input[type="radio"]#rechazar:checked ~ #card-rechazar {
     box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    background-color: rgba(220, 53, 69, 0.05);
+}
+
+.form-check-card label {
+    cursor: pointer;
+}
+
+.form-check-card .card:hover {
+    transform: translateY(-2px);
+    transition: all 0.2s ease;
 }
 
 .form-control, .form-select {
