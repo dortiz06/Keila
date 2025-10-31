@@ -4,8 +4,8 @@
 {% block title %}Panel RH{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
+<div class="container-fluid dashboard-container px-2">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-2">
         <div>
             <h1>Panel Recursos Humanos</h1>
             <p class="mb-0">Bienvenido, {{ perfil.nombre_completo }}</p>
@@ -50,7 +50,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row g-2 mb-2">
         <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
@@ -78,8 +78,8 @@
     </div>
 
     <!-- Tarjetas de estado rápido (igual que empleado) -->
-    <div class="row mt-3">
-        <div class="col-6 col-md-3 mb-3">
+    <div class="row g-2 mb-2">
+        <div class="col-6 col-md-3 mb-2">
             <div class="card text-center h-100">
                 <div class="card-body d-flex flex-column justify-content-center">
                     <i class="fas fa-calendar-check fa-2x text-success mb-2"></i>
@@ -89,7 +89,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-md-3 mb-3">
+        <div class="col-6 col-md-3 mb-2">
             <div class="card text-center h-100">
                 <div class="card-body d-flex flex-column justify-content-center">
                     <i class="fas fa-calendar-minus fa-2x text-danger mb-2"></i>
@@ -99,7 +99,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-6 col-md-3 mb-3">
+        <div class="col-6 col-md-3 mb-2">
             <div class="card text-center h-100">
                 <div class="card-body d-flex flex-column justify-content-center">
                     <i class="fas fa-clock fa-2x text-warning mb-2"></i>
@@ -110,7 +110,7 @@
             </div>
         </div>
         {% if perfil.antiguedad_anos < 1 and perfil.dias_vacaciones_extraordinarios_disponibles > 0 %}
-        <div class="col-6 col-md-3 mb-3">
+        <div class="col-6 col-md-3 mb-2">
             <div class="card text-center h-100">
                 <div class="card-body d-flex flex-column justify-content-center">
                     <i class="fas fa-star fa-2x text-info mb-2"></i>
@@ -123,7 +123,7 @@
         {% endif %}
     </div>
     
-    <div class="row mt-4">
+    <div class="row g-2 mb-2">
         <div class="col-12 col-sm-6 col-lg-4 mb-4">
             <div class="card h-100 square-container">
                 <div class="card-header bg-primary text-white">

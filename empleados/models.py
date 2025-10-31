@@ -24,7 +24,7 @@ class Perfil(models.Model):
     puesto = models.CharField(max_length=100, verbose_name="Puesto")
     supervisor = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Supervisor")
     activo = models.BooleanField(default=True, verbose_name="Activo")
-    
+     
     # Información personal adicional
     telefono = models.CharField(max_length=15, blank=True, verbose_name="Teléfono")
     fecha_nacimiento = models.DateField(null=True, blank=True, verbose_name="Fecha de Nacimiento")

@@ -4,14 +4,14 @@
 {% block title %}Panel Administrador{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="container-fluid dashboard-container px-2">
+    <div class="d-flex justify-content-between align-items-center mb-2">
         <h1><i class="fas fa-crown me-2 text-warning"></i>Panel Administrador</h1>
         <p class="text-muted">Bienvenido, {{ perfil.nombre_completo }}</p>
     </div>
     
     <!-- Botones de Acción Rápida -->
-    <div class="card mb-4">
+    <div class="card mb-2">
         <div class="card-header bg-dark text-white">
             <h5><i class="fas fa-bolt me-2"></i>Accesos Rápidos</h5>
         </div>
@@ -52,13 +52,13 @@
     </div>
     
     <!-- MÓDULO 1: ESTADÍSTICAS DE EMPLEADOS Y DEPARTAMENTOS -->
-    <div class="card mb-4">
+    <div class="card mb-2">
         <div class="card-header bg-primary text-white">
             <h5><i class="fas fa-users me-2"></i>Empleados y Departamentos</h5>
         </div>
         <div class="card-body">
-            <div class="row">
-                <div class="col-md-3">
+    <div class="row">
+        <div class="col-md-3">
                     <div class="card text-center">
                         <div class="card-body">
                             <i class="fas fa-users fa-2x text-primary mb-2"></i>
@@ -87,7 +87,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="card text-center">
-                        <div class="card-body">
+                <div class="card-body">
                             <i class="fas fa-cogs fa-2x text-success mb-2"></i>
                             <h3 class="text-success">{{ stats.empleados_por_tipo.sistemas }}</h3>
                             <p class="mb-0 text-muted">Personal IT</p>
@@ -100,7 +100,7 @@
     
     <div class="row mt-4">
         <!-- MÓDULO 2: ESTADÍSTICAS DE VACACIONES -->
-        <div class="card mb-4">
+        <div class="card mb-2">
             <div class="card-header bg-success text-white">
                 <h5><i class="fas fa-calendar-alt me-2"></i>Módulo de Vacaciones</h5>
             </div>
@@ -130,12 +130,12 @@
                                 <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
                                 <h3 class="text-success">{{ stats.solicitudes_aprobadas_mes }}</h3>
                                 <p class="mb-0 text-muted">Aprobadas Este Mes</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
                         <div class="card text-center">
-                            <div class="card-body">
+                <div class="card-body">
                                 <i class="fas fa-times-circle fa-2x text-danger mb-2"></i>
                                 <h3 class="text-danger">{{ stats.solicitudes_rechazadas_mes }}</h3>
                                 <p class="mb-0 text-muted">Rechazadas Este Mes</p>
@@ -147,7 +147,7 @@
         </div>
     
         <!-- MÓDULO 3: ESTADÍSTICAS DE TICKETS IT -->
-        <div class="card mb-4">
+        <div class="card mb-2">
             <div class="card-header bg-warning text-dark">
                 <h5><i class="fas fa-ticket-alt me-2"></i>Módulo de Tickets IT</h5>
             </div>
@@ -177,12 +177,12 @@
                                 <i class="fas fa-check-double fa-2x text-success mb-2"></i>
                                 <h3 class="text-success">{{ stats.tickets_resueltos_hoy }}</h3>
                                 <p class="mb-0 text-muted">Resueltos Hoy</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
                         <div class="card text-center">
-                            <div class="card-body">
+                <div class="card-body">
                                 <i class="fas fa-archive fa-2x text-danger mb-2"></i>
                                 <h3 class="text-danger">{{ stats.tickets_cancelados_hoy }}</h3>
                                 <p class="mb-0 text-muted">Cancelados Hoy</p>
@@ -194,7 +194,7 @@
         </div>
         
         <!-- MÓDULO 4: ESTADÍSTICAS DE EQUIPOS -->
-        <div class="card mb-4">
+        <div class="card mb-2">
             <div class="card-header bg-info text-white">
                 <h5><i class="fas fa-laptop me-2"></i>Módulo de Equipos e Inventario</h5>
             </div>
@@ -224,12 +224,12 @@
                                 <i class="fas fa-user-check fa-2x text-primary mb-2"></i>
                                 <h3 class="text-primary">{{ stats.equipos_asignados }}</h3>
                                 <p class="mb-0 text-muted">Asignados</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
                         <div class="card text-center">
-                            <div class="card-body">
+                <div class="card-body">
                                 <i class="fas fa-wrench fa-2x text-warning mb-2"></i>
                                 <h3 class="text-warning">{{ stats.equipos_en_reparacion }}</h3>
                                 <p class="mb-0 text-muted">En Reparación</p>
@@ -250,7 +250,7 @@
                 </div>
                 <div class="card-body">
                     {% if solicitudes_recientes %}
-                        <div class="table-responsive">
+            <div class="table-responsive">
                             <table class="table table-hover table-sm">
                                 <thead class="table-light">
                                     <tr>
@@ -263,11 +263,11 @@
                                         <th class="d-none d-sm-table-cell"><i class="fas fa-tag me-1"></i>Tipo</th>
                                         <th><i class="fas fa-info-circle me-1"></i>Estado</th>
                                         <th class="d-none d-lg-table-cell"><i class="fas fa-clock me-1"></i>Solicitado</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for solicitud in solicitudes_recientes %}
-                                    <tr>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for solicitud in solicitudes_recientes %}
+                        <tr>
                                         <td class="d-none d-md-table-cell">
                                             <strong>{{ solicitud.empleado.nombre_completo }}</strong>
                                         </td>
@@ -437,10 +437,10 @@
                                                 <span class="text-muted">-</span>
                                             {% endif %}
                                         </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
                         </div>
                     {% else %}
                         <div class="text-center py-4">
