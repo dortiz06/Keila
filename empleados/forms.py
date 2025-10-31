@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, datetime, date
 from .models import Perfil, Departamento, SolicitudVacaciones, Ticket, Equipo, AsignacionEquipo, CategoriaEquipo
 
 
@@ -170,16 +170,19 @@ class SolicitudVacacionesForm(forms.ModelForm):
             
             # Validar que no sea en el pasado
             # Usar solo la fecha sin hora para comparar correctamente
+            from datetime import date
             hoy = timezone.now().date()
-            fecha_inicio_date = fecha_inicio if isinstance(fecha_inicio, timezone.datetime.date) else fecha_inicio
             
-            # Asegurar que comparamos solo fechas (sin hora)
-            if isinstance(fecha_inicio_date, str):
-                from datetime import datetime
+            # Asegurar que tenemos un objeto date
+            if isinstance(fecha_inicio, date):
+                fecha_inicio_date = fecha_inicio
+            elif isinstance(fecha_inicio, str):
                 try:
-                    fecha_inicio_date = datetime.strptime(fecha_inicio_date, '%Y-%m-%d').date()
+                    fecha_inicio_date = datetime.strptime(fecha_inicio, '%Y-%m-%d').date()
                 except ValueError:
                     raise forms.ValidationError('Formato de fecha inválido.')
+            else:
+                fecha_inicio_date = fecha_inicio
             
             if fecha_inicio_date < hoy:
                 raise forms.ValidationError('No puedes solicitar vacaciones para fechas pasadas.')
