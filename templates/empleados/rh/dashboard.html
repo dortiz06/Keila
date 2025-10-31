@@ -29,20 +29,20 @@
         <div class="row g-2">
             {% if perfil.mostrar_seccion_ano_anterior %}
             <div class="col-md-4">
-                <div class="p-2 bg-white rounded">
+                <div class="p-2 rounded">
                     <small class="text-muted">Año Anterior Completado</small>
                     <div class="h5 mb-0 text-primary">{{ perfil.dias_ano_anterior_completado }} días</div>
                 </div>
             </div>
             {% endif %}
             <div class="{% if perfil.mostrar_seccion_ano_anterior %}col-md-4{% else %}col-md-6{% endif %}">
-                <div class="p-2 bg-white rounded">
+                <div class="p-2 rounded">
                     <small class="text-muted">Acumulado este año (hoy)</small>
                     <div class="h5 mb-0 text-primary">{{ perfil.calcular_dias_acumulados_hasta_hoy }} días</div>
                 </div>
             </div>
             <div class="{% if perfil.mostrar_seccion_ano_anterior %}col-md-4{% else %}col-md-6{% endif %}">
-                <div class="p-2 bg-white rounded">
+                <div class="p-2 rounded">
                     <small class="text-muted">Total proyectado disponible</small>
                     <div class="h5 mb-0 text-success">{{ perfil.calcular_total_disponible_proyectado }} días</div>
                 </div>
