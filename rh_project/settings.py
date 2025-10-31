@@ -110,19 +110,6 @@ TIME_ZONE = 'America/Mexico_City'
 USE_I18N = True
 USE_TZ = True
 
-# Formato de fechas
-DATE_FORMAT = 'd/m/Y'
-DATE_INPUT_FORMATS = [
-    '%d/%m/%Y',  # DD/MM/YYYY
-    '%Y-%m-%d',  # YYYY-MM-DD (para compatibilidad)
-    '%d-%m-%Y',  # DD-MM-YYYY
-]
-DATETIME_FORMAT = 'd/m/Y H:i'
-DATETIME_INPUT_FORMATS = [
-    '%d/%m/%Y %H:%M',
-    '%Y-%m-%d %H:%M:%S',
-]
-
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
