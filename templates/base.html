@@ -44,6 +44,15 @@
         .navbar-brand {
             font-weight: bold;
             font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-brand img {
+            height: 55px;
+            width: auto;
+            margin-right: 12px;
+            object-fit: contain;
         }
 
         .card {
@@ -482,7 +491,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="{% url 'empleados:dashboard' %}">
-                <i class="fas fa-users me-2"></i>
+                <img src="{% static 'images/logos/Sello_keila.png' %}" alt="Grupo Keila" />
                 Sistema GK
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -580,7 +589,7 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container text-center">
-            <p class="mb-0">Desarrollo de un sistema de gestión en el área de Recursos Humanos en Grupo Keila S.A. de C.V.</p>
+            <p class="mb-0">Sistema de Gestión en Grupo Keila S.A. de C.V.</p>
         </div>
     </footer>
 
