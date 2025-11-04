@@ -127,7 +127,7 @@
                             </div>
                         </div>
                         <div class="text-center mt-3">
-                            <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-primary">
+                            <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-outline-primary">
                                 <i class="fas fa-calendar-check me-1"></i>Solicitar Vacaciones
                             </a>
                         </div>
@@ -226,13 +226,13 @@
                             {% endif %}
                             
                             {% if es_jefe %}
-                                <a href="{% url 'empleados:jefe_dashboard' %}" class="btn btn-outline-success btn-sm">
+                                <a href="{% url 'empleados:jefe_dashboard' %}" class="btn btn-outline-warning btn-sm">
                                     <i class="fas fa-user-tie me-1"></i>Panel de Jefe
                                 </a>
                             {% endif %}
                             
                             {% if es_empleado %}
-                                <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-outline-info btn-sm">
+                                <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-success btn-sm">
                                     <i class="fas fa-calendar-check me-1"></i>Solicitar Vacaciones
                                 </a>
                             {% endif %}
@@ -250,13 +250,13 @@
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
-                            <a href="{% url 'empleados:dashboard' %}" class="btn btn-outline-secondary btn-sm">
+                            <a href="{% url 'empleados:dashboard' %}" class="btn btn-outline-primary btn-sm">
                                 <i class="fas fa-home me-1"></i>Inicio
                             </a>
-                            <a href="{% url 'empleados:gestion_usuarios' %}" class="btn btn-outline-secondary btn-sm">
+                            <a href="{% url 'empleados:gestion_usuarios' %}" class="btn btn-outline-primary btn-sm">
                                 <i class="fas fa-users me-1"></i>Ver Empleados
                             </a>
-                            <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-outline-secondary btn-sm">
+                            <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-outline-success btn-sm">
                                 <i class="fas fa-calendar-alt me-1"></i>Solicitar Vacaciones
                             </a>
                             {% if user.is_staff %}

@@ -82,11 +82,10 @@
                                 {% endfor %}
                             {% endif %}
 
-                            {% if puede_solicitar_extraordinarias %}
+                            {% if puede_solicitar_normales %}
                             <div class="alert alert-info alert-dismissible fade show" role="alert">
                                 <i class="fas fa-info-circle me-2"></i>
-                                <strong>¡Buenas noticias!</strong> Tienes días acumulados disponibles, por lo que puedes solicitar 
-                                <strong>Vacaciones Extraordinarias</strong> además de las vacaciones normales.
+                                <strong>¡Buenas noticias!</strong> Tienes días acumulados disponibles para solicitar tus vacaciones normales.
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             </div>
                             {% endif %}
@@ -174,7 +173,7 @@
                                 {% endif %}
 
                                 <div class="d-flex justify-content-between">
-                                    <a href="{% url 'empleados:empleado_dashboard' %}" class="btn btn-secondary">
+                                    <a href="{% url 'empleados:empleado_dashboard' %}" class="btn btn-outline-secondary">
                                         <i class="fas fa-times me-1"></i>Cancelar
                                     </a>
                                     <button type="submit" class="btn btn-primary" 

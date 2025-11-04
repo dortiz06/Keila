@@ -371,11 +371,18 @@ def solicitar_vacaciones(request):
         perfil.dias_vacaciones_extraordinarios_disponibles >= 1
     )
     
+    # Verificar si puede solicitar vacaciones normales (antigüedad >= 1 año y días disponibles)
+    puede_solicitar_normales = (
+        perfil.antiguedad_anos >= 1 and 
+        perfil.dias_vacaciones_disponibles > 0
+    )
+    
     context = {
         'form': form,
         'perfil': perfil,
         'solicitudes_recientes': solicitudes_recientes,
         'puede_solicitar_extraordinarias': puede_solicitar_extraordinarias,
+        'puede_solicitar_normales': puede_solicitar_normales,
         'dias_extraordinarios_disponibles': perfil.dias_vacaciones_extraordinarios_disponibles,
     }
     return render(request, 'empleados/empleado/solicitar_vacaciones.html', context)

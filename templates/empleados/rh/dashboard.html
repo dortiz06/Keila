@@ -11,7 +11,7 @@
             <p class="mb-0">Bienvenido, {{ perfil.nombre_completo }}</p>
         </div>
         <div class="mt-2 mt-md-0">
-            <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-primary">
+            <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-outline-primary">
                 <i class="fas fa-calendar-plus me-1"></i>Solicitar Vacaciones
             </a>
         </div>
@@ -149,7 +149,7 @@
                                     </td>
                                     <td><span class="badge bg-warning">{{ solicitud.dias_solicitados }}</span></td>
                                     <td>
-                                        <a href="{% url 'empleados:aprobar_rh' solicitud.id %}" class="btn btn-sm btn-primary">Revisar</a>
+                                        <a href="{% url 'empleados:aprobar_rh' solicitud.id %}" class="btn btn-sm btn-outline-primary">Revisar</a>
                                     </td>
                                 </tr>
                                 {% endfor %}

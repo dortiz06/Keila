@@ -57,7 +57,7 @@
                     </div>
                     
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-outline-primary">
                             <i class="fas fa-search me-1"></i>Filtrar
                         </button>
                         <a href="{% url 'lista_empleados' %}" class="btn btn-outline-secondary">
@@ -76,10 +76,10 @@
                         <i class="fas fa-list me-2"></i>Empleados ({{ empleados|length }})
                     </h5>
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-outline-light btn-sm" onclick="toggleView('card')">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="toggleView('card')">
                             <i class="fas fa-th-large"></i>
                         </button>
-                        <button type="button" class="btn btn-outline-light btn-sm" onclick="toggleView('table')">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="toggleView('table')">
                             <i class="fas fa-table"></i>
                         </button>
                     </div>
@@ -173,7 +173,7 @@
                                             </div>
                                             
                                             <div class="d-grid gap-2">
-                                                <a href="{% url 'detalle_empleado' empleado.id %}" class="btn btn-primary btn-sm">
+                                                <a href="{% url 'detalle_empleado' empleado.id %}" class="btn btn-outline-primary btn-sm">
                                                     <i class="fas fa-eye me-1"></i>Ver Detalles
                                                 </a>
                                                 <a href="/admin/empleados/empleado/{{ empleado.id }}/change/" class="btn btn-outline-warning btn-sm">
@@ -191,7 +191,7 @@
                             <i class="fas fa-user-slash fa-4x text-muted mb-3"></i>
                             <h4 class="text-muted">No se encontraron empleados</h4>
                             <p class="text-muted">No hay empleados que coincidan con los filtros seleccionados.</p>
-                            <a href="{% url 'lista_empleados' %}" class="btn btn-primary">
+                            <a href="{% url 'lista_empleados' %}" class="btn btn-outline-primary">
                                 <i class="fas fa-refresh me-1"></i>Ver Todos los Empleados
                             </a>
                         </div>

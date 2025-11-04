@@ -147,9 +147,9 @@
                                         <td>{{ ticket.fecha_creacion|date:"d/m/Y H:i" }}</td>
                                         <td>
                                             {% if ticket.estado == 'PENDIENTE' %}
-                                                <a href="{% url 'empleados:asignar_ticket' ticket.id %}" class="btn btn-sm btn-success">Asignarme</a>
+                                                <a href="{% url 'empleados:asignar_ticket' ticket.id %}" class="btn btn-sm btn-outline-success">Asignarme</a>
                                             {% elif ticket.estado == 'EN_PROCESO' %}
-                                                <a href="{% url 'empleados:resolver_ticket' ticket.id %}" class="btn btn-sm btn-primary">Resolver</a>
+                                                <a href="{% url 'empleados:resolver_ticket' ticket.id %}" class="btn btn-sm btn-outline-primary">Resolver</a>
                                             {% endif %}
                                         </td>
                                     </tr>
