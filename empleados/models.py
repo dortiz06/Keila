@@ -46,7 +46,7 @@ class Perfil(models.Model):
         verbose_name = "Perfil"
         verbose_name_plural = "Perfiles"
         ordering = ['usuario__last_name', 'usuario__first_name']
-    
+     
     def __str__(self):
         return f"{self.usuario.get_full_name()} - {self.get_tipo_perfil_display()}"
     
