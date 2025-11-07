@@ -5,11 +5,55 @@
 
 {% block content %}
 <div class="container-fluid">
-    <!-- Header -->
-    <div class="page-header">
+    <!-- Header con Glassmorphism -->
+    <div class="page-header glassmorphism-header">
         <div class="container">
-            <h1><i class="fas fa-user-circle me-3"></i>Mi Perfil</h1>
-            <p>Gestiona tu información personal y laboral</p>
+            {% comment %} Línea Principal (H1) - Saludo y Nombre {% endcomment %}
+            <h1 class="header-line-primary">
+                {% if es_propio_perfil %}
+                    <span id="saludo-dinamico" class="saludo-placeholder"></span>
+                {% endif %}
+                {% comment %} Nombre completo {% endcomment %}
+                {% if tiene_perfil %}
+                    {% if perfil.nombre_completo %}
+                        {{ perfil.nombre_completo }}
+                    {% elif user.get_full_name %}
+                        {{ user.get_full_name }}
+                    {% else %}
+                        {{ user.username }}
+                    {% endif %}
+                {% else %}
+                    {% if user.get_full_name %}
+                        {{ user.get_full_name }}
+                    {% else %}
+                        {{ user.username }}
+                    {% endif %}
+                {% endif %}
+            </h1>
+            
+            {% comment %} Línea Secundaria (H2) - Puesto y Departamento {% endcomment %}
+            {% if tiene_perfil %}
+                {% if perfil.puesto or perfil.departamento %}
+                <h2 class="header-line-secondary">
+                    {% if perfil.puesto %}
+                        {{ perfil.puesto }}
+                    {% endif %}
+                    {% if perfil.puesto and perfil.departamento %}
+                        | 
+                    {% endif %}
+                    {% if perfil.departamento %}
+                        {{ perfil.departamento.nombre }}
+                    {% endif %}
+                </h2>
+                {% endif %}
+            {% endif %}
+            
+            {% comment %} Línea de Acción (H3) - Solo para usuario propio {% endcomment %}
+            {% if es_propio_perfil %}
+            <h3 class="header-line-action">
+                Gestiona tu información personal y laboral
+            </h3>
+            {% endif %}
         </div>
     </div>
 
@@ -298,6 +342,61 @@
 </div>
 
 <style>
+/* Estilos Glassmorphism para la cabecera */
+.glassmorphism-header {
+    background: rgba(0, 56, 168, 0.7) !important; /* Azul rey de la empresa con transparencia */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 3rem 0 !important;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    color: white !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.glassmorphism-header * {
+    color: white !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Línea Principal (H1) - Saludo y Nombre */
+.header-line-primary {
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 2.2rem; /* Tamaño profesional entre 2.0rem - 2.5rem */
+    font-weight: 700; /* Montserrat Bold */
+    margin-bottom: 0.75rem;
+    color: white !important;
+    line-height: 1.2;
+}
+
+.saludo-placeholder {
+    margin-right: 0.5rem;
+}
+
+/* Línea Secundaria (H2) - Puesto y Departamento */
+.header-line-secondary {
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 1.5rem;
+    font-weight: 500; /* Montserrat Medium */
+    margin-bottom: 0.5rem;
+    color: white !important;
+    opacity: 0.95;
+    line-height: 1.3;
+}
+
+/* Línea de Acción (H3) - Gestión */
+.header-line-action {
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 1.1rem;
+    font-weight: 300; /* Montserrat Light */
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.9) !important;
+    margin-bottom: 0;
+    line-height: 1.4;
+}
+
 .stats-number {
     font-size: 2rem;
     font-weight: bold;
@@ -332,5 +431,48 @@
     font-size: 0.8rem;
     padding: 0.5em 0.75em;
 }
+
+/* Responsive para la cabecera */
+@media (max-width: 768px) {
+    .glassmorphism-header {
+        padding: 2rem 0 !important;
+        border-radius: 15px;
+    }
+    
+    .header-line-primary {
+        font-size: 1.8rem;
+    }
+    
+    .header-line-secondary {
+        font-size: 1.2rem;
+    }
+    
+    .header-line-action {
+        font-size: 1rem;
+    }
+}
 </style>
-{% endblock %}
+
+{% block extra_js %}
+<script>
+// Saludo dinámico basado en la hora local del usuario
+(function() {
+    const saludoElement = document.getElementById('saludo-dinamico');
+    if (!saludoElement) return;
+    
+    const horaActual = new Date().getHours();
+    let saludo;
+    
+    if (horaActual >= 0 && horaActual < 12) {
+        saludo = 'Buenos días,';
+    } else if (horaActual >= 12 && horaActual < 20) {
+        saludo = 'Buenas tardes,';
+    } else {
+        saludo = 'Buenas noches,';
+    }
+    
+    saludoElement.textContent = saludo;
+})();
+</script>
+{% endblock extra_js %}
+{% endblock content %}

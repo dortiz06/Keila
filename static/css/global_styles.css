@@ -27,6 +27,45 @@ main {
     margin-top: auto; /* Empuja el footer hacia abajo */
 }
 
+
+/* EXCEPCIÓN: Solo las tarjetas y elementos específicos tienen Glassmorphism */
+.card {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
+    display: flex;
+    flex-direction: column;
+}
+
+.alert {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.glass-box {
+    background-color: rgba(255, 255, 255, 0.15) !important; /* Blanco con 15% de opacidad para efecto cristal */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Asegurar que el texto sea legible sobre el degradado */
+body, main, .container, .container-fluid {
+    color: var(--dark-text);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--dark-text) !important;
+}
+
 @media (max-width: 768px) {
     body {
         background-size: cover;
@@ -34,24 +73,7 @@ main {
     }
 }
 
-/* Estilos para el efecto Glassmorphism */
-.alert {
-    backdrop-filter: blur(10px);
-    background-color: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.card {
-    background-color: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 18px;
-    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
-    display: flex;
-    flex-direction: column;
-}
+/* Estilos duplicados eliminados - ya están definidos arriba */
 
 .card-body {
     flex-grow: 1;

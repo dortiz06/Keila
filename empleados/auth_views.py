@@ -95,6 +95,8 @@ def perfil_usuario(request):
     es_rh = perfil.es_rh() if perfil else False
     es_jefe = perfil.es_jefe_area() if perfil else False
     es_empleado = perfil.es_empleado() if perfil else False
+    # Esta vista siempre muestra el perfil del usuario logueado, por lo que siempre es su propio perfil
+    es_propio_perfil = True
     
     context = {
         'user': request.user,
@@ -105,6 +107,7 @@ def perfil_usuario(request):
         'es_jefe': es_jefe,
         'es_empleado': es_empleado,
         'equipos_asignados': equipos_asignados,
+        'es_propio_perfil': es_propio_perfil,
     }
     
     return render(request, 'empleados/perfil_usuario.html', context)

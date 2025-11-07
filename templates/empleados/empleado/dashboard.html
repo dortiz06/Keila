@@ -4,7 +4,7 @@
 {% block title %}Panel Empleado{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
+<div class="container-fluid dashboard">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
         <div class="mb-3 mb-md-0">
             <h1><i class="fas fa-tachometer-alt me-2"></i>Mi Panel</h1>
@@ -14,7 +14,7 @@
             <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-outline-primary">
                 <i class="fas fa-calendar-plus me-1"></i><span class="d-none d-sm-inline">Solicitar Vacaciones</span><span class="d-inline d-sm-none">Vacaciones</span>
             </a>
-            <a href="{% url 'empleados:crear_ticket' %}" class="btn btn-success">
+            <a href="{% url 'empleados:crear_ticket' %}" class="btn btn-success btn-generar-ticket">
                 <i class="fas fa-headset me-1"></i><span class="d-none d-sm-inline">Generar Ticket</span><span class="d-inline d-sm-none">Ticket</span>
             </a>
         </div>
@@ -40,21 +40,21 @@
     <div class="row">
             {% if perfil.mostrar_seccion_ano_anterior %}
             <div class="col-md-4">
-                <div class="p-2 bg-white rounded">
+                <div class="p-2 glass-box rounded">
                     <small class="text-muted">Año Anterior Completado</small>
                     <div class="h5 mb-0 text-primary">{{ perfil.dias_ano_anterior_completado }} días</div>
                 </div>
             </div>
             {% endif %}
             <div class="{% if perfil.mostrar_seccion_ano_anterior %}col-md-4{% else %}col-md-6{% endif %}">
-                <div class="p-2 bg-white rounded">
+                <div class="p-2 glass-box rounded">
                     <small class="text-muted">Acumulado Este Año (hasta hoy)</small>
                     <div class="h5 mb-0 text-success">{{ perfil.calcular_dias_acumulados_hasta_hoy }} días</div>
                     <small class="text-muted">({{ perfil.calcular_acumulacion_diaria }} días/día trabajado)</small>
                 </div>
             </div>
             <div class="{% if perfil.mostrar_seccion_ano_anterior %}col-md-4{% else %}col-md-6{% endif %}">
-                <div class="p-2 bg-white rounded">
+                <div class="p-2 glass-box rounded">
                     <small class="text-muted">Total Proyectado Disponible</small>
                     <div class="h5 mb-0 text-info">{{ perfil.calcular_total_disponible_proyectado }} días</div>
                     <small class="text-muted">Al finalizar año: {{ perfil.dias_al_finalizar_ano_actual }} días</small>
@@ -313,6 +313,108 @@
         </div>
     </div>
 </div>
+
+<style>
+
+/* Glassmorphism para cajas pequeñas de información */
+.glass-box {
+    background: rgba(255, 255, 255, 0.15) !important; /* Blanco con 15% de opacidad para efecto cristal */
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos Glassmorphism para tarjetas de métricas */
+.dashboard .card {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.15) !important; /* Blanco con 15% de opacidad para efecto cristal */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Iconos con color azul corporativo en tarjetas de métricas */
+.dashboard .card .fa-calendar-check,
+.dashboard .card .fa-calendar-times,
+.dashboard .card .fa-clock,
+.dashboard .card .fa-laptop,
+.dashboard .card .fa-ticket-alt {
+    color: var(--primary-color) !important;
+}
+
+/* Botón Generar Ticket - Verde Esmeralda destacado */
+.btn-generar-ticket {
+    background: linear-gradient(135deg, #16A34A, #22C55E) !important;
+    border: none !important;
+    color: white !important;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-generar-ticket:hover {
+    background: linear-gradient(135deg, #22C55E, #16A34A) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);
+    color: white !important;
+}
+
+/* Encabezados de secciones inferiores - Azul corporativo más oscuro con Glassmorphism */
+.dashboard .card-header.bg-primary,
+.dashboard .card-header.bg-success {
+    background: linear-gradient(135deg, rgba(0, 56, 168, 0.85), rgba(30, 58, 138, 0.85)) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    font-weight: 600;
+    color: white !important;
+}
+
+/* Asegurar que el cuerpo de las tarjetas sea Glassmorphism semitransparente */
+.dashboard .card .card-body {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* Mejoras en las tarjetas de métricas */
+.dashboard .card.text-center .card-body {
+    padding: 1.5rem;
+}
+
+.dashboard .card.text-center h3 {
+    font-weight: 700;
+    font-size: 2rem;
+    margin: 0.5rem 0;
+}
+
+.dashboard .card.text-center h5 {
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Responsive para tarjetas de métricas */
+@media (max-width: 768px) {
+    .dashboard .card.text-center h3 {
+        font-size: 1.5rem;
+    }
+    
+    .dashboard .card.text-center .fa-2x {
+        font-size: 1.5rem !important;
+    }
+}
+</style>
 {% endblock %}
 
 
