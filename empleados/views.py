@@ -3,15 +3,51 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
 from django.contrib import messages
 from django.db.models import Q, Count
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
+from django.urls import reverse
 from .models import Perfil, Departamento, SolicitudVacaciones, ConfiguracionSistema, Ticket, Equipo, AsignacionEquipo
 from .forms import (
     UsuarioConPerfilForm, SolicitudVacacionesForm, 
     AprobacionJefeForm, AprobacionRHForm, EditarPerfilForm, ConfigurarDepartamentoForm
 )
 from datetime import date, timedelta
+from reportlab.lib.pagesizes import letter, A4
+from reportlab.lib import colors
+from reportlab.lib.units import cm
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
+from reportlab.pdfgen import canvas
+from reportlab.lib.utils import ImageReader
+from django.conf import settings
+import os
+
+
+def calcular_fecha_presentarse(fecha_fin):
+    """
+    Calcula la fecha de presentación después de las vacaciones.
+    El domingo es día obligatorio de descanso, por lo que:
+    - Si las vacaciones terminan en sábado, se presenta el lunes (saltando domingo)
+    - Si el día siguiente es domingo, se salta al lunes
+    - En cualquier otro caso, se presenta el día siguiente
+    """
+    # Calcular el día siguiente
+    fecha_siguiente = fecha_fin + timedelta(days=1)
+    
+    # weekday() retorna: 0=Lunes, 1=Martes, 2=Miércoles, 3=Jueves, 4=Viernes, 5=Sábado, 6=Domingo
+    dia_semana = fecha_siguiente.weekday()
+    
+    # Si el día siguiente es domingo (6), saltar al lunes
+    if dia_semana == 6:  # Domingo
+        # Agregar un día más para llegar al lunes
+        fecha_siguiente = fecha_siguiente + timedelta(days=1)
+    
+    # Si las vacaciones terminan en sábado, el día siguiente es domingo, 
+    # pero ya lo manejamos arriba, así que esto está cubierto
+    
+    return fecha_siguiente
 
 
 def get_user_profile(user):
@@ -342,6 +378,29 @@ def editar_perfil(request, perfil_id):
 # === GESTIÓN DE VACACIONES ===
 
 @login_required
+def mis_vacaciones(request):
+    """Vista para ver todas las solicitudes de vacaciones del empleado"""
+    perfil = get_user_profile(request.user)
+    if not perfil:
+        raise PermissionDenied
+    
+    # Obtener todas las solicitudes del empleado
+    solicitudes = SolicitudVacaciones.objects.filter(
+        empleado=perfil
+    ).order_by('-fecha_solicitud')
+    
+    # Verificar si puede solicitar vacaciones normales
+    puede_normal = perfil.antiguedad_anos >= 1
+    
+    context = {
+        'solicitudes': solicitudes,
+        'perfil': perfil,
+        'puede_normal': puede_normal,
+    }
+    return render(request, 'empleados/mis_vacaciones.html', context)
+
+
+@login_required
 def solicitar_vacaciones(request):
     """Solicitar vacaciones - Empleados, RH y personal de sistemas"""
     perfil = get_user_profile(request.user)
@@ -492,7 +551,7 @@ def solicitudes_rh(request):
     # Filtrar por estado (para ver también otras solicitudes si se desea)
     if estado_actual == 'P':
         solicitudes = solicitudes.filter(estado='PENDIENTE_RH')
-    elif estado_actual == 'A':
+    elif estado_actual == 'A' or estado_actual == 'APROBADO_RH':
         solicitudes = SolicitudVacaciones.objects.filter(estado='APROBADO_RH').select_related(
             'empleado', 'empleado__departamento'
         ).order_by('-fecha_solicitud')
@@ -541,7 +600,7 @@ def aprobar_rh(request, solicitud_id):
             
             if accion == 'aprobar':
                 if solicitud.aprobar_por_rh(perfil, comentario):
-                    messages.success(request, 'Solicitud aprobada exitosamente.')
+                    messages.success(request, f'Solicitud aprobada exitosamente. <a href="{reverse("empleados:generar_pdf_vacaciones", args=[solicitud.id])}" class="alert-link" target="_blank">Descargar Formulario de Vacaciones</a>', extra_tags='safe')
                 else:
                     messages.error(request, 'No se pudo aprobar la solicitud. La solicitud puede que ya haya sido procesada o no esté en estado PENDIENTE_RH.')
             elif accion == 'rechazar':
@@ -568,6 +627,46 @@ def aprobar_rh(request, solicitud_id):
         'perfil': perfil,
     }
     return render(request, 'empleados/rh/aprobar_solicitud.html', context)
+
+
+@login_required
+def generar_pdf_vacaciones(request, solicitud_id):
+    """Vista previa del formulario de vacaciones - Solo RH y Admin"""
+    solicitud = get_object_or_404(SolicitudVacaciones, id=solicitud_id)
+    perfil = get_user_profile(request.user)
+    
+    # Solo RH y admin pueden ver la vista previa
+    if not perfil:
+        raise PermissionDenied
+    
+    if not (perfil.es_rh() or perfil.es_admin()):
+        raise PermissionDenied
+    
+    # Solo mostrar vista previa si está aprobada por RH
+    if solicitud.estado != 'APROBADO_RH':
+        if perfil.es_rh() or perfil.es_admin():
+            messages.error(request, 'Solo se puede generar el formulario de solicitudes aprobadas por RH.')
+            return redirect('empleados:rh_dashboard')
+        else:
+            raise PermissionDenied
+    
+    # Calcular datos necesarios
+    empleado = solicitud.empleado
+    fecha_presentarse = calcular_fecha_presentarse(solicitud.fecha_fin)
+    ano_vacaciones = solicitud.fecha_fin.year
+    dias_usados_antes = empleado.dias_vacaciones_usados - solicitud.dias_solicitados
+    dias_pendientes = max(0, empleado.dias_vacaciones_anuales - dias_usados_antes)
+    
+    context = {
+        'solicitud': solicitud,
+        'fecha_actual': timezone.now(),
+        'fecha_presentarse': fecha_presentarse,
+        'ano_vacaciones': ano_vacaciones,
+        'dias_pendientes': dias_pendientes,
+        'perfil': perfil,
+    }
+    
+    return render(request, 'empleados/rh/vista_previa_vacaciones.html', context)
 
 
 # === GESTIÓN DE DEPARTAMENTOS ===

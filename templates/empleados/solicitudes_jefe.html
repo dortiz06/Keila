@@ -138,6 +138,10 @@
                                             <a href="{% url 'empleados:aprobar_jefe' solicitud.id %}" class="btn btn-sm btn-outline-primary">
                                                 <i class="fas fa-check me-1"></i>Revisar
                                             </a>
+                                        {% elif solicitud.estado == 'APROBADO_RH' %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check-circle me-1"></i>Aprobada por RH
+                                            </span>
                                         {% else %}
                                             <span class="text-muted">Procesada</span>
                                         {% endif %}

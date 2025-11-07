@@ -168,10 +168,11 @@ class SolicitudVacacionesForm(forms.ModelForm):
             if fecha_fin < fecha_inicio:
                 raise forms.ValidationError('La fecha de fin debe ser posterior a la fecha de inicio.')
             
-            # Validar que no sea en el pasado
-            # Usar solo la fecha sin hora para comparar correctamente
+            # Validar que no sea más de una semana en el pasado
+            # Permitir solicitar vacaciones hasta 7 días antes (para cambiar faltas por días de vacaciones)
             from datetime import date
             hoy = timezone.now().date()
+            fecha_limite = hoy - timedelta(days=7)  # Permite hasta una semana antes
             
             # Asegurar que tenemos un objeto date
             if isinstance(fecha_inicio, date):
@@ -184,8 +185,8 @@ class SolicitudVacacionesForm(forms.ModelForm):
             else:
                 fecha_inicio_date = fecha_inicio
             
-            if fecha_inicio_date < hoy:
-                raise forms.ValidationError('No puedes solicitar vacaciones para fechas pasadas.')
+            if fecha_inicio_date < fecha_limite:
+                raise forms.ValidationError('No puedes solicitar vacaciones para fechas anteriores a hace una semana. Solo se permite retroceder hasta 7 días para cambiar faltas por días de vacaciones.')
             
             # Calcular días solicitados (excluyendo domingos)
             dias_solicitados = SolicitudVacaciones.calcular_dias_laborables(fecha_inicio, fecha_fin)

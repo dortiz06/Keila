@@ -1,67 +1,138 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Mis Vacaciones{% endblock %}
 
 {% block content %}
-<div class="page-header">
-  <div class="container">
-    <h1><i class="fas fa-suitcase-rolling me-2"></i>Mis Vacaciones</h1>
-    <p>
-      {% if puede_normal %}
-        Puedes solicitar vacaciones normales.
-      {% else %}
-        Aún no cumples 1 año. Puedes solicitar una <strong>vacación extraordinaria</strong> con justificación.
-      {% endif %}
-    </p>
-  </div>
-  </div>
-
-<div class="container">
-  <div class="text-end mb-3">
-    <a href="{% url 'solicitar_vacaciones' %}" class="btn btn-primary">
-      <i class="fas fa-plus me-1"></i> Solicitar Vacaciones
-    </a>
-  </div>
-
-  <div class="card">
-    <div class="card-header">Mis Solicitudes</div>
-    <div class="card-body">
-      {% if solicitudes %}
-      <div class="table-responsive">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>Período</th>
-              <th>Días</th>
-              <th>Tipo</th>
-              <th>Etapa</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for s in solicitudes %}
-            <tr>
-              <td>{{ s.fecha_inicio|date:"d/m/Y" }} - {{ s.fecha_fin|date:"d/m/Y" }}</td>
-              <td>{{ s.dias_solicitados }}</td>
-              <td>
-                {% if s.tipo == 'N' %}
-                  <span class="badge bg-success">Normal</span>
-                {% else %}
-                  <span class="badge bg-warning">Extraordinaria</span>
-                {% endif %}
-              </td>
-              <td>{{ s.get_etapa_display }}</td>
-              <td>{{ s.get_estado_display }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      {% else %}
-        <p class="text-muted mb-0">Aún no tienes solicitudes.</p>
-      {% endif %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1><i class="fas fa-calendar-alt me-2"></i>Mis Solicitudes de Vacaciones</h1>
+            <p class="text-muted mb-0">Historial completo de tus solicitudes de vacaciones</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'empleados:empleado_dashboard' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Volver al Panel
+            </a>
+            <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i>Solicitar Vacaciones
+            </a>
+        </div>
     </div>
-  </div>
- </div>
-{% endblock %}
 
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-list me-2"></i>Todas mis Solicitudes</h5>
+                </div>
+                <div class="card-body">
+                    {% if solicitudes %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th><i class="fas fa-calendar me-1"></i>Período</th>
+                                    <th><i class="fas fa-hashtag me-1"></i>Días</th>
+                                    <th><i class="fas fa-tag me-1"></i>Tipo</th>
+                                    <th><i class="fas fa-info-circle me-1"></i>Estado</th>
+                                    <th><i class="fas fa-clock me-1"></i>Fecha Solicitud</th>
+                                    <th><i class="fas fa-comment me-1"></i>Comentarios</th>
+                                    <th><i class="fas fa-cog me-1"></i>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for solicitud in solicitudes %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ solicitud.fecha_inicio|date:"d/m/Y" }}</strong><br>
+                                        <small class="text-muted">hasta {{ solicitud.fecha_fin|date:"d/m/Y" }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary">{{ solicitud.dias_solicitados }} día{{ solicitud.dias_solicitados|pluralize }}</span>
+                                    </td>
+                                    <td>
+                                        {% if solicitud.tipo == 'NORMAL' %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check-circle me-1"></i>Normal
+                                            </span>
+                                        {% elif solicitud.tipo == 'EXTRAORDINARIA' %}
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-exclamation-triangle me-1"></i>Extraordinaria
+                                            </span>
+                                        {% elif solicitud.tipo == 'EMERGENCIA' %}
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-exclamation-circle me-1"></i>Emergencia
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ solicitud.get_tipo_display }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if solicitud.estado == 'PENDIENTE_JEFE' %}
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-clock me-1"></i>Pendiente Jefe
+                                            </span>
+                                        {% elif solicitud.estado == 'PENDIENTE_RH' %}
+                                            <span class="badge bg-info">
+                                                <i class="fas fa-clock me-1"></i>Pendiente RH
+                                            </span>
+                                        {% elif solicitud.estado == 'APROBADO_RH' %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check-circle me-1"></i>Aprobada
+                                            </span>
+                                        {% elif solicitud.estado == 'RECHAZADO_JEFE' or solicitud.estado == 'RECHAZADO_RH' %}
+                                            <span class="badge bg-danger">
+                                                <i class="fas fa-times me-1"></i>Rechazada
+                                            </span>
+                                        {% elif solicitud.estado == 'CANCELADO' %}
+                                            <span class="badge bg-secondary">
+                                                <i class="fas fa-ban me-1"></i>Cancelada
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ solicitud.get_estado_display }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ solicitud.fecha_solicitud|date:"d/m/Y" }}<br>
+                                        <small class="text-muted">{{ solicitud.fecha_solicitud|time:"H:i" }}</small>
+                                    </td>
+                                    <td>
+                                        {% if solicitud.comentarios_jefe %}
+                                            <small class="text-muted">
+                                                <strong>Jefe:</strong> {{ solicitud.comentarios_jefe|truncatechars:30 }}
+                                            </small>
+                                        {% endif %}
+                                        {% if solicitud.comentarios_rh %}
+                                            <br><small class="text-muted">
+                                                <strong>RH:</strong> {{ solicitud.comentarios_rh|truncatechars:30 }}
+                                            </small>
+                                        {% endif %}
+                                        {% if not solicitud.comentarios_jefe and not solicitud.comentarios_rh %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="text-muted">-</span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-calendar-plus fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No tienes solicitudes de vacaciones</h5>
+                            <p class="text-muted">Haz clic en "Solicitar Vacaciones" para crear tu primera solicitud</p>
+                            <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-calendar-plus me-1"></i>Solicitar Vacaciones
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

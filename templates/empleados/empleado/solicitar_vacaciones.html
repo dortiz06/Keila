@@ -253,12 +253,18 @@ document.addEventListener('DOMContentLoaded', function() {
         fechaFinInput.value = convertirFechaAFormato(fechaFinInput.value);
     }
     
+    // Calcular fecha límite (7 días antes de hoy)
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    const fechaLimite = new Date(hoy);
+    fechaLimite.setDate(fechaLimite.getDate() - 7); // 7 días antes
+    
     // Inicializar Flatpickr para Fecha de Inicio
     const fechaInicio = flatpickr(fechaInicioInput, {
         dateFormat: 'd/m/Y',
         altInput: false,
         locale: 'es',
-        minDate: 'today',
+        minDate: fechaLimite, // Permitir hasta 7 días antes
         defaultDate: fechaInicioInput.value || null,
         onChange: function(selectedDates, dateStr, instance) {
             calcularDias();
@@ -278,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
         dateFormat: 'd/m/Y',
         altInput: false,
         locale: 'es',
-        minDate: 'today',
+        minDate: fechaLimite, // Permitir hasta 7 días antes
         defaultDate: fechaFinInput.value || null,
         onChange: function(selectedDates, dateStr, instance) {
             calcularDias();
@@ -364,6 +370,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const fin = new Date(finStr + 'T00:00:00');
             const hoy = new Date();
             hoy.setHours(0, 0, 0, 0);
+            const fechaLimiteValidacion = new Date(hoy);
+            fechaLimiteValidacion.setDate(fechaLimiteValidacion.getDate() - 7); // 7 días antes
             
             // Verificar que las fechas sean válidas
             if (isNaN(inicio.getTime()) || isNaN(fin.getTime())) {
@@ -372,9 +380,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 return false;
             }
             
-            if (inicio < hoy) {
+            if (inicio < fechaLimiteValidacion) {
                 e.preventDefault();
-                alert('No puedes solicitar vacaciones para fechas pasadas.');
+                alert('No puedes solicitar vacaciones para fechas anteriores a hace una semana. Solo se permite retroceder hasta 7 días para cambiar faltas por días de vacaciones.');
                 return false;
             }
             
