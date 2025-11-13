@@ -7,8 +7,8 @@
 <div class="container-fluid dashboard">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
         <div class="mb-3 mb-md-0">
-            <h1><i class="fas fa-tachometer-alt me-2"></i>Mi Panel</h1>
-            <p class="text-muted mb-0">Bienvenido, {{ perfil.nombre_completo }}</p>
+            <h1 class="dashboard-title">Mi Panel</h1>
+            <p class="dashboard-subtitle mb-0">Bienvenido, {{ perfil.nombre_completo }}</p>
         </div>
         <div class="d-flex flex-wrap gap-2">
             <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-outline-primary">
@@ -316,24 +316,106 @@
 
 <style>
 
-/* Glassmorphism para cajas pequeñas de información */
-.glass-box {
-    background: rgba(255, 255, 255, 0.15) !important; /* Blanco con 15% de opacidad para efecto cristal */
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+/* Título y subtítulo del dashboard - Texto blanco con sombra para efecto flotante */
+.dashboard-title {
+    color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 
+                 0 4px 12px rgba(0, 0, 0, 0.3),
+                 0 0 20px rgba(0, 0, 0, 0.2) !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.5rem !important;
 }
 
-/* Estilos Glassmorphism para tarjetas de métricas */
+.dashboard-subtitle {
+    color: #ffffff !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), 
+                 0 3px 10px rgba(0, 0, 0, 0.3),
+                 0 0 15px rgba(0, 0, 0, 0.2) !important;
+    font-weight: 400 !important;
+}
+
+/* Color del número en "Días Disponibles" - Mismo verde del botón "Generar Ticket" */
+.dashboard .card.text-center .card-body h5.card-title.small + h3.text-success {
+    color: #22C55E !important; /* Verde esmeralda del botón Generar Ticket */
+}
+
+/* Selector más específico para la primera card con "Días Disponibles" */
+.dashboard .row > .col-6.col-md-3:first-child .card h3.text-success {
+    color: #22C55E !important; /* Verde esmeralda del botón Generar Ticket */
+}
+
+/* Mantener colores de números en las cards - Sobrescribir el blanco global */
+.dashboard .card h3.text-success:not(.dashboard-title),
+.dashboard .card h3.text-warning,
+.dashboard .card h3.text-info,
+.dashboard .card h3.text-primary,
+.dashboard .card h3.text-danger {
+    /* Mantener colores Bootstrap originales para números */
+}
+
+/* Texto blanco para labels y descripciones en cards */
+.dashboard .card .card-title,
+.dashboard .card small.text-muted,
+.dashboard .card .text-muted {
+    color: #ffffff !important;
+}
+
+/* Tipografía menos gruesa para "Tu Antigüedad:" */
+.alert-info h6 strong {
+    font-weight: 400 !important; /* Menos grueso que el bold normal (700) */
+}
+
+/* Estilos para tickets en "Mis Tickets Recientes" - Sin fondo, efecto hover sutil */
+.dashboard .list-group-item {
+    background: transparent !important; /* Sin fondo */
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; /* Borde sutil entre items */
+    padding: 1rem !important;
+    transition: all 0.3s ease !important;
+    border-radius: 8px !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.dashboard .list-group-item:last-child {
+    border-bottom: none !important;
+}
+
+/* Efecto hover - Brillo sutil con glassmorphism */
+.dashboard .list-group-item:hover {
+    background: rgba(255, 255, 255, 0.1) !important; /* Fondo sutil al hover */
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    transform: translateX(5px) !important; /* Ligero desplazamiento a la derecha */
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1) !important; /* Sombra sutil */
+}
+
+.dashboard .list-group-item:active {
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Glassmorphism para cajas pequeñas de información - Mismo estilo que alerts */
+.glass-box {
+    background: rgba(255, 255, 255, 0.15) !important; /* Transparencia más sutil */
+    backdrop-filter: blur(20px) saturate(180%) !important; /* Blur más pronunciado y saturación */
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important; /* Borde sutil pero visible */
+    border-radius: 20px !important; /* Bordes más redondeados */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important; /* Sombra externa e interna para profundidad */
+    overflow: hidden; /* Asegura que el contenido respete los bordes redondeados */
+}
+
+/* Estilos Glassmorphism para tarjetas de métricas - Mismo estilo que alerts */
 .dashboard .card {
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.15) !important; /* Blanco con 15% de opacidad para efecto cristal */
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 18px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.15) !important; /* Transparencia más sutil */
+    backdrop-filter: blur(20px) saturate(180%) !important; /* Blur más pronunciado y saturación */
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important; /* Borde sutil pero visible */
+    border-radius: 20px !important; /* Bordes más redondeados */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important; /* Sombra externa e interna para profundidad */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden; /* Asegura que el contenido respete los bordes redondeados */
 }
 
 .dashboard .card:hover {
@@ -341,50 +423,195 @@
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
-/* Iconos con color azul corporativo en tarjetas de métricas */
-.dashboard .card .fa-calendar-check,
-.dashboard .card .fa-calendar-times,
-.dashboard .card .fa-clock,
-.dashboard .card .fa-laptop,
-.dashboard .card .fa-ticket-alt {
-    color: var(--primary-color) !important;
+/* ===== ICONOS BLANCOS Y DELGADOS ===== */
+/* Todos los iconos Font Awesome en el dashboard - Color blanco */
+.dashboard i.fas,
+.dashboard i.far,
+.dashboard i.fal,
+.dashboard i.fab,
+.dashboard .fa,
+.dashboard [class*="fa-"] {
+    color: #ffffff !important;
+    font-weight: 300 !important; /* Intenta hacerlos más delgados */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* Botón Generar Ticket - Verde Esmeralda destacado */
-.btn-generar-ticket {
-    background: linear-gradient(135deg, #16A34A, #22C55E) !important;
+/* Excepción: Iconos en alertas de advertencia mantienen su color amarillo */
+.alert.alert-warning i,
+.alert.alert-warning .fa,
+.alert.alert-warning [class*="fa-"],
+.alert-warning i.fas,
+.alert-warning i.fa-exclamation-triangle,
+.dashboard .alert-warning i,
+.dashboard .alert-warning .fa,
+.dashboard .alert-warning [class*="fa-"] {
+    color: #FFDE21 !important;
+}
+
+/* ===== ESTILO DE BOTONES MODERNO - Con luz arriba y sombra abajo (estilo imagen) ===== */
+/* Base común para todos los botones */
+.dashboard .btn,
+.dashboard .btn-primary,
+.dashboard .btn-success,
+.dashboard .btn-danger,
+.dashboard .btn-info,
+.dashboard .btn-warning,
+.dashboard .btn-outline-primary,
+.dashboard .btn-outline-danger,
+.dashboard .btn-outline-success {
     border: none !important;
-    color: white !important;
-    font-weight: 600;
-    padding: 10px 24px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3);
-    transition: all 0.3s ease;
+    border-radius: 14px !important; /* Bordes muy redondeados */
+    padding: 14px 32px !important; /* Padding generoso */
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    color: #ffffff !important; /* Texto blanco */
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
 }
 
-.btn-generar-ticket:hover {
-    background: linear-gradient(135deg, #22C55E, #16A34A) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);
-    color: white !important;
+/* Botones pequeños */
+.dashboard .btn-sm {
+    padding: 10px 24px !important;
+    font-size: 0.85rem !important;
+    border-radius: 12px !important;
 }
 
-/* Encabezados de secciones inferiores - Azul corporativo más oscuro con Glassmorphism */
+/* Botón Primary - Azul corporativo con degradado oscuro (estado normal) */
+.dashboard .btn-primary,
+.dashboard .btn-outline-primary {
+    background: linear-gradient(180deg, 
+        rgba(37, 99, 235, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 30, 100, 1) 100%) !important; /* Colores oscuros en estado normal */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+}
+
+.dashboard .btn-primary:hover,
+.dashboard .btn-outline-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 56, 168, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Botón Success - Verde esmeralda con degradado oscuro (estado normal) */
+.dashboard .btn-success,
+.dashboard .btn-generar-ticket {
+    background: linear-gradient(180deg, 
+        rgba(34, 197, 94, 0.95) 0%, 
+        rgba(22, 163, 74, 0.95) 50%,
+        rgba(15, 118, 50, 1) 100%) !important; /* Colores oscuros en estado normal */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+}
+
+.dashboard .btn-success:hover,
+.dashboard .btn-generar-ticket:hover {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Botón Danger - Rojo con degradado oscuro (estado normal) */
+.dashboard .btn-danger,
+.dashboard .btn-outline-danger {
+    background: linear-gradient(180deg, 
+        rgba(239, 68, 68, 0.95) 0%, 
+        rgba(220, 38, 38, 0.95) 50%,
+        rgba(185, 28, 28, 1) 100%) !important; /* Colores oscuros en estado normal */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+}
+
+.dashboard .btn-danger:hover,
+.dashboard .btn-outline-danger:hover {
+    background: linear-gradient(180deg, 
+        rgba(248, 113, 113, 0.95) 0%, 
+        rgba(239, 68, 68, 0.95) 50%,
+        rgba(220, 38, 38, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Botón Info - Azul claro con degradado oscuro (estado normal) */
+.dashboard .btn-info {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important; /* Colores oscuros en estado normal */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+}
+
+.dashboard .btn-info:hover {
+    background: linear-gradient(180deg, 
+        rgba(147, 197, 253, 0.95) 0%, 
+        rgba(96, 165, 250, 0.95) 50%,
+        rgba(59, 130, 246, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Botón Warning - Amarillo/Naranja con degradado oscuro (estado normal) */
+.dashboard .btn-warning {
+    background: linear-gradient(180deg, 
+        rgba(245, 158, 11, 0.95) 0%, 
+        rgba(217, 119, 6, 0.95) 50%,
+        rgba(180, 83, 9, 1) 100%) !important; /* Colores oscuros en estado normal */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+    color: #000000 !important; /* Texto negro para contraste */
+}
+
+.dashboard .btn-warning:hover {
+    background: linear-gradient(180deg, 
+        rgba(251, 191, 36, 0.95) 0%, 
+        rgba(245, 158, 11, 0.95) 50%,
+        rgba(217, 119, 6, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    color: #000000 !important;
+}
+
+/* Encabezados de secciones inferiores - Sin fondo azul, completamente transparentes */
 .dashboard .card-header.bg-primary,
 .dashboard .card-header.bg-success {
-    background: linear-gradient(135deg, rgba(0, 56, 168, 0.85), rgba(30, 58, 138, 0.85)) !important;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    background: transparent !important; /* Sin fondo de color */
+    backdrop-filter: none !important; /* Sin blur adicional en el header */
+    -webkit-backdrop-filter: none !important;
+    border-bottom: none !important; /* La línea se maneja con ::after */
     font-weight: 600;
     color: white !important;
 }
 
 /* Asegurar que el cuerpo de las tarjetas sea Glassmorphism semitransparente */
 .dashboard .card .card-body {
-    background: rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: transparent !important; /* Transparente para que se vea el fondo del card */
+    backdrop-filter: none !important; /* Sin blur adicional, el card ya lo tiene */
+    -webkit-backdrop-filter: none !important;
 }
 
 /* Mejoras en las tarjetas de métricas */

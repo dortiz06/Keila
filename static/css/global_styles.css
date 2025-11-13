@@ -1,72 +1,141 @@
 html, body {
     height: 100%;
     margin: 0;
-    background-color: transparent; /* Asegura que el html y body sean transparentes */
 }
 
+/* Estilos del body */
+html body,
 body {
-    background-image: url('/static/images/dash/fondoAzul.jpg');
-    background-size: cover;
-    background-position: bottom center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
+    background-color: #0038A8; /* Azul rey corporativo */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('../images/dash/dash1.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 main {
     flex-grow: 1; /* Permite que el contenido principal ocupe el espacio disponible */
-    background-color: transparent; /* Asegura que el main sea transparente y permita ver el fondo */
 }
 
 /* Footer global con estilo oscuro - El estilo principal está en base.html */
 /* Este archivo mantiene compatibilidad pero el estilo principal está en base.html */
 
 
-/* EXCEPCIÓN: Solo las tarjetas y elementos específicos tienen Glassmorphism */
+/* ===== GLASSMORPHISM ESTILO MODERNO - Similar a la imagen de referencia ===== */
+/* Tarjetas con efecto glassmorphism pronunciado */
 .card {
-    background-color: rgba(255, 255, 255, 0.2) !important;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 18px;
-    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.08);
+    background: rgba(255, 255, 255, 0.15) !important; /* Transparencia más sutil */
+    backdrop-filter: blur(20px) saturate(180%) !important; /* Blur más pronunciado y saturación */
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important; /* Borde sutil pero visible */
+    border-radius: 20px !important; /* Bordes más redondeados */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important; /* Sombra externa e interna para profundidad */
     display: flex;
     flex-direction: column;
+    overflow: hidden; /* Asegura que el contenido respete los bordes redondeados */
 }
 
+/* Alerts con glassmorphism - Mismo estilo que las cards */
 .alert {
-    background-color: rgba(255, 255, 255, 0.2) !important;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.15) !important; /* Transparencia más sutil */
+    backdrop-filter: blur(20px) saturate(180%) !important; /* Blur más pronunciado y saturación */
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important; /* Borde sutil pero visible */
+    border-radius: 20px !important; /* Bordes más redondeados - igual que las cards */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important; /* Sombra externa e interna para profundidad */
+    overflow: hidden; /* Asegura que el contenido respete los bordes redondeados */
 }
 
+/* Alerta de advertencia - Texto amarillo */
+.alert-warning {
+    color: #FFDE21 !important; /* Amarillo especificado */
+}
+
+.alert-warning strong,
+.alert-warning i,
+.alert-warning .fa-exclamation-triangle {
+    color: #FFDE21 !important; /* Amarillo para texto fuerte e iconos */
+}
+
+/* Glass-box con efecto glassmorphism - Mismo estilo que las cards */
 .glass-box {
-    background-color: rgba(255, 255, 255, 0.15) !important; /* Blanco con 15% de opacidad para efecto cristal */
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.15) !important; /* Transparencia más sutil */
+    backdrop-filter: blur(20px) saturate(180%) !important; /* Blur más pronunciado y saturación */
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important; /* Borde sutil pero visible */
+    border-radius: 20px !important; /* Bordes más redondeados - igual que las cards */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important; /* Sombra externa e interna para profundidad */
+    overflow: hidden; /* Asegura que el contenido respete los bordes redondeados */
 }
 
-/* Asegurar que el texto sea legible sobre el degradado */
-body, main, .container, .container-fluid {
-    color: var(--dark-text);
+/* ===== TEXTO BLANCO GLOBAL - Excepto números con colores ===== */
+/* Color de texto blanco para todo el dashboard */
+body, main, .container, .container-fluid, .dashboard {
+    color: #ffffff !important;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    color: var(--dark-text) !important;
+/* Títulos en blanco - Excepto los que tienen clases de color Bootstrap */
+h1:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+h2:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+h3:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+h4:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+h5:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+h6:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+.h1:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+.h2:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+.h3:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+.h4:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+.h5:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+.h6:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger) {
+    color: #ffffff !important;
 }
 
-@media (max-width: 768px) {
-    body {
-        background-size: cover;
-        background-position: bottom center;
-    }
+/* Texto en cards y contenedores - Blanco (excepto elementos con clases de color Bootstrap) */
+.card:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+.card-body, 
+.card-title:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+.card-text:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+.card-header,
+.alert:not(.alert-warning),
+.alert-body,
+.glass-box,
+.table, .table th, .table td,
+p:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+span:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+div:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+label,
+small.text-muted,
+.text-muted {
+    color: #ffffff !important;
 }
+
+/* EXCEPCIONES: Los números con clases text-success, text-primary, text-warning, text-info, text-danger 
+   mantendrán sus colores Bootstrap originales por especificidad de las clases de Bootstrap */
+
+/* Color específico para "Días Disponibles" - Verde brillante */
+.dashboard .card.text-center .card-body h5.card-title.small + h3.text-success,
+.dashboard .row > .col-6.col-md-3:first-child .card h3.text-success {
+    color: #00FF00 !important;
+}
+
+/* Advertencia - Amarillo */
+.alert-warning {
+    color: #FFDE21 !important;
+}
+
+.alert-warning strong,
+.alert-warning i,
+.alert-warning .fa-exclamation-triangle {
+    color: #FFDE21 !important;
+}
+
 
 /* Estilos duplicados eliminados - ya están definidos arriba */
 
@@ -81,15 +150,70 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .card-header {
-    background: rgba(0, 56, 168, 0.7) !important; /* Usar el azul rey de la empresa con transparencia */
+    background: rgba(0, 56, 168, 0.4) !important; /* Azul rey con más transparencia para glassmorphism */
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Headers de cards del dashboard - Sin fondo azul, completamente transparentes */
+.dashboard .card-header.bg-primary,
+.dashboard .card-header.bg-success,
+.dashboard .card-header.bg-info,
+.dashboard .card-header.bg-warning,
+.dashboard .card-header.bg-danger {
+    background: transparent !important; /* Sin fondo de color */
+    background-color: transparent !important; /* Asegurar que no haya color de fondo */
+    background-image: none !important; /* Sin gradientes */
+    backdrop-filter: none !important; /* Sin blur en el header, solo en el card */
+    -webkit-backdrop-filter: none !important;
+    border: none !important; /* Sin bordes */
+    box-shadow: none !important;
+    text-align: center !important; /* Centrar el contenido */
+    padding: 1rem !important;
+    position: relative !important; /* Para el pseudo-elemento de la línea */
+}
+
+/* Sobrescribir cualquier color de Bootstrap para estos headers */
+.dashboard .card-header.bg-primary,
+.dashboard .card-header.bg-success {
+    --bs-bg-opacity: 0 !important; /* Forzar opacidad 0 para clases bg-* de Bootstrap */
+}
+
+/* Línea blanca delgada que no llega a los bordes */
+.dashboard .card-header.bg-primary::after,
+.dashboard .card-header.bg-success::after,
+.dashboard .card-header.bg-info::after,
+.dashboard .card-header.bg-warning::after,
+.dashboard .card-header.bg-danger::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 20px !important; /* Margen izquierdo */
+    right: 20px !important; /* Margen derecho */
+    height: 1px !important;
+    background: rgba(255, 255, 255, 0.5) !important; /* Línea blanca delgada */
+}
+
+/* Centrar el contenido del header (texto e icono) */
+.dashboard .card-header h5,
+.dashboard .card-header .mb-0 {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
 }
 
 .table-responsive {
-    backdrop-filter: blur(8px);
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.15) !important; /* Transparencia más sutil */
+    backdrop-filter: blur(20px) saturate(180%) !important; /* Blur más pronunciado y saturación */
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important; /* Borde sutil pero visible */
+    border-radius: 20px !important; /* Bordes más redondeados - igual que las cards */
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important; /* Sombra externa e interna para profundidad */
 }
 
 .table thead th {
@@ -108,4 +232,44 @@ h1, h2, h3, h4, h5, h6 {
 
 .table tbody tr:hover {
     background-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* ===== ICONOS BLANCOS Y DELGADOS - GLOBAL ===== */
+/* Todos los iconos Font Awesome - Color blanco y más delgados */
+i.fas,
+i.far,
+i.fal,
+i.fab,
+.fa,
+[class*="fa-"] {
+    color: #ffffff !important;
+    font-weight: 300 !important; /* Intenta hacerlos más delgados */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Excepción: Iconos en alertas de advertencia mantienen su color amarillo */
+.alert.alert-warning i,
+.alert.alert-warning .fa,
+.alert.alert-warning [class*="fa-"],
+.alert-warning i.fas,
+.alert-warning i.fa-exclamation-triangle,
+.dashboard .alert-warning i,
+.dashboard .alert-warning .fa,
+.dashboard .alert-warning [class*="fa-"] {
+    color: #FFDE21 !important;
+}
+
+/* Excepción: Iconos con clases de color Bootstrap mantienen su color */
+.text-success i,
+.text-success .fa,
+.text-primary i,
+.text-primary .fa,
+.text-warning i,
+.text-warning .fa,
+.text-info i,
+.text-info .fa,
+.text-danger i,
+.text-danger .fa {
+    color: inherit !important; /* Hereda el color de la clase Bootstrap */
 }
