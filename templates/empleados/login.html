@@ -4,11 +4,11 @@
 {% block title %}Recursos Humanos{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row justify-content-center align-items-center min-vh-100">
-        <div class="col-md-6 col-lg-4">
+<div class="login-page-wrapper">
+    <div class="login-container">
+        <div class="login-card-wrapper">
             <div class="card glass-card shadow-lg border-0">
-                <div class="card-header text-center py-5 bg-transparent border-0">
+                <div class="card-header text-center border-0">
                     <div class="mb-4">
                         <img src="{% static 'images/logos/logo-keila.png' %}" alt="Logo Grupo Keila" class="login-logo">
                     </div>
@@ -77,136 +77,311 @@
                     </small>
                 </div>
             </div>
-
-
         </div>
     </div>
 </div>
 
 <style>
-.min-vh-100 {
-    min-height: 100vh;
-    position: relative;
-    background-image: url('{% static "images/login/login1.jpg" %}');
-    background-size: cover; /* Ensures it fills horizontally */
-    background-position: center bottom; /* Prioritize bottom of image */
-    background-repeat: no-repeat;
-    background-attachment: fixed; /* Optional parallax */
+/* ===== CORRECCIÓN DE UX Y CENTRADO FIJO DEL LOGIN ===== */
+
+/* Estilos para navbar y footer en página de login */
+body.login-page {
+    padding-top: 0 !important;
+    overflow: hidden !important;
+    height: 100vh !important;
+    margin: 0 !important;
 }
 
-.min-vh-100::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4); /* Dark overlay for contrast */
+body.login-page main {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+}
+
+/* Navbar fijo en la parte superior para login */
+body.login-page .navbar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 1000 !important;
+    background: rgba(0, 56, 168, 0.9) !important;
+    backdrop-filter: saturate(140%) blur(8px) !important;
+    -webkit-backdrop-filter: saturate(140%) blur(8px) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Footer fijo en la parte inferior para login */
+body.login-page .footer {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 1000 !important;
+    background: rgba(0, 0, 0, 0.6) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    padding: 1rem 0 !important;
+    margin: 0 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+body.login-page .footer p {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 0.9rem !important;
+    margin: 0 !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Contenedor principal del login - Fondo fijo sin scroll */
+.login-page-wrapper {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+    background-image: url('{% static "images/login/login1.jpg" %}');
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     z-index: 0;
 }
 
-.min-vh-100 > * {
-    position: relative;
-    z-index: 1; /* Ensure content sits above overlay */
+/* Overlay oscuro para contraste */
+.login-page-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1;
 }
 
-.card {
-    border-radius: 20px;
+/* Contenedor de centrado perfecto - Ajustado para navbar y footer */
+.login-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    padding: 80px 1rem 60px 1rem; /* Espacio superior para navbar, inferior para footer */
+    box-sizing: border-box;
+}
+
+/* Wrapper de la tarjeta de login */
+.login-card-wrapper {
+    width: 100%;
+    max-width: 450px;
+    position: relative;
+    z-index: 1001; /* Por encima del navbar (1000) y footer (1000) */
+}
+
+/* Contenedor principal con Glassmorphism mejorado */
+.glass-card {
+    background: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.08) !important;
     overflow: hidden;
 }
 
-/* Liquid Glass container */
-.glass-card {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-radius: 20px;
+/* Card Header con Glassmorphism y gradiente azul corporativo */
+.glass-card .card-header {
+    background: linear-gradient(135deg, rgba(0, 56, 168, 0.85), rgba(30, 58, 138, 0.85)) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 18px 18px 0 0 !important;
+    padding: 2rem 1.5rem !important;
 }
 
+/* Logo con mejor contraste */
 .login-logo {
     max-width: 180px;
     height: auto;
-    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.25));
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
 }
 
-.login-title {
-    color: #ffffff;
-    font-weight: 700;
-    letter-spacing: 0.2px;
-}
-
+/* Tipografía Montserrat consistente */
 .login-subtitle {
-    color: rgba(255,255,255,0.85);
+    color: rgba(255, 255, 255, 0.95) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 1rem;
+    letter-spacing: 0.3px;
 }
 
+/* Campos de formulario con Glassmorphism mejorado */
 .form-control {
-    background: rgba(255,255,255,0.35);
-    border: 1px solid rgba(255,255,255,0.6);
-    color: var(--dark-text);
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 12px !important;
+    color: var(--dark-text) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    padding: 12px 16px !important;
+    transition: all 0.3s ease !important;
+}
+
+.form-control::placeholder {
+    color: rgba(15, 23, 42, 0.6) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+}
+
+.form-control:hover {
+    background: rgba(255, 255, 255, 0.35) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
 }
 
 .form-control:focus {
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+    background: rgba(255, 255, 255, 0.4) !important;
+    border-color: var(--accent-color) !important;
+    box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.3) !important;
+    outline: none !important;
 }
 
-.interactive-input {
-    transition: transform 0.15s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+/* Labels con Montserrat */
+.form-label {
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 500 !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+    margin-bottom: 0.5rem;
 }
 
-.interactive-input:hover {
-    background: rgba(255,255,255,0.5);
-}
-
-.interactive-input:focus {
-    transform: translateY(-1px);
-}
-
-.btn-login {
-    background: #01356f;
-    border: none;
-    border-radius: 12px;
-    font-weight: 700;
-    letter-spacing: 0.4px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-    color: #ffffff;
-}
-
-.btn-login:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.05);
-    box-shadow: 0 10px 24px rgba(1, 53, 111, 0.35);
-}
-
+/* Botón de toggle password con Glassmorphism */
 .input-group .btn {
-    border-left: none;
-}
-
-.input-group .form-control:focus + .btn {
-    border-color: var(--accent-color);
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-left: none !important;
+    border-radius: 0 12px 12px 0 !important;
+    color: var(--dark-text) !important;
+    transition: all 0.3s ease !important;
 }
 
 .input-group .btn:hover {
+    background: rgba(255, 255, 255, 0.35) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
     transform: scale(1.02);
 }
 
-.alert {
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.35);
+.input-group .form-control:focus + .btn {
+    border-color: var(--accent-color) !important;
 }
 
+/* Botón de login con estilo corporativo mejorado */
+.btn-login {
+    background: linear-gradient(135deg, #01356f, #0038A8) !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.4px !important;
+    padding: 12px 24px !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(1, 53, 111, 0.3) !important;
+}
+
+.btn-login:hover {
+    background: linear-gradient(135deg, #0038A8, #01356f) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(1, 53, 111, 0.4) !important;
+    filter: brightness(1.05) !important;
+}
+
+.btn-login:active {
+    transform: translateY(0) !important;
+}
+
+/* Card Body con Glassmorphism */
+.glass-card .card-body {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    padding: 2rem 1.5rem !important;
+}
+
+/* Card Footer con Glassmorphism */
+.glass-card .card-footer {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 0 0 18px 18px !important;
+    padding: 1rem 1.5rem !important;
+}
+
+.glass-card .card-footer small {
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Alerts con Glassmorphism mejorado */
 .glass-alert {
-    background: rgba(255,255,255,0.2);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    background: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
 }
 
-.alert-success { border-left: 4px solid var(--success-color); }
-.alert-danger { border-left: 4px solid var(--danger-color); }
-.alert-warning { border-left: 4px solid var(--warning-color); }
-.alert-info { border-left: 4px solid var(--accent-color); }
+.alert-success { 
+    border-left: 4px solid var(--success-color) !important;
+}
+
+.alert-danger { 
+    border-left: 4px solid var(--danger-color) !important;
+}
+
+.alert-warning { 
+    border-left: 4px solid var(--warning-color) !important;
+}
+
+.alert-info { 
+    border-left: 4px solid var(--accent-color) !important;
+}
+
+/* Mensajes de error del formulario */
+.form-error {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    background: rgba(220, 38, 38, 0.15) !important;
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+    border: 1px solid rgba(220, 38, 38, 0.4) !important;
+    color: var(--danger-color) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 500 !important;
+}
 
 .invalid-feedback {
     display: none;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 500 !important;
+    color: var(--danger-color) !important;
 }
 
 .form-control.is-invalid ~ .invalid-feedback,
@@ -214,23 +389,18 @@
     display: block;
 }
 
-.form-error {
-    margin-top: 1rem;
-    padding: 0.75rem 1rem;
-    border-radius: 12px;
-    background: rgba(220, 38, 38, 0.1);
-    border: 1px solid rgba(220, 38, 38, 0.35);
-    color: var(--danger-color);
+.visually-hidden { 
+    position: absolute; 
+    width: 1px; 
+    height: 1px; 
+    padding: 0; 
+    margin: -1px; 
+    overflow: hidden; 
+    clip: rect(0,0,0,0); 
+    border: 0; 
 }
 
-.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
-
-.card-footer {
-    background: #f8f9fa;
-    border: none;
-}
-
-/* Animaciones */
+/* ===== ANIMACIONES ===== */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -242,7 +412,7 @@
     }
 }
 
-.card {
+.glass-card {
     animation: fadeInUp 0.6s ease-out;
 }
 
@@ -257,21 +427,114 @@
     animation: shake 0.4s ease both;
 }
 
-/* Responsive */
+/* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
-    .col-md-4 {
-        margin-bottom: 1rem;
+    .login-container {
+        padding: 70px 0.75rem 55px 0.75rem; /* Ajuste responsive para navbar/footer */
     }
-    /* iOS/Safari mobile often ignores fixed backgrounds; disable for performance */
-    .min-vh-100 {
+    
+    body.login-page .footer {
+        padding: 0.75rem 0 !important;
+    }
+    
+    body.login-page .footer p {
+        font-size: 0.8rem !important;
+    }
+    
+    .login-card-wrapper {
+        max-width: 100%;
+    }
+    
+    .glass-card {
+        margin: 0;
+    }
+    
+    .glass-card .card-header {
+        padding: 1.5rem 1rem !important;
+    }
+    
+    .glass-card .card-body {
+        padding: 1.5rem 1rem !important;
+    }
+    
+    .login-logo {
+        max-width: 150px;
+    }
+    
+    /* iOS/Safari mobile - optimización de fondo */
+    .login-page-wrapper {
         background-attachment: scroll;
-        background-position: center bottom; /* Keep bottom alignment on mobile */
+        background-position: center center;
     }
+    
+    .form-control {
+        padding: 10px 14px !important;
+        font-size: 0.95rem !important;
+    }
+    
+    .btn-login {
+        padding: 10px 20px !important;
+        font-size: 0.95rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .login-container {
+        padding: 65px 0.5rem 50px 0.5rem; /* Ajuste móvil para navbar/footer */
+    }
+    
+    body.login-page .footer {
+        padding: 0.5rem 0 !important;
+    }
+    
+    body.login-page .footer p {
+        font-size: 0.75rem !important;
+    }
+    
+    .glass-card {
+        border-radius: 15px !important;
+    }
+    
+    .glass-card .card-header {
+        border-radius: 15px 15px 0 0 !important;
+        padding: 1.25rem 0.75rem !important;
+    }
+    
+    .glass-card .card-footer {
+        border-radius: 0 0 15px 15px !important;
+        padding: 0.75rem !important;
+    }
+    
+    .login-logo {
+        max-width: 120px;
+    }
+    
+    .login-subtitle {
+        font-size: 0.9rem !important;
+    }
+}
+
+/* Asegurar que no haya scroll en ningún caso */
+html.login-page-html,
+html.login-page-html body {
+    overflow: hidden !important;
+    height: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 </style>
 
 <script>
+// Agregar clases al body y html para ocultar navbar/footer y prevenir scroll
 document.addEventListener('DOMContentLoaded', function() {
+    // Agregar clases especiales al body y html
+    document.body.classList.add('login-page');
+    document.documentElement.classList.add('login-page-html');
+    
+    // Asegurar que no haya scroll
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
     // Toggle password visibility
     const togglePassword = document.getElementById('togglePassword');
     const passwordInput = document.getElementById('password');
