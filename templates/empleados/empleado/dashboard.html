@@ -281,13 +281,15 @@
                                     <h6 class="mb-1">{{ ticket.codigo }}</h6>
                                     <small>
                                         {% if ticket.estado == 'PENDIENTE' %}
-                                            <span class="badge bg-warning">Pendiente</span>
+                                            <span class="badge badge-pendiente">Pendiente</span>
                                         {% elif ticket.estado == 'EN_PROCESO' %}
-                                            <span class="badge bg-info">En Proceso</span>
+                                            <span class="badge badge-proceso">En Proceso</span>
                                         {% elif ticket.estado == 'RESUELTO' %}
-                                            <span class="badge bg-success">Resuelto</span>
+                                            <span class="badge badge-resuelto">Resuelto</span>
+                                        {% elif ticket.estado == 'CANCELADO' %}
+                                            <span class="badge badge-cancelado">Cancelado</span>
                                         {% else %}
-                                            <span class="badge bg-secondary">{{ ticket.get_estado_display }}</span>
+                                            <span class="badge badge-cancelado">{{ ticket.get_estado_display }}</span>
                                         {% endif %}
                                     </small>
                                 </div>
@@ -392,6 +394,8 @@
 .dashboard .list-group-item:active {
     background: rgba(255, 255, 255, 0.15) !important;
 }
+
+/* Los estilos de badges están en global_styles.css - Se aplican automáticamente */
 
 /* Glassmorphism para cajas pequeñas de información - Mismo estilo que alerts */
 .glass-box {

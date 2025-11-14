@@ -287,3 +287,136 @@ i.fab,
 .dashboard .text-danger i {
     color: #ffffff !important; /* Forzar iconos blancos en dashboard */
 }
+
+/* ===== BADGES CON ESTILO DE BOTONES - GLOBAL PARA TODAS LAS VISTAS ===== */
+/* Estilo base para todos los badges - Rectangulares redondeados con efecto elevado */
+/* Alta especificidad para sobrescribir estilos en base.html y media queries */
+.badge,
+span.badge,
+.badge.badge-pendiente,
+.badge.badge-proceso,
+.badge.badge-resuelto,
+.badge.badge-cancelado,
+.badge.badge-urgente,
+.badge.badge-alta,
+.badge.badge-media,
+.badge.badge-baja,
+body .badge,
+html body .badge,
+.dashboard .badge,
+.dashboard span.badge {
+    border: none !important;
+    border-radius: 16px !important; /* Esquinas muy redondeadas (squircle/pill shape) */
+    padding: 10px 20px !important; /* Padding generoso para aspecto de botón - Sobrescribe media queries */
+    font-weight: 700 !important; /* Texto más grueso y negrita */
+    font-size: 0.9rem !important; /* Tamaño fijo - Sobrescribe media queries */
+    color: #ffffff !important;
+    display: inline-block !important;
+    text-align: center !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3), /* Sombra más pronunciada por debajo para efecto de elevación */
+        0 2px 6px rgba(0, 0, 0, 0.2), /* Sombra adicional para más profundidad */
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important; /* Highlight más visible arriba para efecto 3D */
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important; /* Sombra de texto sutil para mejor legibilidad */
+}
+
+/* Badge Urgente - Rojo con degradado más suave */
+.badge-urgente,
+.badge.bg-danger:not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado) {
+    background: linear-gradient(180deg, 
+        rgba(248, 113, 113, 1) 0%, 
+        rgba(239, 68, 68, 1) 50%,
+        rgba(220, 38, 38, 1) 100%) !important;
+}
+
+/* Badge Alta - Amarillo/Naranja con degradado */
+.badge-alta {
+    background: linear-gradient(180deg, 
+        rgba(245, 158, 11, 0.95) 0%, 
+        rgba(217, 119, 6, 0.95) 50%,
+        rgba(180, 83, 9, 1) 100%) !important;
+}
+
+/* Badge Media - Azul con degradado más suave */
+.badge-media,
+.badge.bg-info:not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado) {
+    background: linear-gradient(180deg, 
+        rgba(147, 197, 253, 1) 0%, 
+        rgba(96, 165, 250, 1) 50%,
+        rgba(59, 130, 246, 1) 100%) !important;
+}
+
+/* Badge Baja - Gris con degradado */
+.badge-baja,
+.badge.bg-secondary:not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado) {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+}
+
+/* Badge Pendiente - Naranja/Amarillo con degradado más suave */
+.badge-pendiente,
+span.badge-pendiente,
+.badge.badge-pendiente,
+.badge.bg-warning:not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado) {
+    background: linear-gradient(180deg, 
+        rgba(251, 191, 36, 1) 0%, 
+        rgba(245, 158, 11, 1) 50%,
+        rgba(217, 119, 6, 1) 100%) !important;
+}
+
+/* Badge En Proceso - Azul con degradado más suave */
+.badge-proceso,
+span.badge-proceso,
+.badge.badge-proceso {
+    background: linear-gradient(180deg, 
+        rgba(147, 197, 253, 1) 0%, 
+        rgba(96, 165, 250, 1) 50%,
+        rgba(59, 130, 246, 1) 100%) !important;
+}
+
+/* Badge Resuelto - Verde con degradado más suave */
+.badge-resuelto,
+span.badge-resuelto,
+.badge.badge-resuelto,
+.badge.bg-success:not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado) {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 1) 0%, 
+        rgba(34, 197, 94, 1) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+}
+
+/* Badge Cancelado - Gris con degradado */
+.badge-cancelado,
+span.badge-cancelado,
+.badge.badge-cancelado {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+}
+
+/* Badges de estados de vacaciones */
+.badge-aprobada {
+    background: linear-gradient(180deg, 
+        rgba(34, 197, 94, 0.95) 0%, 
+        rgba(22, 163, 74, 0.95) 50%,
+        rgba(15, 118, 50, 1) 100%) !important;
+}
+
+.badge-rechazada {
+    background: linear-gradient(180deg, 
+        rgba(239, 68, 68, 0.95) 0%, 
+        rgba(220, 38, 38, 0.95) 50%,
+        rgba(185, 28, 28, 1) 100%) !important;
+}
+
+.badge-cancelada {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+}
