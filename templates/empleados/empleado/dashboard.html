@@ -424,13 +424,23 @@
 }
 
 /* ===== ICONOS BLANCOS Y DELGADOS ===== */
-/* Todos los iconos Font Awesome en el dashboard - Color blanco */
+/* Todos los iconos Font Awesome en el dashboard - Color blanco (sobrescribe clases de color Bootstrap) */
 .dashboard i.fas,
 .dashboard i.far,
 .dashboard i.fal,
 .dashboard i.fab,
 .dashboard .fa,
-.dashboard [class*="fa-"] {
+.dashboard [class*="fa-"],
+.dashboard i.text-success,
+.dashboard i.text-primary,
+.dashboard i.text-warning,
+.dashboard i.text-info,
+.dashboard i.text-danger,
+.dashboard .text-success i,
+.dashboard .text-primary i,
+.dashboard .text-warning i,
+.dashboard .text-info i,
+.dashboard .text-danger i {
     color: #ffffff !important;
     font-weight: 300 !important; /* Intenta hacerlos más delgados */
     -webkit-font-smoothing: antialiased;

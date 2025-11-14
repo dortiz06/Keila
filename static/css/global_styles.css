@@ -273,3 +273,17 @@ i.fab,
 .text-danger .fa {
     color: inherit !important; /* Hereda el color de la clase Bootstrap */
 }
+
+/* Sobrescribir: En el dashboard, todos los iconos deben ser blancos (excepto alertas) */
+.dashboard i.text-success,
+.dashboard i.text-primary,
+.dashboard i.text-warning,
+.dashboard i.text-info,
+.dashboard i.text-danger,
+.dashboard .text-success i,
+.dashboard .text-primary i,
+.dashboard .text-warning i,
+.dashboard .text-info i,
+.dashboard .text-danger i {
+    color: #ffffff !important; /* Forzar iconos blancos en dashboard */
+}

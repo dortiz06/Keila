@@ -4,57 +4,47 @@
 {% block title %}Mi Perfil - Sistema RH{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <!-- Header con Glassmorphism -->
-    <div class="page-header glassmorphism-header">
-        <div class="container">
-            {% comment %} Línea Principal (H1) - Saludo y Nombre {% endcomment %}
-            <h1 class="header-line-primary">
-                {% if es_propio_perfil %}
-                    <span id="saludo-dinamico" class="saludo-placeholder"></span>
-                {% endif %}
-                {% comment %} Nombre completo {% endcomment %}
-                {% if tiene_perfil %}
-                    {% if perfil.nombre_completo %}
-                        {{ perfil.nombre_completo }}
-                    {% elif user.get_full_name %}
-                        {{ user.get_full_name }}
-                    {% else %}
-                        {{ user.username }}
-                    {% endif %}
-                {% else %}
-                    {% if user.get_full_name %}
-                        {{ user.get_full_name }}
-                    {% else %}
-                        {{ user.username }}
-                    {% endif %}
-                {% endif %}
-            </h1>
-            
-            {% comment %} Línea Secundaria (H2) - Puesto y Departamento {% endcomment %}
-            {% if tiene_perfil %}
-                {% if perfil.puesto or perfil.departamento %}
-                <h2 class="header-line-secondary">
-                    {% if perfil.puesto %}
-                        {{ perfil.puesto }}
-                    {% endif %}
-                    {% if perfil.puesto and perfil.departamento %}
-                        | 
-                    {% endif %}
-                    {% if perfil.departamento %}
-                        {{ perfil.departamento.nombre }}
-                    {% endif %}
-                </h2>
-                {% endif %}
-            {% endif %}
-            
-            {% comment %} Línea de Acción (H3) - Solo para usuario propio {% endcomment %}
+<div class="container-fluid dashboard">
+    <!-- Header con texto blanco y sombra -->
+    <div class="d-flex flex-column mb-4">
+        <h1 class="dashboard-title">
             {% if es_propio_perfil %}
-            <h3 class="header-line-action">
-                Gestiona tu información personal y laboral
-            </h3>
+                <span id="saludo-dinamico" class="saludo-placeholder"></span>
             {% endif %}
-        </div>
+            {% comment %} Nombre completo {% endcomment %}
+            {% if tiene_perfil %}
+                {% if perfil.nombre_completo %}
+                    {{ perfil.nombre_completo }}
+                {% elif user.get_full_name %}
+                    {{ user.get_full_name }}
+                {% else %}
+                    {{ user.username }}
+                {% endif %}
+            {% else %}
+                {% if user.get_full_name %}
+                    {{ user.get_full_name }}
+                {% else %}
+                    {{ user.username }}
+                {% endif %}
+            {% endif %}
+        </h1>
+        
+        {% comment %} Línea Secundaria - Puesto y Departamento {% endcomment %}
+        {% if tiene_perfil %}
+            {% if perfil.puesto or perfil.departamento %}
+            <p class="dashboard-subtitle mb-0">
+                {% if perfil.puesto %}
+                    {{ perfil.puesto }}
+                {% endif %}
+                {% if perfil.puesto and perfil.departamento %}
+                    | 
+                {% endif %}
+                {% if perfil.departamento %}
+                    {{ perfil.departamento.nombre }}
+                {% endif %}
+            </p>
+            {% endif %}
+        {% endif %}
     </div>
 
     <div class="container">
@@ -62,7 +52,7 @@
             <!-- Información del Usuario -->
             <div class="col-lg-8">
                 <div class="card mb-4">
-                    <div class="card-header">
+                    <div class="card-header bg-primary">
                         <h5 class="mb-0">
                             <i class="fas fa-user me-2"></i>
                             Información de Usuario
@@ -103,7 +93,7 @@
                 <!-- Información de Empleado -->
                 {% if tiene_perfil %}
                 <div class="card mb-4">
-                    <div class="card-header">
+                    <div class="card-header bg-success">
                         <h5 class="mb-0">
                             <i class="fas fa-briefcase me-2"></i>
                             Información Laboral
@@ -132,8 +122,8 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label fw-bold">Antigüedad</label>
-                                    <p class="form-control-plaintext">
-                                        <span class="badge bg-primary fs-6">{{ perfil.antiguedad_anos }} años</span>
+                                    <p class="form-control-plaintext antiguedad-text">
+                                        {{ perfil.antiguedad_anos }} años
                                     </p>
                                 </div>
                             </div>
@@ -143,7 +133,7 @@
 
                 <!-- Información de Vacaciones -->
                 <div class="card mb-4">
-                    <div class="card-header">
+                    <div class="card-header bg-info">
                         <h5 class="mb-0">
                             <i class="fas fa-calendar-alt me-2"></i>
                             Información de Vacaciones
@@ -171,7 +161,7 @@
                             </div>
                         </div>
                         <div class="text-center mt-3">
-                            <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-outline-primary">
+                            <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-success">
                                 <i class="fas fa-calendar-check me-1"></i>Solicitar Vacaciones
                             </a>
                         </div>
@@ -191,7 +181,7 @@
                 <!-- Equipos Asignados -->
                 {% if equipos_asignados %}
                 <div class="card mb-4">
-                    <div class="card-header">
+                    <div class="card-header bg-primary">
                         <h5 class="mb-0">
                             <i class="fas fa-laptop me-2"></i>
                             Equipos Asignados
@@ -232,7 +222,7 @@
                             </table>
                         </div>
                         <div class="mt-2">
-                            <a href="{% url 'empleados:mis_equipos' %}" class="btn btn-sm btn-outline-primary">
+                            <a href="{% url 'empleados:mis_equipos' %}" class="btn btn-sm btn-primary">
                                 <i class="fas fa-eye me-1"></i>Ver todos mis equipos
                             </a>
                         </div>
@@ -245,7 +235,7 @@
             <div class="col-lg-4">
                 <!-- Roles y Permisos -->
                 <div class="card mb-4">
-                    <div class="card-header">
+                    <div class="card-header bg-info">
                         <h6 class="mb-0">
                             <i class="fas fa-user-tag me-2"></i>
                             Roles y Permisos
@@ -264,13 +254,13 @@
                         
                         <div class="d-grid gap-2">
                             {% if es_rh %}
-                                <a href="{% url 'empleados:gestion_usuarios' %}" class="btn btn-outline-primary btn-sm">
+                                <a href="{% url 'empleados:gestion_usuarios' %}" class="btn btn-primary btn-sm">
                                     <i class="fas fa-users-cog me-1"></i>Gestionar Usuarios
                                 </a>
                             {% endif %}
                             
                             {% if es_jefe %}
-                                <a href="{% url 'empleados:jefe_dashboard' %}" class="btn btn-outline-warning btn-sm">
+                                <a href="{% url 'empleados:jefe_dashboard' %}" class="btn btn-warning btn-sm">
                                     <i class="fas fa-user-tie me-1"></i>Panel de Jefe
                                 </a>
                             {% endif %}
@@ -286,7 +276,7 @@
 
                 <!-- Acciones Rápidas -->
                 <div class="card mb-4">
-                    <div class="card-header">
+                    <div class="card-header bg-warning">
                         <h6 class="mb-0">
                             <i class="fas fa-bolt me-2"></i>
                             Acciones Rápidas
@@ -294,17 +284,17 @@
                     </div>
                     <div class="card-body">
                         <div class="d-grid gap-2">
-                            <a href="{% url 'empleados:dashboard' %}" class="btn btn-outline-primary btn-sm">
+                            <a href="{% url 'empleados:dashboard' %}" class="btn btn-primary btn-sm">
                                 <i class="fas fa-home me-1"></i>Inicio
                             </a>
-                            <a href="{% url 'empleados:gestion_usuarios' %}" class="btn btn-outline-primary btn-sm">
+                            <a href="{% url 'empleados:gestion_usuarios' %}" class="btn btn-primary btn-sm">
                                 <i class="fas fa-users me-1"></i>Ver Empleados
                             </a>
-                            <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-outline-success btn-sm">
+                            <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-success btn-sm">
                                 <i class="fas fa-calendar-alt me-1"></i>Solicitar Vacaciones
                             </a>
                             {% if user.is_staff %}
-                                <a href="/admin/" class="btn btn-outline-warning btn-sm">
+                                <a href="/admin/" class="btn btn-warning btn-sm">
                                     <i class="fas fa-cog me-1"></i>Panel Admin
                                 </a>
                             {% endif %}
@@ -314,7 +304,7 @@
 
                 <!-- Información del Sistema -->
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header bg-info">
                         <h6 class="mb-0">
                             <i class="fas fa-info-circle me-2"></i>
                             Información del Sistema
@@ -342,59 +332,39 @@
 </div>
 
 <style>
-/* Estilos Glassmorphism para la cabecera */
-.glassmorphism-header {
-    background: rgba(0, 56, 168, 0.7) !important; /* Azul rey de la empresa con transparencia */
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    padding: 3rem 0 !important;
-    margin-bottom: 2rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    color: white !important;
-    font-family: 'Montserrat', sans-serif !important;
+/* Título y subtítulo del perfil - Texto blanco con sombra para efecto flotante */
+.dashboard-title {
+    color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 
+                 0 4px 12px rgba(0, 0, 0, 0.3),
+                 0 0 20px rgba(0, 0, 0, 0.2) !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.5rem !important;
 }
 
-.glassmorphism-header * {
-    color: white !important;
-    font-family: 'Montserrat', sans-serif !important;
-}
-
-/* Línea Principal (H1) - Saludo y Nombre */
-.header-line-primary {
-    font-family: 'Montserrat', sans-serif !important;
-    font-size: 2.2rem; /* Tamaño profesional entre 2.0rem - 2.5rem */
-    font-weight: 700; /* Montserrat Bold */
-    margin-bottom: 0.75rem;
-    color: white !important;
-    line-height: 1.2;
+.dashboard-subtitle {
+    color: #ffffff !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), 
+                 0 3px 10px rgba(0, 0, 0, 0.3),
+                 0 0 15px rgba(0, 0, 0, 0.2) !important;
+    font-weight: 400 !important;
 }
 
 .saludo-placeholder {
     margin-right: 0.5rem;
 }
 
-/* Línea Secundaria (H2) - Puesto y Departamento */
-.header-line-secondary {
-    font-family: 'Montserrat', sans-serif !important;
-    font-size: 1.5rem;
-    font-weight: 500; /* Montserrat Medium */
-    margin-bottom: 0.5rem;
-    color: white !important;
-    opacity: 0.95;
-    line-height: 1.3;
+/* Campos de texto con fondo transparente y texto blanco */
+.form-control-plaintext {
+    background: transparent !important;
+    padding: 0.5rem 0.75rem !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
 }
 
-/* Línea de Acción (H3) - Gestión */
-.header-line-action {
-    font-family: 'Montserrat', sans-serif !important;
-    font-size: 1.1rem;
-    font-weight: 300; /* Montserrat Light */
-    font-style: italic;
-    color: rgba(255, 255, 255, 0.9) !important;
-    margin-bottom: 0;
-    line-height: 1.4;
+.form-label {
+    color: #ffffff !important;
 }
 
 .stats-number {
@@ -406,25 +376,7 @@
 .stats-label {
     font-size: 0.9rem;
     opacity: 0.8;
-}
-
-.card {
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-}
-
-.card-header {
-    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-    color: white;
-    border-radius: 15px 15px 0 0 !important;
-    font-weight: 600;
-}
-
-.form-control-plaintext {
-    background: #f8f9fa;
-    padding: 0.5rem 0.75rem;
-    border-radius: 8px;
-    border: 1px solid #e9ecef;
+    color: #ffffff !important;
 }
 
 .badge {
@@ -432,23 +384,129 @@
     padding: 0.5em 0.75em;
 }
 
-/* Responsive para la cabecera */
+/* Texto de antigüedad - Blanco con sombra sutil, sin badge */
+.antiguedad-text {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    color: #ffffff !important;
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important; /* Sombra muy sutil debajo */
+}
+
+/* Estilos para el número de "Días Disponibles" - Verde esmeralda */
+.dashboard .card.text-center .card-body .stats-number.text-success {
+    color: #22C55E !important; /* Verde esmeralda del botón Generar Ticket */
+}
+
+/* ===== ESTILO DE BOTONES MODERNO - Con luz arriba y sombra abajo (igual que dashboard) ===== */
+/* Base común para todos los botones */
+.dashboard .btn,
+.dashboard .btn-primary,
+.dashboard .btn-success,
+.dashboard .btn-danger,
+.dashboard .btn-info,
+.dashboard .btn-warning,
+.dashboard .btn-outline-primary,
+.dashboard .btn-outline-danger,
+.dashboard .btn-outline-success {
+    border: none !important;
+    border-radius: 14px !important; /* Bordes muy redondeados */
+    padding: 14px 32px !important; /* Padding generoso */
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    color: #ffffff !important; /* Texto blanco */
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* Botones pequeños */
+.dashboard .btn-sm {
+    padding: 10px 24px !important;
+    font-size: 0.85rem !important;
+    border-radius: 12px !important;
+}
+
+/* Botón Primary - Azul corporativo con degradado oscuro (estado normal) */
+.dashboard .btn-primary,
+.dashboard .btn-outline-primary {
+    background: linear-gradient(180deg, 
+        rgba(37, 99, 235, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 30, 100, 1) 100%) !important; /* Colores oscuros en estado normal */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+}
+
+.dashboard .btn-primary:hover,
+.dashboard .btn-outline-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 56, 168, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Botón Success - Verde esmeralda con degradado oscuro (estado normal) - Mismo tono del dashboard */
+.dashboard .btn-success {
+    background: linear-gradient(180deg, 
+        rgba(34, 197, 94, 0.95) 0%, 
+        rgba(22, 163, 74, 0.95) 50%,
+        rgba(15, 118, 50, 1) 100%) !important; /* Colores oscuros en estado normal - Mismo verde del dashboard */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+}
+
+.dashboard .btn-success:hover {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important; /* Colores más claros al hover - Mismo verde del dashboard */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Botón Warning - Amarillo/Naranja con degradado oscuro (estado normal) */
+.dashboard .btn-warning {
+    background: linear-gradient(180deg, 
+        rgba(245, 158, 11, 0.95) 0%, 
+        rgba(217, 119, 6, 0.95) 50%,
+        rgba(180, 83, 9, 1) 100%) !important; /* Colores oscuros en estado normal */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+    color: #000000 !important; /* Texto negro para contraste */
+}
+
+.dashboard .btn-warning:hover {
+    background: linear-gradient(180deg, 
+        rgba(251, 191, 36, 0.95) 0%, 
+        rgba(245, 158, 11, 0.95) 50%,
+        rgba(217, 119, 6, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    color: #000000 !important;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-    .glassmorphism-header {
-        padding: 2rem 0 !important;
-        border-radius: 15px;
+    .dashboard-title {
+        font-size: 1.8rem !important;
     }
     
-    .header-line-primary {
-        font-size: 1.8rem;
-    }
-    
-    .header-line-secondary {
-        font-size: 1.2rem;
-    }
-    
-    .header-line-action {
-        font-size: 1rem;
+    .dashboard-subtitle {
+        font-size: 1.2rem !important;
     }
 }
 </style>

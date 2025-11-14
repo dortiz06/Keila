@@ -414,8 +414,8 @@ def solicitar_vacaciones(request):
             solicitud.empleado = perfil
             solicitud.save()
             messages.success(request, 'Solicitud de vacaciones enviada exitosamente.')
-            # Redirigir al panel correspondiente del usuario
-            return redirect('empleados:dashboard')
+            # Redirigir a la misma página para mostrar el modal con el mensaje de Django
+            return redirect('empleados:solicitar_vacaciones')
     else:
         form = SolicitudVacacionesForm(empleado=perfil)
     

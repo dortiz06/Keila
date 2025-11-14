@@ -654,6 +654,45 @@
         </div>
     </nav>
 
+    <!-- Mensajes de Django - Solo mostrar si NO es mensaje de éxito (el modal lo maneja) -->
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags != 'success' %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 1050; min-width: 300px; max-width: 500px;">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    
+    <!-- Variable JavaScript para detectar mensajes de éxito -->
+    <script>
+        // Variable global para indicar si hay un mensaje de éxito
+        window.hayMensajeExito = false;
+        console.log('=== BASE.HTML - VERIFICANDO MENSAJES ===');
+        console.log('¿Hay mensajes?', {% if messages %}true{% else %}false{% endif %});
+        
+        {% if messages %}
+            console.log('Total de mensajes:', {{ messages|length }});
+            {% for message in messages %}
+                console.log('Mensaje {{ forloop.counter }}: tags="{{ message.tags }}", mensaje="{{ message|escapejs }}"');
+                {% if message.tags == 'success' %}
+                    window.hayMensajeExito = true;
+                    console.log('✅ Mensaje de éxito encontrado en base.html: {{ message|escapejs }}');
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            console.log('❌ No hay mensajes en el contexto');
+        {% endif %}
+        
+        console.log('Variable global hayMensajeExito establecida:', window.hayMensajeExito);
+        console.log('Tipo de window.hayMensajeExito:', typeof window.hayMensajeExito);
+        
+        // Solo establecer la variable, la detección se hará en la página específica
+        // Esto evita problemas de orden de carga de scripts
+    </script>
+
     <!-- Contenido principal -->
     <main class="pt-4">
         {% block content %}{% endblock %}

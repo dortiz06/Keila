@@ -4,21 +4,25 @@
 {% block title %}Solicitar Vacaciones{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
+<div class="container-fluid dashboard">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+        <div>
+            <h1 class="dashboard-title">Solicitar Vacaciones</h1>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'empleados:empleado_dashboard' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Volver al Panel
+            </a>
+        </div>
+    </div>
     <div class="row">
         <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2><i class="fas fa-calendar-plus me-2"></i>Solicitar Vacaciones</h2>
-                <a href="{% url 'empleados:empleado_dashboard' %}" class="btn btn-outline-secondary">
-                    <i class="fas fa-arrow-left me-1"></i>Volver al Panel
-                </a>
-            </div>
 
             <!-- Información del empleado -->
             <div class="row mb-4">
                 <div class="col-md-6">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header bg-primary">
                             <h5 class="mb-0"><i class="fas fa-user me-2"></i>Información Personal</h5>
                         </div>
                         <div class="card-body">
@@ -31,7 +35,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header bg-info">
                             <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Estado de Vacaciones</h5>
                         </div>
                         <div class="card-body">
@@ -69,7 +73,7 @@
             <div class="row">
                 <div class="col-lg-8">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header bg-success">
                             <h5 class="mb-0"><i class="fas fa-edit me-2"></i>Nueva Solicitud de Vacaciones</h5>
                         </div>
                         <div class="card-body">
@@ -173,9 +177,9 @@
                                 {% endif %}
 
                                 <div class="d-flex justify-content-between">
-                                    <a href="{% url 'empleados:empleado_dashboard' %}" class="btn btn-outline-secondary">
+                                    <button type="button" class="btn btn-outline-secondary" id="btnCancelar">
                                         <i class="fas fa-times me-1"></i>Cancelar
-                                    </a>
+                                    </button>
                                     <button type="submit" class="btn btn-primary" 
                                             {% if perfil.dias_vacaciones_disponibles <= 0 and perfil.antiguedad_anos >= 1 %}disabled{% endif %}>
                                         <i class="fas fa-paper-plane me-1"></i>Enviar Solicitud
@@ -185,11 +189,11 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <!-- Panel lateral con información -->
                 <div class="col-lg-4">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header bg-info">
                             <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Información Importante</h5>
                         </div>
                         <div class="card-body">
@@ -222,6 +226,24 @@
     </div>
 </div>
 
+<!-- Modal de confirmación de solicitud enviada (fuera del contenedor dashboard) -->
+<div id="modalConfirmacion" class="modal-confirmacion" style="display: none !important; position: fixed !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; z-index: 99999 !important;">
+    <div class="modal-confirmacion-content">
+        <div class="modal-confirmacion-header">
+            <i class="fas fa-check-circle"></i>
+            <h3>Solicitud Enviada</h3>
+        </div>
+        <div class="modal-confirmacion-body">
+            <p>Su solicitud de vacaciones ha sido enviada exitosamente.</p>
+        </div>
+        <div class="modal-confirmacion-footer">
+            <button type="button" class="btn btn-primary" id="btnCerrarModal">
+                <i class="fas fa-check me-1"></i>Aceptar
+            </button>
+        </div>
+    </div>
+</div>
+
 <!-- Flatpickr CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
@@ -230,9 +252,120 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+// Funciones globales para el modal (deben estar disponibles antes de DOMContentLoaded)
+function mostrarModalConfirmacion() {
+    console.log('=== FUNCIÓN mostrarModalConfirmacion LLAMADA ===');
+    const modal = document.getElementById('modalConfirmacion');
+    console.log('Modal elemento:', modal);
+    console.log('Modal existe?', modal !== null);
+    
+    if (!modal) {
+        console.error('ERROR CRÍTICO: Modal no encontrado en el DOM');
+        console.error('Buscando todos los elementos con id que contengan "modal"...');
+        const allModals = document.querySelectorAll('[id*="modal"]');
+        console.log('Elementos encontrados:', allModals);
+        alert('Error: El modal no se encuentra en el DOM. Revisa la consola para más detalles.');
+        return;
+    }
+    
+    console.log('Modal encontrado, mostrando...');
+    console.log('Display antes:', window.getComputedStyle(modal).display);
+    
+    // Forzar el display a flex con !important
+    modal.style.setProperty('display', 'flex', 'important');
+    modal.style.setProperty('visibility', 'visible', 'important');
+    modal.style.setProperty('opacity', '1', 'important');
+    modal.style.setProperty('z-index', '99999', 'important');
+    
+    console.log('Display después:', window.getComputedStyle(modal).display);
+    console.log('Z-index:', window.getComputedStyle(modal).zIndex);
+    console.log('Modal debería estar visible ahora');
+    
+    // Ocultar automáticamente después de 3 segundos
+    setTimeout(function() {
+        ocultarModalConfirmacion();
+    }, 3000);
+}
+
+// Función para resetear el formulario (igual que el botón Cancelar)
+function resetearFormulario() {
+    // Resetear el formulario
+    const form = document.getElementById('solicitudForm');
+    if (form) {
+        form.reset();
+    }
+    
+    // Limpiar explícitamente el campo de motivo (textarea)
+    const motivoField = document.getElementById('{{ form.motivo.id_for_label }}');
+    if (motivoField) {
+        motivoField.value = '';
+    }
+    
+    // Limpiar explícitamente el campo de tipo (select)
+    const tipoField = document.getElementById('{{ form.tipo.id_for_label }}');
+    if (tipoField) {
+        tipoField.value = '';
+    }
+    
+    // Limpiar los valores de las fechas en Flatpickr (usar variables globales si están disponibles)
+    if (typeof window.fechaInicio !== 'undefined' && window.fechaInicio) {
+        window.fechaInicio.clear();
+    }
+    if (typeof window.fechaFin !== 'undefined' && window.fechaFin) {
+        window.fechaFin.clear();
+    }
+    
+    // Limpiar los atributos data-date-value
     const fechaInicioInput = document.getElementById('{{ form.fecha_inicio.id_for_label }}');
     const fechaFinInput = document.getElementById('{{ form.fecha_fin.id_for_label }}');
+    
+    if (fechaInicioInput) {
+        fechaInicioInput.removeAttribute('data-date-value');
+    }
+    if (fechaFinInput) {
+        fechaFinInput.removeAttribute('data-date-value');
+    }
+    
+    // Ocultar el div de información de días solicitados
+    const diasInfo = document.getElementById('dias-info');
+    if (diasInfo) {
+        diasInfo.style.display = 'none';
+        diasInfo.innerHTML = '';
+    }
+    
+    console.log('Formulario reseteado (incluyendo motivo y tipo)');
+}
+
+function ocultarModalConfirmacion() {
+    const modal = document.getElementById('modalConfirmacion');
+    if (modal) {
+        modal.style.setProperty('display', 'none', 'important');
+        console.log('Modal ocultado');
+        
+        // Resetear el formulario cuando el modal se oculta
+        resetearFormulario();
+    }
+}
+
+// Hacer las funciones disponibles globalmente inmediatamente
+window.mostrarModalConfirmacion = mostrarModalConfirmacion;
+window.ocultarModalConfirmacion = ocultarModalConfirmacion;
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOMContentLoaded ejecutado');
+    
+    const fechaInicioInput = document.getElementById('{{ form.fecha_inicio.id_for_label }}');
+    const fechaFinInput = document.getElementById('{{ form.fecha_fin.id_for_label }}');
+    
+    // Verificar que los inputs existan
+    if (!fechaInicioInput || !fechaFinInput) {
+        console.error('ERROR: No se encontraron los inputs de fecha');
+        console.error('fechaInicioInput:', fechaInicioInput);
+        console.error('fechaFinInput:', fechaFinInput);
+        return; // Salir si no existen los inputs
+    }
+    
+    console.log('Inputs de fecha encontrados correctamente');
     
     // Convertir valores existentes de YYYY-MM-DD a DD/MM/YYYY si los hay
     function convertirFechaAFormato(fechaStr) {
@@ -253,21 +386,105 @@ document.addEventListener('DOMContentLoaded', function() {
         fechaFinInput.value = convertirFechaAFormato(fechaFinInput.value);
     }
     
-    // Calcular fecha límite (7 días antes de hoy)
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
-    const fechaLimite = new Date(hoy);
-    fechaLimite.setDate(fechaLimite.getDate() - 7); // 7 días antes
+    // Función para crear dropdown de año (igual que el mes)
+    function crearYearDropdown(instance) {
+        const yearInputWrapper = instance.calendarContainer.querySelector('.numInputWrapper');
+        if (!yearInputWrapper) return;
+        
+        // Verificar si ya existe el dropdown
+        if (yearInputWrapper.querySelector('.flatpickr-yearDropdown')) {
+            // Actualizar el valor del dropdown si ya existe
+            const existingSelect = yearInputWrapper.querySelector('.flatpickr-yearDropdown');
+            const currentYear = instance.currentYear || new Date().getFullYear();
+            existingSelect.value = currentYear;
+            return;
+        }
+        
+        // Obtener el año actual
+        const currentYear = instance.currentYear || new Date().getFullYear();
+        
+        // Crear el select dropdown para años
+        const yearSelect = document.createElement('select');
+        yearSelect.classList.add('flatpickr-yearDropdown');
+        yearSelect.size = 1; // Tamaño normal (dropdown)
+        
+        // Generar años (desde 20 años atrás hasta 10 años adelante)
+        const startYear = currentYear - 20;
+        const endYear = currentYear + 10;
+        
+        for (let year = startYear; year <= endYear; year++) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            if (year === currentYear) {
+                option.selected = true;
+            }
+            yearSelect.appendChild(option);
+        }
+        
+        // Manejar cambio de año
+        yearSelect.addEventListener('change', function() {
+            const selectedYear = parseInt(this.value);
+            instance.changeYear(selectedYear);
+            // Actualizar el valor si hay una fecha seleccionada
+            if (instance.selectedDates.length > 0) {
+                const date = new Date(instance.selectedDates[0]);
+                date.setFullYear(selectedYear);
+                instance.setDate(date, false);
+            }
+        });
+        
+        // Reemplazar el input number con el select
+        const yearInput = yearInputWrapper.querySelector('input');
+        if (yearInput) {
+            yearInput.style.display = 'none';
+            yearInputWrapper.appendChild(yearSelect);
+        }
+        
+        // Aplicar tipografía gruesa al mes
+        const monthSelect = instance.calendarContainer.querySelector('.flatpickr-monthDropdown-months');
+        if (monthSelect) {
+            monthSelect.style.fontWeight = '700';
+        }
+    }
+    
+    // Verificar que flatpickr esté disponible
+    if (typeof flatpickr === 'undefined') {
+        console.error('ERROR: Flatpickr no está cargado');
+        alert('Error: El calendario no se puede cargar. Por favor, recarga la página.');
+        return;
+    }
+    
+    console.log('Flatpickr disponible, inicializando...');
+    
+    // Permitir años anteriores (hasta 10 años atrás) y futuros
+    const fechaMinima = new Date();
+    fechaMinima.setFullYear(fechaMinima.getFullYear() - 10);
     
     // Inicializar Flatpickr para Fecha de Inicio
-    const fechaInicio = flatpickr(fechaInicioInput, {
+    window.fechaInicio = null;
+    try {
+        window.fechaInicio = flatpickr(fechaInicioInput, {
         dateFormat: 'd/m/Y',
         altInput: false,
         locale: 'es',
-        minDate: fechaLimite, // Permitir hasta 7 días antes
+        minDate: null, // Sin límite mínimo (permitir años anteriores)
+        maxDate: null, // Sin límite máximo
         defaultDate: fechaInicioInput.value || null,
+        allowInput: true,
+        clickOpens: true,
+        enableTime: false,
+        animate: true,
+        // Convertir el selector de año en dropdown como el mes
+        onReady: function(selectedDates, dateStr, instance) {
+            crearYearDropdown(instance);
+        },
+        onOpen: function(selectedDates, dateStr, instance) {
+            setTimeout(function() {
+                crearYearDropdown(instance);
+            }, 50);
+        },
         onChange: function(selectedDates, dateStr, instance) {
-            calcularDias();
             // Actualizar el valor en formato YYYY-MM-DD para el backend
             if (selectedDates.length > 0) {
                 const date = selectedDates[0];
@@ -276,18 +493,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 const dd = String(date.getDate()).padStart(2, '0');
                 fechaInicioInput.setAttribute('data-date-value', `${yyyy}-${mm}-${dd}`);
             }
+            // Calcular días después de actualizar el valor (con delay para asegurar que se actualice)
+            setTimeout(calcularDias, 100);
+            // Actualizar el dropdown de año
+            crearYearDropdown(instance);
         }
-    });
+        });
+        console.log('Flatpickr fecha inicio inicializado correctamente');
+    } catch (error) {
+        console.error('Error al inicializar Flatpickr para fecha inicio:', error);
+    }
     
     // Inicializar Flatpickr para Fecha de Fin
-    const fechaFin = flatpickr(fechaFinInput, {
+    window.fechaFin = null;
+    try {
+        window.fechaFin = flatpickr(fechaFinInput, {
         dateFormat: 'd/m/Y',
         altInput: false,
         locale: 'es',
-        minDate: fechaLimite, // Permitir hasta 7 días antes
+        minDate: null, // Sin límite mínimo (permitir años anteriores)
+        maxDate: null, // Sin límite máximo
         defaultDate: fechaFinInput.value || null,
+        allowInput: true,
+        clickOpens: true,
+        enableTime: false,
+        animate: true,
+        // Convertir el selector de año en dropdown como el mes
+        onReady: function(selectedDates, dateStr, instance) {
+            crearYearDropdown(instance);
+        },
+        onOpen: function(selectedDates, dateStr, instance) {
+            setTimeout(function() {
+                crearYearDropdown(instance);
+            }, 50);
+        },
         onChange: function(selectedDates, dateStr, instance) {
-            calcularDias();
             // Actualizar el valor en formato YYYY-MM-DD para el backend
             if (selectedDates.length > 0) {
                 const date = selectedDates[0];
@@ -296,29 +536,66 @@ document.addEventListener('DOMContentLoaded', function() {
                 const dd = String(date.getDate()).padStart(2, '0');
                 fechaFinInput.setAttribute('data-date-value', `${yyyy}-${mm}-${dd}`);
             }
+            // Calcular días después de actualizar el valor (con delay para asegurar que se actualice)
+            setTimeout(calcularDias, 100);
+            // Actualizar el dropdown de año
+            crearYearDropdown(instance);
         }
-    });
+        });
+        console.log('Flatpickr fecha fin inicializado correctamente');
+    } catch (error) {
+        console.error('Error al inicializar Flatpickr para fecha fin:', error);
+    }
     
-    // Calcular días automáticamente
+    // Calcular días automáticamente (excluyendo domingos)
     function calcularDias() {
         const inicioStr = fechaInicioInput.getAttribute('data-date-value');
         const finStr = fechaFinInput.getAttribute('data-date-value');
         
+        // Obtener o crear el div de información
+        let infoDiv = document.getElementById('dias-info');
+        
         if (inicioStr && finStr) {
-            const inicio = new Date(inicioStr);
-            const fin = new Date(finStr);
-            const diffTime = Math.abs(fin - inicio);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            const inicio = new Date(inicioStr + 'T00:00:00');
+            const fin = new Date(finStr + 'T00:00:00');
             
-            // Mostrar información de días
-            let infoDiv = document.getElementById('dias-info');
-            if (!infoDiv) {
-                infoDiv = document.createElement('div');
-                infoDiv.id = 'dias-info';
-                infoDiv.className = 'alert alert-info mt-2';
-                fechaFinInput.parentNode.appendChild(infoDiv);
+            // Verificar que las fechas sean válidas
+            if (!isNaN(inicio.getTime()) && !isNaN(fin.getTime())) {
+                // Asegurar que inicio sea anterior o igual a fin
+                let fechaInicio = inicio <= fin ? inicio : fin;
+                let fechaFin = inicio <= fin ? fin : inicio;
+                
+                // Contar días excluyendo domingos (día 0)
+                let diffDays = 0;
+                let fechaActual = new Date(fechaInicio);
+                
+                // Iterar día por día desde inicio hasta fin (inclusive)
+                while (fechaActual <= fechaFin) {
+                    // Si no es domingo (día 0), contarlo
+                    if (fechaActual.getDay() !== 0) {
+                        diffDays++;
+                    }
+                    // Avanzar al siguiente día
+                    fechaActual.setDate(fechaActual.getDate() + 1);
+                }
+                
+                // Crear el div si no existe
+                if (!infoDiv) {
+                    infoDiv = document.createElement('div');
+                    infoDiv.id = 'dias-info';
+                    infoDiv.className = 'alert alert-info mt-2';
+                    // Insertar después del campo de fecha fin
+                    fechaFinInput.parentNode.appendChild(infoDiv);
+                }
+                // Mostrar información de días
+                infoDiv.innerHTML = `<i class="fas fa-info-circle me-1"></i>Días solicitados: <strong>${diffDays}</strong>`;
+                infoDiv.style.display = 'block';
             }
-            infoDiv.innerHTML = `<i class="fas fa-info-circle me-1"></i>Días solicitados: <strong>${diffDays}</strong>`;
+        } else {
+            // Si no hay ambas fechas, ocultar el div
+            if (infoDiv) {
+                infoDiv.style.display = 'none';
+            }
         }
     }
     
@@ -346,7 +623,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Convertir valores DD/MM/YYYY a YYYY-MM-DD antes de enviar el formulario
-    document.getElementById('solicitudForm').addEventListener('submit', function(e) {
+    const formSolicitud = document.getElementById('solicitudForm');
+    if (formSolicitud) {
+        formSolicitud.addEventListener('submit', function(e) {
         // Obtener el valor del atributo data-date-value (si existe) o convertir el valor visible
         let inicioStr = fechaInicioInput.getAttribute('data-date-value');
         let finStr = fechaFinInput.getAttribute('data-date-value');
@@ -368,10 +647,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Validación: convertir strings a Date objects correctamente
             const inicio = new Date(inicioStr + 'T00:00:00');
             const fin = new Date(finStr + 'T00:00:00');
-            const hoy = new Date();
-            hoy.setHours(0, 0, 0, 0);
-            const fechaLimiteValidacion = new Date(hoy);
-            fechaLimiteValidacion.setDate(fechaLimiteValidacion.getDate() - 7); // 7 días antes
             
             // Verificar que las fechas sean válidas
             if (isNaN(inicio.getTime()) || isNaN(fin.getTime())) {
@@ -380,21 +655,970 @@ document.addEventListener('DOMContentLoaded', function() {
                 return false;
             }
             
-            if (inicio < fechaLimiteValidacion) {
-                e.preventDefault();
-                alert('No puedes solicitar vacaciones para fechas anteriores a hace una semana. Solo se permite retroceder hasta 7 días para cambiar faltas por días de vacaciones.');
-                return false;
-            }
-            
+            // Validación: la fecha de fin debe ser posterior a la de inicio
             if (fin < inicio) {
                 e.preventDefault();
                 alert('La fecha de fin debe ser posterior a la fecha de inicio.');
                 return false;
             }
+            
+            // Si el formulario es válido, guardar en sessionStorage que se está enviando
+            // Esto nos permitirá detectar cuando la página se recargue después del envío exitoso
+            console.log('Formulario válido, guardando en sessionStorage...');
+            sessionStorage.setItem('solicitudVacacionesEnviada', 'true');
+            console.log('sessionStorage establecido: solicitudVacacionesEnviada = true');
+            
+            // NO prevenir el envío - dejar que el formulario se envíe normalmente
         } else {
             e.preventDefault();
             alert('Por favor, completa ambos campos de fecha.');
             return false;
+        }
+        });
+    } else {
+        console.error('Formulario solicitudForm no encontrado');
+    }
+    
+    // Botón para cerrar el modal
+    const btnCerrarModal = document.getElementById('btnCerrarModal');
+    if (btnCerrarModal) {
+        btnCerrarModal.addEventListener('click', function() {
+            ocultarModalConfirmacion();
+        });
+    }
+    
+    // Cerrar modal al hacer clic fuera de él
+    const modalConfirmacion = document.getElementById('modalConfirmacion');
+    if (modalConfirmacion) {
+        modalConfirmacion.addEventListener('click', function(e) {
+            if (e.target === this) {
+                ocultarModalConfirmacion();
+            }
+        });
+    }
+    
+    // Verificar mensajes de Django y mostrar modal automáticamente
+    function verificarYMostrarModal() {
+        console.log('=== VERIFICANDO MENSAJES DE DJANGO ===');
+        console.log('window.hayMensajeExito:', window.hayMensajeExito);
+        console.log('Tipo:', typeof window.hayMensajeExito);
+        console.log('URL actual:', window.location.href);
+        
+        let mensajeEncontrado = false;
+        
+        // Método 1: Verificar variable global (más confiable)
+        if (typeof window.hayMensajeExito !== 'undefined' && window.hayMensajeExito === true) {
+            console.log('✅ Mensaje de éxito detectado vía variable global');
+            mensajeEncontrado = true;
+        }
+        
+        // Método 2: Verificar mensajes de Django en el template directamente
+        {% if messages %}
+            console.log('Método 2: Verificando mensajes en template solicitar_vacaciones.html...');
+            console.log('Total de mensajes en template:', {{ messages|length }});
+            {% for message in messages %}
+                console.log('Mensaje {{ forloop.counter }} en template: tags="{{ message.tags }}", mensaje="{{ message|escapejs }}"');
+                {% if message.tags == 'success' %}
+                    console.log('✅ Mensaje de éxito de Django detectado en template: {{ message|escapejs }}');
+                    mensajeEncontrado = true;
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            console.log('Método 2: No hay mensajes en el template');
+        {% endif %}
+        
+        // Método 3: Verificar parámetros en la URL como respaldo
+        const urlParams = new URLSearchParams(window.location.search);
+        const enviado = urlParams.get('enviado');
+        const success = urlParams.get('success');
+        
+        if (enviado === 'true' || enviado === 'True' || enviado === '1' || 
+            success === 'true' || success === 'True' || success === '1') {
+            console.log('✅ Parámetro de éxito detectado en URL');
+            mensajeEncontrado = true;
+            // Limpiar el parámetro de la URL
+            setTimeout(function() {
+                const url = new URL(window.location);
+                url.searchParams.delete('enviado');
+                url.searchParams.delete('success');
+                window.history.replaceState({}, '', url);
+            }, 100);
+        }
+        
+        // Método 4: Verificar si hay alertas de éxito en el DOM
+        const alertasExito = document.querySelectorAll('.alert-success, .alert.alert-success');
+        if (alertasExito.length > 0) {
+            console.log('✅ Alerta de éxito encontrada en el DOM:', alertasExito.length, 'elementos');
+            mensajeEncontrado = true;
+        }
+        
+        // Método 5: Verificar sessionStorage (más confiable para detectar envío exitoso)
+        const solicitudEnviada = sessionStorage.getItem('solicitudVacacionesEnviada');
+        if (solicitudEnviada === 'true') {
+            console.log('✅ Solicitud enviada detectada en sessionStorage');
+            mensajeEncontrado = true;
+            // Limpiar el sessionStorage después de detectarlo
+            sessionStorage.removeItem('solicitudVacacionesEnviada');
+            console.log('sessionStorage limpiado');
+        }
+        
+        // Si se encontró algún mensaje de éxito, mostrar el modal
+        if (mensajeEncontrado) {
+            console.log('✅ Mensaje de éxito confirmado - Mostrando modal en 500ms...');
+            setTimeout(function() {
+                console.log('Llamando a mostrarModalConfirmacion...');
+                if (typeof mostrarModalConfirmacion === 'function') {
+                    mostrarModalConfirmacion();
+                } else {
+                    console.error('ERROR: mostrarModalConfirmacion no está definida');
+                }
+            }, 500);
+        } else {
+            console.log('❌ No se detectó ningún mensaje de éxito');
+            console.log('window.hayMensajeExito es:', window.hayMensajeExito);
+            console.log('Mensajes en el DOM:', document.querySelectorAll('.alert').length);
+            console.log('sessionStorage solicitudVacacionesEnviada:', sessionStorage.getItem('solicitudVacacionesEnviada'));
+        }
+    }
+    
+    // Función para ejecutar la verificación de forma agresiva
+    function ejecutarVerificacion() {
+        console.log('=== EJECUTANDO VERIFICACIÓN ===');
+        console.log('Estado del documento:', document.readyState);
+        console.log('window.hayMensajeExito:', window.hayMensajeExito);
+        
+        // Verificar inmediatamente
+        verificarYMostrarModal();
+        
+        // Verificar después de un pequeño delay para asegurar que la variable esté disponible
+        setTimeout(function() {
+            console.log('Verificación con delay 100ms...');
+            verificarYMostrarModal();
+        }, 100);
+        
+        setTimeout(function() {
+            console.log('Verificación con delay 300ms...');
+            verificarYMostrarModal();
+        }, 300);
+        
+        setTimeout(function() {
+            console.log('Verificación con delay 500ms...');
+            verificarYMostrarModal();
+        }, 500);
+        
+        setTimeout(function() {
+            console.log('Verificación con delay 1000ms...');
+            verificarYMostrarModal();
+        }, 1000);
+    }
+    
+    // Ejecutar la verificación de múltiples formas para asegurar que se ejecute
+    
+    // 1. Inmediatamente si el script se carga después del DOM
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        console.log('Documento ya cargado, ejecutando verificación inmediata...');
+        ejecutarVerificacion();
+    }
+    
+    // 2. Cuando el DOM está listo
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded disparado, ejecutando verificación...');
+            ejecutarVerificacion();
+        });
+    }
+    
+    // 3. Cuando la página se carga completamente
+    window.addEventListener('load', function() {
+        console.log('Window load disparado, ejecutando verificación...');
+        ejecutarVerificacion();
+    });
+    
+    // 4. Para páginas cargadas desde caché (pageshow event)
+    window.addEventListener('pageshow', function(event) {
+        console.log('Pageshow disparado, persisted:', event.persisted);
+        if (event.persisted) {
+            console.log('Página cargada desde caché, ejecutando verificación...');
+            ejecutarVerificacion();
+        }
+    });
+    
+    // 5. Verificación adicional después de delays más largos (por si acaso)
+    setTimeout(ejecutarVerificacion, 2000);
+    
+    // Botón Cancelar - Resetear formulario usando la función compartida
+    try {
+        const btnCancelar = document.getElementById('btnCancelar');
+        if (btnCancelar) {
+            btnCancelar.addEventListener('click', function(e) {
+                e.preventDefault();
+                resetearFormulario();
+            });
+            console.log('Event listener agregado al botón cancelar');
+        } else {
+            console.warn('Botón btnCancelar no encontrado');
+        }
+    } catch (error) {
+        console.error('Error al agregar event listener al botón cancelar:', error);
+    }
+});
+</script>
+
+<style>
+/* Tipografía para los cuadros de información - Labels delgados, valores gruesos */
+.dashboard .card-body p {
+    color: #ffffff !important;
+    font-weight: 400 !important; /* Peso base delgado para todo el párrafo */
+}
+
+/* Labels (strong) - Tipografía delgada */
+.dashboard .card-body p strong {
+    font-weight: 400 !important; /* Tipografía delgada para los labels */
+    color: #ffffff !important;
+}
+
+/* Todos los elementos hijos del párrafo excepto strong - Tipografía gruesa */
+.dashboard .card-body p > *:not(strong),
+.dashboard .card-body p span:not(strong),
+.dashboard .card-body p .text-success,
+.dashboard .card-body p .text-warning,
+.dashboard .card-body p .text-info,
+.dashboard .card-body p .text-danger,
+.dashboard .card-body p .text-primary,
+.dashboard .card-body p .text-muted {
+    font-weight: 600 !important; /* Tipografía gruesa para los valores */
+}
+
+/* Texto directo después del strong (usando JavaScript para envolver) */
+.dashboard .card-body p {
+    font-weight: 400 !important;
+}
+
+/* ===== CAMPOS DE FORMULARIO CON GLASSMORPHISM ===== */
+/* Labels de formulario - Texto blanco */
+.dashboard .form-label {
+    color: #ffffff !important;
+    font-weight: 500 !important;
+}
+
+/* Inputs, textareas y selects - Fondo transparente con glassmorphism */
+.dashboard .form-control,
+.dashboard input[type="text"],
+.dashboard input[type="date"],
+.dashboard input[type="email"],
+.dashboard input[type="number"],
+.dashboard textarea,
+.dashboard select {
+    background: rgba(255, 255, 255, 0.1) !important; /* Fondo transparente */
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important; /* Borde blanco sutil */
+    border-radius: 12px !important;
+    color: #ffffff !important; /* Texto blanco */
+    padding: 12px 16px !important;
+    transition: all 0.3s ease !important;
+}
+
+.dashboard .form-control:focus,
+.dashboard input[type="text"]:focus,
+.dashboard input[type="date"]:focus,
+.dashboard input[type="email"]:focus,
+.dashboard input[type="number"]:focus,
+.dashboard textarea:focus,
+.dashboard select:focus {
+    background: rgba(255, 255, 255, 0.15) !important; /* Más opaco al focus */
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.2) !important;
+    outline: none !important;
+    color: #ffffff !important;
+}
+
+.dashboard .form-control::placeholder,
+.dashboard input::placeholder,
+.dashboard textarea::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important; /* Placeholder blanco semitransparente */
+}
+
+.dashboard .form-control:hover,
+.dashboard input:hover,
+.dashboard textarea:hover,
+.dashboard select:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Select dropdown - Estilo glassmorphism */
+.dashboard select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 12px center !important;
+    padding-right: 40px !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+}
+
+/* Texto de ayuda del formulario */
+.dashboard .form-text,
+.dashboard small.text-muted {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Mensajes de error */
+.dashboard .text-danger {
+    color: #ff6b6b !important; /* Rojo más suave pero visible */
+}
+
+/* ===== ESTILOS PARA FLATPICKR CALENDAR - GLASSMORPHISM ===== */
+/* Contenedor principal del calendario */
+.flatpickr-calendar {
+    background: rgba(255, 255, 255, 0.15) !important; /* Fondo transparente con glassmorphism */
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important; /* Borde blanco sutil */
+    border-radius: 20px !important; /* Bordes redondeados */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important; /* Sombra y highlight */
+    padding: 20px !important; /* Más espacio interno */
+    font-family: 'Montserrat', sans-serif !important;
+    z-index: 9999 !important; /* Asegurar que esté por encima */
+    min-width: 320px !important; /* Ancho mínimo más amplio */
+    width: auto !important;
+}
+
+/* Header del calendario (mes y año) */
+.flatpickr-months {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+    padding-bottom: 10px !important;
+    margin-bottom: 10px !important;
+}
+
+.flatpickr-month {
+    background: transparent !important;
+    color: #ffffff !important;
+}
+
+.flatpickr-current-month {
+    color: #ffffff !important;
+    font-weight: 700 !important; /* Tipografía gruesa para el mes */
+    font-size: 1.1rem !important;
+}
+
+/* Mes en el dropdown - Tipografía gruesa */
+.flatpickr-monthDropdown-months {
+    font-weight: 700 !important; /* Tipografía gruesa */
+    font-size: 1.1rem !important;
+}
+
+.flatpickr-month .flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-month .flatpickr-current-month .numInputWrapper {
+    color: #ffffff !important;
+}
+
+/* Botones de navegación (flechas) */
+.flatpickr-prev-month,
+.flatpickr-next-month {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+    padding: 8px !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+}
+
+.flatpickr-prev-month:hover,
+.flatpickr-next-month:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Días de la semana */
+.flatpickr-weekdays {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    margin-bottom: 5px !important;
+}
+
+.flatpickr-weekday {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-weight: 500 !important;
+}
+
+/* Días del calendario - Más espacio */
+.flatpickr-days {
+    padding: 10px 0 !important;
+}
+
+.flatpickr-day {
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    border: none !important;
+    transition: all 0.3s ease !important;
+    width: 36px !important; /* Más ancho */
+    height: 36px !important; /* Más alto */
+    line-height: 36px !important;
+    margin: 2px !important; /* Espacio entre días */
+    font-size: 0.95rem !important;
+}
+
+.flatpickr-day:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border: none !important;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+    background: rgba(255, 255, 255, 0.25) !important; /* Fondo gris claro/transparente como en la imagen */
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important; /* Borde blanco más visible */
+    border-radius: 12px !important; /* Bordes redondeados como burbuja */
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 
+                0 2px 8px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important; /* Sombra para efecto flotante y highlight interno */
+    transform: translateY(-1px) !important; /* Ligero desplazamiento hacia arriba para efecto flotante */
+    position: relative !important;
+    z-index: 10 !important; /* Asegurar que esté por encima */
+}
+
+/* Día de hoy - Solo borde blanco, sin fondo ni sombra */
+.flatpickr-day.today {
+    border: 2px solid rgba(255, 255, 255, 0.6) !important; /* Solo borde blanco */
+    background: transparent !important; /* Sin fondo */
+    color: #ffffff !important;
+    box-shadow: none !important; /* Sin sombra */
+    border-radius: 12px !important;
+}
+
+/* Si el día de hoy está seleccionado, usar el estilo de seleccionado con sombra */
+.flatpickr-day.today.selected {
+    background: rgba(255, 255, 255, 0.25) !important; /* Fondo gris claro cuando está seleccionado */
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 
+                0 2px 8px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important; /* Mismas sombras que el día seleccionado */
+    transform: translateY(-1px) !important; /* Ligero desplazamiento hacia arriba para efecto flotante */
+    position: relative !important;
+    z-index: 10 !important; /* Asegurar que esté por encima */
+}
+
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay {
+    color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.flatpickr-day.flatpickr-disabled:hover {
+    background: transparent !important;
+}
+
+/* Selector de mes - Estilo glassmorphism */
+.flatpickr-monthDropdown-months {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+    padding: 6px 12px !important;
+    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+    transition: all 0.3s ease !important;
+}
+
+.flatpickr-monthDropdown-months:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Selector de año - Mismo estilo que el mes (dropdown) con scroll */
+.flatpickr-yearDropdown {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+    padding: 6px 12px !important;
+    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer !important;
+    font-family: 'Montserrat', sans-serif !important;
+    margin-left: 5px !important;
+    min-width: 100px !important; /* Ancho mínimo */
+    width: auto !important;
+}
+
+/* Cuando el select está abierto (size > 1), mostrar scroll */
+.flatpickr-yearDropdown[size] {
+    max-height: 200px !important; /* Altura máxima para mostrar scroll */
+    overflow-y: auto !important; /* Habilitar scroll vertical */
+    padding: 4px 0 !important; /* Menos padding cuando está abierto */
+}
+
+.flatpickr-yearDropdown:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.flatpickr-yearDropdown:focus {
+    background: rgba(255, 255, 255, 0.25) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Scrollbar personalizado para el dropdown de año */
+.flatpickr-yearDropdown::-webkit-scrollbar {
+    width: 8px !important;
+}
+
+.flatpickr-yearDropdown::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 4px !important;
+}
+
+.flatpickr-yearDropdown::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3) !important;
+    border-radius: 4px !important;
+}
+
+.flatpickr-yearDropdown::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Opciones del dropdown de año */
+.flatpickr-yearDropdown option {
+    background: rgba(0, 0, 0, 0.8) !important;
+    color: #ffffff !important;
+    padding: 8px 12px !important;
+}
+
+/* Selector de año - Mismo estilo glassmorphism que el mes */
+.flatpickr-calendar .numInputWrapper,
+.flatpickr-month .numInputWrapper,
+.flatpickr-current-month .numInputWrapper {
+    position: relative !important;
+}
+
+.flatpickr-calendar .numInputWrapper input,
+.flatpickr-month .numInputWrapper input,
+.flatpickr-current-month .numInputWrapper input,
+.flatpickr-month .flatpickr-current-month .numInputWrapper input {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+    padding: 6px 12px !important;
+    font-weight: 700 !important; /* Tipografía gruesa como el mes */
+    font-size: 1.1rem !important;
+    width: 80px !important; /* Ancho adecuado */
+    text-align: center !important;
+    transition: all 0.3s ease !important;
+    cursor: text !important;
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    -moz-user-select: text !important;
+}
+
+.flatpickr-calendar .numInputWrapper input:hover,
+.flatpickr-month .numInputWrapper input:hover,
+.flatpickr-current-month .numInputWrapper input:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.flatpickr-calendar .numInputWrapper input:focus,
+.flatpickr-month .numInputWrapper input:focus,
+.flatpickr-current-month .numInputWrapper input:focus {
+    background: rgba(255, 255, 255, 0.25) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Ocultar las flechas del input number */
+.flatpickr-calendar .numInputWrapper input[type="number"]::-webkit-inner-spin-button,
+.flatpickr-calendar .numInputWrapper input[type="number"]::-webkit-outer-spin-button,
+.flatpickr-month .numInputWrapper input[type="number"]::-webkit-inner-spin-button,
+.flatpickr-month .numInputWrapper input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+    display: none !important;
+}
+
+.flatpickr-calendar .numInputWrapper input[type="number"],
+.flatpickr-month .numInputWrapper input[type="number"] {
+    -moz-appearance: textfield !important;
+}
+
+/* Dropdown de años/meses */
+.flatpickr-monthDropdown-months option {
+    background: rgba(0, 0, 0, 0.8) !important;
+    color: #ffffff !important;
+}
+
+/* Asegurar visibilidad del calendario */
+.flatpickr-calendar.open {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Input de año editable - Más visible y funcional (consolidado arriba) */
+
+/* ===== ESTILO DE BOTONES MODERNO - Con luz arriba y sombra abajo (igual que dashboard) ===== */
+/* Base común para todos los botones */
+.dashboard .btn,
+.dashboard .btn-primary,
+.dashboard .btn-success,
+.dashboard .btn-danger,
+.dashboard .btn-info,
+.dashboard .btn-warning,
+.dashboard .btn-outline-primary,
+.dashboard .btn-outline-secondary,
+.dashboard .btn-outline-danger,
+.dashboard .btn-outline-success {
+    border: none !important;
+    border-radius: 14px !important; /* Bordes muy redondeados */
+    padding: 14px 32px !important; /* Padding generoso */
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    color: #ffffff !important; /* Texto blanco */
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* Botones pequeños */
+.dashboard .btn-sm {
+    padding: 10px 24px !important;
+    font-size: 0.85rem !important;
+    border-radius: 12px !important;
+}
+
+/* Botón Primary - Azul corporativo con degradado oscuro (estado normal) */
+.dashboard .btn-primary,
+.dashboard .btn-outline-primary {
+    background: linear-gradient(180deg, 
+        rgba(37, 99, 235, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 30, 100, 1) 100%) !important; /* Colores oscuros en estado normal */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+}
+
+.dashboard .btn-primary:hover,
+.dashboard .btn-outline-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 56, 168, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Botón Success - Verde esmeralda con degradado oscuro (estado normal) */
+.dashboard .btn-success,
+.dashboard .btn-generar-ticket {
+    background: linear-gradient(180deg, 
+        rgba(34, 197, 94, 0.95) 0%, 
+        rgba(22, 163, 74, 0.95) 50%,
+        rgba(15, 118, 50, 1) 100%) !important; /* Colores oscuros en estado normal */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+}
+
+.dashboard .btn-success:hover,
+.dashboard .btn-generar-ticket:hover {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Botón Outline Secondary (Cancelar) - Gris con degradado oscuro (estado normal) */
+.dashboard .btn-outline-secondary {
+    background: linear-gradient(180deg, 
+        rgba(107, 114, 128, 0.95) 0%, 
+        rgba(75, 85, 99, 0.95) 50%,
+        rgba(55, 65, 81, 1) 100%) !important; /* Colores oscuros en estado normal */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+}
+
+.dashboard .btn-outline-secondary:hover {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* ===== MODAL DE CONFIRMACIÓN - GLASSMORPHISM IDÉNTICO AL DASHBOARD ===== */
+.modal-confirmacion {
+    display: none !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: rgba(0, 0, 0, 0.3) !important; /* Fondo menos oscuro para notar mejor el glassmorphism */
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+    z-index: 99999 !important; /* Z-index muy alto para estar por encima de todo */
+    justify-content: center !important;
+    align-items: center !important;
+    animation: fadeIn 0.3s ease;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Contenedor del modal - EXACTAMENTE igual que las cards del dashboard */
+.modal-confirmacion-content {
+    background: rgba(255, 255, 255, 0.15) !important; /* Misma transparencia que las cards */
+    backdrop-filter: blur(20px) saturate(180%) !important; /* Mismo blur y saturación que las cards */
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important; /* Mismo borde que las cards */
+    border-radius: 20px !important; /* Mismo border-radius que las cards */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important; /* Mismas sombras que las cards */
+    padding: 0 !important;
+    max-width: 500px;
+    width: 90%;
+    animation: slideUp 0.3s ease;
+    overflow: hidden !important; /* Igual que las cards */
+    display: flex !important;
+    flex-direction: column !important; /* Igual que las cards */
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Header del modal - Transparente como los headers de las cards del dashboard */
+.modal-confirmacion-header {
+    padding: 2rem 2rem 1rem 2rem;
+    text-align: center;
+    border: none !important; /* Sin líneas divisorias */
+    background: transparent !important; /* Transparente como los headers del dashboard */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+.modal-confirmacion-header i {
+    font-size: 3.5rem;
+    color: #22C55E !important; /* Verde esmeralda del programa */
+    margin-bottom: 1rem;
+    display: block;
+    text-shadow: 0 2px 8px rgba(34, 197, 94, 0.5) !important; /* Sombra sutil para el icono */
+}
+
+.modal-confirmacion-header h3 {
+    color: #ffffff !important; /* Texto blanco como en el dashboard */
+    font-weight: 700 !important;
+    margin: 0 !important;
+    font-size: 1.75rem !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 
+                 0 4px 12px rgba(0, 0, 0, 0.3),
+                 0 0 20px rgba(0, 0, 0, 0.2) !important; /* Sombra para efecto flotante como en el dashboard */
+}
+
+/* Body del modal - Transparente como el body de las cards */
+.modal-confirmacion-body {
+    padding: 1.5rem 2rem;
+    text-align: center;
+    background: transparent !important; /* Transparente como el body de las cards */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+.modal-confirmacion-body p {
+    color: #ffffff !important; /* Texto blanco como en el dashboard */
+    font-size: 1.1rem !important;
+    margin-bottom: 0 !important;
+    font-weight: 500 !important;
+    line-height: 1.6 !important;
+}
+
+.modal-confirmacion-body .text-muted {
+    color: rgba(255, 255, 255, 0.7) !important; /* Texto blanco semitransparente */
+    font-size: 0.95rem !important;
+}
+
+/* Footer del modal - Transparente como el footer de las cards */
+.modal-confirmacion-footer {
+    padding: 1.5rem 2rem 2rem 2rem;
+    text-align: center;
+    border: none !important; /* Sin líneas divisorias */
+    background: transparent !important; /* Transparente como el footer de las cards */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* Botón del modal con el estilo del programa */
+.modal-confirmacion-footer .btn-primary {
+    background: linear-gradient(180deg, 
+        rgba(37, 99, 235, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 30, 100, 1) 100%) !important; /* Azul corporativo con degradado oscuro */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+    border: none !important;
+    border-radius: 14px !important; /* Bordes muy redondeados */
+    padding: 14px 32px !important; /* Padding generoso */
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    color: #ffffff !important; /* Texto blanco */
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.modal-confirmacion-footer .btn-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 56, 168, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Hacer que los nodos de texto después del strong sean gruesos usando JavaScript */
+</style>
+
+<script>
+// Asegurar que el campo de año sea editable cuando se abre el calendario
+document.addEventListener('DOMContentLoaded', function() {
+    // Función para hacer editable el campo de año y aplicar estilos
+    function makeYearEditable() {
+        const yearInputs = document.querySelectorAll('.flatpickr-calendar .numInputWrapper input');
+        yearInputs.forEach(function(input) {
+            if (input && input.type === 'number') {
+                input.readOnly = false;
+                input.style.cursor = 'text';
+                input.style.userSelect = 'text';
+                input.style.webkitUserSelect = 'text';
+                input.style.mozUserSelect = 'text';
+                // Quitar cualquier limitación de min/max
+                input.removeAttribute('min');
+                input.removeAttribute('max');
+            }
+        });
+        
+        // Aplicar tipografía gruesa al mes
+        const monthSelects = document.querySelectorAll('.flatpickr-calendar .flatpickr-monthDropdown-months');
+        monthSelects.forEach(function(select) {
+            select.style.fontWeight = '700';
+        });
+    }
+    
+    // Observar cuando se abre el calendario
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.addedNodes.length) {
+                mutation.addedNodes.forEach(function(node) {
+                    if (node.classList && node.classList.contains('flatpickr-calendar')) {
+                        setTimeout(makeYearEditable, 100);
+                    }
+                });
+            }
+        });
+    });
+    
+    // Observar cambios en el body
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+    
+    // También ejecutar cuando se hace clic en los inputs de fecha
+    document.addEventListener('click', function(e) {
+        if (e.target.matches('input[type="text"]') && e.target.id && 
+            (e.target.id.includes('fecha_inicio') || e.target.id.includes('fecha_fin'))) {
+            setTimeout(makeYearEditable, 300);
+        }
+    });
+    
+    // Ejecutar cuando se abre el calendario (evento de Flatpickr)
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.flatpickr-calendar')) {
+            setTimeout(makeYearEditable, 50);
+        }
+    });
+});
+</script>
+
+<script>
+// Envolver el texto después de strong en spans para aplicar tipografía gruesa
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.dashboard .card-body p');
+    cards.forEach(function(p) {
+        const strong = p.querySelector('strong');
+        if (strong) {
+            // Procesar todos los nodos después del strong
+            let node = strong.nextSibling;
+            while (node) {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    const text = node.textContent.trim();
+                    if (text) {
+                        // Envolver el texto en un span con peso grueso
+                        const span = document.createElement('span');
+                        span.style.fontWeight = '600';
+                        span.textContent = node.textContent;
+                        node.parentNode.replaceChild(span, node);
+                        node = span.nextSibling;
+                    } else {
+                        node = node.nextSibling;
+                    }
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    // Si es un span u otro elemento, asegurar que tenga peso grueso si no es strong
+                    if (!node.matches('strong')) {
+                        node.style.fontWeight = '600';
+                    }
+                    node = node.nextSibling;
+                } else {
+                    node = node.nextSibling;
+                }
+            }
         }
     });
 });
