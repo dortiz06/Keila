@@ -189,24 +189,28 @@ body.login-page .footer p {
     z-index: 1001; /* Por encima del navbar (1000) y footer (1000) */
 }
 
-/* Contenedor principal con Glassmorphism mejorado */
+/* Contenedor principal con Glassmorphism mejorado - Degradado de opacidad */
 .glass-card {
-    background: rgba(255, 255, 255, 0.2) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-    border-radius: 18px !important;
-    box-shadow: 0 10px 30px rgba(2, 6, 23, 0.08) !important;
-    overflow: hidden;
+    background: linear-gradient(180deg, 
+        rgba(255, 255, 255, 0.25) 0%, 
+        rgba(255, 255, 255, 0.15) 30%,
+        rgba(255, 255, 255, 0.05) 100%) !important; /* Degradado de opacidad de arriba a abajo */
+    backdrop-filter: blur(20px) saturate(180%) !important; /* Blur más pronunciado y saturación */
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important; /* Borde sutil pero visible */
+    border-radius: 20px !important; /* Bordes más redondeados */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important; /* Sombra externa e interna para profundidad */
+    overflow: hidden; /* Asegura que el contenido respete los bordes redondeados */
 }
 
-/* Card Header con Glassmorphism y gradiente azul corporativo */
+/* Card Header con Glassmorphism - Transparente para mostrar el degradado del cuadro */
 .glass-card .card-header {
-    background: linear-gradient(135deg, rgba(0, 56, 168, 0.85), rgba(30, 58, 138, 0.85)) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.25) !important;
-    border-radius: 18px 18px 0 0 !important;
+    background: transparent !important; /* Transparente para mostrar el degradado del cuadro */
+    backdrop-filter: none !important; /* Sin blur adicional, usa el del cuadro principal */
+    -webkit-backdrop-filter: none !important;
+    border: none !important; /* Sin línea blanca */
+    border-radius: 20px 20px 0 0 !important;
     padding: 2rem 1.5rem !important;
 }
 
@@ -313,21 +317,21 @@ body.login-page .footer p {
     transform: translateY(0) !important;
 }
 
-/* Card Body con Glassmorphism */
+/* Card Body con Glassmorphism - Transparente para mostrar el degradado del cuadro */
 .glass-card .card-body {
-    background: rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(8px) !important;
-    -webkit-backdrop-filter: blur(8px) !important;
+    background: transparent !important; /* Transparente para mostrar el degradado del cuadro */
+    backdrop-filter: none !important; /* Sin blur adicional, usa el del cuadro principal */
+    -webkit-backdrop-filter: none !important;
     padding: 2rem 1.5rem !important;
 }
 
-/* Card Footer con Glassmorphism */
+/* Card Footer con Glassmorphism - Transparente para mostrar el degradado del cuadro */
 .glass-card .card-footer {
-    background: rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(8px) !important;
-    -webkit-backdrop-filter: blur(8px) !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 0 0 18px 18px !important;
+    background: transparent !important; /* Transparente para mostrar el degradado del cuadro */
+    backdrop-filter: none !important; /* Sin blur adicional, usa el del cuadro principal */
+    -webkit-backdrop-filter: none !important;
+    border: none !important; /* Sin línea blanca */
+    border-radius: 0 0 20px 20px !important;
     padding: 1rem 1.5rem !important;
 }
 
@@ -492,16 +496,16 @@ body.login-page .footer p {
     }
     
     .glass-card {
-        border-radius: 15px !important;
+        border-radius: 20px !important;
     }
     
     .glass-card .card-header {
-        border-radius: 15px 15px 0 0 !important;
+        border-radius: 20px 20px 0 0 !important;
         padding: 1.25rem 0.75rem !important;
     }
     
     .glass-card .card-footer {
-        border-radius: 0 0 15px 15px !important;
+        border-radius: 0 0 20px 20px !important;
         padding: 0.75rem !important;
     }
     
