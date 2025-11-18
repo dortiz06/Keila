@@ -1,15 +1,372 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Agregar Equipo{% endblock %}
+{% block title %}Agregar Nuevo Equipo{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>Agregar Nuevo Equipo</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Agregar Equipo</button>
-    </form>
-</div>
-{% endblock %}
+<div class="container-fluid dashboard">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="dashboard-title"><i class="fas fa-plus-circle me-2"></i>Agregar Nuevo Equipo</h1>
+        <a href="{% url 'empleados:inventario_equipos' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Volver al Inventario
+        </a>
+    </div>
 
+    <div class="card">
+        <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
+            <form method="post" id="equipoForm">
+                {% csrf_token %}
+                
+                <!-- Información Básica -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="mb-3" style="color: #ffffff !important; font-weight: 600 !important;">
+                            <i class="fas fa-info-circle me-2"></i>Información Básica del Equipo
+                        </h5>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.categoria.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.categoria.label }} <span class="text-danger">*</span>
+                        </label>
+                        {{ form.categoria }}
+                        {% if form.categoria.errors %}
+                            <div class="text-danger mt-1">{{ form.categoria.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.marca.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.marca.label }} <span class="text-danger">*</span>
+                        </label>
+                        {{ form.marca }}
+                        {% if form.marca.errors %}
+                            <div class="text-danger mt-1">{{ form.marca.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.modelo.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.modelo.label }} <span class="text-danger">*</span>
+                        </label>
+                        {{ form.modelo }}
+                        {% if form.modelo.errors %}
+                            <div class="text-danger mt-1">{{ form.modelo.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.numero_serie.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.numero_serie.label }} <span class="text-danger">*</span>
+                        </label>
+                        {{ form.numero_serie }}
+                        {% if form.numero_serie.errors %}
+                            <div class="text-danger mt-1">{{ form.numero_serie.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.codigo_inventario.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.codigo_inventario.label }} <span class="text-danger">*</span>
+                        </label>
+                        {{ form.codigo_inventario }}
+                        {% if form.codigo_inventario.errors %}
+                            <div class="text-danger mt-1">{{ form.codigo_inventario.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.estado.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.estado.label }} <span class="text-danger">*</span>
+                        </label>
+                        {{ form.estado }}
+                        {% if form.estado.errors %}
+                            <div class="text-danger mt-1">{{ form.estado.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.fecha_adquisicion.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.fecha_adquisicion.label }} <span class="text-danger">*</span>
+                        </label>
+                        {{ form.fecha_adquisicion }}
+                        {% if form.fecha_adquisicion.errors %}
+                            <div class="text-danger mt-1">{{ form.fecha_adquisicion.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Asignación (Opcional) -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="mb-3" style="color: #ffffff !important; font-weight: 600 !important;">
+                            <i class="fas fa-user-check me-2"></i>Asignación de Equipo (Opcional)
+                        </h5>
+                        <p class="text-muted mb-3" style="color: rgba(255, 255, 255, 0.7) !important;">
+                            Puede asignar el equipo a un empleado al momento de crearlo, o hacerlo más tarde desde el inventario.
+                        </p>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.asignar_a_empleado.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.asignar_a_empleado.label }}
+                        </label>
+                        {{ form.asignar_a_empleado }}
+                        {% if form.asignar_a_empleado.help_text %}
+                            <small class="form-text" style="color: rgba(255, 255, 255, 0.6) !important;">
+                                {{ form.asignar_a_empleado.help_text }}
+                            </small>
+                        {% endif %}
+                        {% if form.asignar_a_empleado.errors %}
+                            <div class="text-danger mt-1">{{ form.asignar_a_empleado.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.condicion_entrega.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.condicion_entrega.label }}
+                        </label>
+                        {{ form.condicion_entrega }}
+                        {% if form.condicion_entrega.help_text %}
+                            <small class="form-text" style="color: rgba(255, 255, 255, 0.6) !important;">
+                                {{ form.condicion_entrega.help_text }}
+                            </small>
+                        {% endif %}
+                        {% if form.condicion_entrega.errors %}
+                            <div class="text-danger mt-1">{{ form.condicion_entrega.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Observaciones -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <label for="{{ form.observaciones.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.observaciones.label }}
+                        </label>
+                        {{ form.observaciones }}
+                        {% if form.observaciones.errors %}
+                            <div class="text-danger mt-1">{{ form.observaciones.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-outline-success">
+                                <i class="fas fa-save me-1"></i>Agregar Equipo
+                            </button>
+                            <a href="{% url 'empleados:inventario_equipos' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-1"></i>Cancelar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Aplicar estilos del dashboard */
+.dashboard .card {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .card-body {
+    background: transparent !important;
+}
+
+.dashboard-title {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    margin-bottom: 0 !important;
+}
+
+/* Estilos para campos de formulario */
+.dashboard .form-control,
+.dashboard .form-select {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    padding: 12px 16px !important;
+}
+
+.dashboard .form-control:focus,
+.dashboard .form-select:focus {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+    outline: none !important;
+}
+
+.dashboard .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.dashboard .form-control option,
+.dashboard .form-select option {
+    background: #0038A8 !important;
+    color: #ffffff !important;
+}
+
+.dashboard .form-label {
+    color: #ffffff !important;
+    font-weight: 500 !important;
+    margin-bottom: 8px !important;
+}
+
+.dashboard .form-text {
+    color: rgba(255, 255, 255, 0.6) !important;
+    font-size: 0.875rem !important;
+}
+
+/* Estilos para textarea */
+.dashboard textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Estilos de botones del dashboard */
+.dashboard .btn-outline-primary {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .btn-outline-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-success {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .btn-outline-success:hover {
+    background: linear-gradient(180deg, 
+        rgba(134, 239, 172, 0.95) 0%, 
+        rgba(74, 222, 128, 0.95) 50%,
+        rgba(34, 197, 94, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-secondary {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .btn-outline-secondary:hover {
+    background: linear-gradient(180deg, 
+        rgba(209, 213, 219, 0.95) 0%, 
+        rgba(156, 163, 175, 0.95) 50%,
+        rgba(107, 114, 128, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Mensajes de error */
+.dashboard .text-danger {
+    color: #ff6b6b !important;
+    font-size: 0.875rem !important;
+    margin-top: 4px !important;
+}
+
+/* Input date personalizado */
+.dashboard input[type="date"] {
+    color-scheme: dark;
+}
+
+.dashboard input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+</style>
+
+<script>
+// Mostrar/ocultar campo de condición de entrega según si se selecciona un empleado
+document.addEventListener('DOMContentLoaded', function() {
+    const empleadoField = document.getElementById('{{ form.asignar_a_empleado.id_for_label }}');
+    const condicionField = document.getElementById('{{ form.condicion_entrega.id_for_label }}');
+    const condicionLabel = condicionField.closest('.col-md-6');
+    
+    function toggleCondicionField() {
+        if (empleadoField.value) {
+            condicionLabel.style.display = 'block';
+        } else {
+            condicionLabel.style.display = 'none';
+            condicionField.value = '';
+        }
+    }
+    
+    // Inicializar estado
+    toggleCondicionField();
+    
+    // Escuchar cambios
+    empleadoField.addEventListener('change', toggleCondicionField);
+});
+</script>
+{% endblock %}

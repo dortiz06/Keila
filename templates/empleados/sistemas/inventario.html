@@ -1,38 +1,441 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Inventario{% endblock %}
+{% block title %}Inventario de Equipos{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <h2>Inventario de Equipos</h2>
-    {% if equipos %}
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Código</th>
-                    <th>Categoría</th>
-                    <th>Marca</th>
-                    <th>Modelo</th>
-                    <th>Serie</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for equipo in equipos %}
-                <tr>
-                    <td>{{ equipo.codigo_inventario }}</td>
-                    <td>{{ equipo.categoria.nombre }}</td>
-                    <td>{{ equipo.marca }}</td>
-                    <td>{{ equipo.modelo }}</td>
-                    <td>{{ equipo.numero_serie }}</td>
-                    <td>{{ equipo.get_estado_display }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>No hay equipos en el inventario</p>
-    {% endif %}
+<div class="container-fluid dashboard">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="dashboard-title"><i class="fas fa-boxes me-2"></i>Inventario de Equipos</h1>
+    </div>
+
+    <!-- Filtros y acciones -->
+    <div class="card mb-4">
+        <div class="card-body" style="background: transparent !important; padding: 1.5rem !important;">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <form method="get" class="d-flex gap-2">
+                        <select name="estado" class="form-control" style="background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;">
+                            <option value="">Todos los estados</option>
+                            <option value="DISPONIBLE" {% if request.GET.estado == 'DISPONIBLE' %}selected{% endif %}>Disponible</option>
+                            <option value="ASIGNADO" {% if request.GET.estado == 'ASIGNADO' %}selected{% endif %}>Asignado</option>
+                            <option value="EN_REPARACION" {% if request.GET.estado == 'EN_REPARACION' %}selected{% endif %}>En Reparación</option>
+                            <option value="DADO_DE_BAJA" {% if request.GET.estado == 'DADO_DE_BAJA' %}selected{% endif %}>Dado de Baja</option>
+                        </select>
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="fas fa-filter me-1"></i>Filtrar
+                        </button>
+                    </form>
+                </div>
+                <div class="col-md-6 text-end">
+                    {% if perfil.es_sistemas or perfil.es_admin %}
+                    <a href="{% url 'empleados:agregar_equipo' %}" class="btn btn-outline-success">
+                        <i class="fas fa-plus me-1"></i>Agregar Equipo
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de equipos -->
+    <div class="card">
+        <div class="card-body" style="background: transparent !important; padding: 1.5rem !important;">
+            {% if equipos %}
+                <div class="table-responsive" style="background: transparent !important; overflow-x: auto !important;">
+                    <table class="table table-hover" style="width: 100% !important;">
+                        <thead>
+                            <tr>
+                                <th style="color: #ffffff !important;"><i class="fas fa-hashtag me-1"></i>Código</th>
+                                <th style="color: #ffffff !important;"><i class="fas fa-tag me-1"></i>Categoría</th>
+                                <th style="color: #ffffff !important;"><i class="fas fa-industry me-1"></i>Marca</th>
+                                <th style="color: #ffffff !important;"><i class="fas fa-laptop me-1"></i>Modelo</th>
+                                <th style="color: #ffffff !important;"><i class="fas fa-barcode me-1"></i>Número de Serie</th>
+                                <th style="color: #ffffff !important;"><i class="fas fa-info-circle me-1"></i>Estado</th>
+                                <th style="color: #ffffff !important;"><i class="fas fa-user me-1"></i>Asignado a</th>
+                                {% if perfil.es_sistemas or perfil.es_admin or perfil.es_rh %}
+                                <th style="color: #ffffff !important;"><i class="fas fa-cog me-1"></i>Acciones</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for equipo in equipos %}
+                            <tr style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
+                                <td style="color: #ffffff !important;"><strong>{{ equipo.codigo_inventario }}</strong></td>
+                                <td style="color: #ffffff !important;">
+                                    <i class="fas fa-{{ equipo.categoria.nombre|lower }} me-1"></i>
+                                    {{ equipo.categoria.nombre }}
+                                </td>
+                                <td style="color: #ffffff !important;">{{ equipo.marca }}</td>
+                                <td style="color: #ffffff !important;">{{ equipo.modelo }}</td>
+                                <td style="color: rgba(255, 255, 255, 0.8) !important;"><small>{{ equipo.numero_serie }}</small></td>
+                                <td>
+                                    {% if equipo.estado == 'DISPONIBLE' %}
+                                        <span class="badge badge-resuelto">
+                                            <i class="fas fa-check-circle me-1"></i>Disponible
+                                        </span>
+                                    {% elif equipo.estado == 'ASIGNADO' %}
+                                        <span class="badge badge-proceso">
+                                            <i class="fas fa-user-check me-1"></i>Asignado
+                                        </span>
+                                    {% elif equipo.estado == 'EN_REPARACION' %}
+                                        <span class="badge badge-pendiente">
+                                            <i class="fas fa-wrench me-1"></i>En Reparación
+                                        </span>
+                                    {% elif equipo.estado == 'DADO_DE_BAJA' %}
+                                        <span class="badge badge-urgente">
+                                            <i class="fas fa-ban me-1"></i>Dado de Baja
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td style="color: #ffffff !important;">
+                                    {% if equipo.empleado_asignado %}
+                                        <i class="fas fa-user me-1"></i>{{ equipo.empleado_asignado.nombre_completo }}
+                                    {% else %}
+                                        <span style="color: rgba(255, 255, 255, 0.6) !important;">Sin asignar</span>
+                                    {% endif %}
+                                </td>
+                                {% if perfil.es_sistemas or perfil.es_admin or perfil.es_rh %}
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        {% if equipo.estado == 'DISPONIBLE' %}
+                                            <a href="{% url 'empleados:asignar_equipo_inventario' equipo.id %}" class="btn btn-sm btn-outline-success" title="Asignar Equipo">
+                                                <i class="fas fa-user-plus"></i>
+                                            </a>
+                                        {% elif equipo.estado == 'ASIGNADO' and equipo.empleado_asignado %}
+                                            <a href="{% url 'empleados:editar_asignacion_equipo' equipo.asignacion_actual.id %}" class="btn btn-sm btn-outline-warning" title="Editar Asignación">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'empleados:quitar_asignacion_equipo' equipo.id %}" class="btn btn-sm btn-outline-danger" title="Quitar Asignación">
+                                                <i class="fas fa-user-minus"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-box fa-3x mb-3" style="color: rgba(255, 255, 255, 0.5) !important;"></i>
+                    <h5 style="color: #ffffff !important;">No hay equipos en el inventario</h5>
+                    <p style="color: rgba(255, 255, 255, 0.8) !important;">Comienza agregando el primer equipo al sistema.</p>
+                    {% if perfil.es_sistemas or perfil.es_admin %}
+                    <a href="{% url 'empleados:agregar_equipo' %}" class="btn btn-outline-success mt-3">
+                        <i class="fas fa-plus me-1"></i>Agregar Primer Equipo
+                    </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
+
+<style>
+/* Aplicar estilos del dashboard a la vista de inventario */
+.dashboard .card {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .card-body {
+    background: transparent !important;
+}
+
+.dashboard .table-responsive {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+.dashboard .table {
+    background: transparent !important;
+    border-collapse: collapse !important;
+    width: 100% !important;
+    margin-bottom: 0 !important;
+}
+
+.dashboard .table thead {
+    background: transparent !important;
+}
+
+.dashboard .table thead th {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    padding: 12px 8px !important;
+}
+
+.dashboard .table tbody {
+    background: transparent !important;
+}
+
+.dashboard .table tbody tr {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.dashboard .table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.dashboard .table tbody tr:last-child {
+    border-bottom: none !important;
+}
+
+.dashboard .table tbody td {
+    background: transparent !important;
+    border: none !important;
+    padding: 12px 8px !important;
+    color: #ffffff !important;
+    vertical-align: middle !important;
+}
+
+.dashboard .table tbody td strong {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+.dashboard .table tbody td small {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.dashboard-title {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    margin-bottom: 0 !important;
+}
+
+/* Estilos para select y formularios */
+.dashboard .form-control {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+}
+
+.dashboard .form-control:focus {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+}
+
+.dashboard .form-control option {
+    background: #0038A8 !important;
+    color: #ffffff !important;
+}
+
+/* ===== ESTILOS DE BOTONES DEL DASHBOARD ===== */
+/* Botón Primary - Azul con degradado */
+.dashboard .btn-outline-primary {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .btn-outline-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Botón Success - Verde con degradado */
+.dashboard .btn-outline-success {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .btn-outline-success:hover {
+    background: linear-gradient(180deg, 
+        rgba(134, 239, 172, 0.95) 0%, 
+        rgba(74, 222, 128, 0.95) 50%,
+        rgba(34, 197, 94, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Botón Info - Azul claro con degradado */
+.dashboard .btn-outline-info {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .btn-outline-info:hover {
+    background: linear-gradient(180deg, 
+        rgba(147, 197, 253, 0.95) 0%, 
+        rgba(96, 165, 250, 0.95) 50%,
+        rgba(59, 130, 246, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Botón Warning - Amarillo/Naranja con degradado */
+.dashboard .btn-outline-warning {
+    background: linear-gradient(180deg, 
+        rgba(251, 191, 36, 0.95) 0%, 
+        rgba(245, 158, 11, 0.95) 50%,
+        rgba(217, 119, 6, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .btn-outline-warning:hover {
+    background: linear-gradient(180deg, 
+        rgba(253, 224, 71, 0.95) 0%, 
+        rgba(251, 191, 36, 0.95) 50%,
+        rgba(245, 158, 11, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Botón Danger - Rojo con degradado */
+.dashboard .btn-outline-danger {
+    background: linear-gradient(180deg, 
+        rgba(248, 113, 113, 0.95) 0%, 
+        rgba(239, 68, 68, 0.95) 50%,
+        rgba(220, 38, 38, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .btn-outline-danger:hover {
+    background: linear-gradient(180deg, 
+        rgba(252, 165, 165, 0.95) 0%, 
+        rgba(248, 113, 113, 0.95) 50%,
+        rgba(239, 68, 68, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Botón Secondary - Gris con degradado */
+.dashboard .btn-outline-secondary {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .btn-outline-secondary:hover {
+    background: linear-gradient(180deg, 
+        rgba(209, 213, 219, 0.95) 0%, 
+        rgba(156, 163, 175, 0.95) 50%,
+        rgba(107, 114, 128, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Estilos para botones pequeños en la tabla */
+.dashboard .btn-sm {
+    padding: 8px 12px !important;
+    font-size: 0.875rem !important;
+    border-radius: 10px !important;
+}
+
+.dashboard .btn-group .btn {
+    margin-right: 4px;
+}
+</style>
 {% endblock %}
 

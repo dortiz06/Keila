@@ -409,7 +409,7 @@
                                             <i class="fas fa-user me-1"></i>
                                             {{ asignacion.empleado.nombre_completo }}
                                         </td>
-                                        <td style="color: rgba(255, 255, 255, 0.8) !important;"><small>{{ asignacion.fecha_asignacion|date:"d/m/Y H:i" }}</small></td>
+                                        <td style="color: rgba(255, 255, 255, 0.8) !important;"><small>{{ asignacion.fecha_asignacion|date:"d/m/Y" }}</small></td>
                                         <td>
                                             {% if asignacion.condicion_entrega %}
                                                 <span class="badge badge-resuelto">{{ asignacion.condicion_entrega }}</span>

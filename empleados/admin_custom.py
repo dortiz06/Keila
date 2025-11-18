@@ -269,6 +269,22 @@ class CategoriaEquipoAdmin(admin.ModelAdmin):
     search_fields = ['nombre', 'descripcion']
 
 
+class AsignacionEquipoInline(admin.TabularInline):
+    """Inline para gestionar asignaciones de equipos desde el admin de Equipo"""
+    model = AsignacionEquipo
+    extra = 1
+    fields = ('empleado', 'fecha_asignacion', 'fecha_devolucion', 'condicion_entrega', 'condicion_devolucion', 'asignado_por')
+    readonly_fields = ('asignado_por',)
+    can_delete = True
+    
+    def get_readonly_fields(self, request, obj=None):
+        """Hacer campos editables según el contexto"""
+        if obj and obj.pk:  # Si el objeto ya existe
+            # Mostrar fecha_asignacion y fecha_devolucion como readonly si ya existen
+            return ('asignado_por',)
+        return ('asignado_por',)  # Al crear, todos los campos son editables excepto asignado_por
+
+
 @admin.register(Equipo)
 class EquipoAdmin(admin.ModelAdmin):
     """Admin para equipos tecnológicos"""
@@ -279,7 +295,8 @@ class EquipoAdmin(admin.ModelAdmin):
     ]
     list_filter = ['estado', 'categoria', 'fecha_adquisicion']
     search_fields = ['codigo_inventario', 'numero_serie', 'marca', 'modelo']
-    readonly_fields = ['fecha_creacion', 'fecha_actualizacion']
+    readonly_fields = ['fecha_creacion', 'fecha_actualizacion', 'empleado_asignado_display']
+    inlines = [AsignacionEquipoInline]
     
     fieldsets = (
         ('Información Básica', {
@@ -287,6 +304,10 @@ class EquipoAdmin(admin.ModelAdmin):
         }),
         ('Estado y Fechas', {
             'fields': ('estado', 'fecha_adquisicion')
+        }),
+        ('Asignación Actual', {
+            'fields': ('empleado_asignado_display',),
+            'classes': ('collapse',)
         }),
         ('Observaciones', {
             'fields': ('observaciones',)
@@ -307,6 +328,40 @@ class EquipoAdmin(admin.ModelAdmin):
             )
         return format_html('<span class="badge badge-secondary">No asignado</span>')
     empleado_asignado_display.short_description = 'Asignado A'
+    
+    def save_model(self, request, obj, form, change):
+        """Guardar el equipo"""
+        super().save_model(request, obj, form, change)
+    
+    def save_formset(self, request, form, formset, change):
+        """Guardar el formset de asignaciones y actualizar estado del equipo"""
+        instances = formset.save(commit=False)
+        for instance in instances:
+            # Si es una nueva asignación, establecer asignado_por
+            if not instance.pk or not instance.asignado_por:
+                try:
+                    instance.asignado_por = request.user.perfil
+                except:
+                    pass
+            # Si no tiene fecha_asignacion, usar la fecha actual
+            if not instance.fecha_asignacion:
+                from django.utils import timezone
+                instance.fecha_asignacion = timezone.now().date()
+            instance.save()
+        
+        # Eliminar asignaciones marcadas para eliminar
+        for obj in formset.deleted_objects:
+            obj.delete()
+        
+        # Actualizar estado del equipo según asignaciones activas
+        equipo = form.instance
+        asignacion_activa = equipo.asignaciones.filter(fecha_devolucion__isnull=True).first()
+        if asignacion_activa and equipo.estado != 'ASIGNADO':
+            equipo.estado = 'ASIGNADO'
+            equipo.save(update_fields=['estado'])
+        elif not asignacion_activa and equipo.estado == 'ASIGNADO':
+            equipo.estado = 'DISPONIBLE'
+            equipo.save(update_fields=['estado'])
 
 
 @admin.register(AsignacionEquipo)

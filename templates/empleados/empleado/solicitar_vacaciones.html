@@ -55,15 +55,6 @@
                                     <span class="text-danger">{{ perfil.dias_vacaciones_disponibles }}</span>
                                 {% endif %}
                             </p>
-                            {% if perfil.antiguedad_anos < 1 %}
-                            <p><strong>Días Extraordinarios:</strong> 
-                                {% if dias_extraordinarios_disponibles > 0 %}
-                                    <span class="text-info">{{ dias_extraordinarios_disponibles }} disponibles</span>
-                                {% else %}
-                                    <span class="text-muted">0 disponibles</span>
-                                {% endif %}
-                            </p>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -162,13 +153,6 @@
                                 </div>
 
                                 <!-- Información adicional -->
-                                {% if perfil.antiguedad_anos < 1 %}
-                                    <div class="alert alert-warning">
-                                        <i class="fas fa-exclamation-triangle me-2"></i>
-                                        <strong>Atención:</strong> Como tienes menos de 1 año de antigüedad, solo puedes solicitar vacaciones extraordinarias.
-                                    </div>
-                                {% endif %}
-
                                 {% if perfil.dias_vacaciones_disponibles <= 0 %}
                                     <div class="alert alert-danger">
                                         <i class="fas fa-exclamation-circle me-2"></i>
@@ -200,7 +184,6 @@
                             <h6>Política de Vacaciones:</h6>
                             <ul class="list-unstyled">
                                 <li><i class="fas fa-check text-success me-2"></i>Vacaciones normales: 1+ año de antigüedad</li>
-                                <li><i class="fas fa-check text-warning me-2"></i>Vacaciones extraordinarias: < 1 año</li>
                                 <li><i class="fas fa-clock text-info me-2"></i>Proceso de aprobación: Jefe → RH</li>
                             </ul>
 

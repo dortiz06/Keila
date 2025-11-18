@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar Asignación de Equipo{% endblock %}
+
+{% block content %}
+<div class="container-fluid dashboard">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="dashboard-title"><i class="fas fa-edit me-2"></i>Editar Asignación de Equipo</h1>
+        <a href="{% url 'empleados:inventario_equipos' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Volver al Inventario
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
+            <!-- Información del Equipo y Asignación -->
+            <div class="alert alert-info mb-4" style="background: rgba(59, 130, 246, 0.2) !important; border: 1px solid rgba(59, 130, 246, 0.4) !important; color: #ffffff !important;">
+                <h6 class="mb-2" style="font-weight: 300 !important;"><i class="fas fa-laptop me-2"></i>Equipo:</h6>
+                <p class="mb-2">
+                    <strong>{{ equipo.codigo_inventario }}</strong> - {{ equipo.categoria.nombre }} {{ equipo.marca }} {{ equipo.modelo }}
+                </p>
+                <h6 class="mb-2" style="font-weight: 300 !important;"><i class="fas fa-calendar me-2"></i>Fecha de Asignación:</h6>
+                <p class="mb-0">{{ asignacion.fecha_asignacion|date:"d/m/Y" }}</p>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                
+                <!-- Campo oculto del equipo -->
+                {{ form.equipo }}
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="{{ form.empleado.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.empleado.label }} <span class="text-danger">*</span>
+                        </label>
+                        {{ form.empleado }}
+                        {% if form.empleado.errors %}
+                            <div class="text-danger mt-1">{{ form.empleado.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label for="{{ form.condicion_entrega.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.condicion_entrega.label }}
+                        </label>
+                        {{ form.condicion_entrega }}
+                        {% if form.condicion_entrega.errors %}
+                            <div class="text-danger mt-1">{{ form.condicion_entrega.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <label for="{{ form.observaciones.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.observaciones.label }}
+                        </label>
+                        {{ form.observaciones }}
+                        {% if form.observaciones.errors %}
+                            <div class="text-danger mt-1">{{ form.observaciones.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3">
+                    <button type="submit" class="btn btn-outline-info">
+                        <i class="fas fa-save me-1"></i>Guardar Cambios
+                    </button>
+                    <a href="{% url 'empleados:inventario_equipos' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% include 'empleados/sistemas/equipo_form_styles.html' %}
+{% endblock %}
+

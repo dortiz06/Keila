@@ -5,54 +5,58 @@
 
 {% block content %}
 <div class="container-fluid dashboard">
-    <div class="d-flex flex-column mb-4">
-        <h1 class="dashboard-title">Mis Equipos Asignados</h1>
-        <p class="dashboard-subtitle mb-0">Equipos tecnológicos asignados a mi persona</p>
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+        <div>
+            <h1 class="dashboard-title">Mis Equipos Asignados</h1>
+            <p class="dashboard-subtitle mb-0">Equipos tecnológicos asignados a mi persona</p>
+        </div>
+        <a href="{% url 'empleados:empleado_dashboard' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Volver al Panel
+        </a>
     </div>
     
     <!-- Equipos Actualmente Asignados -->
-    <div class="card mb-4">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0"><i class="fas fa-check-circle me-2"></i>Equipos Activos</h5>
-        </div>
-        <div class="card-body">
-            {% if asignaciones_activas %}
-                <div class="table-responsive">
+    {% if asignaciones_activas %}
+        <div class="card">
+            <div class="card-body" style="background: transparent !important; padding: 1.5rem !important;">
+                <div class="table-responsive" style="background: transparent !important; border: none !important; box-shadow: none !important; border-radius: 0 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;">
                     <table class="table table-hover">
-                        <thead class="table-light">
+                        <thead>
                             <tr>
-                                <th>Categoría</th>
-                                <th>Marca / Modelo</th>
-                                <th>Número de Serie</th>
-                                <th>Código Inventario</th>
-                                <th>Fecha Asignación</th>
-                                <th>Condición</th>
-                                <th>Observaciones</th>
+                                <th style="color: #ffffff !important;">Categoría</th>
+                                <th style="color: #ffffff !important;">Marca / Modelo</th>
+                                <th style="color: #ffffff !important;">Número de Serie</th>
+                                <th style="color: #ffffff !important;">Código Inventario</th>
+                                <th style="color: #ffffff !important;">Fecha Asignación</th>
+                                <th style="color: #ffffff !important;">Condición</th>
+                                <th style="color: #ffffff !important;">Observaciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for asignacion in asignaciones_activas %}
-                            <tr>
-                                <td>
-                                    <i class="fas fa-{{ asignacion.equipo.categoria.nombre|lower }} me-1 text-primary"></i>
+                            <tr style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
+                                <td style="color: #ffffff !important;">
+                                    <i class="fas fa-laptop me-1"></i>
                                     <strong>{{ asignacion.equipo.categoria.nombre }}</strong>
                                 </td>
-                                <td>{{ asignacion.equipo.marca }} {{ asignacion.equipo.modelo }}</td>
-                                <td><code>{{ asignacion.equipo.numero_serie }}</code></td>
-                                <td><span class="badge bg-secondary">{{ asignacion.equipo.codigo_inventario }}</span></td>
-                                <td>{{ asignacion.fecha_asignacion|date:"d/m/Y" }}</td>
+                                <td style="color: #ffffff !important;">{{ asignacion.equipo.marca }} {{ asignacion.equipo.modelo }}</td>
+                                <td style="color: #ffffff !important;"><code style="color: rgba(255, 255, 255, 0.8) !important; background: rgba(255, 255, 255, 0.1) !important; padding: 0.25rem 0.5rem !important; border-radius: 4px !important;">{{ asignacion.equipo.numero_serie }}</code></td>
+                                <td>
+                                    <span class="badge equipos-badge-codigo">{{ asignacion.equipo.codigo_inventario }}</span>
+                                </td>
+                                <td style="color: #ffffff !important;">{{ asignacion.fecha_asignacion|date:"d/m/Y" }}</td>
                                 <td>
                                     {% if asignacion.condicion_entrega %}
-                                        <span class="badge bg-info">{{ asignacion.condicion_entrega }}</span>
+                                        <span class="badge equipos-badge-condicion">{{ asignacion.condicion_entrega }}</span>
                                     {% else %}
-                                        <span class="text-muted">-</span>
+                                        <span style="color: rgba(255, 255, 255, 0.6) !important;">-</span>
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td style="color: #ffffff !important;">
                                     {% if asignacion.observaciones %}
                                         {{ asignacion.observaciones|truncatewords:10 }}
                                     {% else %}
-                                        <span class="text-muted">Sin observaciones</span>
+                                        <span style="color: rgba(255, 255, 255, 0.6) !important;">Sin observaciones</span>
                                     {% endif %}
                                 </td>
                             </tr>
@@ -60,51 +64,53 @@
                         </tbody>
                     </table>
                 </div>
-            {% else %}
-                <div class="text-center py-5">
-                    <i class="fas fa-laptop fa-3x text-muted mb-3"></i>
-                    <h5 class="text-muted">No tienes equipos asignados actualmente</h5>
-                    <p class="text-muted">Cuando se te asigne algún equipo, aparecerá aquí</p>
-                </div>
-            {% endif %}
+            </div>
         </div>
-    </div>
+    {% else %}
+        <div class="card">
+            <div class="card-body text-center py-5" style="background: transparent !important;">
+                <i class="fas fa-laptop fa-4x mb-3" style="color: rgba(255, 255, 255, 0.6) !important;"></i>
+                <h4 style="color: #ffffff !important;">No tienes equipos asignados actualmente</h4>
+                <p style="color: rgba(255, 255, 255, 0.7) !important;">Cuando se te asigne algún equipo, aparecerá aquí</p>
+            </div>
+        </div>
+    {% endif %}
     
     <!-- Historial de Equipos Devueltos -->
     {% if historial_asignaciones %}
-    <div class="card">
-        <div class="card-header bg-secondary text-white">
-            <h5 class="mb-0"><i class="fas fa-history me-2"></i>Historial de Equipos Devueltos</h5>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-sm">
-                    <thead class="table-light">
+    <div class="card mt-4">
+        <div class="card-body" style="background: transparent !important; padding: 1.5rem !important;">
+            <h5 class="mb-3" style="color: #ffffff !important; font-weight: 600 !important;">
+                <i class="fas fa-history me-2"></i>Historial de Equipos Devueltos
+            </h5>
+            <div class="table-responsive" style="background: transparent !important; border: none !important; box-shadow: none !important; border-radius: 0 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;">
+                <table class="table table-hover">
+                    <thead>
                         <tr>
-                            <th>Categoría</th>
-                            <th>Marca / Modelo</th>
-                            <th>Código</th>
-                            <th>Asignación</th>
-                            <th>Devolución</th>
-                            <th>Condición Devolución</th>
+                            <th style="color: #ffffff !important;">Categoría</th>
+                            <th style="color: #ffffff !important;">Marca / Modelo</th>
+                            <th style="color: #ffffff !important;">Código</th>
+                            <th style="color: #ffffff !important;">Asignación</th>
+                            <th style="color: #ffffff !important;">Devolución</th>
+                            <th style="color: #ffffff !important;">Condición Devolución</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for asignacion in historial_asignaciones %}
-                        <tr>
-                            <td>
-                                <i class="fas fa-{{ asignacion.equipo.categoria.nombre|lower }} me-1"></i>
+                        <tr style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
+                            <td style="color: #ffffff !important;">
+                                <i class="fas fa-laptop me-1"></i>
                                 {{ asignacion.equipo.categoria.nombre }}
                             </td>
-                            <td>{{ asignacion.equipo.marca }} {{ asignacion.equipo.modelo }}</td>
-                            <td><small>{{ asignacion.equipo.codigo_inventario }}</small></td>
-                            <td>{{ asignacion.fecha_asignacion|date:"d/m/Y" }}</td>
-                            <td>{{ asignacion.fecha_devolucion|date:"d/m/Y" }}</td>
-                            <td>
+                            <td style="color: #ffffff !important;">{{ asignacion.equipo.marca }} {{ asignacion.equipo.modelo }}</td>
+                            <td style="color: #ffffff !important;">{{ asignacion.equipo.codigo_inventario }}</td>
+                            <td style="color: #ffffff !important;">{{ asignacion.fecha_asignacion|date:"d/m/Y" }}</td>
+                            <td style="color: #ffffff !important;">{{ asignacion.fecha_devolucion|date:"d/m/Y" }}</td>
+                            <td style="color: #ffffff !important;">
                                 {% if asignacion.condicion_devolucion %}
                                     {{ asignacion.condicion_devolucion }}
                                 {% else %}
-                                    <span class="text-muted">-</span>
+                                    <span style="color: rgba(255, 255, 255, 0.6) !important;">-</span>
                                 {% endif %}
                             </td>
                         </tr>
@@ -115,12 +121,181 @@
         </div>
     </div>
     {% endif %}
-    
-    <div class="mt-3">
-        <a href="{% url 'empleados:empleado_dashboard' %}" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left me-1"></i>Volver al Panel
-        </a>
-    </div>
 </div>
+
+<style>
+/* Título y subtítulo del dashboard - Texto blanco con sombra */
+.dashboard-title {
+    color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 
+                 0 4px 12px rgba(0, 0, 0, 0.3),
+                 0 0 20px rgba(0, 0, 0, 0.2) !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.5rem !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard-subtitle {
+    color: #ffffff !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), 
+                 0 3px 10px rgba(0, 0, 0, 0.3),
+                 0 0 15px rgba(0, 0, 0, 0.2) !important;
+    font-weight: 400 !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Asegurar que el card tenga el estilo glassmorphism del dashboard */
+.dashboard .card {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+/* El table-responsive debe ser completamente transparente */
+.dashboard .table-responsive {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+.dashboard .table {
+    margin-bottom: 0 !important;
+    background: transparent !important;
+}
+
+.dashboard .table thead th {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    padding: 1rem !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .table tbody tr {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    transition: all 0.3s ease !important;
+}
+
+.dashboard .table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    transform: translateX(3px) !important;
+}
+
+.dashboard .table tbody tr:last-child {
+    border-bottom: none !important;
+}
+
+.dashboard .table tbody td {
+    padding: 1rem !important;
+    color: #ffffff !important;
+    vertical-align: middle !important;
+    background: transparent !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .table tbody td strong {
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+}
+
+/* Asegurar que todos los textos sean blancos */
+.dashboard .table th,
+.dashboard .table td,
+.dashboard .table td strong,
+.dashboard .table td span:not(.badge) {
+    color: #ffffff !important;
+}
+
+/* Iconos blancos - Font Awesome correctamente configurado */
+.dashboard .table td i,
+.dashboard i.fas,
+.dashboard i.far,
+.dashboard i.fal,
+.dashboard i.fab,
+.dashboard .fa,
+.dashboard [class*="fa-"] {
+    color: #ffffff !important;
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Badges con estilo glassmorphism */
+.dashboard .equipos-badge-codigo {
+    background: rgba(108, 117, 125, 0.3) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-weight: 500 !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .equipos-badge-condicion {
+    background: rgba(59, 130, 246, 0.3) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-weight: 500 !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Botones con estilo del dashboard */
+.dashboard .btn-outline-secondary {
+    background: linear-gradient(180deg, 
+        rgba(108, 117, 125, 0.95) 0%, 
+        rgba(73, 80, 87, 0.95) 50%,
+        rgba(52, 58, 64, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 32px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .btn-outline-secondary:hover {
+    background: linear-gradient(180deg, 
+        rgba(134, 142, 150, 0.95) 0%, 
+        rgba(108, 117, 125, 0.95) 50%,
+        rgba(73, 80, 87, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+}
+
+/* Títulos dentro de cards */
+.dashboard .card-body h5 {
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+}
+</style>
 {% endblock %}
 

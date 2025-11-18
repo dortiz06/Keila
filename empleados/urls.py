@@ -53,6 +53,9 @@ urlpatterns = [
     path('sistemas/equipos/', views.inventario_equipos, name='inventario_equipos'),
     path('sistemas/equipos/agregar/', views.agregar_equipo, name='agregar_equipo'),
     path('sistemas/equipos/asignar/', views.asignar_equipo, name='asignar_equipo'),
+    path('sistemas/equipos/<int:equipo_id>/asignar/', views.asignar_equipo_desde_inventario, name='asignar_equipo_inventario'),
+    path('sistemas/equipos/asignacion/<int:asignacion_id>/editar/', views.editar_asignacion_equipo, name='editar_asignacion_equipo'),
+    path('sistemas/equipos/<int:equipo_id>/quitar-asignacion/', views.quitar_asignacion_equipo, name='quitar_asignacion_equipo'),
     path('sistemas/equipos/<int:asignacion_id>/devolver/', views.devolver_equipo, name='devolver_equipo'),
     
     # === API ENDPOINTS ===
