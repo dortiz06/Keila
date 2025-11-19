@@ -52,8 +52,6 @@
                                             <i class="fas fa-check-circle me-1"></i>Normal
                                         {% elif solicitud.tipo == 'EXTRAORDINARIA' %}
                                             <i class="fas fa-exclamation-triangle me-1"></i>Extraordinaria
-                                        {% elif solicitud.tipo == 'EMERGENCIA' %}
-                                            <i class="fas fa-exclamation-circle me-1"></i>Emergencia
                                         {% else %}
                                             {{ solicitud.get_tipo_display }}
                                         {% endif %}

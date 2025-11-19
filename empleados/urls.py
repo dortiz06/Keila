@@ -36,6 +36,9 @@ urlpatterns = [
     # === GESTIÓN DE DEPARTAMENTOS ===
     path('departamentos/', views.gestion_departamentos, name='gestion_departamentos'),
     path('departamentos/crear/', views.crear_departamento, name='crear_departamento'),
+    path('departamentos/<int:departamento_id>/', views.ver_departamento, name='ver_departamento'),
+    path('departamentos/<int:departamento_id>/editar/', views.editar_departamento, name='editar_departamento'),
+    path('departamentos/<int:departamento_id>/toggle/', views.toggle_departamento, name='toggle_departamento'),
     
     # === TICKETS ===
     path('tickets/', views.mis_tickets, name='mis_tickets'),

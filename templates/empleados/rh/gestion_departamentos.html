@@ -23,8 +23,8 @@ body {
             <a href="{% url 'empleados:crear_departamento' %}" class="btn btn-outline-success">
                 <i class="fas fa-plus me-1"></i>Crear Nuevo Departamento
             </a>
-            <a href="{% url 'empleados:rh_dashboard' %}" class="btn btn-outline-primary">
-                <i class="fas fa-arrow-left me-1"></i>Volver al Panel
+            <a href="{% url url_dashboard %}" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left me-1"></i>{{ texto_dashboard }}
             </a>
         </div>
     </div>
@@ -36,110 +36,110 @@ body {
             <h5 class="gestion-section-title mb-3" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
                 <i class="fas fa-list me-2"></i>Departamentos Existentes
                 <span class="badge gestion-badge-count" style="background: rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; border: 1px solid rgba(255, 255, 255, 0.3) !important;">{{ departamentos|length }}</span>
-            </h5>
+                        </h5>
 
-            {% if departamentos %}
+                        {% if departamentos %}
                 <div class="table-responsive gestion-table-wrapper">
                     <table class="table table-hover gestion-table">
-                        <thead>
-                            <tr>
+                                    <thead>
+                                        <tr>
                                 <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Nombre</th>
                                 <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Descripción</th>
                                 <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Jefe</th>
                                 <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Empleados</th>
                                 <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Estado</th>
                                 <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for departamento in departamentos %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for departamento in departamentos %}
                             <tr class="gestion-table-row">
                                 <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">
-                                    <strong>{{ departamento.nombre }}</strong>
-                                </td>
+                                                <strong>{{ departamento.nombre }}</strong>
+                                            </td>
                                 <td style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
-                                    {% if departamento.descripcion %}
-                                        {{ departamento.descripcion|truncatechars:50 }}
-                                    {% else %}
+                                                {% if departamento.descripcion %}
+                                                    {{ departamento.descripcion|truncatechars:50 }}
+                                                {% else %}
                                         <span style="color: rgba(255, 255, 255, 0.5) !important;">Sin descripción</span>
-                                    {% endif %}
-                                </td>
+                                                {% endif %}
+                                            </td>
                                 <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">
-                                    {% if departamento.jefe %}
+                                                {% if departamento.jefe %}
                                         <span class="badge badge-jefe">
                                             <i class="fas fa-user-check"></i>
                                             <span>{{ departamento.jefe.usuario.get_full_name|default:departamento.jefe.usuario.username }}</span>
-                                        </span>
-                                    {% else %}
+                                                    </span>
+                                                {% else %}
                                         <span class="badge badge-sin-asignar">
                                             <i class="fas fa-user-times"></i>
                                             <span>Sin asignar</span>
                                         </span>
-                                    {% endif %}
-                                </td>
+                                                {% endif %}
+                                            </td>
                                 <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">
                                     <span class="badge badge-empleados">
                                         <i class="fas fa-users"></i>
                                         <span>{{ departamento.empleados_count }} empleados</span>
                                     </span>
-                                </td>
+                                            </td>
                                 <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">
-                                    {% if departamento.activo %}
+                                                {% if departamento.activo %}
                                         <span class="badge badge-activo">
                                             <i class="fas fa-check-circle"></i>
                                             <span>Activo</span>
                                         </span>
-                                    {% else %}
+                                                {% else %}
                                         <span class="badge badge-inactivo">
                                             <i class="fas fa-ban"></i>
                                             <span>Inactivo</span>
                                         </span>
-                                    {% endif %}
-                                </td>
-                                <td>
+                                                {% endif %}
+                                            </td>
+                                            <td>
                                     <div class="action-buttons-group">
-                                        <a href="#" class="action-btn action-btn-view" title="Ver detalles">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="#" class="action-btn action-btn-edit" title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        {% if departamento.activo %}
-                                            <a href="#" class="action-btn action-btn-disable" title="Desactivar">
-                                                <i class="fas fa-ban"></i>
-                                            </a>
-                                        {% else %}
-                                            <a href="#" class="action-btn action-btn-enable" title="Activar">
-                                                <i class="fas fa-check"></i>
-                                            </a>
-                                        {% endif %}
-                                    </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% else %}
-                <div class="text-center py-5">
+                                        <a href="{% url 'empleados:ver_departamento' departamento.id %}" class="action-btn action-btn-view" title="Ver detalles">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                        <a href="{% url 'empleados:editar_departamento' departamento.id %}" class="action-btn action-btn-edit" title="Editar">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    {% if departamento.activo %}
+                                            <a href="{% url 'empleados:toggle_departamento' departamento.id %}" class="action-btn action-btn-disable" title="Desactivar" onclick="return confirm('¿Estás seguro de que deseas desactivar este departamento?');">
+                                                            <i class="fas fa-ban"></i>
+                                                        </a>
+                                                    {% else %}
+                                            <a href="{% url 'empleados:toggle_departamento' departamento.id %}" class="action-btn action-btn-enable" title="Activar" onclick="return confirm('¿Estás seguro de que deseas activar este departamento?');">
+                                                            <i class="fas fa-check"></i>
+                                                        </a>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <div class="text-center py-5">
                     <i class="fas fa-building fa-3x mb-3" style="color: rgba(255, 255, 255, 0.5) !important;"></i>
                     <h5 style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">No hay departamentos registrados</h5>
                     <p style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif !important;">Comienza creando el primer departamento de la empresa.</p>
-                    <a href="{% url 'empleados:crear_departamento' %}" class="btn btn-outline-primary">
-                        <i class="fas fa-plus me-2"></i>Crear Primer Departamento
-                    </a>
-                </div>
-            {% endif %}
+                                <a href="{% url 'empleados:crear_departamento' %}" class="btn btn-outline-primary">
+                                    <i class="fas fa-plus me-2"></i>Crear Primer Departamento
+                                </a>
+                            </div>
+                        {% endif %}
+            </div>
         </div>
-    </div>
 
-    <!-- Estadísticas -->
-    <div class="row mt-4">
+        <!-- Estadísticas -->
+        <div class="row mt-4">
         <div class="col-md-3 mb-3">
             <div class="stats-card stats-card-primary">
                 <div class="stats-card-icon">
                     <i class="fas fa-building"></i>
-                </div>
+                    </div>
                 <div class="stats-card-content">
                     <h3 class="stats-card-number">{{ departamentos|length }}</h3>
                     <p class="stats-card-label">Total Departamentos</p>
@@ -150,7 +150,7 @@ body {
             <div class="stats-card stats-card-success">
                 <div class="stats-card-icon">
                     <i class="fas fa-check-circle"></i>
-                </div>
+                    </div>
                 <div class="stats-card-content">
                     <h3 class="stats-card-number">{{ departamentos|length }}</h3>
                     <p class="stats-card-label">Departamentos Activos</p>
@@ -164,8 +164,8 @@ body {
                 </div>
                 <div class="stats-card-content">
                     <h3 class="stats-card-number">
-                        {% widthratio departamentos|length 1 1 %}
-                    </h3>
+                            {% widthratio departamentos|length 1 1 %}
+                        </h3>
                     <p class="stats-card-label">Con Jefe Asignado</p>
                 </div>
             </div>
@@ -174,7 +174,7 @@ body {
             <div class="stats-card stats-card-warning">
                 <div class="stats-card-icon">
                     <i class="fas fa-users"></i>
-                </div>
+                    </div>
                 <div class="stats-card-content">
                     <h3 class="stats-card-number">0</h3>
                     <p class="stats-card-label">Total Empleados</p>

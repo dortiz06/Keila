@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load perfil_tags %}
 
 {% block title %}Mis Equipos{% endblock %}
 
@@ -36,7 +37,7 @@
                             {% for asignacion in asignaciones_activas %}
                             <tr style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
                                 <td style="color: #ffffff !important;">
-                                    <i class="fas fa-laptop me-1"></i>
+                                    <i class="fas {% categoria_icono asignacion.equipo.categoria.nombre %} me-1"></i>
                                     <strong>{{ asignacion.equipo.categoria.nombre }}</strong>
                                 </td>
                                 <td style="color: #ffffff !important;">{{ asignacion.equipo.marca }} {{ asignacion.equipo.modelo }}</td>
@@ -99,7 +100,7 @@
                         {% for asignacion in historial_asignaciones %}
                         <tr style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
                             <td style="color: #ffffff !important;">
-                                <i class="fas fa-laptop me-1"></i>
+                                <i class="fas {% categoria_icono asignacion.equipo.categoria.nombre %} me-1"></i>
                                 {{ asignacion.equipo.categoria.nombre }}
                             </td>
                             <td style="color: #ffffff !important;">{{ asignacion.equipo.marca }} {{ asignacion.equipo.modelo }}</td>

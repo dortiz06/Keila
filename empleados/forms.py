@@ -147,7 +147,6 @@ class SolicitudVacacionesForm(forms.ModelForm):
             if antiguedad < 1:
                 self.fields['tipo'].choices = [
                     ('EXTRAORDINARIA', 'Vacación Extraordinaria'),
-                    ('EMERGENCIA', 'Vacación de Emergencia'),
                 ]
                 meses_trabajados = ((timezone.now().date() - self.empleado.fecha_contratacion).days) / 30.44
                 self.fields['tipo'].help_text = (

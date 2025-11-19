@@ -3332,3 +3332,716 @@ INFO 2025-11-18 17:25:35,654 basehttp 12971 6195081216 "POST / HTTP/1.1" 200 485
 INFO 2025-11-18 17:25:43,641 basehttp 12971 6195081216 "POST / HTTP/1.1" 200 48574
 INFO 2025-11-18 17:25:54,770 basehttp 12971 6195081216 "POST / HTTP/1.1" 302 0
 INFO 2025-11-18 17:25:54,782 basehttp 12971 6195081216 "GET /rh/ HTTP/1.1" 200 24689
+INFO 2025-11-19 08:21:07,879 autoreload 14997 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 08:21:11,801 basehttp 14997 6131789824 "GET /rh/ HTTP/1.1" 302 0
+INFO 2025-11-19 08:21:11,818 basehttp 14997 6131789824 "GET /?next=/rh/ HTTP/1.1" 200 47576
+INFO 2025-11-19 08:21:12,134 basehttp 14997 6131789824 "GET /static/css/global_styles.css HTTP/1.1" 304 0
+INFO 2025-11-19 08:21:12,217 basehttp 14997 6131789824 "GET /static/images/login/login1.png HTTP/1.1" 200 10267390
+INFO 2025-11-19 08:38:49,359 basehttp 14997 6131789824 "POST /?next=/rh/ HTTP/1.1" 302 0
+WARNING 2025-11-19 08:38:49,374 log 14997 6131789824 Forbidden (Permission denied): /rh/
+Traceback (most recent call last):
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py", line 176, in rh_dashboard
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+WARNING 2025-11-19 08:38:49,378 basehttp 14997 6131789824 "GET /rh/ HTTP/1.1" 403 19573
+INFO 2025-11-19 08:38:54,421 basehttp 14997 6131789824 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-11-19 08:38:54,448 basehttp 14997 6131789824 "GET /empleado/ HTTP/1.1" 200 48197
+WARNING 2025-11-19 08:38:54,882 log 14997 6165442560 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 08:38:54,889 log 14997 6148616192 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 08:38:54,894 log 14997 6182268928 Not Found: /favicon.ico
+WARNING 2025-11-19 08:38:54,894 basehttp 14997 6148616192 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+WARNING 2025-11-19 08:38:54,894 basehttp 14997 6165442560 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+WARNING 2025-11-19 08:38:54,895 basehttp 14997 6182268928 "GET /favicon.ico HTTP/1.1" 404 12929
+INFO 2025-11-19 08:38:57,441 basehttp 14997 6131789824 "GET /logout/ HTTP/1.1" 302 0
+INFO 2025-11-19 08:38:57,452 basehttp 14997 6131789824 "GET / HTTP/1.1" 200 48568
+WARNING 2025-11-19 08:38:57,972 log 14997 6182268928 Not Found: /favicon.ico
+WARNING 2025-11-19 08:38:57,977 log 14997 6148616192 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 08:38:57,984 basehttp 14997 6182268928 "GET /favicon.ico HTTP/1.1" 404 12929
+WARNING 2025-11-19 08:38:57,984 log 14997 6165442560 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 08:38:57,985 basehttp 14997 6165442560 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+WARNING 2025-11-19 08:38:57,985 basehttp 14997 6148616192 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+INFO 2025-11-19 08:39:01,768 basehttp 14997 6131789824 "POST / HTTP/1.1" 302 0
+INFO 2025-11-19 08:39:01,778 basehttp 14997 6131789824 "GET /empleado/ HTTP/1.1" 200 48532
+INFO 2025-11-19 08:39:05,578 basehttp 14997 6131789824 "GET /tickets/ HTTP/1.1" 200 28645
+INFO 2025-11-19 08:39:07,550 basehttp 14997 6131789824 "GET /tickets/crear/ HTTP/1.1" 200 28792
+INFO 2025-11-19 08:39:11,125 basehttp 14997 6131789824 "GET /tickets/2/ HTTP/1.1" 200 27242
+INFO 2025-11-19 08:39:13,894 basehttp 14997 6131789824 "GET /tickets/ HTTP/1.1" 200 28645
+INFO 2025-11-19 09:06:00,820 basehttp 14997 6131789824 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-11-19 09:06:00,844 basehttp 14997 6131789824 "GET /empleado/ HTTP/1.1" 200 48197
+INFO 2025-11-19 09:06:04,772 basehttp 14997 6131789824 "GET /equipos/ HTTP/1.1" 200 29799
+INFO 2025-11-19 09:06:08,384 basehttp 14997 6131789824 "GET /empleado/ HTTP/1.1" 200 48197
+INFO 2025-11-19 09:06:10,878 basehttp 14997 6131789824 "GET /equipos/ HTTP/1.1" 200 29799
+INFO 2025-11-19 09:06:14,857 basehttp 14997 6131789824 "GET /vacaciones/ HTTP/1.1" 200 30014
+INFO 2025-11-19 09:06:16,832 basehttp 14997 6131789824 "GET /vacaciones/solicitar/ HTTP/1.1" 200 81047
+INFO 2025-11-19 09:06:33,301 basehttp 14997 6131789824 "GET /perfil/ HTTP/1.1" 200 50695
+INFO 2025-11-19 09:06:33,446 basehttp 14997 6131789824 "GET /static/images/dash/fondoAzul2.jpg HTTP/1.1" 200 298659
+WARNING 2025-11-19 09:06:36,538 log 14997 6131789824 Forbidden (Permission denied): /usuarios/
+Traceback (most recent call last):
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py", line 293, in gestion_usuarios
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+WARNING 2025-11-19 09:06:36,539 basehttp 14997 6131789824 "GET /usuarios/ HTTP/1.1" 403 19238
+INFO 2025-11-19 09:06:40,561 basehttp 14997 6131789824 "GET /vacaciones/solicitar/ HTTP/1.1" 200 81047
+INFO 2025-11-19 09:06:44,234 basehttp 14997 6131789824 "GET /empleado/ HTTP/1.1" 200 48197
+INFO 2025-11-19 09:06:48,255 basehttp 14997 6131789824 "GET /tickets/crear/ HTTP/1.1" 200 28792
+INFO 2025-11-19 09:06:51,450 basehttp 14997 6131789824 "GET /perfil/ HTTP/1.1" 200 50695
+INFO 2025-11-19 09:07:00,798 basehttp 14997 6131789824 "GET /equipos/ HTTP/1.1" 200 29799
+INFO 2025-11-19 09:07:03,512 basehttp 14997 6131789824 "GET /logout/ HTTP/1.1" 302 0
+INFO 2025-11-19 09:07:03,523 basehttp 14997 6131789824 "GET / HTTP/1.1" 200 48568
+INFO 2025-11-19 09:07:09,129 basehttp 14997 6131789824 "POST / HTTP/1.1" 302 0
+INFO 2025-11-19 09:07:09,143 basehttp 14997 6131789824 "GET /rh/ HTTP/1.1" 200 24689
+INFO 2025-11-19 09:20:04,783 basehttp 14997 6131789824 "GET /rh/ HTTP/1.1" 200 31283
+INFO 2025-11-19 09:20:57,345 basehttp 14997 6131789824 "GET /vacaciones/solicitudes-rh/?estado=APROBADO_RH HTTP/1.1" 200 37811
+WARNING 2025-11-19 09:21:09,944 log 14997 6148616192 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 09:21:09,950 log 14997 6182268928 Not Found: /favicon.ico
+WARNING 2025-11-19 09:21:09,951 basehttp 14997 6148616192 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+WARNING 2025-11-19 09:21:09,956 log 14997 6165442560 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 09:21:09,956 basehttp 14997 6182268928 "GET /favicon.ico HTTP/1.1" 404 12929
+WARNING 2025-11-19 09:21:09,957 basehttp 14997 6165442560 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+WARNING 2025-11-19 09:21:10,246 log 14997 6182268928 Not Found: /favicon.ico
+WARNING 2025-11-19 09:21:10,251 log 14997 6165442560 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 09:21:10,258 log 14997 6148616192 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 09:21:10,258 basehttp 14997 6182268928 "GET /favicon.ico HTTP/1.1" 404 12929
+WARNING 2025-11-19 09:21:10,259 basehttp 14997 6165442560 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+WARNING 2025-11-19 09:21:10,259 basehttp 14997 6148616192 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+INFO 2025-11-19 09:24:52,975 basehttp 14997 6131789824 "GET /vacaciones/solicitudes-rh/?estado=APROBADO_RH HTTP/1.1" 200 55732
+INFO 2025-11-19 09:37:20,415 basehttp 14997 6131789824 "GET /vacaciones/solicitudes-rh/?estado=APROBADO_RH HTTP/1.1" 200 56704
+INFO 2025-11-19 09:37:41,600 basehttp 14997 6131789824 "GET /vacaciones/solicitudes-rh/?estado=&busqueda= HTTP/1.1" 200 30636
+INFO 2025-11-19 09:37:50,684 basehttp 14997 6131789824 "GET /vacaciones/solicitudes-rh/?estado=A&busqueda= HTTP/1.1" 200 56712
+INFO 2025-11-19 09:37:54,477 basehttp 14997 6131789824 "GET /vacaciones/solicitudes-rh/?estado=TODAS&busqueda= HTTP/1.1" 200 61377
+INFO 2025-11-19 09:38:00,388 basehttp 14997 6131789824 "GET /vacaciones/solicitudes-rh/?estado=R&busqueda= HTTP/1.1" 200 30896
+INFO 2025-11-19 09:38:04,942 basehttp 14997 6131789824 "GET /vacaciones/solicitudes-rh/?estado=TODAS&busqueda= HTTP/1.1" 200 61377
+INFO 2025-11-19 09:38:10,589 basehttp 14997 6131789824 "GET /vacaciones/solicitudes-rh/?estado=R&busqueda= HTTP/1.1" 200 30896
+INFO 2025-11-19 09:38:11,558 basehttp 14997 6131789824 "GET /vacaciones/solicitudes-rh/ HTTP/1.1" 200 30636
+INFO 2025-11-19 09:38:13,745 basehttp 14997 6131789824 "GET /vacaciones/solicitudes-rh/?estado=&busqueda= HTTP/1.1" 200 30636
+INFO 2025-11-19 09:38:17,670 basehttp 14997 6131789824 "GET /vacaciones/solicitudes-rh/?estado=TODAS&busqueda= HTTP/1.1" 200 61377
+INFO 2025-11-19 09:38:28,163 basehttp 14997 6131789824 "GET /vacaciones/5/pdf/ HTTP/1.1" 200 7359
+INFO 2025-11-19 09:39:26,848 basehttp 14997 6131789824 "GET /rh/ HTTP/1.1" 200 31283
+INFO 2025-11-19 09:40:25,089 basehttp 14997 6131789824 "GET /rh/ HTTP/1.1" 200 31339
+INFO 2025-11-19 09:42:02,747 basehttp 14997 6131789824 "GET /rh/ HTTP/1.1" 200 31480
+INFO 2025-11-19 09:42:31,629 basehttp 14997 6131789824 "GET /vacaciones/solicitudes-rh/?estado=APROBADO_RH HTTP/1.1" 200 56704
+INFO 2025-11-19 09:43:01,097 basehttp 14997 6131789824 "GET /perfil/ HTTP/1.1" 200 46130
+INFO 2025-11-19 09:43:03,525 basehttp 14997 6131789824 "GET /usuarios/ HTTP/1.1" 200 57426
+WARNING 2025-11-19 09:43:23,756 log 14997 6148616192 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 09:43:23,760 log 14997 6165442560 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 09:43:23,765 log 14997 6182268928 Not Found: /favicon.ico
+WARNING 2025-11-19 09:43:23,765 basehttp 14997 6148616192 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+WARNING 2025-11-19 09:43:23,765 basehttp 14997 6165442560 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+WARNING 2025-11-19 09:43:23,766 basehttp 14997 6182268928 "GET /favicon.ico HTTP/1.1" 404 12929
+INFO 2025-11-19 09:44:51,857 basehttp 14997 6131789824 "GET /usuarios/1/editar/ HTTP/1.1" 200 57062
+INFO 2025-11-19 09:44:59,285 basehttp 14997 6131789824 "GET /usuarios/ HTTP/1.1" 200 57426
+INFO 2025-11-19 09:45:10,390 basehttp 14997 6131789824 "GET /usuarios/crear/ HTTP/1.1" 200 34497
+INFO 2025-11-19 09:49:08,625 basehttp 14997 6131789824 "GET /usuarios/ HTTP/1.1" 200 57787
+INFO 2025-11-19 09:51:06,325 basehttp 14997 6131789824 "GET /usuarios/crear/ HTTP/1.1" 200 34497
+INFO 2025-11-19 09:51:41,572 basehttp 14997 6131789824 "GET /usuarios/ HTTP/1.1" 200 57787
+INFO 2025-11-19 09:51:51,561 basehttp 14997 6131789824 "GET /usuarios/crear/ HTTP/1.1" 200 34497
+WARNING 2025-11-19 09:51:53,774 log 14997 6148616192 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 09:51:53,769 log 14997 6182268928 Not Found: /favicon.ico
+WARNING 2025-11-19 09:51:53,778 log 14997 6165442560 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 09:51:53,779 basehttp 14997 6148616192 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+WARNING 2025-11-19 09:51:53,779 basehttp 14997 6182268928 "GET /favicon.ico HTTP/1.1" 404 12929
+WARNING 2025-11-19 09:51:53,779 basehttp 14997 6165442560 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+WARNING 2025-11-19 09:51:53,965 log 14997 6182268928 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 09:51:53,971 log 14997 6165442560 Not Found: /favicon.ico
+WARNING 2025-11-19 09:51:53,976 log 14997 6148616192 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 09:51:53,977 basehttp 14997 6182268928 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+WARNING 2025-11-19 09:51:53,977 basehttp 14997 6165442560 "GET /favicon.ico HTTP/1.1" 404 12929
+WARNING 2025-11-19 09:51:53,977 basehttp 14997 6148616192 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+WARNING 2025-11-19 09:51:54,101 log 14997 6182268928 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 09:51:54,105 log 14997 6165442560 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 09:51:54,107 basehttp 14997 6182268928 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+WARNING 2025-11-19 09:51:54,113 log 14997 6148616192 Not Found: /favicon.ico
+WARNING 2025-11-19 09:51:54,114 basehttp 14997 6165442560 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+WARNING 2025-11-19 09:51:54,114 basehttp 14997 6148616192 "GET /favicon.ico HTTP/1.1" 404 12929
+INFO 2025-11-19 09:54:21,741 basehttp 14997 6131789824 "GET /usuarios/crear/ HTTP/1.1" 200 41677
+INFO 2025-11-19 09:55:55,372 basehttp 14997 6131789824 "GET /usuarios/crear/ HTTP/1.1" 200 41614
+INFO 2025-11-19 09:56:24,407 basehttp 14997 6131789824 - Broken pipe from ('127.0.0.1', 57325)
+INFO 2025-11-19 10:00:33,622 basehttp 14997 6131789824 "GET /usuarios/crear/ HTTP/1.1" 200 56321
+INFO 2025-11-19 10:04:44,576 basehttp 14997 6131789824 "GET /usuarios/crear/ HTTP/1.1" 200 58910
+INFO 2025-11-19 10:28:50,324 basehttp 14997 6131789824 "GET /usuarios/crear/ HTTP/1.1" 302 0
+INFO 2025-11-19 10:28:50,352 basehttp 14997 6131789824 "GET /?next=/usuarios/crear/ HTTP/1.1" 200 47576
+INFO 2025-11-19 10:28:50,654 basehttp 14997 6131789824 "GET /static/images/logos/logo-keila.png HTTP/1.1" 200 282180
+INFO 2025-11-19 10:28:50,720 basehttp 14997 6131789824 "GET /static/images/login/login1.png HTTP/1.1" 200 10267390
+INFO 2025-11-19 10:28:55,200 basehttp 14997 6131789824 "POST /?next=/usuarios/crear/ HTTP/1.1" 302 0
+INFO 2025-11-19 10:28:55,212 basehttp 14997 6131789824 "GET /usuarios/crear/ HTTP/1.1" 200 59661
+INFO 2025-11-19 10:33:32,912 basehttp 14997 6131789824 "GET /usuarios/crear/ HTTP/1.1" 200 59140
+INFO 2025-11-19 10:34:55,049 basehttp 14997 6131789824 "GET /usuarios/crear/ HTTP/1.1" 200 58910
+INFO 2025-11-19 10:43:21,047 basehttp 14997 6131789824 "GET /usuarios/crear/ HTTP/1.1" 200 60803
+INFO 2025-11-19 10:51:57,593 basehttp 14997 6131789824 "GET /usuarios/crear/ HTTP/1.1" 200 63156
+INFO 2025-11-19 10:53:44,921 basehttp 14997 6131789824 "GET /usuarios/crear/ HTTP/1.1" 200 63237
+INFO 2025-11-19 10:56:11,035 basehttp 14997 6131789824 "GET /usuarios/crear/ HTTP/1.1" 200 63097
+INFO 2025-11-19 10:59:16,981 basehttp 14997 6131789824 "GET /usuarios/crear/ HTTP/1.1" 200 63097
+INFO 2025-11-19 11:02:22,257 basehttp 14997 6131789824 "GET /usuarios/ HTTP/1.1" 200 57787
+INFO 2025-11-19 11:02:26,257 basehttp 14997 6131789824 "GET /usuarios/crear/ HTTP/1.1" 200 63097
+INFO 2025-11-19 11:02:28,875 basehttp 14997 6131789824 "GET /usuarios/ HTTP/1.1" 200 57787
+INFO 2025-11-19 11:02:30,456 basehttp 14997 6131789824 "GET /usuarios/crear/ HTTP/1.1" 200 63097
+INFO 2025-11-19 11:04:52,794 basehttp 14997 6131789824 "GET /usuarios/crear/ HTTP/1.1" 200 64051
+INFO 2025-11-19 11:05:30,660 basehttp 14997 6131789824 "GET /admin/empleados/perfil/ HTTP/1.1" 302 0
+INFO 2025-11-19 11:05:30,682 basehttp 14997 6131789824 "GET /admin/login/?next=/admin/empleados/perfil/ HTTP/1.1" 200 3776
+INFO 2025-11-19 11:05:33,574 basehttp 14997 6131789824 "POST /admin/login/?next=/admin/empleados/perfil/ HTTP/1.1" 302 0
+INFO 2025-11-19 11:05:33,602 basehttp 14997 6131789824 "GET /admin/empleados/perfil/ HTTP/1.1" 200 24355
+INFO 2025-11-19 11:05:33,625 basehttp 14997 6131789824 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-11-19 11:05:42,034 basehttp 14997 6131789824 "GET /admin/auth/user/ HTTP/1.1" 200 18638
+INFO 2025-11-19 11:05:42,365 basehttp 14997 6131789824 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-11-19 11:05:42,375 basehttp 14997 6131789824 "GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+WARNING 2025-11-19 11:06:44,260 log 14997 6131789824 Forbidden (CSRF token from POST incorrect.): /usuarios/crear/
+WARNING 2025-11-19 11:06:44,261 basehttp 14997 6131789824 "POST /usuarios/crear/ HTTP/1.1" 403 2514
+WARNING 2025-11-19 11:18:02,875 log 14997 6148616192 Forbidden (Permission denied): /usuarios/crear/
+Traceback (most recent call last):
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py", line 334, in crear_usuario
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+WARNING 2025-11-19 11:18:02,877 basehttp 14997 6148616192 "GET /usuarios/crear/ HTTP/1.1" 403 19238
+INFO 2025-11-19 11:18:04,705 basehttp 14997 6148616192 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-11-19 11:18:04,724 basehttp 14997 6148616192 "GET /empleado/ HTTP/1.1" 200 48197
+WARNING 2025-11-19 11:18:05,271 log 14997 6165442560 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 11:18:05,276 log 14997 6182268928 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 11:18:05,280 log 14997 6199095296 Not Found: /favicon.ico
+WARNING 2025-11-19 11:18:05,280 basehttp 14997 6182268928 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+WARNING 2025-11-19 11:18:05,280 basehttp 14997 6165442560 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+WARNING 2025-11-19 11:18:05,281 basehttp 14997 6199095296 "GET /favicon.ico HTTP/1.1" 404 12929
+INFO 2025-11-19 11:18:06,719 basehttp 14997 6148616192 "GET /vacaciones/solicitar/ HTTP/1.1" 200 81047
+INFO 2025-11-19 11:18:13,667 basehttp 14997 6148616192 "GET /empleado/ HTTP/1.1" 200 48197
+INFO 2025-11-19 11:18:19,000 basehttp 14997 6148616192 "GET /equipos/ HTTP/1.1" 200 29799
+INFO 2025-11-19 11:18:21,736 basehttp 14997 6148616192 "GET /tickets/ HTTP/1.1" 200 28645
+INFO 2025-11-19 11:18:24,285 basehttp 14997 6148616192 "GET /tickets/crear/ HTTP/1.1" 200 28792
+INFO 2025-11-19 11:18:27,597 basehttp 14997 6148616192 "GET /empleado/ HTTP/1.1" 200 48197
+INFO 2025-11-19 11:18:28,910 basehttp 14997 6148616192 "GET /vacaciones/ HTTP/1.1" 200 30014
+INFO 2025-11-19 11:18:31,460 basehttp 14997 6148616192 "GET /vacaciones/solicitar/ HTTP/1.1" 200 81047
+INFO 2025-11-19 11:18:34,970 basehttp 14997 6148616192 "GET /logout/ HTTP/1.1" 302 0
+INFO 2025-11-19 11:18:34,978 basehttp 14997 6148616192 "GET / HTTP/1.1" 200 48568
+WARNING 2025-11-19 11:18:35,607 log 14997 6165442560 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 11:18:35,610 log 14997 6182268928 Not Found: /favicon.ico
+WARNING 2025-11-19 11:18:35,613 log 14997 6131789824 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 11:18:35,613 basehttp 14997 6182268928 "GET /favicon.ico HTTP/1.1" 404 12929
+WARNING 2025-11-19 11:18:35,614 basehttp 14997 6165442560 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+WARNING 2025-11-19 11:18:35,614 basehttp 14997 6131789824 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+INFO 2025-11-19 11:18:39,080 basehttp 14997 6148616192 "POST / HTTP/1.1" 302 0
+INFO 2025-11-19 11:18:39,092 basehttp 14997 6148616192 "GET /rh/ HTTP/1.1" 200 31807
+INFO 2025-11-19 11:18:43,497 basehttp 14997 6148616192 "GET /vacaciones/solicitudes-rh/?estado=APROBADO_RH HTTP/1.1" 200 56704
+INFO 2025-11-19 11:18:48,358 basehttp 14997 6148616192 "GET /rh/ HTTP/1.1" 200 31480
+INFO 2025-11-19 11:18:51,140 basehttp 14997 6148616192 "GET /perfil/ HTTP/1.1" 200 46130
+INFO 2025-11-19 11:18:54,070 basehttp 14997 6148616192 "GET /usuarios/ HTTP/1.1" 200 57787
+INFO 2025-11-19 11:18:57,050 basehttp 14997 6148616192 "GET /usuarios/crear/ HTTP/1.1" 200 66664
+INFO 2025-11-19 11:19:06,183 basehttp 14997 6148616192 "GET /usuarios/crear/ HTTP/1.1" 200 66664
+INFO 2025-11-19 11:20:20,240 basehttp 14997 6131789824 "POST /usuarios/crear/ HTTP/1.1" 200 67473
+INFO 2025-11-19 11:20:43,641 basehttp 14997 6131789824 "POST /usuarios/crear/ HTTP/1.1" 302 0
+INFO 2025-11-19 11:20:43,653 basehttp 14997 6131789824 "GET /usuarios/ HTTP/1.1" 200 61134
+INFO 2025-11-19 11:20:53,508 basehttp 14997 6131789824 "GET /usuarios/10/editar/ HTTP/1.1" 200 57075
+INFO 2025-11-19 11:21:25,369 basehttp 14997 6131789824 "POST /usuarios/10/editar/ HTTP/1.1" 302 0
+INFO 2025-11-19 11:21:25,391 basehttp 14997 6131789824 "GET /usuarios/ HTTP/1.1" 200 61124
+INFO 2025-11-19 11:21:31,439 basehttp 14997 6131789824 "GET /admin/empleados/perfil/10/change/ HTTP/1.1" 302 0
+INFO 2025-11-19 11:21:31,455 basehttp 14997 6131789824 "GET /admin/login/?next=/admin/empleados/perfil/10/change/ HTTP/1.1" 200 3796
+INFO 2025-11-19 11:21:31,518 basehttp 14997 6131789824 "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-11-19 11:21:31,518 basehttp 14997 6148616192 "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-11-19 11:21:31,519 basehttp 14997 6165442560 "GET /static/admin/css/responsive.css HTTP/1.1" 200 16565
+INFO 2025-11-19 11:21:35,654 basehttp 14997 6131789824 "POST /admin/login/?next=/admin/empleados/perfil/10/change/ HTTP/1.1" 200 4046
+INFO 2025-11-19 11:21:42,662 basehttp 14997 6148616192 "POST /admin/login/?next=/admin/empleados/perfil/10/change/ HTTP/1.1" 302 0
+INFO 2025-11-19 11:21:42,685 basehttp 14997 6165442560 "GET /admin/empleados/perfil/10/change/ HTTP/1.1" 200 33686
+INFO 2025-11-19 11:21:42,696 basehttp 14997 6131789824 "GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+INFO 2025-11-19 11:21:42,697 basehttp 14997 6148616192 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-11-19 11:21:42,700 basehttp 14997 6165442560 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-11-19 11:21:42,703 basehttp 14997 6131789824 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-11-19 11:21:42,705 basehttp 14997 6148616192 "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+INFO 2025-11-19 11:21:51,934 basehttp 14997 6131789824 "GET /usuarios/10/editar/ HTTP/1.1" 200 57075
+WARNING 2025-11-19 11:22:02,181 log 14997 6182268928 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 11:22:02,186 log 14997 6215921664 Not Found: /favicon.ico
+WARNING 2025-11-19 11:22:02,190 log 14997 6199095296 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 11:22:02,191 basehttp 14997 6182268928 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+WARNING 2025-11-19 11:22:02,191 basehttp 14997 6215921664 "GET /favicon.ico HTTP/1.1" 404 12929
+WARNING 2025-11-19 11:22:02,191 basehttp 14997 6199095296 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+INFO 2025-11-19 11:23:55,503 autoreload 14997 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/forms.py changed, reloading.
+INFO 2025-11-19 11:23:55,848 autoreload 17669 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 11:24:09,160 autoreload 17669 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/forms.py changed, reloading.
+INFO 2025-11-19 11:24:09,433 autoreload 17676 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 11:24:50,449 basehttp 17676 6198751232 "GET /usuarios/10/editar/ HTTP/1.1" 200 57126
+INFO 2025-11-19 11:24:57,605 basehttp 17676 6198751232 "GET /usuarios/ HTTP/1.1" 200 60773
+INFO 2025-11-19 11:25:04,414 basehttp 17676 6198751232 "GET /usuarios/10/editar/ HTTP/1.1" 200 57126
+INFO 2025-11-19 11:25:12,756 basehttp 17676 6198751232 "GET /usuarios/ HTTP/1.1" 200 60773
+INFO 2025-11-19 11:25:19,962 basehttp 17676 6198751232 "GET /usuarios/3/editar/ HTTP/1.1" 200 57079
+INFO 2025-11-19 11:25:38,264 basehttp 17676 6198751232 "GET /usuarios/3/editar/ HTTP/1.1" 200 57079
+INFO 2025-11-19 11:25:42,871 basehttp 17676 6198751232 "GET /usuarios/ HTTP/1.1" 200 60773
+INFO 2025-11-19 11:25:47,685 basehttp 17676 6198751232 "GET /usuarios/1/editar/ HTTP/1.1" 200 57120
+INFO 2025-11-19 11:25:50,200 basehttp 17676 6198751232 "GET /usuarios/ HTTP/1.1" 200 60773
+INFO 2025-11-19 11:25:53,717 basehttp 17676 6198751232 "GET /usuarios/8/editar/ HTTP/1.1" 200 57116
+INFO 2025-11-19 11:25:56,960 basehttp 17676 6198751232 "GET /usuarios/8/editar/ HTTP/1.1" 200 57116
+INFO 2025-11-19 11:26:00,904 basehttp 17676 6198751232 "GET /usuarios/ HTTP/1.1" 200 60773
+INFO 2025-11-19 11:26:04,133 basehttp 17676 6198751232 "GET /usuarios/7/editar/ HTTP/1.1" 200 57083
+INFO 2025-11-19 11:26:35,913 basehttp 17676 6198751232 "GET /perfil/ HTTP/1.1" 200 46134
+INFO 2025-11-19 11:26:35,916 basehttp 17676 6215577600 "GET /static/images/dash/fondoAzul2.jpg HTTP/1.1" 304 0
+WARNING 2025-11-19 11:26:37,917 log 17676 6198751232 Forbidden (Permission denied): /vacaciones/solicitar/
+Traceback (most recent call last):
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py", line 434, in solicitar_vacaciones
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+WARNING 2025-11-19 11:26:37,922 basehttp 17676 6198751232 "GET /vacaciones/solicitar/ HTTP/1.1" 403 19238
+INFO 2025-11-19 11:26:39,977 basehttp 17676 6198751232 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-11-19 11:26:40,008 basehttp 17676 6215577600 "GET /administrador/ HTTP/1.1" 200 54233
+INFO 2025-11-19 11:26:44,574 basehttp 17676 6215577600 "GET /departamentos/ HTTP/1.1" 200 30633
+INFO 2025-11-19 11:26:48,531 basehttp 17676 6215577600 "GET /usuarios/crear/ HTTP/1.1" 200 66664
+INFO 2025-11-19 11:26:55,206 basehttp 17676 6215577600 "GET /usuarios/ HTTP/1.1" 200 60773
+INFO 2025-11-19 11:27:25,576 basehttp 17676 6198751232 "GET /usuarios/crear/ HTTP/1.1" 200 66664
+INFO 2025-11-19 11:27:27,924 basehttp 17676 6198751232 "GET /usuarios/ HTTP/1.1" 200 60773
+WARNING 2025-11-19 11:27:32,301 log 17676 6215577600 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 11:27:32,307 log 17676 6232403968 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 11:27:32,311 log 17676 6249230336 Not Found: /favicon.ico
+WARNING 2025-11-19 11:27:32,312 basehttp 17676 6215577600 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+WARNING 2025-11-19 11:27:32,312 basehttp 17676 6232403968 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+INFO 2025-11-19 11:27:32,312 basehttp 17676 6232403968 - Broken pipe from ('127.0.0.1', 58345)
+WARNING 2025-11-19 11:27:32,312 basehttp 17676 6249230336 "GET /favicon.ico HTTP/1.1" 404 12929
+WARNING 2025-11-19 11:27:32,515 log 17676 6215577600 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 11:27:32,518 basehttp 17676 6215577600 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+WARNING 2025-11-19 11:27:32,524 log 17676 6232403968 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 11:27:32,528 log 17676 6249230336 Not Found: /favicon.ico
+WARNING 2025-11-19 11:27:32,529 basehttp 17676 6232403968 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+WARNING 2025-11-19 11:27:32,529 basehttp 17676 6249230336 "GET /favicon.ico HTTP/1.1" 404 12929
+INFO 2025-11-19 11:30:00,219 autoreload 17676 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py changed, reloading.
+INFO 2025-11-19 11:30:00,530 autoreload 17797 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 11:30:17,917 autoreload 17797 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py changed, reloading.
+INFO 2025-11-19 11:30:18,187 autoreload 17819 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 11:30:45,728 basehttp 17819 6204502016 "GET /usuarios/crear/ HTTP/1.1" 200 66744
+INFO 2025-11-19 11:30:48,652 basehttp 17819 6204502016 "GET /administrador/ HTTP/1.1" 200 54233
+INFO 2025-11-19 11:30:50,302 basehttp 17819 6204502016 "GET /usuarios/crear/ HTTP/1.1" 200 66744
+INFO 2025-11-19 11:30:53,109 basehttp 17819 6204502016 "GET /administrador/ HTTP/1.1" 200 54233
+INFO 2025-11-19 11:30:55,186 basehttp 17819 6204502016 "GET /usuarios/ HTTP/1.1" 200 60773
+INFO 2025-11-19 11:30:58,002 basehttp 17819 6204502016 "GET /usuarios/crear/ HTTP/1.1" 200 66725
+INFO 2025-11-19 11:31:00,204 basehttp 17819 6204502016 "GET /usuarios/ HTTP/1.1" 200 60773
+INFO 2025-11-19 11:31:03,637 basehttp 17819 6204502016 "GET /usuarios/crear/ HTTP/1.1" 200 66725
+INFO 2025-11-19 11:31:05,557 basehttp 17819 6204502016 "GET /usuarios/ HTTP/1.1" 200 60773
+INFO 2025-11-19 11:31:07,724 basehttp 17819 6204502016 "GET /usuarios/3/editar/ HTTP/1.1" 200 57079
+INFO 2025-11-19 11:31:19,950 basehttp 17819 6204502016 "GET /usuarios/ HTTP/1.1" 200 60773
+INFO 2025-11-19 11:37:11,880 basehttp 17819 6204502016 "GET /usuarios/ HTTP/1.1" 200 61171
+INFO 2025-11-19 11:37:12,267 basehttp 17819 6204502016 "GET /static/images/dash/elevador.jpg HTTP/1.1" 200 80483
+INFO 2025-11-19 11:46:03,949 basehttp 17819 6204502016 "GET /usuarios/ HTTP/1.1" 200 60600
+INFO 2025-11-19 11:54:06,659 basehttp 17819 6204502016 "GET /usuarios/ HTTP/1.1" 200 60596
+INFO 2025-11-19 11:54:07,153 basehttp 17819 6204502016 "GET /static/images/dash/KC07.jpg HTTP/1.1" 200 557668
+INFO 2025-11-19 12:04:34,167 basehttp 17819 6204502016 "GET /usuarios/ HTTP/1.1" 200 60690
+INFO 2025-11-19 12:04:34,707 basehttp 17819 6204502016 "GET /static/images/dash/KC07.jpg HTTP/1.1" 304 0
+INFO 2025-11-19 12:04:42,556 basehttp 17819 6204502016 "GET /usuarios/crear/ HTTP/1.1" 200 67116
+INFO 2025-11-19 12:05:01,615 basehttp 17819 6204502016 "GET /usuarios/ HTTP/1.1" 200 60690
+WARNING 2025-11-19 12:05:03,496 log 17819 6204502016 Forbidden (Permission denied): /rh/
+Traceback (most recent call last):
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py", line 176, in rh_dashboard
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+WARNING 2025-11-19 12:05:03,500 basehttp 17819 6204502016 "GET /rh/ HTTP/1.1" 403 19238
+INFO 2025-11-19 12:05:05,828 basehttp 17819 6204502016 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-11-19 12:05:05,858 basehttp 17819 6204502016 "GET /administrador/ HTTP/1.1" 200 54233
+INFO 2025-11-19 12:05:09,514 basehttp 17819 6204502016 "GET /usuarios/ HTTP/1.1" 200 60690
+WARNING 2025-11-19 12:05:10,571 log 17819 6204502016 Forbidden (Permission denied): /rh/
+Traceback (most recent call last):
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py", line 176, in rh_dashboard
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+WARNING 2025-11-19 12:05:10,572 basehttp 17819 6204502016 "GET /rh/ HTTP/1.1" 403 19238
+WARNING 2025-11-19 12:05:35,113 log 17819 6221328384 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 12:05:35,114 basehttp 17819 6221328384 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+WARNING 2025-11-19 12:05:35,118 log 17819 6254981120 Not Found: /favicon.ico
+WARNING 2025-11-19 12:05:35,121 log 17819 6238154752 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 12:05:35,121 basehttp 17819 6254981120 "GET /favicon.ico HTTP/1.1" 404 12929
+WARNING 2025-11-19 12:05:35,121 basehttp 17819 6238154752 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+INFO 2025-11-19 12:07:40,510 autoreload 17819 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py changed, reloading.
+INFO 2025-11-19 12:07:40,785 autoreload 18399 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 12:08:03,220 autoreload 18399 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py changed, reloading.
+INFO 2025-11-19 12:08:03,410 autoreload 18414 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 12:09:04,146 basehttp 18414 6188920832 "GET /usuarios/ HTTP/1.1" 200 60701
+INFO 2025-11-19 12:09:04,252 basehttp 18414 6188920832 "GET /static/images/dash/KC07.jpg HTTP/1.1" 304 0
+INFO 2025-11-19 12:09:05,461 basehttp 18414 6188920832 "GET /administrador/ HTTP/1.1" 200 54233
+INFO 2025-11-19 12:09:07,978 basehttp 18414 6188920832 "GET /usuarios/ HTTP/1.1" 200 60701
+INFO 2025-11-19 12:09:09,374 basehttp 18414 6188920832 "GET /usuarios/crear/ HTTP/1.1" 200 67116
+INFO 2025-11-19 12:09:10,600 basehttp 18414 6188920832 "GET /usuarios/ HTTP/1.1" 200 60701
+INFO 2025-11-19 12:09:11,624 basehttp 18414 6188920832 "GET /administrador/ HTTP/1.1" 200 54233
+INFO 2025-11-19 12:09:13,611 basehttp 18414 6188920832 "GET /sistemas/equipos/ HTTP/1.1" 200 36608
+INFO 2025-11-19 12:09:16,369 basehttp 18414 6188920832 "GET /sistemas/equipos/agregar/ HTTP/1.1" 200 35819
+INFO 2025-11-19 12:09:18,555 basehttp 18414 6188920832 "GET /sistemas/equipos/ HTTP/1.1" 200 36608
+INFO 2025-11-19 12:11:31,626 autoreload 18414 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py changed, reloading.
+INFO 2025-11-19 12:11:31,953 autoreload 18463 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 12:11:46,269 autoreload 18463 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py changed, reloading.
+INFO 2025-11-19 12:11:46,583 autoreload 18488 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 12:12:19,432 basehttp 18488 6193049600 "GET /sistemas/equipos/ HTTP/1.1" 200 36795
+INFO 2025-11-19 12:12:21,456 basehttp 18488 6193049600 "GET /administrador/ HTTP/1.1" 200 54233
+INFO 2025-11-19 12:12:23,623 basehttp 18488 6193049600 "GET /sistemas/equipos/ HTTP/1.1" 200 36795
+INFO 2025-11-19 12:12:29,339 basehttp 18488 6193049600 "GET /sistemas/equipos/asignacion/2/editar/ HTTP/1.1" 200 29413
+INFO 2025-11-19 12:12:32,907 basehttp 18488 6193049600 "GET /sistemas/equipos/ HTTP/1.1" 200 36795
+INFO 2025-11-19 12:12:33,962 basehttp 18488 6193049600 "GET /sistemas/equipos/2/quitar-asignacion/ HTTP/1.1" 200 28161
+INFO 2025-11-19 12:12:42,054 basehttp 18488 6193049600 "GET /sistemas/equipos/ HTTP/1.1" 200 36795
+INFO 2025-11-19 12:12:45,497 basehttp 18488 6193049600 "GET /sistemas/equipos/2/quitar-asignacion/ HTTP/1.1" 200 28161
+INFO 2025-11-19 12:16:08,623 basehttp 18488 6193049600 "GET /sistemas/equipos/2/quitar-asignacion/ HTTP/1.1" 200 28311
+INFO 2025-11-19 12:17:09,437 basehttp 18488 6193049600 "GET /sistemas/equipos/ HTTP/1.1" 200 36795
+INFO 2025-11-19 12:17:14,275 basehttp 18488 6193049600 "GET /sistemas/equipos/agregar/ HTTP/1.1" 200 35819
+INFO 2025-11-19 12:21:35,702 basehttp 18488 6193049600 "POST /sistemas/equipos/agregar/ HTTP/1.1" 302 0
+INFO 2025-11-19 12:21:35,721 basehttp 18488 6193049600 "GET /administrador/ HTTP/1.1" 200 55991
+INFO 2025-11-19 12:21:42,669 basehttp 18488 6193049600 "GET /sistemas/equipos/ HTTP/1.1" 302 0
+INFO 2025-11-19 12:21:42,681 basehttp 18488 6193049600 "GET /?next=/sistemas/equipos/ HTTP/1.1" 200 47576
+INFO 2025-11-19 12:21:49,260 basehttp 18488 6193049600 "POST /?next=/sistemas/equipos/ HTTP/1.1" 302 0
+INFO 2025-11-19 12:21:49,276 basehttp 18488 6193049600 "GET /sistemas/equipos/ HTTP/1.1" 200 39484
+INFO 2025-11-19 12:26:24,774 basehttp 18488 6193049600 "GET /sistemas/equipos/ HTTP/1.1" 200 39157
+INFO 2025-11-19 12:26:26,625 basehttp 18488 6193049600 "GET /sistemas/equipos/agregar/ HTTP/1.1" 200 50557
+INFO 2025-11-19 12:27:48,637 basehttp 18488 6193049600 "POST /sistemas/equipos/agregar/ HTTP/1.1" 302 0
+INFO 2025-11-19 12:27:48,662 basehttp 18488 6193049600 "GET /administrador/ HTTP/1.1" 200 57324
+INFO 2025-11-19 12:27:55,447 basehttp 18488 6193049600 "GET /usuarios/crear/ HTTP/1.1" 200 67135
+INFO 2025-11-19 12:27:59,525 basehttp 18488 6193049600 "GET /administrador/ HTTP/1.1" 200 56917
+INFO 2025-11-19 12:28:01,288 basehttp 18488 6193049600 "GET /sistemas/equipos/ HTTP/1.1" 200 41514
+INFO 2025-11-19 12:28:03,054 basehttp 18488 6193049600 "GET /sistemas/equipos/agregar/ HTTP/1.1" 200 50557
+INFO 2025-11-19 12:34:16,179 autoreload 18488 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py changed, reloading.
+INFO 2025-11-19 12:34:16,499 autoreload 18792 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 12:36:23,223 autoreload 18792 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py changed, reloading.
+INFO 2025-11-19 12:36:23,654 autoreload 18814 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 12:36:57,607 basehttp 18814 6128447488 "GET /sistemas/equipos/agregar/ HTTP/1.1" 200 56347
+INFO 2025-11-19 12:37:01,099 basehttp 18814 6128447488 "GET /sistemas/equipos/ HTTP/1.1" 200 41514
+INFO 2025-11-19 12:37:03,637 basehttp 18814 6128447488 "GET /sistemas/equipos/agregar/ HTTP/1.1" 200 56347
+INFO 2025-11-19 12:37:37,777 basehttp 18814 6128447488 "POST /sistemas/equipos/agregar/ HTTP/1.1" 302 0
+INFO 2025-11-19 12:37:37,792 basehttp 18814 6128447488 "GET /sistemas/equipos/agregar/ HTTP/1.1" 200 56867
+INFO 2025-11-19 12:39:50,111 basehttp 18814 6128447488 "GET /sistemas/equipos/agregar/ HTTP/1.1" 200 56438
+INFO 2025-11-19 12:39:53,023 basehttp 18814 6128447488 "GET /sistemas/equipos/ HTTP/1.1" 200 43855
+INFO 2025-11-19 12:39:56,069 basehttp 18814 6128447488 "GET /sistemas/equipos/agregar/ HTTP/1.1" 200 56438
+INFO 2025-11-19 12:40:22,321 basehttp 18814 6128447488 "POST /sistemas/equipos/agregar/ HTTP/1.1" 302 0
+INFO 2025-11-19 12:40:22,340 basehttp 18814 6128447488 "GET /sistemas/equipos/agregar/ HTTP/1.1" 200 56966
+INFO 2025-11-19 12:40:36,324 basehttp 18814 6128447488 "GET /sistemas/equipos/ HTTP/1.1" 200 46214
+INFO 2025-11-19 12:42:20,935 autoreload 18814 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/templatetags/perfil_tags.py changed, reloading.
+INFO 2025-11-19 12:42:21,227 autoreload 18949 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 12:43:53,438 autoreload 18949 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/templatetags/perfil_tags.py changed, reloading.
+INFO 2025-11-19 12:43:53,606 autoreload 19017 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 12:57:53,775 basehttp 19017 6168834048 "GET /sistemas/equipos/ HTTP/1.1" 200 46222
+INFO 2025-11-19 12:58:03,754 basehttp 19017 6168834048 "GET /administrador/ HTTP/1.1" 200 58238
+INFO 2025-11-19 12:58:07,270 basehttp 19017 6168834048 "GET /admin/ HTTP/1.1" 200 15682
+INFO 2025-11-19 12:58:14,158 basehttp 19017 6168834048 "GET /departamentos/ HTTP/1.1" 200 30633
+WARNING 2025-11-19 12:58:18,288 log 19017 6185660416 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 12:58:18,288 log 19017 6219313152 Not Found: /favicon.ico
+WARNING 2025-11-19 12:58:18,288 log 19017 6202486784 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 12:58:18,288 basehttp 19017 6185660416 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+WARNING 2025-11-19 12:58:18,289 basehttp 19017 6219313152 "GET /favicon.ico HTTP/1.1" 404 12929
+WARNING 2025-11-19 12:58:18,289 basehttp 19017 6202486784 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+WARNING 2025-11-19 12:58:18,453 log 19017 6185660416 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 12:58:18,459 log 19017 6202486784 Not Found: /favicon.ico
+WARNING 2025-11-19 12:58:18,463 log 19017 6219313152 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 12:58:18,463 basehttp 19017 6185660416 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+WARNING 2025-11-19 12:58:18,463 basehttp 19017 6202486784 "GET /favicon.ico HTTP/1.1" 404 12929
+WARNING 2025-11-19 12:58:18,464 basehttp 19017 6219313152 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+INFO 2025-11-19 13:01:43,980 basehttp 19017 6168834048 "GET /departamentos/ HTTP/1.1" 200 41412
+INFO 2025-11-19 13:01:44,086 basehttp 19017 6168834048 "GET /static/images/dash/KC07.jpg HTTP/1.1" 304 0
+INFO 2025-11-19 13:07:30,226 basehttp 19017 6168834048 "GET /departamentos/ HTTP/1.1" 200 43869
+INFO 2025-11-19 13:09:56,817 basehttp 19017 6168834048 "GET /departamentos/ HTTP/1.1" 200 45345
+INFO 2025-11-19 13:09:56,919 basehttp 19017 6168834048 "GET /static/images/dash/KC07.jpg HTTP/1.1" 304 0
+INFO 2025-11-19 13:20:38,593 basehttp 19017 6168834048 "GET /departamentos/ HTTP/1.1" 200 51411
+INFO 2025-11-19 13:20:39,098 basehttp 19017 6168834048 "GET /static/images/dash/KC07.jpg HTTP/1.1" 304 0
+INFO 2025-11-19 13:26:39,175 basehttp 19017 6168834048 "GET /departamentos/ HTTP/1.1" 302 0
+INFO 2025-11-19 13:26:39,184 basehttp 19017 6168834048 "GET /?next=/departamentos/ HTTP/1.1" 200 47576
+INFO 2025-11-19 13:26:39,534 basehttp 19017 6168834048 "GET /static/images/logos/logo-keila.png HTTP/1.1" 200 282180
+INFO 2025-11-19 13:26:39,583 basehttp 19017 6168834048 "GET /static/images/login/login1.png HTTP/1.1" 200 10267390
+INFO 2025-11-19 13:26:43,935 basehttp 19017 6168834048 "POST /?next=/departamentos/ HTTP/1.1" 302 0
+INFO 2025-11-19 13:26:43,948 basehttp 19017 6168834048 "GET /departamentos/ HTTP/1.1" 200 57156
+INFO 2025-11-19 13:27:39,214 basehttp 19017 6168834048 "GET /departamentos/crear/ HTTP/1.1" 200 25278
+WARNING 2025-11-19 13:27:44,057 log 19017 6185660416 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 13:27:44,062 log 19017 6202486784 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 13:27:44,063 basehttp 19017 6185660416 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+WARNING 2025-11-19 13:27:44,066 log 19017 6219313152 Not Found: /favicon.ico
+WARNING 2025-11-19 13:27:44,067 basehttp 19017 6202486784 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+WARNING 2025-11-19 13:27:44,067 basehttp 19017 6219313152 "GET /favicon.ico HTTP/1.1" 404 12929
+WARNING 2025-11-19 13:27:44,253 log 19017 6185660416 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 13:27:44,258 log 19017 6219313152 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 13:27:44,260 basehttp 19017 6185660416 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+WARNING 2025-11-19 13:27:44,265 log 19017 6202486784 Not Found: /favicon.ico
+WARNING 2025-11-19 13:27:44,266 basehttp 19017 6219313152 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+WARNING 2025-11-19 13:27:44,266 basehttp 19017 6202486784 "GET /favicon.ico HTTP/1.1" 404 12929
+INFO 2025-11-19 13:30:07,482 basehttp 19017 6168834048 "GET /departamentos/crear/ HTTP/1.1" 200 33673
+INFO 2025-11-19 13:30:07,561 basehttp 19017 6168834048 "GET /static/images/dash/KC07.jpg HTTP/1.1" 304 0
+INFO 2025-11-19 13:40:19,796 basehttp 19017 6168834048 "GET /departamentos/crear/ HTTP/1.1" 200 33673
+INFO 2025-11-19 13:40:20,185 basehttp 19017 6168834048 "GET /static/images/dash/KC07.jpg HTTP/1.1" 304 0
+WARNING 2025-11-19 13:41:02,379 log 19017 6168834048 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 13:41:02,384 log 19017 6202486784 Not Found: /favicon.ico
+WARNING 2025-11-19 13:41:02,389 log 19017 6185660416 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 13:41:02,389 basehttp 19017 6202486784 "GET /favicon.ico HTTP/1.1" 404 12929
+WARNING 2025-11-19 13:41:02,389 basehttp 19017 6168834048 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+WARNING 2025-11-19 13:41:02,390 basehttp 19017 6185660416 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+INFO 2025-11-19 13:43:17,931 basehttp 19017 6168834048 "GET /departamentos/crear/ HTTP/1.1" 200 36746
+INFO 2025-11-19 14:28:15,377 basehttp 19017 6168834048 "GET /departamentos/crear/ HTTP/1.1" 302 0
+INFO 2025-11-19 14:28:15,390 basehttp 19017 6168834048 "GET /?next=/departamentos/crear/ HTTP/1.1" 200 47576
+INFO 2025-11-19 14:28:15,776 basehttp 19017 6168834048 "GET /static/images/dash/dash1.jpg HTTP/1.1" 200 4261392
+INFO 2025-11-19 14:28:15,785 basehttp 19017 6185660416 "GET /static/images/login/login1.png HTTP/1.1" 200 10267390
+INFO 2025-11-19 14:28:20,282 basehttp 19017 6168834048 "POST /?next=/departamentos/crear/ HTTP/1.1" 302 0
+INFO 2025-11-19 14:28:20,294 basehttp 19017 6185660416 "GET /departamentos/crear/ HTTP/1.1" 200 37073
+INFO 2025-11-19 14:28:20,368 basehttp 19017 6168834048 "GET /static/images/dash/KC07.jpg HTTP/1.1" 304 0
+INFO 2025-11-19 14:28:48,218 basehttp 19017 6185660416 "POST /departamentos/crear/ HTTP/1.1" 302 0
+INFO 2025-11-19 14:28:48,237 basehttp 19017 6168834048 "GET /departamentos/ HTTP/1.1" 200 60270
+WARNING 2025-11-19 14:29:25,597 log 19017 6219313152 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 14:29:25,601 log 19017 6202486784 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 14:29:25,605 log 19017 6236139520 Not Found: /favicon.ico
+WARNING 2025-11-19 14:29:25,605 basehttp 19017 6219313152 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+WARNING 2025-11-19 14:29:25,605 basehttp 19017 6202486784 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+WARNING 2025-11-19 14:29:25,605 basehttp 19017 6236139520 "GET /favicon.ico HTTP/1.1" 404 12929
+WARNING 2025-11-19 14:29:25,745 log 19017 6219313152 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 14:29:25,750 log 19017 6236139520 Not Found: /favicon.ico
+WARNING 2025-11-19 14:29:25,753 log 19017 6202486784 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 14:29:25,753 basehttp 19017 6219313152 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 12992
+WARNING 2025-11-19 14:29:25,754 basehttp 19017 6202486784 "GET /apple-touch-icon.png HTTP/1.1" 404 12956
+WARNING 2025-11-19 14:29:25,754 basehttp 19017 6236139520 "GET /favicon.ico HTTP/1.1" 404 12929
+INFO 2025-11-19 14:30:24,198 autoreload 19017 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py changed, reloading.
+INFO 2025-11-19 14:30:24,645 autoreload 20586 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 14:30:25,833 autoreload 20586 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/urls.py changed, reloading.
+INFO 2025-11-19 14:30:26,157 autoreload 20593 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 14:32:12,317 autoreload 20593 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py changed, reloading.
+INFO 2025-11-19 14:32:12,796 autoreload 20823 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 14:32:53,897 basehttp 20823 6163312640 "GET /departamentos/ HTTP/1.1" 200 60521
+INFO 2025-11-19 14:32:56,845 basehttp 20823 6163312640 "GET /departamentos/ HTTP/1.1" 200 60521
+INFO 2025-11-19 14:32:59,326 basehttp 20823 6163312640 "GET /departamentos/3/ HTTP/1.1" 200 26982
+INFO 2025-11-19 14:33:05,246 basehttp 20823 6163312640 "GET /departamentos/ HTTP/1.1" 200 60521
+INFO 2025-11-19 14:33:07,037 basehttp 20823 6163312640 "GET /departamentos/4/ HTTP/1.1" 200 26552
+INFO 2025-11-19 14:33:08,555 basehttp 20823 6163312640 "GET /departamentos/4/editar/ HTTP/1.1" 200 36737
+INFO 2025-11-19 14:33:32,402 basehttp 20823 6163312640 "POST /departamentos/4/editar/ HTTP/1.1" 302 0
+INFO 2025-11-19 14:33:32,417 basehttp 20823 6163312640 "GET /departamentos/ HTTP/1.1" 200 60847
+INFO 2025-11-19 14:33:41,910 basehttp 20823 6163312640 "GET /departamentos/4/editar/ HTTP/1.1" 200 36767
+INFO 2025-11-19 14:33:44,672 basehttp 20823 6163312640 "GET /departamentos/ HTTP/1.1" 200 60470
+INFO 2025-11-19 14:33:47,954 basehttp 20823 6163312640 "GET /departamentos/crear/ HTTP/1.1" 200 36746
+INFO 2025-11-19 14:34:14,993 basehttp 20823 6163312640 "POST /departamentos/crear/ HTTP/1.1" 302 0
+INFO 2025-11-19 14:34:15,013 basehttp 20823 6163312640 "GET /departamentos/ HTTP/1.1" 200 63997
+INFO 2025-11-19 14:34:26,249 basehttp 20823 6163312640 "GET /departamentos/5/toggle/ HTTP/1.1" 302 0
+INFO 2025-11-19 14:34:26,270 basehttp 20823 6163312640 "GET /departamentos/ HTTP/1.1" 200 60849
+WARNING 2025-11-19 14:34:56,654 log 20823 6163312640 Forbidden (Permission denied): /rh/
+Traceback (most recent call last):
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py", line 176, in rh_dashboard
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+WARNING 2025-11-19 14:34:56,658 basehttp 20823 6163312640 "GET /rh/ HTTP/1.1" 403 19238
+WARNING 2025-11-19 14:34:59,969 log 20823 6163312640 Forbidden (Permission denied): /rh/
+Traceback (most recent call last):
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py", line 176, in rh_dashboard
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+WARNING 2025-11-19 14:34:59,970 basehttp 20823 6163312640 "GET /rh/ HTTP/1.1" 403 19238
+INFO 2025-11-19 14:35:01,385 basehttp 20823 6163312640 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-11-19 14:35:01,419 basehttp 20823 6163312640 "GET /administrador/ HTTP/1.1" 200 58238
+INFO 2025-11-19 14:35:06,561 basehttp 20823 6163312640 "GET /usuarios/ HTTP/1.1" 200 60851
+INFO 2025-11-19 14:35:10,068 basehttp 20823 6163312640 "GET /administrador/ HTTP/1.1" 200 58238
+INFO 2025-11-19 14:35:11,430 basehttp 20823 6163312640 "GET /departamentos/ HTTP/1.1" 200 60470
+WARNING 2025-11-19 14:35:13,234 log 20823 6163312640 Forbidden (Permission denied): /rh/
+Traceback (most recent call last):
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/venv/lib/python3.13/site-packages/django/contrib/auth/decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "/Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py", line 176, in rh_dashboard
+    raise PermissionDenied
+django.core.exceptions.PermissionDenied
+WARNING 2025-11-19 14:35:13,235 basehttp 20823 6163312640 "GET /rh/ HTTP/1.1" 403 19238
+WARNING 2025-11-19 14:35:41,301 log 20823 6180139008 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 14:35:41,306 log 20823 6213791744 Not Found: /favicon.ico
+WARNING 2025-11-19 14:35:41,307 basehttp 20823 6180139008 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 13912
+WARNING 2025-11-19 14:35:41,307 basehttp 20823 6213791744 "GET /favicon.ico HTTP/1.1" 404 13849
+WARNING 2025-11-19 14:35:41,312 log 20823 6196965376 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 14:35:41,312 basehttp 20823 6196965376 "GET /apple-touch-icon.png HTTP/1.1" 404 13876
+INFO 2025-11-19 14:36:21,776 autoreload 20823 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py changed, reloading.
+INFO 2025-11-19 14:36:22,039 autoreload 21301 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 14:36:40,446 autoreload 21301 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py changed, reloading.
+INFO 2025-11-19 14:36:40,653 autoreload 21341 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 14:36:50,680 basehttp 21341 6204895232 "GET /departamentos/ HTTP/1.1" 200 61897
+INFO 2025-11-19 14:36:52,589 basehttp 21341 6204895232 "GET /administrador/ HTTP/1.1" 200 58238
+INFO 2025-11-19 14:40:11,420 basehttp 21341 6204895232 "GET /administrador/ HTTP/1.1" 200 58248
+INFO 2025-11-19 14:40:33,050 basehttp 21341 6204895232 "GET /sistemas/tickets/ HTTP/1.1" 200 23771
+WARNING 2025-11-19 14:40:36,733 log 21341 6221721600 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 14:40:36,733 log 21341 6238547968 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 14:40:36,734 log 21341 6255374336 Not Found: /favicon.ico
+WARNING 2025-11-19 14:40:36,734 basehttp 21341 6221721600 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 13912
+WARNING 2025-11-19 14:40:36,735 basehttp 21341 6238547968 "GET /apple-touch-icon.png HTTP/1.1" 404 13876
+WARNING 2025-11-19 14:40:36,735 basehttp 21341 6255374336 "GET /favicon.ico HTTP/1.1" 404 13849
+WARNING 2025-11-19 14:40:36,908 log 21341 6221721600 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 14:40:36,912 log 21341 6238547968 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 14:40:36,913 basehttp 21341 6221721600 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 13912
+WARNING 2025-11-19 14:40:36,921 log 21341 6255374336 Not Found: /favicon.ico
+WARNING 2025-11-19 14:40:36,921 basehttp 21341 6255374336 "GET /favicon.ico HTTP/1.1" 404 13849
+WARNING 2025-11-19 14:40:36,921 basehttp 21341 6238547968 "GET /apple-touch-icon.png HTTP/1.1" 404 13876
+INFO 2025-11-19 14:44:20,539 basehttp 21341 6204895232 "GET /sistemas/tickets/ HTTP/1.1" 200 41562
+INFO 2025-11-19 14:44:20,612 basehttp 21341 6204895232 "GET /static/images/dash/KC07.jpg HTTP/1.1" 304 0
+INFO 2025-11-19 14:44:27,044 basehttp 21341 6204895232 "GET /sistemas/ HTTP/1.1" 200 27055
+WARNING 2025-11-19 14:44:38,847 log 21341 6221721600 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 14:44:38,851 log 21341 6238547968 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 14:44:38,855 log 21341 6255374336 Not Found: /favicon.ico
+WARNING 2025-11-19 14:44:38,855 basehttp 21341 6238547968 "GET /apple-touch-icon.png HTTP/1.1" 404 13876
+WARNING 2025-11-19 14:44:38,855 basehttp 21341 6221721600 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 13912
+WARNING 2025-11-19 14:44:38,856 basehttp 21341 6255374336 "GET /favicon.ico HTTP/1.1" 404 13849
+WARNING 2025-11-19 14:44:39,060 log 21341 6221721600 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 14:44:39,066 log 21341 6255374336 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 14:44:39,069 basehttp 21341 6221721600 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 13912
+WARNING 2025-11-19 14:44:39,075 log 21341 6238547968 Not Found: /favicon.ico
+WARNING 2025-11-19 14:44:39,076 basehttp 21341 6238547968 "GET /favicon.ico HTTP/1.1" 404 13849
+WARNING 2025-11-19 14:44:39,076 basehttp 21341 6255374336 "GET /apple-touch-icon.png HTTP/1.1" 404 13876
+INFO 2025-11-19 14:45:08,079 basehttp 21341 6221721600 - Broken pipe from ('127.0.0.1', 60988)
+INFO 2025-11-19 14:45:08,079 basehttp 21341 6255374336 - Broken pipe from ('127.0.0.1', 60990)
+INFO 2025-11-19 14:45:08,079 basehttp 21341 6238547968 - Broken pipe from ('127.0.0.1', 60989)
+INFO 2025-11-19 14:47:13,414 basehttp 21341 6204895232 "GET /sistemas/ HTTP/1.1" 200 44300
+INFO 2025-11-19 15:20:10,035 basehttp 21341 6204895232 "GET /sistemas/ HTTP/1.1" 200 44300
+INFO 2025-11-19 15:20:10,578 basehttp 21341 6204895232 "GET /static/images/dash/KC07.jpg HTTP/1.1" 304 0
+INFO 2025-11-19 15:20:13,900 basehttp 21341 6204895232 "GET /sistemas/tickets/ HTTP/1.1" 200 41562
+INFO 2025-11-19 15:20:16,498 basehttp 21341 6204895232 "GET /sistemas/tickets/2/asignar/ HTTP/1.1" 302 0
+INFO 2025-11-19 15:20:16,520 basehttp 21341 6204895232 "GET /sistemas/tickets/ HTTP/1.1" 200 41962
+INFO 2025-11-19 15:20:20,366 basehttp 21341 6204895232 "GET /sistemas/tickets/2/resolver/ HTTP/1.1" 200 19726
+WARNING 2025-11-19 15:20:26,157 log 21341 6221721600 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 15:20:26,159 log 21341 6238547968 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 15:20:26,162 log 21341 6255374336 Not Found: /favicon.ico
+WARNING 2025-11-19 15:20:26,162 basehttp 21341 6238547968 "GET /apple-touch-icon.png HTTP/1.1" 404 13876
+WARNING 2025-11-19 15:20:26,162 basehttp 21341 6221721600 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 13912
+WARNING 2025-11-19 15:20:26,162 basehttp 21341 6255374336 "GET /favicon.ico HTTP/1.1" 404 13849
+WARNING 2025-11-19 15:20:26,347 log 21341 6238547968 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 15:20:26,351 log 21341 6255374336 Not Found: /favicon.ico
+WARNING 2025-11-19 15:20:26,355 log 21341 6221721600 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 15:20:26,356 basehttp 21341 6238547968 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 13912
+WARNING 2025-11-19 15:20:26,356 basehttp 21341 6255374336 "GET /favicon.ico HTTP/1.1" 404 13849
+WARNING 2025-11-19 15:20:26,356 basehttp 21341 6221721600 "GET /apple-touch-icon.png HTTP/1.1" 404 13876
+INFO 2025-11-19 15:28:44,650 basehttp 21341 6204895232 "GET /sistemas/tickets/2/resolver/ HTTP/1.1" 302 0
+INFO 2025-11-19 15:28:44,663 basehttp 21341 6204895232 "GET /?next=/sistemas/tickets/2/resolver/ HTTP/1.1" 200 47576
+INFO 2025-11-19 15:28:49,610 basehttp 21341 6204895232 "POST /?next=/sistemas/tickets/2/resolver/ HTTP/1.1" 302 0
+INFO 2025-11-19 15:28:49,623 basehttp 21341 6204895232 "GET /sistemas/tickets/2/resolver/ HTTP/1.1" 200 35263
+INFO 2025-11-19 15:29:01,693 basehttp 21341 6204895232 "POST /sistemas/tickets/2/resolver/ HTTP/1.1" 302 0
+INFO 2025-11-19 15:29:01,723 basehttp 21341 6204895232 "GET /administrador/ HTTP/1.1" 200 58621
+INFO 2025-11-19 15:29:05,572 basehttp 21341 6204895232 "GET /sistemas/tickets/ HTTP/1.1" 200 41249
+INFO 2025-11-19 15:29:11,697 basehttp 21341 6204895232 "GET /tickets/2/ HTTP/1.1" 200 28840
+WARNING 2025-11-19 15:29:18,992 log 21341 6221721600 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 15:29:18,997 log 21341 6238547968 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 15:29:19,000 log 21341 6255374336 Not Found: /favicon.ico
+WARNING 2025-11-19 15:29:19,000 basehttp 21341 6238547968 "GET /apple-touch-icon.png HTTP/1.1" 404 13876
+WARNING 2025-11-19 15:29:19,000 basehttp 21341 6221721600 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 13912
+WARNING 2025-11-19 15:29:19,000 basehttp 21341 6255374336 "GET /favicon.ico HTTP/1.1" 404 13849
+INFO 2025-11-19 15:30:16,889 autoreload 21341 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py changed, reloading.
+INFO 2025-11-19 15:30:17,205 autoreload 22208 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 15:30:38,521 autoreload 22208 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py changed, reloading.
+INFO 2025-11-19 15:30:38,777 autoreload 22242 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 15:31:09,791 basehttp 22242 6157053952 "GET /tickets/2/ HTTP/1.1" 200 28840
+INFO 2025-11-19 15:31:11,633 basehttp 22242 6157053952 "GET /tickets/ HTTP/1.1" 200 24166
+INFO 2025-11-19 15:31:15,690 basehttp 22242 6157053952 "GET /tickets/crear/ HTTP/1.1" 200 28792
+INFO 2025-11-19 15:31:18,400 basehttp 22242 6157053952 "GET /perfil/ HTTP/1.1" 200 46134
+INFO 2025-11-19 15:31:18,404 basehttp 22242 6173880320 "GET /static/images/dash/fondoAzul2.jpg HTTP/1.1" 304 0
+INFO 2025-11-19 15:31:21,041 basehttp 22242 6157053952 "GET /usuarios/ HTTP/1.1" 200 60851
+INFO 2025-11-19 15:31:29,089 basehttp 22242 6157053952 "GET /usuarios/1/editar/ HTTP/1.1" 200 57548
+INFO 2025-11-19 15:31:32,457 basehttp 22242 6157053952 "GET /admin/empleados/perfil/1/change/ HTTP/1.1" 200 33721
+INFO 2025-11-19 15:31:32,512 basehttp 22242 6173880320 "GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+INFO 2025-11-19 15:31:32,512 basehttp 22242 6190706688 "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-11-19 15:31:32,514 basehttp 22242 6157053952 "GET /admin/jsi18n/ HTTP/1.1" 200 9760
+INFO 2025-11-19 15:31:32,516 basehttp 22242 6207533056 "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-11-19 15:31:37,311 basehttp 22242 6190706688 "GET /usuarios/crear/ HTTP/1.1" 200 67153
+INFO 2025-11-19 15:31:40,723 basehttp 22242 6207533056 "GET /usuarios/ HTTP/1.1" 200 60851
+INFO 2025-11-19 15:31:41,870 basehttp 22242 6190706688 "GET /perfil/ HTTP/1.1" 200 46134
+INFO 2025-11-19 15:31:44,137 basehttp 22242 6207533056 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-11-19 15:31:44,165 basehttp 22242 6173880320 "GET /administrador/ HTTP/1.1" 200 58214
+INFO 2025-11-19 15:31:47,951 basehttp 22242 6157053952 "GET /logout/ HTTP/1.1" 302 0
+INFO 2025-11-19 15:31:47,963 basehttp 22242 6207533056 "GET / HTTP/1.1" 200 48568
+WARNING 2025-11-19 15:31:48,325 log 22242 6224359424 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 15:31:48,325 log 22242 6241185792 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 15:31:48,326 log 22242 6258012160 Not Found: /favicon.ico
+WARNING 2025-11-19 15:31:48,326 basehttp 22242 6224359424 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 13912
+WARNING 2025-11-19 15:31:48,326 basehttp 22242 6258012160 "GET /favicon.ico HTTP/1.1" 404 13849
+WARNING 2025-11-19 15:31:48,326 basehttp 22242 6241185792 "GET /apple-touch-icon.png HTTP/1.1" 404 13876
+INFO 2025-11-19 15:31:55,015 basehttp 22242 6173880320 "POST / HTTP/1.1" 200 48574
+INFO 2025-11-19 15:32:17,348 basehttp 22242 6241185792 - Broken pipe from ('127.0.0.1', 61503)
+INFO 2025-11-19 15:34:24,042 basehttp 22242 6157053952 "POST / HTTP/1.1" 200 48574
+INFO 2025-11-19 15:34:31,342 basehttp 22242 6157053952 "POST / HTTP/1.1" 200 48574
+INFO 2025-11-19 15:34:34,675 basehttp 22242 6157053952 "POST / HTTP/1.1" 200 48574
+INFO 2025-11-19 15:34:41,638 basehttp 22242 6157053952 "POST / HTTP/1.1" 302 0
+INFO 2025-11-19 15:34:41,652 basehttp 22242 6157053952 "GET /sistemas/ HTTP/1.1" 200 44446
+INFO 2025-11-19 15:34:46,857 basehttp 22242 6157053952 "GET /sistemas/equipos/agregar/ HTTP/1.1" 200 59366
+INFO 2025-11-19 15:34:50,794 basehttp 22242 6157053952 "GET /sistemas/equipos/ HTTP/1.1" 200 46217
+INFO 2025-11-19 15:34:58,585 basehttp 22242 6157053952 "GET /sistemas/tickets/ HTTP/1.1" 200 41249
+INFO 2025-11-19 15:35:02,493 basehttp 22242 6157053952 "GET /empleado/ HTTP/1.1" 200 43428
+WARNING 2025-11-19 15:35:03,067 log 22242 6190706688 Not Found: /apple-touch-icon.png
+WARNING 2025-11-19 15:35:03,072 log 22242 6173880320 Not Found: /apple-touch-icon-precomposed.png
+WARNING 2025-11-19 15:35:03,076 log 22242 6207533056 Not Found: /favicon.ico
+WARNING 2025-11-19 15:35:03,077 basehttp 22242 6173880320 "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 13912
+WARNING 2025-11-19 15:35:03,077 basehttp 22242 6207533056 "GET /favicon.ico HTTP/1.1" 404 13849
+WARNING 2025-11-19 15:35:03,077 basehttp 22242 6190706688 "GET /apple-touch-icon.png HTTP/1.1" 404 13876
+INFO 2025-11-19 15:35:10,904 basehttp 22242 6157053952 "GET /sistemas/equipos/asignar/ HTTP/1.1" 200 21130
+INFO 2025-11-19 15:35:16,444 basehttp 22242 6157053952 "GET /vacaciones/solicitar/ HTTP/1.1" 200 80977
+INFO 2025-11-19 15:35:23,202 basehttp 22242 6157053952 "GET /perfil/ HTTP/1.1" 200 46281
+INFO 2025-11-19 15:38:17,366 basehttp 22242 6157053952 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-11-19 15:38:17,389 basehttp 22242 6157053952 "GET /sistemas/ HTTP/1.1" 200 44113
+INFO 2025-11-19 15:39:01,920 autoreload 22242 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py changed, reloading.
+INFO 2025-11-19 15:39:02,325 autoreload 22385 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 15:39:24,604 autoreload 22385 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/models.py changed, reloading.
+INFO 2025-11-19 15:39:24,785 autoreload 22405 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 15:40:00,170 autoreload 22405 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/models.py changed, reloading.
+INFO 2025-11-19 15:40:00,333 autoreload 22460 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 15:41:26,120 autoreload 22661 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 15:42:13,781 autoreload 22661 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/models.py changed, reloading.
+INFO 2025-11-19 15:42:13,980 autoreload 22680 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 15:42:31,213 autoreload 22680 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/models.py changed, reloading.
+INFO 2025-11-19 15:42:31,472 autoreload 22691 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 15:42:40,598 autoreload 22691 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/models.py changed, reloading.
+INFO 2025-11-19 15:42:40,762 autoreload 22708 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 15:43:02,810 autoreload 22887 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 15:43:54,500 autoreload 23066 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 15:45:31,922 autoreload 23066 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py changed, reloading.
+INFO 2025-11-19 15:45:32,172 autoreload 23097 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 15:45:44,439 autoreload 23097 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/models.py changed, reloading.
+INFO 2025-11-19 15:45:44,629 autoreload 23178 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 15:45:48,511 basehttp 23178 6124154880 "GET / HTTP/1.1" 302 0
+INFO 2025-11-19 15:45:48,521 basehttp 23178 6124154880 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-11-19 15:45:48,550 basehttp 23178 6124154880 "GET /sistemas/ HTTP/1.1" 200 44113
+INFO 2025-11-19 15:45:48,649 basehttp 23178 6124154880 "GET /static/images/dash/KC07.jpg HTTP/1.1" 304 0
+INFO 2025-11-19 15:45:50,687 basehttp 23178 6124154880 "GET /sistemas/ HTTP/1.1" 200 44113
+INFO 2025-11-19 15:45:54,093 basehttp 23178 6124154880 "GET /vacaciones/solicitar/ HTTP/1.1" 200 80914
+INFO 2025-11-19 15:46:14,174 autoreload 23178 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/models.py changed, reloading.
+INFO 2025-11-19 15:46:14,451 autoreload 23190 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 15:46:27,763 autoreload 23190 8622366848 /Users/alexm/UTCH/Estadias 6to/sistemaGK/Keila/empleados/views.py changed, reloading.
+INFO 2025-11-19 15:46:27,961 autoreload 23195 8622366848 Watching for file changes with StatReloader
+INFO 2025-11-19 15:46:56,757 basehttp 23195 6160265216 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-11-19 15:46:56,780 basehttp 23195 6160265216 "GET /sistemas/ HTTP/1.1" 200 44113
+INFO 2025-11-19 15:47:02,652 basehttp 23195 6160265216 "GET /sistemas/tickets/ HTTP/1.1" 200 41229
+INFO 2025-11-19 15:47:06,385 basehttp 23195 6160265216 "GET /sistemas/tickets/ HTTP/1.1" 200 41229
+INFO 2025-11-19 15:47:10,900 basehttp 23195 6160265216 "GET /sistemas/tickets/1/asignar/ HTTP/1.1" 302 0
+INFO 2025-11-19 15:47:10,922 basehttp 23195 6160265216 "GET /sistemas/tickets/ HTTP/1.1" 200 41629
+INFO 2025-11-19 15:47:18,223 basehttp 23195 6160265216 "GET /sistemas/tickets/1/resolver/ HTTP/1.1" 200 34959
+INFO 2025-11-19 15:47:29,669 basehttp 23195 6160265216 "POST /sistemas/tickets/1/resolver/ HTTP/1.1" 200 36043
+INFO 2025-11-19 15:47:35,544 basehttp 23195 6160265216 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-11-19 15:47:35,565 basehttp 23195 6160265216 "GET /sistemas/ HTTP/1.1" 200 43926
+INFO 2025-11-19 15:47:39,420 basehttp 23195 6160265216 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-11-19 15:47:39,437 basehttp 23195 6160265216 "GET /sistemas/ HTTP/1.1" 200 43926
+INFO 2025-11-19 15:47:40,845 basehttp 23195 6160265216 "GET /dashboard/ HTTP/1.1" 302 0
+INFO 2025-11-19 15:47:40,863 basehttp 23195 6160265216 "GET /sistemas/ HTTP/1.1" 200 43926

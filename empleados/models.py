@@ -431,15 +431,17 @@ class SolicitudVacaciones(models.Model):
     TIPOS = [
         ('NORMAL', 'Vacación Normal'),
         ('EXTRAORDINARIA', 'Vacación Extraordinaria'),
-        ('EMERGENCIA', 'Vacación de Emergencia'),
     ]
+    
+    # Mantener EMERGENCIA temporalmente para compatibilidad con datos existentes
+    TIPOS_CON_LEGACY = TIPOS + [('EMERGENCIA', 'Vacación Extraordinaria')]
     
     empleado = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='solicitudes_vacaciones', 
                                 verbose_name="Empleado")
     fecha_inicio = models.DateField(verbose_name="Fecha de Inicio")
     fecha_fin = models.DateField(verbose_name="Fecha de Fin")
     dias_solicitados = models.PositiveIntegerField(verbose_name="Días Solicitados")
-    tipo = models.CharField(max_length=20, choices=TIPOS, default='NORMAL', verbose_name="Tipo")
+    tipo = models.CharField(max_length=20, choices=TIPOS_CON_LEGACY, default='NORMAL', verbose_name="Tipo")
     motivo = models.TextField(verbose_name="Motivo")
     estado = models.CharField(max_length=20, choices=ESTADOS, default='PENDIENTE_JEFE', verbose_name="Estado")
     
@@ -464,6 +466,17 @@ class SolicitudVacaciones(models.Model):
     
     def __str__(self):
         return f"{self.empleado.nombre_completo} - {self.fecha_inicio} a {self.fecha_fin}"
+    
+    def get_tipo_display(self):
+        """Override para manejar valores antiguos de EMERGENCIA"""
+        tipo_value = self.tipo
+        if tipo_value == 'EMERGENCIA':
+            return 'Vacación Extraordinaria'  # Convertir emergencia a extraordinaria para display
+        # Usar el método original de Django
+        for choice_value, choice_label in self.TIPOS:
+            if choice_value == tipo_value:
+                return choice_label
+        return tipo_value  # Si no encuentra, devolver el valor original
     
     @staticmethod
     def calcular_dias_laborables(fecha_inicio, fecha_fin):

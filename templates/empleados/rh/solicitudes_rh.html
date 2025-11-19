@@ -23,8 +23,8 @@
             <div class="card-body">
                 <!-- Filtros -->
                 <div class="mb-4">
-                    <form method="get" class="row g-3">
-                        <div class="col-md-4">
+                <form method="get" class="row g-3">
+                    <div class="col-md-4">
                             <label for="estado" class="form-label" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">Estado</label>
                             <select name="estado" id="estado" class="form-select" style="background: rgba(255, 255, 255, 0.15) !important; backdrop-filter: blur(20px) saturate(180%) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
                                 <option value="" style="background: rgba(0, 0, 0, 0.8); color: #ffffff;">Pendientes RH (por defecto)</option>
@@ -32,36 +32,36 @@
                                 <option value="A" {% if estado_actual == 'A' %}selected{% endif %} style="background: rgba(0, 0, 0, 0.8); color: #ffffff;">Aprobadas</option>
                                 <option value="R" {% if estado_actual == 'R' %}selected{% endif %} style="background: rgba(0, 0, 0, 0.8); color: #ffffff;">Rechazadas</option>
                                 <option value="TODAS" {% if estado_actual == 'TODAS' %}selected{% endif %} style="background: rgba(0, 0, 0, 0.8); color: #ffffff;">Todas las solicitudes</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
+                        </select>
+                    </div>
+                    <div class="col-md-6">
                             <label for="busqueda" class="form-label" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">Buscar empleado</label>
-                            <input type="text" name="busqueda" id="busqueda" class="form-control" 
+                        <input type="text" name="busqueda" id="busqueda" class="form-control" 
                                    placeholder="Nombre, apellido..." value="{{ busqueda_actual }}"
                                    style="background: rgba(255, 255, 255, 0.15) !important; backdrop-filter: blur(20px) saturate(180%) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-outline-primary">
+                                <i class="fas fa-search me-1"></i>Filtrar
+                            </button>
                         </div>
-                        <div class="col-md-2">
-                            <label class="form-label">&nbsp;</label>
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-outline-primary">
-                                    <i class="fas fa-search me-1"></i>Filtrar
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
+        </div>
 
-                <!-- Lista de Solicitudes -->
+        <!-- Lista de Solicitudes -->
                 <div>
                     <h5 class="mb-3" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                        <i class="fas fa-list me-2"></i>
-                        Solicitudes de Vacaciones
-                    </h5>
-                    {% if solicitudes %}
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
+                    <i class="fas fa-list me-2"></i>
+                    Solicitudes de Vacaciones
+                </h5>
+                {% if solicitudes %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
                                         <th style="background: rgba(0, 56, 168, 0.4) !important; backdrop-filter: blur(20px) saturate(180%) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif; border: none;">Empleado</th>
                                         <th style="background: rgba(0, 56, 168, 0.4) !important; backdrop-filter: blur(20px) saturate(180%) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif; border: none;">Período de Vacaciones</th>
                                         <th style="background: rgba(0, 56, 168, 0.4) !important; backdrop-filter: blur(20px) saturate(180%) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif; border: none;">Días</th>
@@ -69,112 +69,108 @@
                                         <th style="background: rgba(0, 56, 168, 0.4) !important; backdrop-filter: blur(20px) saturate(180%) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif; border: none;">Estado</th>
                                         <th style="background: rgba(0, 56, 168, 0.4) !important; backdrop-filter: blur(20px) saturate(180%) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif; border: none;">Fecha Solicitud</th>
                                         <th style="background: rgba(0, 56, 168, 0.4) !important; backdrop-filter: blur(20px) saturate(180%) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif; border: none;">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for solicitud in solicitudes %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for solicitud in solicitudes %}
                                     <tr style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
                                         <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                            <div class="d-flex align-items-center">
-                                                <div class="avatar me-3">
-                                                    {{ solicitud.empleado.nombre|first }}{{ solicitud.empleado.apellido_paterno|first }}
-                                                </div>
-                                                <div>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar me-3">
+                                                {{ solicitud.empleado.nombre|first }}{{ solicitud.empleado.apellido_paterno|first }}
+                                            </div>
+                                            <div>
                                                     <strong style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">{{ solicitud.empleado.nombre_completo }}</strong><br>
                                                     <small style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif;">{{ solicitud.empleado.puesto }}</small><br>
                                                     <small style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif;">{{ solicitud.empleado.departamento.nombre }}</small>
-                                                </div>
                                             </div>
-                                        </td>
+                                        </div>
+                                    </td>
                                         <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                            <div>
+                                        <div>
                                                 <strong style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">{{ solicitud.fecha_inicio|date:"d/m/Y" }}</strong><br>
                                                 <small style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif;">hasta {{ solicitud.fecha_fin|date:"d/m/Y" }}</small>
-                                            </div>
-                                        </td>
+                                        </div>
+                                    </td>
                                         <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
                                             <span class="badge" style="background: rgba(37, 99, 235, 0.6) !important; backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; padding: 0.4em 0.8em;">{{ solicitud.dias_solicitados }}</span>
-                                        </td>
+                                    </td>
                                         <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                            {% if solicitud.tipo == 'NORMAL' %}
+                                        {% if solicitud.tipo == 'NORMAL' %}
                                                 <span class="badge" style="background: rgba(34, 197, 94, 0.6) !important; backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-check-circle me-1"></i>Normal
-                                                </span>
-                                            {% elif solicitud.tipo == 'EXTRAORDINARIA' %}
+                                                <i class="fas fa-check-circle me-1"></i>Normal
+                                            </span>
+                                        {% elif solicitud.tipo == 'EXTRAORDINARIA' %}
                                                 <span class="badge" style="background: rgba(245, 158, 11, 0.6) !important; backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-exclamation-triangle me-1"></i>Extraordinaria
-                                                </span>
-                                            {% elif solicitud.tipo == 'EMERGENCIA' %}
-                                                <span class="badge" style="background: rgba(239, 68, 68, 0.6) !important; backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-exclamation-circle me-1"></i>Emergencia
-                                                </span>
-                                            {% else %}
+                                                <i class="fas fa-exclamation-triangle me-1"></i>Extraordinaria
+                                            </span>
+                                        {% else %}
                                                 <span class="badge" style="background: rgba(107, 114, 128, 0.6) !important; backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">{{ solicitud.get_tipo_display }}</span>
-                                            {% endif %}
-                                        </td>
+                                        {% endif %}
+                                    </td>
                                         <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                            {% if solicitud.estado == 'PENDIENTE_JEFE' %}
+                                        {% if solicitud.estado == 'PENDIENTE_JEFE' %}
                                                 <span class="badge" style="background: rgba(245, 158, 11, 0.6) !important; backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-clock me-1"></i>Pendiente Jefe
-                                                </span>
-                                            {% elif solicitud.estado == 'PENDIENTE_RH' %}
+                                                <i class="fas fa-clock me-1"></i>Pendiente Jefe
+                                            </span>
+                                        {% elif solicitud.estado == 'PENDIENTE_RH' %}
                                                 <span class="badge" style="background: rgba(59, 130, 246, 0.6) !important; backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-clock me-1"></i>Pendiente RH
-                                                </span>
-                                            {% elif solicitud.estado == 'APROBADO_RH' %}
+                                                <i class="fas fa-clock me-1"></i>Pendiente RH
+                                            </span>
+                                        {% elif solicitud.estado == 'APROBADO_RH' %}
                                                 <span class="badge" style="background: rgba(34, 197, 94, 0.6) !important; backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-check me-1"></i>Aprobada
-                                                </span>
-                                            {% elif solicitud.estado == 'RECHAZADO_JEFE' or solicitud.estado == 'RECHAZADO_RH' %}
+                                                <i class="fas fa-check me-1"></i>Aprobada
+                                            </span>
+                                        {% elif solicitud.estado == 'RECHAZADO_JEFE' or solicitud.estado == 'RECHAZADO_RH' %}
                                                 <span class="badge" style="background: rgba(239, 68, 68, 0.6) !important; backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-times me-1"></i>Rechazada
-                                                </span>
-                                            {% else %}
+                                                <i class="fas fa-times me-1"></i>Rechazada
+                                            </span>
+                                        {% else %}
                                                 <span class="badge" style="background: rgba(107, 114, 128, 0.6) !important; backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">{{ solicitud.get_estado_display }}</span>
-                                            {% endif %}
-                                        </td>
+                                        {% endif %}
+                                    </td>
                                         <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                            {{ solicitud.fecha_solicitud|date:"d/m/Y" }}<br>
+                                        {{ solicitud.fecha_solicitud|date:"d/m/Y" }}<br>
                                             <small style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif;">{{ solicitud.fecha_solicitud|time:"H:i" }}</small>
-                                        </td>
+                                    </td>
                                         <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                            {% if solicitud.estado == 'PENDIENTE_RH' %}
-                                                <a href="{% url 'empleados:aprobar_rh' solicitud.id %}" class="btn btn-sm btn-outline-primary">
-                                                    <i class="fas fa-check me-1"></i>Revisar
+                                        {% if solicitud.estado == 'PENDIENTE_RH' %}
+                                            <a href="{% url 'empleados:aprobar_rh' solicitud.id %}" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-check me-1"></i>Revisar
+                                            </a>
+                                        {% elif solicitud.estado == 'APROBADO_RH' %}
+                                            <div class="d-flex flex-column gap-1">
+                                                <a href="{% url 'empleados:generar_pdf_vacaciones' solicitud.id %}" class="btn btn-sm btn-outline-success" target="_blank">
+                                                    <i class="fas fa-file-pdf me-1"></i>Descargar PDF
                                                 </a>
-                                            {% elif solicitud.estado == 'APROBADO_RH' %}
-                                                <div class="d-flex flex-column gap-1">
-                                                    <a href="{% url 'empleados:generar_pdf_vacaciones' solicitud.id %}" class="btn btn-sm btn-outline-success" target="_blank">
-                                                        <i class="fas fa-file-pdf me-1"></i>Descargar PDF
-                                                    </a>
-                                                </div>
-                                            {% else %}
+                                            </div>
+                                        {% else %}
                                                 <span style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif;">Procesada</span>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% else %}
-                        <div class="text-center py-5">
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
                             <i class="fas fa-clipboard-list fa-3x mb-3" style="color: rgba(255, 255, 255, 0.5) !important;"></i>
                             <h5 style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">No hay solicitudes</h5>
                             <p style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif;">
-                                {% if estado_actual or busqueda_actual %}
-                                    No se encontraron solicitudes con los filtros aplicados.
-                                {% else %}
-                                    No tienes solicitudes de vacaciones pendientes para revisar.
-                                {% endif %}
-                            </p>
                             {% if estado_actual or busqueda_actual %}
-                                <a href="{% url 'empleados:solicitudes_rh' %}" class="btn btn-outline-primary">
-                                    <i class="fas fa-refresh me-1"></i>Limpiar Filtros
-                                </a>
+                                No se encontraron solicitudes con los filtros aplicados.
+                            {% else %}
+                                No tienes solicitudes de vacaciones pendientes para revisar.
                             {% endif %}
-                        </div>
-                    {% endif %}
+                        </p>
+                        {% if estado_actual or busqueda_actual %}
+                            <a href="{% url 'empleados:solicitudes_rh' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-refresh me-1"></i>Limpiar Filtros
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
                 </div>
             </div>
         </div>

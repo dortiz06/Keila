@@ -31,7 +31,7 @@ body {
                 <div class="mt-2 mt-md-0">
                     <a href="{% url url_volver %}" class="btn btn-outline-primary">
                         <i class="fas fa-arrow-left me-1"></i>{{ texto_volver }}
-                    </a>
+                </a>
                 </div>
             </div>
 
@@ -62,111 +62,111 @@ body {
                                         <div class="row mb-3">
                                             <div class="col-md-4 d-flex align-items-center">
                                                 <label for="{{ form.username.id_for_label }}" class="form-label mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-at me-1"></i>{{ form.username.label }}
-                                                </label>
+                                                <i class="fas fa-at me-1"></i>{{ form.username.label }}
+                                            </label>
                                             </div>
                                             <div class="col-md-8">
-                                                {{ form.username }}
-                                                {% if form.username.errors %}
+                                            {{ form.username }}
+                                            {% if form.username.errors %}
                                                     <div style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif; margin-top: 0.25rem;">
-                                                        {% for error in form.username.errors %}
-                                                            <small>{{ error }}</small>
-                                                        {% endfor %}
-                                                    </div>
-                                                {% endif %}
-                                            </div>
+                                                    {% for error in form.username.errors %}
+                                                        <small>{{ error }}</small>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
                                         </div>
+                                    </div>
 
                                         <div class="row mb-3">
                                             <div class="col-md-4 d-flex align-items-center">
                                                 <label for="{{ form.email.id_for_label }}" class="form-label mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-envelope me-1"></i>{{ form.email.label }}
-                                                </label>
+                                                <i class="fas fa-envelope me-1"></i>{{ form.email.label }}
+                                            </label>
                                             </div>
                                             <div class="col-md-8">
-                                                {{ form.email }}
-                                                {% if form.email.errors %}
+                                            {{ form.email }}
+                                            {% if form.email.errors %}
                                                     <div style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif; margin-top: 0.25rem;">
-                                                        {% for error in form.email.errors %}
-                                                            <small>{{ error }}</small>
-                                                        {% endfor %}
-                                                    </div>
-                                                {% endif %}
-                                            </div>
-                                        </div>
+                                                    {% for error in form.email.errors %}
+                                                        <small>{{ error }}</small>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                    </div>
+                                </div>
 
                                         <div class="row mb-3">
                                             <div class="col-md-4 d-flex align-items-center">
                                                 <label for="{{ form.first_name.id_for_label }}" class="form-label mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-user me-1"></i>{{ form.first_name.label }}
-                                                </label>
+                                                <i class="fas fa-user me-1"></i>{{ form.first_name.label }}
+                                            </label>
                                             </div>
                                             <div class="col-md-8">
-                                                {{ form.first_name }}
-                                                {% if form.first_name.errors %}
+                                            {{ form.first_name }}
+                                            {% if form.first_name.errors %}
                                                     <div style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif; margin-top: 0.25rem;">
-                                                        {% for error in form.first_name.errors %}
-                                                            <small>{{ error }}</small>
-                                                        {% endfor %}
-                                                    </div>
-                                                {% endif %}
-                                            </div>
+                                                    {% for error in form.first_name.errors %}
+                                                        <small>{{ error }}</small>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
                                         </div>
+                                    </div>
 
                                         <div class="row mb-3">
                                             <div class="col-md-4 d-flex align-items-center">
                                                 <label for="{{ form.last_name.id_for_label }}" class="form-label mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-user me-1"></i>{{ form.last_name.label }}
-                                                </label>
+                                                <i class="fas fa-user me-1"></i>{{ form.last_name.label }}
+                                            </label>
                                             </div>
                                             <div class="col-md-8">
-                                                {{ form.last_name }}
-                                                {% if form.last_name.errors %}
+                                            {{ form.last_name }}
+                                            {% if form.last_name.errors %}
                                                     <div style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif; margin-top: 0.25rem;">
-                                                        {% for error in form.last_name.errors %}
-                                                            <small>{{ error }}</small>
-                                                        {% endfor %}
-                                                    </div>
-                                                {% endif %}
-                                            </div>
-                                        </div>
+                                                    {% for error in form.last_name.errors %}
+                                                        <small>{{ error }}</small>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                    </div>
+                                </div>
 
                                         <div class="row mb-3">
                                             <div class="col-md-4 d-flex align-items-center">
                                                 <label for="{{ form.password1.id_for_label }}" class="form-label mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-lock me-1"></i>{{ form.password1.label }}
-                                                </label>
+                                                <i class="fas fa-lock me-1"></i>{{ form.password1.label }}
+                                            </label>
                                             </div>
                                             <div class="col-md-8">
-                                                {{ form.password1 }}
-                                                {% if form.password1.errors %}
+                                            {{ form.password1 }}
+                                            {% if form.password1.errors %}
                                                     <div style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif; margin-top: 0.25rem;">
-                                                        {% for error in form.password1.errors %}
-                                                            <small>{{ error }}</small>
-                                                        {% endfor %}
-                                                    </div>
-                                                {% endif %}
-                                            </div>
+                                                    {% for error in form.password1.errors %}
+                                                        <small>{{ error }}</small>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
                                         </div>
+                                    </div>
 
                                         <div class="row mb-3">
                                             <div class="col-md-4 d-flex align-items-center">
                                                 <label for="{{ form.password2.id_for_label }}" class="form-label mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-lock me-1"></i>{{ form.password2.label }}
-                                                </label>
+                                                <i class="fas fa-lock me-1"></i>{{ form.password2.label }}
+                                            </label>
                                             </div>
                                             <div class="col-md-8">
-                                                {{ form.password2 }}
-                                                {% if form.password2.errors %}
+                                            {{ form.password2 }}
+                                            {% if form.password2.errors %}
                                                     <div style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif; margin-top: 0.25rem;">
-                                                        {% for error in form.password2.errors %}
-                                                            <small>{{ error }}</small>
-                                                        {% endfor %}
-                                                    </div>
-                                                {% endif %}
-                                            </div>
+                                                    {% for error in form.password2.errors %}
+                                                        <small>{{ error }}</small>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
                                         </div>
                                     </div>
+                                </div>
 
                                     <!-- Columna Derecha: Información Laboral -->
                                     <div class="col-md-6">
@@ -175,80 +175,80 @@ body {
                                         <div class="row mb-3">
                                             <div class="col-md-4 d-flex align-items-center">
                                                 <label for="{{ form.tipo_perfil.id_for_label }}" class="form-label mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-tag me-1"></i>{{ form.tipo_perfil.label }}
-                                                </label>
+                                                <i class="fas fa-tag me-1"></i>{{ form.tipo_perfil.label }}
+                                            </label>
                                             </div>
                                             <div class="col-md-8">
-                                                {{ form.tipo_perfil }}
-                                                {% if form.tipo_perfil.errors %}
+                                            {{ form.tipo_perfil }}
+                                            {% if form.tipo_perfil.errors %}
                                                     <div style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif; margin-top: 0.25rem;">
-                                                        {% for error in form.tipo_perfil.errors %}
-                                                            <small>{{ error }}</small>
-                                                        {% endfor %}
-                                                    </div>
-                                                {% endif %}
-                                            </div>
+                                                    {% for error in form.tipo_perfil.errors %}
+                                                        <small>{{ error }}</small>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
                                         </div>
+                                    </div>
 
                                         <div class="row mb-3">
                                             <div class="col-md-4 d-flex align-items-center">
                                                 <label for="{{ form.departamento.id_for_label }}" class="form-label mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-building me-1"></i>{{ form.departamento.label }}
-                                                </label>
+                                                <i class="fas fa-building me-1"></i>{{ form.departamento.label }}
+                                            </label>
                                             </div>
                                             <div class="col-md-8">
-                                                {{ form.departamento }}
-                                                {% if form.departamento.errors %}
+                                            {{ form.departamento }}
+                                            {% if form.departamento.errors %}
                                                     <div style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif; margin-top: 0.25rem;">
-                                                        {% for error in form.departamento.errors %}
-                                                            <small>{{ error }}</small>
-                                                        {% endfor %}
-                                                    </div>
-                                                {% endif %}
-                                            </div>
-                                        </div>
+                                                    {% for error in form.departamento.errors %}
+                                                        <small>{{ error }}</small>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                    </div>
+                                </div>
 
                                         <div class="row mb-3">
                                             <div class="col-md-4 d-flex align-items-center">
                                                 <label for="{{ form.numero_empleado.id_for_label }}" class="form-label mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-hashtag me-1"></i>{{ form.numero_empleado.label }}
-                                                </label>
+                                                <i class="fas fa-hashtag me-1"></i>{{ form.numero_empleado.label }}
+                                            </label>
                                             </div>
                                             <div class="col-md-8">
-                                                {{ form.numero_empleado }}
-                                                {% if form.numero_empleado.errors %}
+                                            {{ form.numero_empleado }}
+                                            {% if form.numero_empleado.errors %}
                                                     <div style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif; margin-top: 0.25rem;">
-                                                        {% for error in form.numero_empleado.errors %}
-                                                            <small>{{ error }}</small>
-                                                        {% endfor %}
-                                                    </div>
-                                                {% endif %}
-                                            </div>
+                                                    {% for error in form.numero_empleado.errors %}
+                                                        <small>{{ error }}</small>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
                                         </div>
+                                    </div>
 
                                         <div class="row mb-3">
                                             <div class="col-md-4 d-flex align-items-center">
                                                 <label for="{{ form.puesto.id_for_label }}" class="form-label mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-briefcase me-1"></i>{{ form.puesto.label }}
-                                                </label>
+                                                <i class="fas fa-briefcase me-1"></i>{{ form.puesto.label }}
+                                            </label>
                                             </div>
                                             <div class="col-md-8">
-                                                {{ form.puesto }}
-                                                {% if form.puesto.errors %}
+                                            {{ form.puesto }}
+                                            {% if form.puesto.errors %}
                                                     <div style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif; margin-top: 0.25rem;">
-                                                        {% for error in form.puesto.errors %}
-                                                            <small>{{ error }}</small>
-                                                        {% endfor %}
-                                                    </div>
-                                                {% endif %}
-                                            </div>
-                                        </div>
+                                                    {% for error in form.puesto.errors %}
+                                                        <small>{{ error }}</small>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                    </div>
+                                </div>
 
                                         <div class="row mb-3">
                                             <div class="col-md-4 d-flex align-items-center">
                                                 <label for="{{ form.fecha_contratacion.id_for_label }}" class="form-label mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-calendar me-1"></i>{{ form.fecha_contratacion.label }}
-                                                </label>
+                                                <i class="fas fa-calendar me-1"></i>{{ form.fecha_contratacion.label }}
+                                            </label>
                                             </div>
                                             <div class="col-md-5">
                                                 <input type="text" 
@@ -257,34 +257,34 @@ body {
                                                        value="{% if form.fecha_contratacion.value %}{{ form.fecha_contratacion.value|date:'d/m/Y' }}{% endif %}" 
                                                        class="form-control datepicker-fecha-contratacion"
                                                        placeholder="DD/MM/YYYY">
-                                                {% if form.fecha_contratacion.errors %}
+                                            {% if form.fecha_contratacion.errors %}
                                                     <div style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif; margin-top: 0.25rem;">
-                                                        {% for error in form.fecha_contratacion.errors %}
-                                                            <small>{{ error }}</small>
-                                                        {% endfor %}
-                                                    </div>
-                                                {% endif %}
-                                            </div>
+                                                    {% for error in form.fecha_contratacion.errors %}
+                                                        <small>{{ error }}</small>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
                                         </div>
+                                    </div>
 
                                         <div class="row mb-3">
                                             <div class="col-md-4 d-flex align-items-center">
                                                 <label for="{{ form.jefe_area.id_for_label }}" class="form-label mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-user-tie me-1"></i>{{ form.jefe_area.label }}
-                                                </label>
+                                                <i class="fas fa-user-tie me-1"></i>{{ form.jefe_area.label }}
+                                            </label>
                                             </div>
                                             <div class="col-md-5">
-                                                {{ form.jefe_area }}
-                                                {% if form.jefe_area.errors %}
+                                            {{ form.jefe_area }}
+                                            {% if form.jefe_area.errors %}
                                                     <div style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif; margin-top: 0.25rem;">
-                                                        {% for error in form.jefe_area.errors %}
-                                                            <small>{{ error }}</small>
-                                                        {% endfor %}
-                                                    </div>
-                                                {% endif %}
-                                            </div>
+                                                    {% for error in form.jefe_area.errors %}
+                                                        <small>{{ error }}</small>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
                                         </div>
                                     </div>
+                                </div>
                                 </div>
 
                                 <!-- Información de Contacto -->
@@ -295,24 +295,24 @@ body {
                                         <div class="row mb-3">
                                             <div class="col-md-2 d-flex align-items-center">
                                                 <label for="{{ form.telefono.id_for_label }}" class="form-label mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-phone me-1"></i>{{ form.telefono.label }}
-                                                </label>
+                                                <i class="fas fa-phone me-1"></i>{{ form.telefono.label }}
+                                            </label>
                                             </div>
                                             <div class="col-md-4">
-                                                {{ form.telefono }}
-                                                {% if form.telefono.errors %}
+                                            {{ form.telefono }}
+                                            {% if form.telefono.errors %}
                                                     <div style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif; margin-top: 0.25rem;">
-                                                        {% for error in form.telefono.errors %}
-                                                            <small>{{ error }}</small>
-                                                        {% endfor %}
-                                                    </div>
-                                                {% endif %}
-                                            </div>
+                                                    {% for error in form.telefono.errors %}
+                                                        <small>{{ error }}</small>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
                                             
                                             <div class="col-md-2 d-flex align-items-center">
                                                 <label for="{{ form.fecha_nacimiento.id_for_label }}" class="form-label mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                                    <i class="fas fa-birthday-cake me-1"></i>{{ form.fecha_nacimiento.label }}
-                                                </label>
+                                                <i class="fas fa-birthday-cake me-1"></i>{{ form.fecha_nacimiento.label }}
+                                            </label>
                                             </div>
                                             <div class="col-md-3">
                                                 <input type="text" 
@@ -322,13 +322,13 @@ body {
                                                        class="form-control datepicker-fecha-nacimiento"
                                                        placeholder="DD/MM/YYYY"
                                                        style="max-width: 150px;">
-                                                {% if form.fecha_nacimiento.errors %}
+                                            {% if form.fecha_nacimiento.errors %}
                                                     <div style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif; margin-top: 0.25rem;">
-                                                        {% for error in form.fecha_nacimiento.errors %}
-                                                            <small>{{ error }}</small>
-                                                        {% endfor %}
-                                                    </div>
-                                                {% endif %}
+                                                    {% for error in form.fecha_nacimiento.errors %}
+                                                        <small>{{ error }}</small>
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
                                             </div>
                                         </div>
                                     </div>

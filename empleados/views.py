@@ -749,9 +749,22 @@ def gestion_departamentos(request):
     
     departamentos = Departamento.objects.filter(activo=True)
     
+    # Determinar el dashboard correcto según el perfil
+    if perfil.es_admin():
+        url_dashboard = 'empleados:admin_dashboard'
+        texto_dashboard = 'Volver al Panel'
+    elif perfil.es_rh():
+        url_dashboard = 'empleados:rh_dashboard'
+        texto_dashboard = 'Volver al Panel'
+    else:
+        url_dashboard = 'empleados:rh_dashboard'
+        texto_dashboard = 'Volver al Panel'
+    
     context = {
         'departamentos': departamentos,
         'perfil': perfil,
+        'url_dashboard': url_dashboard,
+        'texto_dashboard': texto_dashboard,
     }
     return render(request, 'empleados/rh/gestion_departamentos.html', context)
 
@@ -777,6 +790,70 @@ def crear_departamento(request):
         'perfil': perfil,
     }
     return render(request, 'empleados/rh/crear_departamento.html', context)
+
+
+@login_required
+def editar_departamento(request, departamento_id):
+    """Editar departamento existente"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+        raise PermissionDenied
+    
+    departamento = get_object_or_404(Departamento, id=departamento_id)
+    
+    if request.method == 'POST':
+        form = ConfigurarDepartamentoForm(request.POST, instance=departamento)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Departamento {departamento.nombre} actualizado exitosamente.')
+            return redirect('empleados:gestion_departamentos')
+    else:
+        form = ConfigurarDepartamentoForm(instance=departamento)
+    
+    context = {
+        'form': form,
+        'departamento': departamento,
+        'perfil': perfil,
+    }
+    return render(request, 'empleados/rh/crear_departamento.html', context)
+
+
+@login_required
+def ver_departamento(request, departamento_id):
+    """Ver detalles de un departamento"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+        raise PermissionDenied
+    
+    departamento = get_object_or_404(Departamento, id=departamento_id)
+    empleados = departamento.perfil_set.filter(activo=True)
+    
+    context = {
+        'departamento': departamento,
+        'empleados': empleados,
+        'perfil': perfil,
+    }
+    return render(request, 'empleados/rh/ver_departamento.html', context)
+
+
+@login_required
+def toggle_departamento(request, departamento_id):
+    """Activar o desactivar un departamento"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+        raise PermissionDenied
+    
+    departamento = get_object_or_404(Departamento, id=departamento_id)
+    
+    if departamento.activo:
+        departamento.activo = False
+        messages.success(request, f'Departamento {departamento.nombre} desactivado exitosamente.')
+    else:
+        departamento.activo = True
+        messages.success(request, f'Departamento {departamento.nombre} activado exitosamente.')
+    
+    departamento.save()
+    return redirect('empleados:gestion_departamentos')
 
 
 # === API ENDPOINTS ===
@@ -997,17 +1074,10 @@ def resolver_ticket(request, ticket_id):
                 ticket.fecha_resolucion = timezone.now()
             ticket.save()
             messages.success(request, f'Ticket {ticket.codigo} actualizado correctamente.')
-            # Redirección basada en el tipo de perfil
-            if perfil.es_sistemas():
-                return redirect('empleados:sistemas_dashboard')
-            elif perfil.es_admin():
-                return redirect('empleados:admin_dashboard')
-            elif perfil.es_rh():
-                return redirect('empleados:rh_dashboard')
-            elif perfil.es_jefe_area():
-                return redirect('empleados:jefe_dashboard')
-            else:
-                return redirect('empleados:gestionar_tickets')
+            # Recargar el ticket desde la base de datos para obtener los datos actualizados
+            ticket.refresh_from_db()
+            # Recrear el formulario con el ticket actualizado
+            form = TicketResolucionForm(instance=ticket)
     else:
         form = TicketResolucionForm(instance=ticket)
     
