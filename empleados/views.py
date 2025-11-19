@@ -315,6 +315,17 @@ def gestion_usuarios(request):
     
     departamentos = Departamento.objects.filter(activo=True)
     
+    # Determinar la URL del dashboard según el tipo de perfil
+    if perfil.es_admin():
+        url_dashboard = 'empleados:admin_dashboard'
+        texto_dashboard = 'Volver al Panel'
+    elif perfil.es_rh():
+        url_dashboard = 'empleados:rh_dashboard'
+        texto_dashboard = 'Volver al Panel'
+    else:
+        url_dashboard = 'empleados:gestion_usuarios'
+        texto_dashboard = 'Volver'
+    
     context = {
         'usuarios': usuarios,
         'departamentos': departamentos,
@@ -322,6 +333,8 @@ def gestion_usuarios(request):
         'departamento_actual': departamento_id,
         'busqueda_actual': busqueda,
         'perfil': perfil,
+        'url_dashboard': url_dashboard,
+        'texto_dashboard': texto_dashboard,
     }
     return render(request, 'empleados/rh/gestion_usuarios.html', context)
 
@@ -338,13 +351,43 @@ def crear_usuario(request):
         if form.is_valid():
             user = form.save()
             messages.success(request, f'Usuario {user.username} creado exitosamente.')
-            return redirect('empleados:gestion_usuarios')
+            # Redirigir según el origen
+            origen = request.POST.get('origen', 'gestion')
+            if origen == 'dashboard':
+                if perfil.es_rh():
+                    return redirect('empleados:rh_dashboard')
+                elif perfil.es_admin():
+                    return redirect('empleados:admin_dashboard')
+                else:
+                    return redirect('empleados:gestion_usuarios')
+            else:
+                return redirect('empleados:gestion_usuarios')
     else:
         form = UsuarioConPerfilForm()
+    
+    # Detectar de dónde viene el usuario
+    referer = request.META.get('HTTP_REFERER', '')
+    viene_del_dashboard = False
+    url_volver = 'empleados:gestion_usuarios'
+    texto_volver = 'Volver a Gestión'
+    
+    if referer:
+        # Verificar si viene del dashboard
+        if '/rh/' in referer or '/administrador/' in referer or '/dashboard/' in referer:
+            viene_del_dashboard = True
+            if perfil.es_rh():
+                url_volver = 'empleados:rh_dashboard'
+                texto_volver = 'Volver a Panel Principal'
+            elif perfil.es_admin():
+                url_volver = 'empleados:admin_dashboard'
+                texto_volver = 'Volver a Panel Principal'
     
     context = {
         'form': form,
         'perfil': perfil,
+        'viene_del_dashboard': viene_del_dashboard,
+        'url_volver': url_volver,
+        'texto_volver': texto_volver,
     }
     return render(request, 'empleados/rh/crear_usuario.html', context)
 
@@ -994,10 +1037,42 @@ def inventario_equipos(request):
     if estado_filtro:
         equipos = equipos.filter(estado=estado_filtro)
     
+    # Detectar de dónde viene el usuario
+    referer = request.META.get('HTTP_REFERER', '')
+    url_volver = 'empleados:sistemas_dashboard'
+    texto_volver = 'Volver al Panel'
+    
+    if referer:
+        # Verificar si viene del dashboard de sistemas
+        if '/sistemas/' in referer and '/equipos/' not in referer:
+            url_volver = 'empleados:sistemas_dashboard'
+            texto_volver = 'Volver al Panel'
+        # Verificar si viene del dashboard de admin
+        elif '/administrador/' in referer:
+            url_volver = 'empleados:admin_dashboard'
+            texto_volver = 'Volver al Panel'
+        # Verificar si viene del dashboard de RH
+        elif '/rh/' in referer:
+            url_volver = 'empleados:rh_dashboard'
+            texto_volver = 'Volver al Panel'
+        # Verificar si viene de gestión de usuarios
+        elif '/usuarios/' in referer:
+            url_volver = 'empleados:gestion_usuarios'
+            texto_volver = 'Volver a Gestión'
+        # Si es admin o RH pero no viene de ningún lugar específico, usar su dashboard
+        elif perfil.es_admin():
+            url_volver = 'empleados:admin_dashboard'
+            texto_volver = 'Volver al Panel'
+        elif perfil.es_rh():
+            url_volver = 'empleados:rh_dashboard'
+            texto_volver = 'Volver al Panel'
+    
     context = {
         'perfil': perfil,
         'equipos': equipos,
         'estado_filtro': estado_filtro,
+        'url_volver': url_volver,
+        'texto_volver': texto_volver,
     }
     return render(request, 'empleados/sistemas/inventario.html', context)
 
@@ -1037,19 +1112,10 @@ def agregar_equipo(request):
                 equipo.save()
                 messages.success(request, f'Equipo {equipo.codigo_inventario} agregado y asignado a {empleado_asignar.nombre_completo} exitosamente.')
             else:
-                messages.success(request, f'Equipo {equipo.codigo_inventario} agregado exitosamente.')
+                messages.success(request, f'Equipo {equipo.codigo_inventario} agregado exitosamente al inventario.')
             
-            # Redirección basada en el tipo de perfil
-            if perfil.es_sistemas():
-                return redirect('empleados:sistemas_dashboard')
-            elif perfil.es_admin():
-                return redirect('empleados:admin_dashboard')
-            elif perfil.es_rh():
-                return redirect('empleados:rh_dashboard')
-            elif perfil.es_jefe_area():
-                return redirect('empleados:jefe_dashboard')
-            else:
-                return redirect('empleados:inventario_equipos')
+            # Redirigir a la misma página para mostrar el modal
+            return redirect('empleados:agregar_equipo')
     else:
         form = EquipoForm()
     

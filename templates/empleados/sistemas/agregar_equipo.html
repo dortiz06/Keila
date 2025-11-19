@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load perfil_tags %}
 
 {% block title %}Agregar Nuevo Equipo{% endblock %}
+
+{% block extra_css %}
+<!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endblock %}
 
 {% block content %}
 <div class="container-fluid dashboard">
@@ -26,8 +32,8 @@
                     </div>
                     
                     <div class="col-md-6 mb-3">
-                        <label for="{{ form.categoria.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
-                            {{ form.categoria.label }} <span class="text-danger">*</span>
+                        <label for="{{ form.categoria.id_for_label }}" class="form-label categoria-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            <i class="fas fa-tag me-2"></i>{{ form.categoria.label }} <span class="text-danger">*</span>
                         </label>
                         {{ form.categoria }}
                         {% if form.categoria.errors %}
@@ -89,7 +95,13 @@
                         <label for="{{ form.fecha_adquisicion.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
                             {{ form.fecha_adquisicion.label }} <span class="text-danger">*</span>
                         </label>
-                        {{ form.fecha_adquisicion }}
+                        <input type="text" 
+                               name="{{ form.fecha_adquisicion.name }}" 
+                               id="{{ form.fecha_adquisicion.id_for_label }}" 
+                               value="{% if form.fecha_adquisicion.value %}{{ form.fecha_adquisicion.value|date:'d/m/Y' }}{% endif %}" 
+                               class="form-control datepicker-fecha-adquisicion"
+                               placeholder="DD/MM/YYYY"
+                               style="background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;">
                         {% if form.fecha_adquisicion.errors %}
                             <div class="text-danger mt-1">{{ form.fecha_adquisicion.errors }}</div>
                         {% endif %}
@@ -158,13 +170,31 @@
                             <button type="submit" class="btn btn-outline-success">
                                 <i class="fas fa-save me-1"></i>Agregar Equipo
                             </button>
-                            <a href="{% url 'empleados:inventario_equipos' %}" class="btn btn-outline-secondary">
+                            <button type="button" id="btnCancelar" class="btn btn-outline-secondary">
                                 <i class="fas fa-times me-1"></i>Cancelar
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmación de equipo agregado -->
+<div id="modalConfirmacionEquipo" class="modal-confirmacion" style="display: none !important; position: fixed !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; z-index: 99999 !important; background: rgba(0, 0, 0, 0.6) !important; backdrop-filter: blur(5px) !important; align-items: center !important; justify-content: center !important;">
+    <div class="modal-confirmacion-content" style="background: rgba(255, 255, 255, 0.15) !important; backdrop-filter: blur(20px) saturate(180%) !important; -webkit-backdrop-filter: blur(20px) saturate(180%) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; border-radius: 24px !important; padding: 2rem !important; max-width: 500px !important; width: 90% !important; margin: 0 auto !important; position: relative !important;">
+        <div class="modal-confirmacion-header" style="text-align: center !important; margin-bottom: 1.5rem !important;">
+            <i class="fas fa-check-circle" style="font-size: 4rem !important; color: #22c55e !important; margin-bottom: 1rem !important;"></i>
+            <h3 style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; margin: 0 !important;">Equipo Agregado</h3>
+        </div>
+        <div class="modal-confirmacion-body" style="text-align: center !important; margin-bottom: 1.5rem !important;">
+            <p style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-size: 1.1rem !important; margin: 0 !important;">El equipo ha sido agregado exitosamente al inventario.</p>
+        </div>
+        <div class="modal-confirmacion-footer" style="text-align: center !important;">
+            <button type="button" class="btn btn-primary" id="btnCerrarModalEquipo" style="background: linear-gradient(180deg, rgba(59, 130, 246, 0.95) 0%, rgba(37, 99, 235, 0.95) 50%, rgba(29, 78, 216, 1) 100%) !important; border: none !important; border-radius: 14px !important; padding: 14px 32px !important; font-weight: 600 !important; color: #ffffff !important;">
+                <i class="fas fa-check me-1"></i>Aceptar
+            </button>
         </div>
     </div>
 </div>
@@ -335,20 +365,270 @@
     margin-top: 4px !important;
 }
 
-/* Input date personalizado */
-.dashboard input[type="date"] {
-    color-scheme: dark;
+/* ===== ESTILOS PARA FLATPICKR CALENDAR - GLASSMORPHISM ===== */
+.flatpickr-calendar {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    padding: 20px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    z-index: 9999 !important;
+    min-width: 320px !important;
+    width: auto !important;
 }
 
-.dashboard input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
-    cursor: pointer;
+.flatpickr-months {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+    padding-bottom: 10px !important;
+    margin-bottom: 10px !important;
+}
+
+.flatpickr-month {
+    background: transparent !important;
+}
+
+.flatpickr-current-month {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+}
+
+.flatpickr-monthDropdown-months {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 700 !important;
+    padding: 4px 8px !important;
+}
+
+.flatpickr-prev-month,
+.flatpickr-next-month {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
+
+.flatpickr-prev-month:hover,
+.flatpickr-next-month:hover {
+    color: rgba(255, 255, 255, 0.8) !important;
+    fill: rgba(255, 255, 255, 0.8) !important;
+}
+
+.flatpickr-weekdays {
+    background: transparent !important;
+}
+
+.flatpickr-weekday {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 500 !important;
+}
+
+.flatpickr-days {
+    background: transparent !important;
+}
+
+.flatpickr-day {
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+}
+
+.flatpickr-day:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+.flatpickr-day.today {
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    font-weight: 600 !important;
+}
+
+.flatpickr-day.today.selected {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+}
+
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay {
+    color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.flatpickr-yearDropdown {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    padding: 4px 8px !important;
+    cursor: pointer !important;
+    outline: none !important;
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    min-width: 80px !important;
+    margin-left: 5px !important;
+}
+
+.flatpickr-yearDropdown:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+.flatpickr-yearDropdown:focus {
+    background: rgba(255, 255, 255, 0.25) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.flatpickr-yearDropdown option {
+    background: #0038A8 !important;
+    color: #ffffff !important;
+}
+
+/* Ocultar el input number del año pero mantener el contenedor visible */
+.flatpickr-calendar .numInputWrapper input[type="number"],
+.flatpickr-month .numInputWrapper input[type="number"],
+.flatpickr-current-month .numInputWrapper input[type="number"] {
+    display: none !important;
+}
+
+/* Asegurar que el contenedor numInputWrapper sea visible */
+.flatpickr-calendar .numInputWrapper,
+.flatpickr-month .numInputWrapper,
+.flatpickr-current-month .numInputWrapper {
+    display: inline-block !important;
+    position: relative !important;
+}
+
+/* Estilos para el modal de confirmación */
+.modal-confirmacion {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.modal-confirmacion-content {
+    animation: modalFadeIn 0.3s ease-out !important;
+    position: relative !important;
+    top: auto !important;
+    transform: none !important;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 </style>
 
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+
 <script>
-// Mostrar/ocultar campo de condición de entrega según si se selecciona un empleado
 document.addEventListener('DOMContentLoaded', function() {
+    // Función para obtener el icono de una categoría
+    function obtenerIconoCategoria(nombre) {
+        const nombreLower = nombre.toLowerCase().trim();
+        const iconos = {
+            'laptop': 'fa-laptop',
+            'celular': 'fa-mobile-alt',
+            'tablet': 'fa-tablet-alt',
+            'teclado': 'fa-keyboard',
+            'monitor': 'fa-desktop',
+            'mouse': 'fa-mouse',
+            'impresora': 'fa-print',
+            'router': 'fa-router',
+            'switch': 'fa-network-wired',
+            'servidor': 'fa-server',
+            'disco duro': 'fa-hdd',
+            'disco': 'fa-hdd',
+            'hdd': 'fa-hdd',
+            'ssd': 'fa-hdd',
+            'cámara': 'fa-camera',
+            'camara': 'fa-camera',
+            'auriculares': 'fa-headphones',
+            'headphones': 'fa-headphones',
+            'micrófono': 'fa-microphone',
+            'microfono': 'fa-microphone',
+            'microphone': 'fa-microphone',
+            'webcam': 'fa-video',
+            'cámara web': 'fa-video',
+            'camara web': 'fa-video',
+            'proyector': 'fa-projector',
+            'cable': 'fa-plug',
+            'adaptador': 'fa-plug',
+            'cargador': 'fa-plug',
+            'ups': 'fa-battery-full',
+            'regulador': 'fa-bolt',
+            'estabilizador': 'fa-bolt',
+        };
+        
+        for (const [categoria, icono] of Object.entries(iconos)) {
+            if (categoria === nombreLower || nombreLower.includes(categoria) || categoria.includes(nombreLower)) {
+                return icono;
+            }
+        }
+        return 'fa-tag';
+    }
+    
+    // Agregar iconos a las opciones del select de categoría y actualizar el label
+    const categoriaSelect = document.getElementById('{{ form.categoria.id_for_label }}');
+    const categoriaLabel = document.querySelector('.categoria-label');
+    
+    if (categoriaSelect && categoriaLabel) {
+        function actualizarIconoCategoria() {
+            const selectedOption = categoriaSelect.options[categoriaSelect.selectedIndex];
+            if (selectedOption && selectedOption.value) {
+                const icono = obtenerIconoCategoria(selectedOption.textContent.trim());
+                // Buscar si ya hay un icono en el label
+                let iconoElement = categoriaLabel.querySelector('i.fas');
+                if (!iconoElement) {
+                    iconoElement = document.createElement('i');
+                    iconoElement.className = 'fas me-2';
+                    categoriaLabel.insertBefore(iconoElement, categoriaLabel.firstChild);
+                }
+                iconoElement.className = 'fas ' + icono + ' me-2';
+            }
+        }
+        
+        // Actualizar al cargar
+        actualizarIconoCategoria();
+        
+        // Actualizar al cambiar
+        categoriaSelect.addEventListener('change', actualizarIconoCategoria);
+    }
+    
+    // Mostrar/ocultar campo de condición de entrega según si se selecciona un empleado
     const empleadoField = document.getElementById('{{ form.asignar_a_empleado.id_for_label }}');
     const condicionField = document.getElementById('{{ form.condicion_entrega.id_for_label }}');
     const condicionLabel = condicionField.closest('.col-md-6');
@@ -367,6 +647,323 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Escuchar cambios
     empleadoField.addEventListener('change', toggleCondicionField);
+    
+    // Inicializar Flatpickr para Fecha de Adquisición
+    const fechaAdquisicionInput = document.getElementById('{{ form.fecha_adquisicion.id_for_label }}');
+    
+    if (!fechaAdquisicionInput) {
+        console.error('ERROR: No se encontró el input de fecha de adquisición');
+        return;
+    }
+    
+    // Convertir valores existentes de YYYY-MM-DD a DD/MM/YYYY si los hay
+    function convertirFechaAFormato(fechaStr) {
+        if (fechaStr && fechaStr.includes('-')) {
+            const parts = fechaStr.split('-');
+            if (parts.length === 3) {
+                return `${parts[2]}/${parts[1]}/${parts[0]}`;
+            }
+        }
+        return fechaStr;
+    }
+    
+    // Si hay valores iniciales en formato YYYY-MM-DD, convertirlos
+    if (fechaAdquisicionInput.value && fechaAdquisicionInput.value.includes('-')) {
+        fechaAdquisicionInput.value = convertirFechaAFormato(fechaAdquisicionInput.value);
+    }
+    
+    // Función para crear dropdown de año (igual que el mes)
+    function crearYearDropdown(instance) {
+        if (!instance || !instance.calendarContainer) {
+            console.warn('Instancia de Flatpickr no válida');
+            return;
+        }
+        
+        const yearInputWrapper = instance.calendarContainer.querySelector('.numInputWrapper');
+        if (!yearInputWrapper) {
+            console.warn('No se encontró numInputWrapper, reintentando...');
+            setTimeout(function() {
+                crearYearDropdown(instance);
+            }, 100);
+            return;
+        }
+        
+        // Verificar si ya existe el dropdown
+        let existingSelect = yearInputWrapper.querySelector('.flatpickr-yearDropdown');
+        if (existingSelect) {
+            // Actualizar el valor del dropdown si ya existe
+            const currentYear = instance.currentYear || instance.latestSelectedDateObj?.getFullYear() || new Date().getFullYear();
+            existingSelect.value = currentYear;
+            return;
+        }
+        
+        // Obtener el año actual o el año de la fecha seleccionada
+        let currentYear;
+        if (instance.selectedDates.length > 0) {
+            currentYear = instance.selectedDates[0].getFullYear();
+        } else if (instance.latestSelectedDateObj) {
+            currentYear = instance.latestSelectedDateObj.getFullYear();
+        } else if (instance.currentYear) {
+            currentYear = instance.currentYear;
+        } else {
+            // Intentar obtener el año del mes actual mostrado
+            const monthElement = instance.calendarContainer.querySelector('.flatpickr-current-month');
+            if (monthElement) {
+                const yearText = monthElement.textContent.match(/\d{4}/);
+                if (yearText) {
+                    currentYear = parseInt(yearText[0]);
+                } else {
+                    currentYear = new Date().getFullYear();
+                }
+            } else {
+                currentYear = new Date().getFullYear();
+            }
+        }
+        
+        // Crear el select dropdown para años (desde 20 años atrás hasta 10 años adelante)
+        const yearSelect = document.createElement('select');
+        yearSelect.classList.add('flatpickr-yearDropdown');
+        yearSelect.size = 1;
+        
+        // Generar años (desde 20 años atrás hasta 10 años adelante)
+        const startYear = currentYear - 20;
+        const endYear = currentYear + 10;
+        
+        for (let year = endYear; year >= startYear; year--) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            if (year === currentYear) {
+                option.selected = true;
+            }
+            yearSelect.appendChild(option);
+        }
+        
+        // Manejar cambio de año
+        yearSelect.addEventListener('change', function() {
+            const selectedYear = parseInt(this.value);
+            instance.changeYear(selectedYear);
+            // Actualizar el valor si hay una fecha seleccionada
+            if (instance.selectedDates.length > 0) {
+                const date = new Date(instance.selectedDates[0]);
+                date.setFullYear(selectedYear);
+                instance.setDate(date, false);
+            }
+        });
+        
+        // Reemplazar el input number con el select
+        const yearInput = yearInputWrapper.querySelector('input');
+        if (yearInput) {
+            yearInput.style.display = 'none';
+        }
+        // Agregar el select al contenedor
+        yearInputWrapper.appendChild(yearSelect);
+        
+        // Asegurar que el select sea visible
+        yearSelect.style.display = 'inline-block';
+        yearSelect.style.visibility = 'visible';
+        yearSelect.style.opacity = '1';
+        
+        // Aplicar tipografía gruesa al mes
+        const monthSelect = instance.calendarContainer.querySelector('.flatpickr-monthDropdown-months');
+        if (monthSelect) {
+            monthSelect.style.fontWeight = '700';
+        }
+    }
+    
+    // Verificar que flatpickr esté disponible
+    if (typeof flatpickr === 'undefined') {
+        console.error('ERROR: Flatpickr no está cargado');
+        return;
+    }
+    
+    // Inicializar Flatpickr para Fecha de Adquisición
+    try {
+        window.fechaAdquisicion = flatpickr(fechaAdquisicionInput, {
+            dateFormat: 'd/m/Y',
+            altInput: false,
+            locale: 'es',
+            maxDate: 'today', // No permitir fechas futuras
+            defaultDate: fechaAdquisicionInput.value || null,
+            allowInput: true,
+            clickOpens: true,
+            enableTime: false,
+            animate: true,
+            // Convertir el selector de año en dropdown como el mes
+            onReady: function(selectedDates, dateStr, instance) {
+                crearYearDropdown(instance);
+            },
+            onOpen: function(selectedDates, dateStr, instance) {
+                setTimeout(function() {
+                    crearYearDropdown(instance);
+                }, 100);
+            },
+            onMonthChange: function(selectedDates, dateStr, instance) {
+                setTimeout(function() {
+                    crearYearDropdown(instance);
+                }, 50);
+            },
+            onChange: function(selectedDates, dateStr, instance) {
+                // Actualizar el valor en formato YYYY-MM-DD para el backend
+                if (selectedDates.length > 0) {
+                    const date = selectedDates[0];
+                    const yyyy = date.getFullYear();
+                    const mm = String(date.getMonth() + 1).padStart(2, '0');
+                    const dd = String(date.getDate()).padStart(2, '0');
+                    fechaAdquisicionInput.setAttribute('data-date-value', `${yyyy}-${mm}-${dd}`);
+                }
+                // Actualizar el dropdown de año
+                setTimeout(function() {
+                    crearYearDropdown(instance);
+                }, 50);
+            }
+        });
+        
+        console.log('Flatpickr fecha de adquisición inicializado correctamente');
+    } catch (error) {
+        console.error('Error al inicializar Flatpickr para fecha de adquisición:', error);
+    }
+    
+    // Botón Cancelar - Resetear formulario
+    const btnCancelar = document.getElementById('btnCancelar');
+    const form = document.getElementById('equipoForm');
+    
+    if (btnCancelar && form) {
+        btnCancelar.addEventListener('click', function() {
+            // Resetear el formulario
+            form.reset();
+            
+            // Si hay instancias de Flatpickr, resetearlas también
+            if (window.fechaAdquisicion) {
+                window.fechaAdquisicion.clear();
+            }
+            
+            // Limpiar cualquier mensaje de error visible
+            const errorMessages = form.querySelectorAll('.text-danger');
+            errorMessages.forEach(function(error) {
+                error.style.display = 'none';
+            });
+        });
+    }
+    
+    // Funciones para el modal de confirmación
+    function mostrarModalConfirmacionEquipo() {
+        const modal = document.getElementById('modalConfirmacionEquipo');
+        if (modal) {
+            modal.style.setProperty('display', 'flex', 'important');
+            modal.style.setProperty('visibility', 'visible', 'important');
+            modal.style.setProperty('opacity', '1', 'important');
+            modal.style.setProperty('z-index', '99999', 'important');
+        }
+    }
+    
+    function ocultarModalConfirmacionEquipo() {
+        const modal = document.getElementById('modalConfirmacionEquipo');
+        if (modal) {
+            modal.style.setProperty('display', 'none', 'important');
+            // Resetear el formulario cuando se cierra el modal
+            if (form) {
+                form.reset();
+                if (window.fechaAdquisicion) {
+                    window.fechaAdquisicion.clear();
+                }
+            }
+        }
+    }
+    
+    // Botón para cerrar el modal
+    const btnCerrarModalEquipo = document.getElementById('btnCerrarModalEquipo');
+    if (btnCerrarModalEquipo) {
+        btnCerrarModalEquipo.addEventListener('click', function() {
+            ocultarModalConfirmacionEquipo();
+        });
+    }
+    
+    // Cerrar modal al hacer clic fuera de él
+    const modalConfirmacionEquipo = document.getElementById('modalConfirmacionEquipo');
+    if (modalConfirmacionEquipo) {
+        modalConfirmacionEquipo.addEventListener('click', function(e) {
+            if (e.target === this) {
+                ocultarModalConfirmacionEquipo();
+            }
+        });
+    }
+    
+    // Verificar mensajes de Django y mostrar modal automáticamente
+    function verificarYMostrarModalEquipo() {
+        let mensajeEncontrado = false;
+        
+        // Verificar variable global
+        if (typeof window.hayMensajeExito !== 'undefined' && window.hayMensajeExito === true) {
+            mensajeEncontrado = true;
+        }
+        
+        // Verificar mensajes de Django en el template
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'success' %}
+                    mensajeEncontrado = true;
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        
+        // Si se encontró algún mensaje de éxito, mostrar el modal
+        if (mensajeEncontrado) {
+            setTimeout(function() {
+                mostrarModalConfirmacionEquipo();
+            }, 500);
+        }
+    }
+    
+    // Verificar al cargar la página
+    verificarYMostrarModalEquipo();
+    
+    // Interceptar el submit del formulario para convertir el formato
+    if (form && !form.hasAttribute('data-date-handler-attached')) {
+        form.setAttribute('data-date-handler-attached', 'true');
+        form.addEventListener('submit', function(e) {
+            // NO prevenir el submit por defecto, solo preparar los datos
+            
+            // Manejar fecha de adquisición
+            const dataDateValue = fechaAdquisicionInput.getAttribute('data-date-value');
+            if (dataDateValue) {
+                // Remover cualquier input hidden previo
+                const existingHidden = document.getElementById('fecha_adquisicion_hidden');
+                if (existingHidden) {
+                    existingHidden.remove();
+                }
+                // Remover el atributo name del input visible para evitar duplicados
+                fechaAdquisicionInput.removeAttribute('name');
+                // Crear un input hidden con el valor en formato YYYY-MM-DD
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = '{{ form.fecha_adquisicion.name }}';
+                hiddenInput.id = 'fecha_adquisicion_hidden';
+                hiddenInput.value = dataDateValue;
+                form.appendChild(hiddenInput);
+            } else if (fechaAdquisicionInput.value && fechaAdquisicionInput.value.includes('/')) {
+                // Si no hay data-date-value pero hay un valor en formato DD/MM/YYYY, convertir
+                const dateParts = fechaAdquisicionInput.value.split('/');
+                if (dateParts.length === 3) {
+                    const convertedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
+                    const existingHidden = document.getElementById('fecha_adquisicion_hidden');
+                    if (existingHidden) {
+                        existingHidden.remove();
+                    }
+                    fechaAdquisicionInput.removeAttribute('name');
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = '{{ form.fecha_adquisicion.name }}';
+                    hiddenInput.id = 'fecha_adquisicion_hidden';
+                    hiddenInput.value = convertedDate;
+                    form.appendChild(hiddenInput);
+                }
+            }
+            
+            // Permitir que el formulario se envíe normalmente
+            return true;
+        });
+    }
 });
 </script>
 {% endblock %}

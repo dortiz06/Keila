@@ -21,7 +21,7 @@
     <div class="alert alert-info">
         <h6 class="mb-2">
             <i class="fas fa-user-clock me-2"></i>
-            <strong>Tu Antigüedad:</strong> {{ perfil.antiguedad_detallada }}
+            <span style="font-weight: 300; font-family: 'Montserrat', sans-serif;">Tu Antigüedad:</span> {{ perfil.antiguedad_detallada }}
             {% if perfil.fecha_contratacion %}
                 <small class="text-muted">(desde {{ perfil.fecha_contratacion|date:"d/m/Y" }})</small>
             {% endif %}
@@ -30,21 +30,21 @@
             {% if perfil.mostrar_seccion_ano_anterior %}
             <div class="col-md-4">
                 <div class="p-2 rounded">
-                    <p class="mb-1 fw-bold text-dark" style="font-size: 0.95rem;">Año Anterior Completado</p>
-                    <div class="h5 mb-0 text-primary">{{ perfil.dias_ano_anterior_completado }} días</div>
+                    <p class="mb-1 text-dark" style="font-size: 0.95rem; font-weight: 300 !important; font-family: 'Montserrat', sans-serif;">Año Anterior Completado</p>
+                    <div class="h5 mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">{{ perfil.dias_ano_anterior_completado }} días</div>
                 </div>
             </div>
             {% endif %}
             <div class="{% if perfil.mostrar_seccion_ano_anterior %}col-md-4{% else %}col-md-6{% endif %}">
                 <div class="p-2 rounded">
-                    <p class="mb-1 fw-bold text-dark" style="font-size: 0.95rem;">Acumulado este año (hoy)</p>
-                    <div class="h5 mb-0 text-primary">{{ perfil.calcular_dias_acumulados_hasta_hoy }} días</div>
+                    <p class="mb-1 text-dark" style="font-size: 0.95rem; font-weight: 300 !important; font-family: 'Montserrat', sans-serif;">Acumulado este año (hoy)</p>
+                    <div class="h5 mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">{{ perfil.calcular_dias_acumulados_hasta_hoy }} días</div>
                 </div>
             </div>
             <div class="{% if perfil.mostrar_seccion_ano_anterior %}col-md-4{% else %}col-md-6{% endif %}">
                 <div class="p-2 rounded">
-                    <p class="mb-1 fw-bold text-dark" style="font-size: 0.95rem;">Total proyectado disponible</p>
-                    <div class="h5 mb-0 text-success">{{ perfil.calcular_total_disponible_proyectado }} días</div>
+                    <p class="mb-1" style="font-size: 0.95rem; color: #ffffff !important; font-family: 'Montserrat', sans-serif; font-weight: 300 !important;">Total proyectado disponible</p>
+                    <div class="h5 mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">{{ perfil.calcular_total_disponible_proyectado }} días</div>
                 </div>
             </div>
         </div>
@@ -55,7 +55,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Solicitudes Pendientes</h5>
-                    <p class="card-text">{{ stats.solicitudes_pendientes }}</p>
+                    <p class="card-text" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">{{ stats.solicitudes_pendientes }}</p>
                 </div>
             </div>
         </div>
@@ -63,7 +63,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Aprobadas Este Mes</h5>
-                    <p class="card-text">{{ stats.aprobadas_este_mes }}</p>
+                    <p class="card-text" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">{{ stats.aprobadas_este_mes }}</p>
                 </div>
             </div>
         </div>
@@ -71,7 +71,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Rechazadas Este Mes</h5>
-                    <p class="card-text">{{ stats.rechazadas_este_mes }}</p>
+                    <p class="card-text" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">{{ stats.rechazadas_este_mes }}</p>
                 </div>
             </div>
         </div>
@@ -82,9 +82,9 @@
         <div class="col-6 col-md-3 mb-3">
             <div class="card text-center h-100">
                 <div class="card-body d-flex flex-column justify-content-center">
-                    <i class="fas fa-calendar-check fa-2x text-success mb-2"></i>
+                    <i class="fas fa-calendar-check fa-2x mb-2" style="color: #22c55e !important;"></i>
                     <h5 class="card-title small">Días Disponibles</h5>
-                    <h3 class="text-success">{{ perfil.dias_vacaciones_disponibles }}</h3>
+                    <h3 style="color: #22c55e !important; font-family: 'Montserrat', sans-serif;">{{ perfil.dias_vacaciones_disponibles }}</h3>
                     <small class="text-muted">disponibles</small>
                 </div>
             </div>
@@ -92,9 +92,9 @@
         <div class="col-6 col-md-3 mb-3">
             <div class="card text-center h-100">
                 <div class="card-body d-flex flex-column justify-content-center">
-                    <i class="fas fa-calendar-minus fa-2x text-danger mb-2"></i>
+                    <i class="fas fa-calendar-minus fa-2x mb-2" style="color: #ef4444 !important;"></i>
                     <h5 class="card-title small">Días Usados</h5>
-                    <h3 class="text-danger">{{ perfil.dias_vacaciones_usados }}</h3>
+                    <h3 style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif;">{{ perfil.dias_vacaciones_usados }}</h3>
                     <small class="text-muted">este año</small>
                 </div>
             </div>
@@ -102,9 +102,9 @@
         <div class="col-6 col-md-3 mb-3">
             <div class="card text-center h-100">
                 <div class="card-body d-flex flex-column justify-content-center">
-                    <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+                    <i class="fas fa-clock fa-2x mb-2" style="color: #f59e0b !important;"></i>
                     <h5 class="card-title small">Pendientes</h5>
-                    <h3 class="text-warning">{{ stats.solicitudes_pendientes }}</h3>
+                    <h3 style="color: #f59e0b !important; font-family: 'Montserrat', sans-serif;">{{ stats.solicitudes_pendientes }}</h3>
                     <small class="text-muted">solicitudes</small>
                 </div>
             </div>
@@ -167,4 +167,170 @@
         </div>
     </div>
 </div>
+
+<style>
+/* Asegurar que se use Montserrat en todo el dashboard */
+.dashboard {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard * {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Preservar iconos de Font Awesome */
+.dashboard i,
+.dashboard .fa,
+.dashboard [class*="fa-"] {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+}
+
+/* ===== ESTILO DE BOTONES MODERNO - Con luz arriba y sombra abajo (estilo imagen) ===== */
+/* Base común para todos los botones */
+.dashboard .btn,
+.dashboard .btn-primary,
+.dashboard .btn-success,
+.dashboard .btn-danger,
+.dashboard .btn-info,
+.dashboard .btn-warning,
+.dashboard .btn-outline-primary,
+.dashboard .btn-outline-danger,
+.dashboard .btn-outline-success {
+    border: none !important;
+    border-radius: 14px !important; /* Bordes muy redondeados */
+    padding: 14px 32px !important; /* Padding generoso */
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    font-family: 'Montserrat', sans-serif !important;
+    color: #ffffff !important; /* Texto blanco */
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* Botones pequeños */
+.dashboard .btn-sm {
+    padding: 10px 24px !important;
+    font-size: 0.85rem !important;
+    border-radius: 12px !important;
+}
+
+/* Botón Primary - Azul corporativo con degradado oscuro (estado normal) */
+.dashboard .btn-primary,
+.dashboard .btn-outline-primary {
+    background: linear-gradient(180deg, 
+        rgba(37, 99, 235, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 30, 100, 1) 100%) !important; /* Colores oscuros en estado normal */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+}
+
+.dashboard .btn-primary:hover,
+.dashboard .btn-outline-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 56, 168, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Botón Success - Verde esmeralda con degradado oscuro (estado normal) */
+.dashboard .btn-success {
+    background: linear-gradient(180deg, 
+        rgba(34, 197, 94, 0.95) 0%, 
+        rgba(22, 163, 74, 0.95) 50%,
+        rgba(15, 118, 50, 1) 100%) !important; /* Colores oscuros en estado normal */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+}
+
+.dashboard .btn-success:hover {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Botón Danger - Rojo con degradado oscuro (estado normal) */
+.dashboard .btn-danger,
+.dashboard .btn-outline-danger {
+    background: linear-gradient(180deg, 
+        rgba(239, 68, 68, 0.95) 0%, 
+        rgba(220, 38, 38, 0.95) 50%,
+        rgba(185, 28, 28, 1) 100%) !important; /* Colores oscuros en estado normal */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+}
+
+.dashboard .btn-danger:hover,
+.dashboard .btn-outline-danger:hover {
+    background: linear-gradient(180deg, 
+        rgba(248, 113, 113, 0.95) 0%, 
+        rgba(239, 68, 68, 0.95) 50%,
+        rgba(220, 38, 38, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Botón Warning - Amarillo/Naranja con degradado oscuro (estado normal) */
+.dashboard .btn-warning {
+    background: linear-gradient(180deg, 
+        rgba(245, 158, 11, 0.95) 0%, 
+        rgba(217, 119, 6, 0.95) 50%,
+        rgba(180, 83, 9, 1) 100%) !important; /* Colores oscuros en estado normal */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+    color: #000000 !important; /* Texto negro para contraste */
+}
+
+.dashboard .btn-warning:hover {
+    background: linear-gradient(180deg, 
+        rgba(251, 191, 36, 0.95) 0%, 
+        rgba(245, 158, 11, 0.95) 50%,
+        rgba(217, 119, 6, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    color: #000000 !important;
+}
+
+/* Botón Info - Azul claro con degradado oscuro (estado normal) */
+.dashboard .btn-info {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important; /* Colores oscuros en estado normal */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+}
+
+.dashboard .btn-info:hover {
+    background: linear-gradient(180deg, 
+        rgba(147, 197, 253, 0.95) 0%, 
+        rgba(96, 165, 250, 0.95) 50%,
+        rgba(59, 130, 246, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+</style>
 {% endblock %}

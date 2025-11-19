@@ -4,6 +4,16 @@
 {% block title %}Gestión de Usuarios{% endblock %}
 
 {% block content %}
+<style>
+/* Cambiar fondo solo en la vista de gestión de usuarios */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/dash/KC07.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+</style>
 <div class="container-fluid dashboard">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="dashboard-title">
@@ -13,20 +23,20 @@
             <a href="{% url 'empleados:crear_usuario' %}" class="btn btn-outline-success">
                 <i class="fas fa-plus me-1"></i>Crear Usuario
             </a>
-            <a href="{% url 'empleados:rh_dashboard' %}" class="btn btn-outline-primary">
-                <i class="fas fa-arrow-left me-1"></i>Volver al Panel
+            <a href="{% url url_dashboard %}" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left me-1"></i>{{ texto_dashboard }}
             </a>
         </div>
     </div>
 
     <!-- Contenedor único con glassmorphism -->
     <div class="card gestion-usuarios-card">
-        <div class="card-header gestion-usuarios-header">
-            <h5 class="mb-0">
+        <div class="card-body">
+            <!-- Título de Filtros -->
+            <h5 class="gestion-section-title mb-3">
                 <i class="fas fa-filter me-2"></i>Filtros y Búsqueda
             </h5>
-        </div>
-        <div class="card-body">
+            
             <!-- Filtros -->
             <form method="get" class="row g-3 mb-4">
                 <div class="col-md-4">
@@ -109,7 +119,7 @@
                                         <span class="badge gestion-badge">{{ usuario.numero_empleado }}</span>
                                     </td>
                                     <td>
-                                        <span class="badge gestion-badge-{% if usuario.tipo_perfil == 'ADMIN' %}danger{% elif usuario.tipo_perfil == 'RH' %}info{% elif usuario.tipo_perfil == 'JEFE_AREA' %}warning{% else %}secondary{% endif %}">
+                                        <span class="badge gestion-badge-{% if usuario.tipo_perfil == 'ADMIN' %}danger{% elif usuario.tipo_perfil == 'RH' %}info{% elif usuario.tipo_perfil == 'JEFE_AREA' %}warning{% elif usuario.tipo_perfil == 'SISTEMAS' %}purple{% else %}secondary{% endif %}">
                                             {{ usuario.get_tipo_perfil_display }}
                                         </span>
                                     </td>
@@ -160,7 +170,7 @@
 <style>
 /* ===== GLASSMORPHISM PARA GESTIÓN DE USUARIOS ===== */
 .gestion-usuarios-card {
-    background: rgba(255, 255, 255, 0.1) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
     backdrop-filter: blur(25px) saturate(200%) !important;
     -webkit-backdrop-filter: blur(25px) saturate(200%) !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
@@ -170,22 +180,6 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.25),
         inset 0 -1px 0 rgba(255, 255, 255, 0.1) !important;
     overflow: hidden !important;
-}
-
-.gestion-usuarios-header {
-    background: rgba(255, 255, 255, 0.08) !important;
-    backdrop-filter: blur(20px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
-    padding: 1.25rem 1.5rem !important;
-}
-
-.gestion-usuarios-header h5 {
-    color: #ffffff !important;
-    font-family: 'Montserrat', sans-serif !important;
-    font-weight: 500 !important;
-    letter-spacing: 0.3px !important;
 }
 
 .gestion-usuarios-card .card-body {
@@ -260,7 +254,9 @@
 
 /* Tabla */
 .gestion-table-wrapper {
-    background: transparent !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
 }
 
 .gestion-table {
@@ -276,7 +272,7 @@
 .gestion-table thead th {
     background: transparent !important;
     border: none !important;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.15) !important;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
     padding: 1rem 0.75rem !important;
     font-family: 'Montserrat', sans-serif !important;
 }
@@ -286,13 +282,13 @@
 }
 
 .gestion-table-row {
-    background: transparent !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
     transition: all 0.2s ease !important;
 }
 
 .gestion-table-row:hover {
-    background: rgba(255, 255, 255, 0.05) !important;
+    background: rgba(255, 255, 255, 0.15) !important;
 }
 
 .gestion-table tbody td {
@@ -383,6 +379,17 @@
     background: rgba(156, 163, 175, 0.25) !important;
     color: #ffffff !important;
     border: 1px solid rgba(156, 163, 175, 0.4) !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 0.8rem !important;
+}
+
+.gestion-badge-purple {
+    background: rgba(147, 51, 234, 0.25) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(147, 51, 234, 0.4) !important;
     padding: 0.4rem 0.8rem !important;
     border-radius: 8px !important;
     font-family: 'Montserrat', sans-serif !important;

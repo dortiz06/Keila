@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load perfil_tags %}
 
 {% block title %}Inventario de Equipos{% endblock %}
 
@@ -7,6 +8,11 @@
 <div class="container-fluid dashboard">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="dashboard-title"><i class="fas fa-boxes me-2"></i>Inventario de Equipos</h1>
+        <div>
+            <a href="{% url url_volver %}" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left me-1"></i>{{ texto_volver }}
+            </a>
+        </div>
     </div>
 
     <!-- Filtros y acciones -->
@@ -63,7 +69,7 @@
                             <tr style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
                                 <td style="color: #ffffff !important;"><strong>{{ equipo.codigo_inventario }}</strong></td>
                                 <td style="color: #ffffff !important;">
-                                    <i class="fas fa-{{ equipo.categoria.nombre|lower }} me-1"></i>
+                                    <i class="fas {% categoria_icono equipo.categoria.nombre %} me-1"></i>
                                     {{ equipo.categoria.nombre }}
                                 </td>
                                 <td style="color: #ffffff !important;">{{ equipo.marca }}</td>

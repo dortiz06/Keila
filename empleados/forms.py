@@ -266,6 +266,14 @@ class EditarPerfilForm(forms.ModelForm):
                 if field_name not in self.fields:
                     # Agregar el campo del modelo
                     self.fields[field_name] = self._meta.model._meta.get_field(field_name).formfield()
+                    # Inicializar el valor del campo con el valor de la instancia si existe
+                    if self.instance and self.instance.pk:
+                        try:
+                            field_value = getattr(self.instance, field_name)
+                            if field_value is not None:
+                                self.initial[field_name] = field_value
+                        except AttributeError:
+                            pass
         
         # Configurar widgets y estilos para todos los campos
         if 'telefono' in self.fields:

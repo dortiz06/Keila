@@ -20,3 +20,54 @@ def saludo_dinamico():
     else:  # 20 <= hora_actual < 24
         return "Buenas noches,"
 
+@register.simple_tag
+def categoria_icono(nombre_categoria):
+    """
+    Retorna el icono de Font Awesome correspondiente a una categoría de equipo.
+    """
+    # Normalizar el nombre de la categoría (minúsculas, sin espacios)
+    nombre = nombre_categoria.lower().strip()
+    
+    # Mapeo de categorías a iconos de Font Awesome
+    iconos = {
+        'laptop': 'fa-laptop',
+        'celular': 'fa-mobile-alt',
+        'tablet': 'fa-tablet-alt',
+        'teclado': 'fa-keyboard',
+        'monitor': 'fa-desktop',
+        'mouse': 'fa-mouse',
+        'impresora': 'fa-print',
+        'router': 'fa-router',
+        'switch': 'fa-network-wired',
+        'servidor': 'fa-server',
+        'disco duro': 'fa-hdd',
+        'disco': 'fa-hdd',
+        'hdd': 'fa-hdd',
+        'ssd': 'fa-hdd',
+        'cámara': 'fa-camera',
+        'camara': 'fa-camera',
+        'auriculares': 'fa-headphones',
+        'headphones': 'fa-headphones',
+        'micrófono': 'fa-microphone',
+        'microfono': 'fa-microphone',
+        'microphone': 'fa-microphone',
+        'webcam': 'fa-video',
+        'cámara web': 'fa-video',
+        'camara web': 'fa-video',
+        'proyector': 'fa-projector',
+        'cable': 'fa-plug',
+        'adaptador': 'fa-plug',
+        'cargador': 'fa-plug',
+        'ups': 'fa-battery-full',
+        'regulador': 'fa-bolt',
+        'estabilizador': 'fa-bolt',
+    }
+    
+    # Buscar coincidencia exacta o parcial
+    for categoria, icono in iconos.items():
+        if categoria in nombre or nombre in categoria:
+            return icono
+    
+    # Si no se encuentra, retornar un icono por defecto
+    return 'fa-tag'
+

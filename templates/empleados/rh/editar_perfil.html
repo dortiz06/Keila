@@ -4,6 +4,16 @@
 {% block title %}Editar Perfil - Sistema RH{% endblock %}
 
 {% block content %}
+<style>
+/* Cambiar fondo solo en la vista de editar perfil */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/dash/elevador.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+</style>
 <div class="container-fluid dashboard">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
@@ -47,7 +57,7 @@
                                     <input type="text" 
                                            name="{{ form.telefono.name }}" 
                                            id="{{ form.telefono.id_for_label }}" 
-                                           value="{{ form.telefono.value|default:'' }}" 
+                                           value="{% if form.telefono.value %}{{ form.telefono.value }}{% elif perfil_editado.telefono %}{{ perfil_editado.telefono }}{% endif %}" 
                                            class="form-control editar-perfil-input"
                                            placeholder="Ingrese el teléfono">
                                     {% if form.telefono.errors %}
@@ -67,7 +77,7 @@
                                     <input type="text" 
                                            name="{{ form.fecha_nacimiento.name }}" 
                                            id="{{ form.fecha_nacimiento.id_for_label }}" 
-                                           value="{% if form.fecha_nacimiento.value %}{{ form.fecha_nacimiento.value|date:'d/m/Y' }}{% endif %}" 
+                                           value="{% if form.fecha_nacimiento.value %}{{ form.fecha_nacimiento.value|date:'d/m/Y' }}{% elif perfil_editado.fecha_nacimiento %}{{ perfil_editado.fecha_nacimiento|date:'d/m/Y' }}{% endif %}" 
                                            class="form-control editar-perfil-input datepicker-fecha-nacimiento"
                                            placeholder="DD/MM/YYYY">
                                     {% if form.fecha_nacimiento.errors %}
@@ -188,7 +198,7 @@
                                         <input type="text" 
                                                name="{{ form.fecha_contratacion.name }}" 
                                                id="{{ form.fecha_contratacion.id_for_label }}" 
-                                               value="{% if form.fecha_contratacion.value %}{{ form.fecha_contratacion.value|date:'d/m/Y' }}{% endif %}" 
+                                               value="{% if form.fecha_contratacion.value %}{{ form.fecha_contratacion.value|date:'d/m/Y' }}{% elif perfil_editado.fecha_contratacion %}{{ perfil_editado.fecha_contratacion|date:'d/m/Y' }}{% endif %}" 
                                                class="form-control editar-perfil-input datepicker-fecha-contratacion"
                                                placeholder="DD/MM/YYYY">
                                         {% if form.fecha_contratacion.errors %}

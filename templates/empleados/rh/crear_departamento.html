@@ -4,84 +4,97 @@
 {% block title %}Crear Departamento - Sistema RH{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <!-- Header -->
-    <div class="page-header">
-        <div class="container">
-            <h1><i class="fas fa-plus-circle me-3"></i>Crear Nuevo Departamento</h1>
-            <p>Agrega un nuevo departamento a la empresa</p>
+<style>
+/* Cambiar fondo solo en la vista de crear departamento */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/dash/KC07.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+</style>
+<div class="container-fluid dashboard">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+        <div>
+            <h1 class="dashboard-title" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important;">
+                <i class="fas fa-plus-circle me-2"></i>Crear Nuevo Departamento
+            </h1>
+        </div>
+        <div class="mt-2 mt-md-0">
+            <a href="{% url 'empleados:gestion_departamentos' %}" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left me-1"></i>Volver a Gestión
+            </a>
         </div>
     </div>
 
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <i class="fas fa-building me-2"></i>
-                            Información del Departamento
-                        </h5>
-                    </div>
-                    <div class="card-body">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header" style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important; padding: 1.5rem !important;">
+                    <h5 class="mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
+                        <i class="fas fa-building me-2"></i>Información del Departamento
+                    </h5>
+                </div>
+                <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
                         <form method="post">
                             {% csrf_token %}
                             
                             <!-- Nombre del Departamento -->
-                            <div class="mb-3">
-                                <label for="{{ form.nombre.id_for_label }}" class="form-label">
-                                    <i class="fas fa-tag me-1"></i>{{ form.nombre.label }}
+                            <div class="mb-4">
+                                <label for="{{ form.nombre.id_for_label }}" class="form-label" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 500 !important;">
+                                    <i class="fas fa-tag me-1"></i>{{ form.nombre.label }} <span class="text-danger">*</span>
                                 </label>
                                 {{ form.nombre }}
                                 {% if form.nombre.errors %}
-                                    <div class="text-danger">
+                                    <div class="text-danger mt-1" style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif !important;">
                                         {% for error in form.nombre.errors %}
                                             <small>{{ error }}</small>
                                         {% endfor %}
                                     </div>
                                 {% endif %}
-                                <div class="form-text">Nombre único del departamento</div>
+                                <div class="form-text" style="color: rgba(255, 255, 255, 0.6) !important; font-family: 'Montserrat', sans-serif !important; font-size: 0.875rem !important;">Nombre único del departamento</div>
                             </div>
 
                             <!-- Descripción -->
-                            <div class="mb-3">
-                                <label for="{{ form.descripcion.id_for_label }}" class="form-label">
+                            <div class="mb-4">
+                                <label for="{{ form.descripcion.id_for_label }}" class="form-label" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 500 !important;">
                                     <i class="fas fa-align-left me-1"></i>{{ form.descripcion.label }}
                                 </label>
                                 {{ form.descripcion }}
                                 {% if form.descripcion.errors %}
-                                    <div class="text-danger">
+                                    <div class="text-danger mt-1" style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif !important;">
                                         {% for error in form.descripcion.errors %}
                                             <small>{{ error }}</small>
                                         {% endfor %}
                                     </div>
                                 {% endif %}
-                                <div class="form-text">Descripción detallada del departamento y sus funciones</div>
+                                <div class="form-text" style="color: rgba(255, 255, 255, 0.6) !important; font-family: 'Montserrat', sans-serif !important; font-size: 0.875rem !important;">Descripción detallada del departamento y sus funciones</div>
                             </div>
 
                             <!-- Jefe del Departamento -->
                             <div class="mb-4">
-                                <label for="{{ form.jefe.id_for_label }}" class="form-label">
+                                <label for="{{ form.jefe.id_for_label }}" class="form-label" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 500 !important;">
                                     <i class="fas fa-user-tie me-1"></i>{{ form.jefe.label }}
                                 </label>
                                 {{ form.jefe }}
                                 {% if form.jefe.errors %}
-                                    <div class="text-danger">
+                                    <div class="text-danger mt-1" style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif !important;">
                                         {% for error in form.jefe.errors %}
                                             <small>{{ error }}</small>
                                         {% endfor %}
                                     </div>
                                 {% endif %}
-                                <div class="form-text">Selecciona el jefe responsable del departamento (opcional)</div>
+                                <div class="form-text" style="color: rgba(255, 255, 255, 0.6) !important; font-family: 'Montserrat', sans-serif !important; font-size: 0.875rem !important;">Selecciona el jefe responsable del departamento (opcional)</div>
                             </div>
 
                             <!-- Botones de Acción -->
-                            <div class="d-flex justify-content-between">
-                                <a href="{% url 'empleados:gestion_departamentos' %}" class="btn btn-secondary">
-                                    <i class="fas fa-arrow-left me-2"></i>Cancelar
+                            <div class="d-flex justify-content-between mt-4">
+                                <a href="{% url 'empleados:gestion_departamentos' %}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times me-1"></i>Cancelar
                                 </a>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save me-2"></i>Crear Departamento
+                                <button type="submit" class="btn btn-outline-success">
+                                    <i class="fas fa-save me-1"></i>Crear Departamento
                                 </button>
                             </div>
                         </form>
@@ -90,28 +103,31 @@
 
                 <!-- Información Adicional -->
                 <div class="card mt-4">
-                    <div class="card-header">
-                        <h6 class="mb-0">
-                            <i class="fas fa-info-circle me-2"></i>
-                            Información Importante
+                    <div class="card-header" style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important; padding: 1.5rem !important;">
+                        <h6 class="mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
+                            <i class="fas fa-info-circle me-2"></i>Información Importante
                         </h6>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
                         <div class="row">
-                            <div class="col-md-6">
-                                <h6><i class="fas fa-check-circle text-success me-2"></i>Requisitos</h6>
-                                <ul class="list-unstyled">
-                                    <li>• El nombre debe ser único</li>
-                                    <li>• La descripción es opcional pero recomendada</li>
-                                    <li>• El jefe puede asignarse después</li>
+                            <div class="col-md-6 mb-3">
+                                <h6 style="color: #22c55e !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; margin-bottom: 1rem !important;">
+                                    <i class="fas fa-check-circle me-2"></i>Requisitos
+                                </h6>
+                                <ul class="list-unstyled" style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
+                                    <li style="margin-bottom: 0.5rem !important;"><i class="fas fa-circle" style="font-size: 0.5rem !important; margin-right: 0.5rem !important; color: rgba(255, 255, 255, 0.6) !important;"></i>El nombre debe ser único</li>
+                                    <li style="margin-bottom: 0.5rem !important;"><i class="fas fa-circle" style="font-size: 0.5rem !important; margin-right: 0.5rem !important; color: rgba(255, 255, 255, 0.6) !important;"></i>La descripción es opcional pero recomendada</li>
+                                    <li style="margin-bottom: 0.5rem !important;"><i class="fas fa-circle" style="font-size: 0.5rem !important; margin-right: 0.5rem !important; color: rgba(255, 255, 255, 0.6) !important;"></i>El jefe puede asignarse después</li>
                                 </ul>
                             </div>
-                            <div class="col-md-6">
-                                <h6><i class="fas fa-lightbulb text-warning me-2"></i>Consejos</h6>
-                                <ul class="list-unstyled">
-                                    <li>• Usa nombres descriptivos y claros</li>
-                                    <li>• Incluye las funciones principales</li>
-                                    <li>• Asigna un jefe experimentado</li>
+                            <div class="col-md-6 mb-3">
+                                <h6 style="color: #f59e0b !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; margin-bottom: 1rem !important;">
+                                    <i class="fas fa-lightbulb me-2"></i>Consejos
+                                </h6>
+                                <ul class="list-unstyled" style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
+                                    <li style="margin-bottom: 0.5rem !important;"><i class="fas fa-circle" style="font-size: 0.5rem !important; margin-right: 0.5rem !important; color: rgba(255, 255, 255, 0.6) !important;"></i>Usa nombres descriptivos y claros</li>
+                                    <li style="margin-bottom: 0.5rem !important;"><i class="fas fa-circle" style="font-size: 0.5rem !important; margin-right: 0.5rem !important; color: rgba(255, 255, 255, 0.6) !important;"></i>Incluye las funciones principales</li>
+                                    <li style="margin-bottom: 0.5rem !important;"><i class="fas fa-circle" style="font-size: 0.5rem !important; margin-right: 0.5rem !important; color: rgba(255, 255, 255, 0.6) !important;"></i>Asigna un jefe experimentado</li>
                                 </ul>
                             </div>
                         </div>
@@ -123,63 +139,186 @@
 </div>
 
 <style>
-.card {
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+/* ===== ESTILOS GLOBALES DEL DASHBOARD ===== */
+.dashboard .card {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
 }
 
-.card-header {
-    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-    color: white;
-    border-radius: 15px 15px 0 0 !important;
-    font-weight: 600;
+.dashboard .card-body {
+    background: transparent !important;
 }
 
-.form-control, .form-select {
-    border-radius: 10px;
-    border: 2px solid #e9ecef;
-    padding: 0.75rem 1rem;
-    transition: all 0.3s ease;
+.dashboard-title {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    margin-bottom: 0 !important;
 }
 
-.form-control:focus, .form-select:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+/* Estilos para campos de formulario */
+.dashboard .form-control,
+.dashboard .form-select {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    padding: 12px 16px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    transition: all 0.3s ease !important;
 }
 
-.form-label {
-    font-weight: 600;
-    color: #495057;
-    margin-bottom: 0.5rem;
+.dashboard .form-control:focus,
+.dashboard .form-select:focus {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+    outline: none !important;
 }
 
-.btn {
-    border-radius: 10px;
-    padding: 0.75rem 1.5rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
+.dashboard .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
 }
 
-.btn-primary {
-    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-    border: none;
+.dashboard .form-control option,
+.dashboard .form-select option {
+    background: #0038A8 !important;
+    color: #ffffff !important;
 }
 
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+.dashboard .form-label {
+    color: #ffffff !important;
+    font-weight: 500 !important;
+    margin-bottom: 8px !important;
+    font-family: 'Montserrat', sans-serif !important;
 }
 
-.page-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 2rem 0;
-    margin-bottom: 2rem;
+.dashboard .form-text {
+    color: rgba(255, 255, 255, 0.6) !important;
+    font-size: 0.875rem !important;
+    font-family: 'Montserrat', sans-serif !important;
 }
 
-.list-unstyled li {
-    padding: 0.25rem 0;
-    color: #6c757d;
+/* Estilos para textarea */
+.dashboard textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Estilos de botones del dashboard */
+.dashboard .btn-outline-primary {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .btn-outline-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-success {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .btn-outline-success:hover {
+    background: linear-gradient(180deg, 
+        rgba(134, 239, 172, 0.95) 0%, 
+        rgba(74, 222, 128, 0.95) 50%,
+        rgba(34, 197, 94, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-secondary {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .btn-outline-secondary:hover {
+    background: linear-gradient(180deg, 
+        rgba(209, 213, 219, 0.95) 0%, 
+        rgba(156, 163, 175, 0.95) 50%,
+        rgba(107, 114, 128, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Mensajes de error */
+.dashboard .text-danger {
+    color: #ff6b6b !important;
+    font-size: 0.875rem !important;
+    margin-top: 4px !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Asegurar que los iconos de Font Awesome mantengan su fuente */
+.dashboard .fas,
+.dashboard .fa,
+.dashboard i[class*="fa-"] {
+    font-family: "Font Awesome 6 Free" !important;
+    font-weight: 900 !important;
 }
 </style>
 {% endblock %}

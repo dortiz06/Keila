@@ -1,3 +1,75 @@
+/* ===== TIPOGRAFÍA GLOBAL MONSERRAT - APLICADA A TODO EL SISTEMA ===== */
+/* Regla global: Todo el sistema usa Montserrat por defecto */
+* {
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+/* Excepción: Iconos de Font Awesome mantienen su fuente original */
+i.fas,
+i.far,
+i.fal,
+i.fab,
+i.fa,
+.fa,
+[class*="fa-"],
+[class^="fa-"],
+[class*=" icon-"],
+i[class*="fa-"],
+i[class^="fa-"] {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "Font Awesome 6 Brands" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Aplicar Montserrat a todos los elementos de texto */
+html,
+body,
+div,
+span,
+p,
+h1, h2, h3, h4, h5, h6,
+a,
+button,
+input,
+textarea,
+select,
+label,
+table,
+th,
+td,
+tr,
+ul,
+ol,
+li,
+strong,
+em,
+small,
+b,
+i:not([class*="fa-"]):not([class^="fa-"]),
+.navbar,
+.navbar-brand,
+.nav-link,
+.card,
+.card-body,
+.card-title,
+.card-text,
+.alert,
+.badge,
+.btn,
+.form-control,
+.form-label,
+.form-select,
+.table,
+.dashboard,
+.container,
+.container-fluid {
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+}
+
 html, body {
     height: 100%;
     margin: 0;
@@ -236,16 +308,22 @@ small.text-muted,
 
 /* ===== ICONOS BLANCOS Y DELGADOS - GLOBAL ===== */
 /* Todos los iconos Font Awesome - Color blanco y más delgados */
+/* IMPORTANTE: Mantener fuente Font Awesome (ya definida arriba) */
 i.fas,
 i.far,
 i.fal,
 i.fab,
+i.fa,
 .fa,
-[class*="fa-"] {
+[class*="fa-"],
+[class^="fa-"],
+i[class*="fa-"],
+i[class^="fa-"] {
     color: #ffffff !important;
-    font-weight: 300 !important; /* Intenta hacerlos más delgados */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    font-weight: 900 !important; /* Font Awesome requiere font-weight 900 */
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "Font Awesome 6 Brands" !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
 }
 
 /* Excepción: Iconos en alertas de advertencia mantienen su color amarillo */
