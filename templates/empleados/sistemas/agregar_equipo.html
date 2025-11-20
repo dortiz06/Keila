@@ -10,16 +10,26 @@
 {% endblock %}
 
 {% block content %}
+<style>
+/* Cambiar fondo solo en la vista de agregar equipo - Más oscuro para mejor legibilidad */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.65)), url('{% static "images/dash/hardw.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+</style>
 <div class="container-fluid dashboard">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="dashboard-title"><i class="fas fa-plus-circle me-2"></i>Agregar Nuevo Equipo</h1>
+        <h1 class="dashboard-title" style="color: #ffffff !important; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 0 3px 12px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 0, 0, 0.5) !important;"><i class="fas fa-plus-circle me-2"></i>Agregar Nuevo Equipo</h1>
         <a href="{% url 'empleados:inventario_equipos' %}" class="btn btn-outline-secondary">
             <i class="fas fa-arrow-left me-1"></i>Volver al Inventario
         </a>
     </div>
 
-    <div class="card">
-        <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
+    <div class="card" style="overflow: hidden !important; border-radius: 20px !important;">
+        <div class="card-body" style="background: transparent !important; padding: 2rem !important; overflow: hidden !important; border-radius: 20px !important;">
             <form method="post" id="equipoForm">
                 {% csrf_token %}
                 
@@ -101,7 +111,7 @@
                                value="{% if form.fecha_adquisicion.value %}{{ form.fecha_adquisicion.value|date:'d/m/Y' }}{% endif %}" 
                                class="form-control datepicker-fecha-adquisicion"
                                placeholder="DD/MM/YYYY"
-                               style="background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;">
+                               style="background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;">
                         {% if form.fecha_adquisicion.errors %}
                             <div class="text-danger mt-1">{{ form.fecha_adquisicion.errors }}</div>
                         {% endif %}
@@ -200,28 +210,55 @@
 </div>
 
 <style>
-/* Aplicar estilos del dashboard */
+/* Aplicar estilos del dashboard a la vista de agregar equipo - Mejor contraste */
 .dashboard .card {
-    background: rgba(255, 255, 255, 0.15) !important;
-    backdrop-filter: blur(20px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    background: rgba(60, 60, 60, 0.4) !important;
+    backdrop-filter: blur(25px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
     border: 1px solid rgba(255, 255, 255, 0.25) !important;
     border-radius: 20px !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
-                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 
+                0 4px 16px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    overflow: hidden !important;
+    position: relative !important;
+}
+
+.dashboard .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 20px;
+    pointer-events: none;
+    z-index: 1;
 }
 
 .dashboard .card-body {
     background: transparent !important;
+    overflow: hidden !important;
+    border-radius: 20px !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+.dashboard .card-body > * {
+    position: relative !important;
+    z-index: 3 !important;
 }
 
 .dashboard-title {
     color: #ffffff !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 
+                 0 3px 12px rgba(0, 0, 0, 0.6),
+                 0 0 20px rgba(0, 0, 0, 0.5) !important;
     font-weight: 700 !important;
     margin-bottom: 0 !important;
 }
 
-/* Estilos para campos de formulario */
+/* Estilos para campos de formulario - Mejor contraste */
 .dashboard .form-control,
 .dashboard .form-select {
     background: rgba(255, 255, 255, 0.15) !important;
@@ -229,14 +266,15 @@
     color: #ffffff !important;
     border-radius: 10px !important;
     padding: 12px 16px !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
 }
 
 .dashboard .form-control:focus,
 .dashboard .form-select:focus {
-    background: rgba(255, 255, 255, 0.2) !important;
-    border-color: rgba(255, 255, 255, 0.4) !important;
+    background: rgba(255, 255, 255, 0.35) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
     color: #ffffff !important;
-    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.35) !important;
     outline: none !important;
 }
 
@@ -267,7 +305,8 @@
     min-height: 100px;
 }
 
-/* Estilos de botones del dashboard */
+/* ===== ESTILOS DE BOTONES DEL DASHBOARD ===== */
+/* Botón Primary - Azul con degradado */
 .dashboard .btn-outline-primary {
     background: linear-gradient(180deg, 
         rgba(59, 130, 246, 0.95) 0%, 
@@ -298,11 +337,12 @@
         inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
 }
 
+/* Botón Success - Verde con degradado (más oscuro) */
 .dashboard .btn-outline-success {
     background: linear-gradient(180deg, 
-        rgba(74, 222, 128, 0.95) 0%, 
-        rgba(34, 197, 94, 0.95) 50%,
-        rgba(22, 163, 74, 1) 100%) !important;
+        rgba(34, 197, 94, 0.95) 0%, 
+        rgba(22, 163, 74, 0.95) 50%,
+        rgba(15, 118, 50, 1) 100%) !important;
     box-shadow: 
         0 4px 12px rgba(0, 0, 0, 0.3),
         0 2px 6px rgba(0, 0, 0, 0.2),
@@ -318,9 +358,9 @@
 
 .dashboard .btn-outline-success:hover {
     background: linear-gradient(180deg, 
-        rgba(134, 239, 172, 0.95) 0%, 
-        rgba(74, 222, 128, 0.95) 50%,
-        rgba(34, 197, 94, 1) 100%) !important;
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
     transform: translateY(-2px) !important;
     box-shadow: 
         0 6px 16px rgba(0, 0, 0, 0.35),
@@ -328,6 +368,7 @@
         inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
 }
 
+/* Botón Secondary - Gris con degradado */
 .dashboard .btn-outline-secondary {
     background: linear-gradient(180deg, 
         rgba(156, 163, 175, 0.95) 0%, 

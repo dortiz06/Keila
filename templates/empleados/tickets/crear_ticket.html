@@ -5,8 +5,13 @@
 
 {% block content %}
 <div class="container-fluid dashboard">
-    <div class="d-flex flex-column mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="dashboard-title">Generar Ticket de Soporte</h1>
+        <div>
+            <button type="button" class="btn btn-outline-secondary" onclick="window.history.back();">
+                <i class="fas fa-arrow-left me-1"></i>Volver
+            </button>
+        </div>
     </div>
     <div class="container">
         <div class="row justify-content-center">
@@ -91,9 +96,9 @@
                         </div>
                         
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                            <a href="{% url 'empleados:empleado_dashboard' %}" class="btn btn-outline-secondary">
+                            <button type="button" class="btn btn-outline-secondary" id="btn-cancelar">
                                 <i class="fas fa-times me-1"></i>Cancelar
-                            </a>
+                            </button>
                             <button type="submit" class="btn btn-success">
                                 <i class="fas fa-paper-plane me-1"></i>Enviar Ticket
                             </button>
@@ -210,6 +215,125 @@
         0 6px 16px rgba(0, 0, 0, 0.25),
         inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
 }
+
+/* Estilos para el modal */
+.modal-content .btn-success {
+    background: linear-gradient(180deg, 
+        rgba(34, 197, 94, 0.95) 0%, 
+        rgba(22, 163, 74, 0.95) 50%,
+        rgba(15, 118, 50, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 32px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.modal-content .btn-success:hover {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+.modal-content .btn-outline-secondary {
+    background: linear-gradient(180deg, 
+        rgba(107, 114, 128, 0.95) 0%, 
+        rgba(75, 85, 99, 0.95) 50%,
+        rgba(55, 65, 81, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 32px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.modal-content .btn-outline-secondary:hover {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
 </style>
+
+<!-- Modal de Éxito -->
+{% if mostrar_modal and ticket_creado %}
+<div class="modal fade show" id="modalExito" tabindex="-1" aria-labelledby="modalExitoLabel" aria-hidden="false" style="display: block !important;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background: rgba(60, 60, 60, 0.95) !important; backdrop-filter: blur(20px) saturate(180%) !important; -webkit-backdrop-filter: blur(20px) saturate(180%) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; border-radius: 20px !important; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;">
+            <div class="modal-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;">
+                <h5 class="modal-title" id="modalExitoLabel" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
+                    <i class="fas fa-check-circle text-success me-2"></i>Ticket Creado Exitosamente
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">
+                <p class="mb-3">Tu ticket ha sido creado y enviado correctamente.</p>
+                <div class="alert" style="background: rgba(34, 197, 94, 0.2) !important; backdrop-filter: blur(10px) saturate(150%) !important; -webkit-backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(34, 197, 94, 0.4) !important; border-radius: 12px !important; color: #ffffff !important;">
+                    <strong>Código del Ticket:</strong> <span class="badge bg-success">{{ ticket_creado.codigo }}</span>
+                </div>
+                <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important;">
+                    El equipo de Sistemas recibirá tu solicitud y trabajará en resolverla lo antes posible.
+                </p>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid rgba(255, 255, 255, 0.2) !important;">
+                <button type="button" class="btn btn-outline-secondary" onclick="window.history.back();">
+                    <i class="fas fa-arrow-left me-1"></i>Volver
+                </button>
+                <a href="{% url 'empleados:detalle_ticket' ticket_creado.id %}" class="btn btn-success">
+                    <i class="fas fa-eye me-1"></i>Ver Detalle del Ticket
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade show"></div>
+{% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Función para restablecer campos del formulario
+    document.getElementById('btn-cancelar').addEventListener('click', function() {
+        const form = document.querySelector('form');
+        if (form) {
+            form.reset();
+            // Limpiar también los campos select
+            const selects = form.querySelectorAll('select');
+            selects.forEach(select => {
+                select.selectedIndex = 0;
+            });
+        }
+    });
+
+    // Cerrar modal al hacer clic en el backdrop
+    const modal = document.getElementById('modalExito');
+    if (modal) {
+        const backdrop = document.querySelector('.modal-backdrop');
+        backdrop.addEventListener('click', function() {
+            modal.classList.remove('show');
+            backdrop.remove();
+            modal.style.display = 'none';
+        });
+    }
+});
+</script>
 {% endblock %}
 

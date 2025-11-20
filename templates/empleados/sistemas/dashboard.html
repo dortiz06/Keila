@@ -7,7 +7,7 @@
 <style>
 /* Cambiar fondo solo en la vista del dashboard de sistemas */
 body {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/dash/KC07.jpg" %}') !important;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/dash/tech.jpg" %}') !important;
     background-size: cover !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
@@ -16,10 +16,10 @@ body {
 </style>
 <div class="container-fluid dashboard">
     <div class="d-flex flex-column mb-4">
-        <h1 class="dashboard-title" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important;">
+        <h1 class="dashboard-title" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 0 5px 20px rgba(0, 0, 0, 0.85), 0 8px 30px rgba(0, 0, 0, 0.8), 0 10px 40px rgba(0, 0, 0, 0.75), 0 0 50px rgba(0, 0, 0, 0.7) !important;">
             <i class="fas fa-server me-2"></i>Panel Sistemas/IT
         </h1>
-        <p class="dashboard-subtitle mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important; font-weight: 400 !important;">
+        <p class="dashboard-subtitle mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important; font-weight: 400 !important; text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 0 5px 20px rgba(0, 0, 0, 0.85), 0 8px 30px rgba(0, 0, 0, 0.8), 0 10px 40px rgba(0, 0, 0, 0.75), 0 0 50px rgba(0, 0, 0, 0.7) !important;">
             Gestión de tickets y equipos
         </p>
     </div>
@@ -68,44 +68,44 @@ body {
     <div class="row mt-4">
         <!-- Sección de Accesos Rápidos -->
         <div class="col-12">
-            <div class="card mb-4">
+            <div class="card quick-access-card mb-4">
                 <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
                     <h5 class="gestion-section-title mb-4" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
-                        <i class="fas fa-tasks me-2"></i>Accesos Rápidos
+                        <i class="fas fa-bolt me-2"></i>Accesos Rápidos
                     </h5>
-                    <div class="row">
-                        <div class="col-md-3 mb-3">
-                            <a href="{% url 'empleados:gestionar_tickets' %}" class="btn btn-outline-warning w-100">
-                                <i class="fas fa-ticket-alt me-1"></i>Gestionar Tickets
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <a href="{% url 'empleados:inventario_equipos' %}" class="btn btn-outline-primary w-100">
-                                <i class="fas fa-boxes me-1"></i>Inventario
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <a href="{% url 'empleados:agregar_equipo' %}" class="btn btn-outline-success w-100">
-                                <i class="fas fa-plus me-1"></i>Agregar Equipo
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <a href="{% url 'empleados:asignar_equipo' %}" class="btn btn-outline-info w-100">
-                                <i class="fas fa-user-plus me-1"></i>Asignar Equipo
-                            </a>
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-md-3 mb-3">
-                            <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-outline-success w-100">
-                                <i class="fas fa-calendar-plus me-1"></i>Solicitar Vacaciones
-                            </a>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <a href="{% url 'empleados:empleado_dashboard' %}" class="btn btn-outline-secondary w-100">
-                                <i class="fas fa-user me-1"></i>Mi Panel
-                            </a>
-                        </div>
+                    <div class="quick-access-container">
+                        <a href="{% url 'empleados:gestionar_tickets' %}" class="quick-access-btn quick-access-warning">
+                            <div class="quick-access-btn-icon">
+                                <i class="fas fa-ticket-alt"></i>
+                            </div>
+                            <div class="quick-access-btn-content">
+                                <span class="quick-access-btn-title">Gestionar Tickets</span>
+                            </div>
+                        </a>
+                        <a href="{% url 'empleados:inventario_equipos' %}" class="quick-access-btn quick-access-primary">
+                            <div class="quick-access-btn-icon">
+                                <i class="fas fa-boxes"></i>
+                            </div>
+                            <div class="quick-access-btn-content">
+                                <span class="quick-access-btn-title">Inventario</span>
+                            </div>
+                        </a>
+                        <a href="{% url 'empleados:agregar_equipo' %}" class="quick-access-btn quick-access-success">
+                            <div class="quick-access-btn-icon">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="quick-access-btn-content">
+                                <span class="quick-access-btn-title">Agregar Equipo</span>
+                            </div>
+                        </a>
+                        <a href="{% url 'empleados:lista_empleados' %}" class="quick-access-btn quick-access-info">
+                            <div class="quick-access-btn-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="quick-access-btn-content">
+                                <span class="quick-access-btn-title">Lista de Empleados</span>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -591,6 +591,175 @@ body {
     font-family: "Font Awesome 6 Free" !important;
     font-weight: 900 !important;
 }
+
+/* ===== DISEÑO MEJORADO PARA ACCESOS RÁPIDOS - BOTONES DE COLORES ===== */
+.quick-access-card {
+    overflow: hidden !important;
+}
+
+.quick-access-container {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+    gap: 1.5rem !important;
+}
+
+.quick-access-btn {
+    background: linear-gradient(180deg, 
+        rgba(245, 158, 11, 0.95) 0%, 
+        rgba(217, 119, 6, 0.95) 50%,
+        rgba(180, 83, 9, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 16px !important;
+    padding: 1.5rem 2rem !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 1.25rem !important;
+    text-decoration: none !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.quick-access-btn::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent) !important;
+    opacity: 0 !important;
+    transition: opacity 0.3s ease !important;
+}
+
+.quick-access-btn:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 
+        0 8px 20px rgba(0, 0, 0, 0.4),
+        0 4px 10px rgba(0, 0, 0, 0.3),
+        inset 0 1px 2px rgba(255, 255, 255, 0.4) !important;
+}
+
+.quick-access-btn:hover::before {
+    opacity: 1 !important;
+}
+
+.quick-access-warning {
+    background: linear-gradient(180deg, 
+        rgba(245, 158, 11, 0.95) 0%, 
+        rgba(217, 119, 6, 0.95) 50%,
+        rgba(180, 83, 9, 1) 100%) !important;
+}
+
+.quick-access-warning:hover {
+    background: linear-gradient(180deg, 
+        rgba(251, 191, 36, 0.95) 0%, 
+        rgba(245, 158, 11, 0.95) 50%,
+        rgba(217, 119, 6, 1) 100%) !important;
+}
+
+.quick-access-primary {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+}
+
+.quick-access-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
+}
+
+.quick-access-success {
+    background: linear-gradient(180deg, 
+        rgba(34, 197, 94, 0.95) 0%, 
+        rgba(22, 163, 74, 0.95) 50%,
+        rgba(20, 83, 45, 1) 100%) !important;
+}
+
+.quick-access-success:hover {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+}
+
+.quick-access-info {
+    background: linear-gradient(180deg, 
+        rgba(168, 85, 247, 0.95) 0%, 
+        rgba(147, 51, 234, 0.95) 50%,
+        rgba(126, 34, 206, 1) 100%) !important;
+}
+
+.quick-access-info:hover {
+    background: linear-gradient(180deg, 
+        rgba(192, 132, 252, 0.95) 0%, 
+        rgba(168, 85, 247, 0.95) 50%,
+        rgba(147, 51, 234, 1) 100%) !important;
+}
+
+.quick-access-btn-icon {
+    width: 56px !important;
+    height: 56px !important;
+    border-radius: 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.5rem !important;
+    flex-shrink: 0 !important;
+    transition: all 0.3s ease !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+}
+
+.quick-access-btn:hover .quick-access-btn-icon {
+    transform: scale(1.1) rotate(5deg) !important;
+    background: rgba(255, 255, 255, 0.3) !important;
+}
+
+.quick-access-btn-content {
+    flex: 1 !important;
+}
+
+.quick-access-btn-title {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 1.15rem !important;
+    display: block !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Responsive para Accesos Rápidos */
+@media (max-width: 768px) {
+    .quick-access-container {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+    
+    .quick-access-btn {
+        padding: 1.25rem 1.5rem !important;
+        gap: 1rem !important;
+    }
+    
+    .quick-access-btn-icon {
+        width: 48px !important;
+        height: 48px !important;
+        font-size: 1.25rem !important;
+    }
+    
+    .quick-access-btn-title {
+        font-size: 1rem !important;
+    }
+}
 </style>
 {% endblock %}
-

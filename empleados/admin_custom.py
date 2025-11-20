@@ -354,14 +354,19 @@ class EquipoAdmin(admin.ModelAdmin):
             obj.delete()
         
         # Actualizar estado del equipo según asignaciones activas
+        # Respetar estados especiales como EN_REPARACION y DADO_DE_BAJA
         equipo = form.instance
         asignacion_activa = equipo.asignaciones.filter(fecha_devolucion__isnull=True).first()
         if asignacion_activa and equipo.estado != 'ASIGNADO':
-            equipo.estado = 'ASIGNADO'
-            equipo.save(update_fields=['estado'])
+            # Solo cambiar a ASIGNADO si no está en reparación o dado de baja
+            if equipo.estado != 'EN_REPARACION' and equipo.estado != 'DADO_DE_BAJA':
+                equipo.estado = 'ASIGNADO'
+                equipo.save(update_fields=['estado'])
         elif not asignacion_activa and equipo.estado == 'ASIGNADO':
-            equipo.estado = 'DISPONIBLE'
-            equipo.save(update_fields=['estado'])
+            # Solo cambiar a DISPONIBLE si no está en reparación o dado de baja
+            if equipo.estado != 'EN_REPARACION' and equipo.estado != 'DADO_DE_BAJA':
+                equipo.estado = 'DISPONIBLE'
+                equipo.save(update_fields=['estado'])
 
 
 @admin.register(AsignacionEquipo)

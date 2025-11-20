@@ -239,9 +239,9 @@ def jefe_dashboard(request):
 
 @login_required
 def empleado_dashboard(request):
-    """Dashboard para Empleados y personal de sistemas"""
+    """Dashboard para Empleados (no Sistemas)"""
     perfil = get_user_profile(request.user)
-    if not perfil or not (perfil.es_empleado() or perfil.es_sistemas()):
+    if not perfil or not perfil.es_empleado():
         raise PermissionDenied
     
     # Solicitudes del empleado
@@ -287,63 +287,16 @@ def empleado_dashboard(request):
 
 @login_required
 def gestion_usuarios(request):
-    """Gestión de usuarios - Solo RH y Admin"""
-    perfil = get_user_profile(request.user)
-    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
-        raise PermissionDenied
-    
-    usuarios = Perfil.objects.filter(activo=True)
-    
-    # Filtros
-    tipo_perfil = request.GET.get('tipo_perfil')
-    departamento_id = request.GET.get('departamento')
-    busqueda = request.GET.get('busqueda')
-    
-    if tipo_perfil:
-        usuarios = usuarios.filter(tipo_perfil=tipo_perfil)
-    
-    if departamento_id:
-        usuarios = usuarios.filter(departamento_id=departamento_id)
-    
-    if busqueda:
-        usuarios = usuarios.filter(
-            Q(usuario__username__icontains=busqueda) |
-            Q(usuario__first_name__icontains=busqueda) |
-            Q(usuario__last_name__icontains=busqueda) |
-            Q(numero_empleado__icontains=busqueda)
-        )
-    
-    departamentos = Departamento.objects.filter(activo=True)
-    
-    # Determinar la URL del dashboard según el tipo de perfil
-    if perfil.es_admin():
-        url_dashboard = 'empleados:admin_dashboard'
-        texto_dashboard = 'Volver al Panel'
-    elif perfil.es_rh():
-        url_dashboard = 'empleados:rh_dashboard'
-        texto_dashboard = 'Volver al Panel'
-    else:
-        url_dashboard = 'empleados:gestion_usuarios'
-        texto_dashboard = 'Volver'
-    
-    context = {
-        'usuarios': usuarios,
-        'departamentos': departamentos,
-        'tipo_actual': tipo_perfil,
-        'departamento_actual': departamento_id,
-        'busqueda_actual': busqueda,
-        'perfil': perfil,
-        'url_dashboard': url_dashboard,
-        'texto_dashboard': texto_dashboard,
-    }
-    return render(request, 'empleados/rh/gestion_usuarios.html', context)
+    """Gestión de usuarios - Redirige a lista_empleados (vista unificada)"""
+    # Redirigir a la vista unificada de lista de empleados
+    return redirect('empleados:lista_empleados')
 
 
 @login_required
 def crear_usuario(request):
-    """Crear nuevo usuario con perfil"""
+    """Crear nuevo usuario con perfil - Solo Sistemas y Admin"""
     perfil = get_user_profile(request.user)
-    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+    if not perfil or not (perfil.es_sistemas() or perfil.es_admin()):
         raise PermissionDenied
     
     if request.method == 'POST':
@@ -354,8 +307,8 @@ def crear_usuario(request):
             # Redirigir según el origen
             origen = request.POST.get('origen', 'gestion')
             if origen == 'dashboard':
-                if perfil.es_rh():
-                    return redirect('empleados:rh_dashboard')
+                if perfil.es_sistemas():
+                    return redirect('empleados:sistemas_dashboard')
                 elif perfil.es_admin():
                     return redirect('empleados:admin_dashboard')
                 else:
@@ -373,10 +326,10 @@ def crear_usuario(request):
     
     if referer:
         # Verificar si viene del dashboard
-        if '/rh/' in referer or '/administrador/' in referer or '/dashboard/' in referer:
+        if '/sistemas/' in referer or '/administrador/' in referer or '/dashboard/' in referer:
             viene_del_dashboard = True
-            if perfil.es_rh():
-                url_volver = 'empleados:rh_dashboard'
+            if perfil.es_sistemas():
+                url_volver = 'empleados:sistemas_dashboard'
                 texto_volver = 'Volver a Panel Principal'
             elif perfil.es_admin():
                 url_volver = 'empleados:admin_dashboard'
@@ -393,17 +346,98 @@ def crear_usuario(request):
 
 
 @login_required
+def lista_empleados(request):
+    """Lista de empleados - Vista de solo lectura con permisos según rol"""
+    perfil = get_user_profile(request.user)
+    if not perfil:
+        raise PermissionDenied
+    
+    # Empleados normales no pueden ver la lista
+    if perfil.es_empleado() and not perfil.es_jefe_area():
+        raise PermissionDenied
+    
+    # Obtener empleados según permisos
+    if perfil.es_sistemas() or perfil.es_admin() or perfil.es_rh():
+        # Sistemas, Admin, RH: pueden ver todos los empleados
+        empleados = Perfil.objects.filter(activo=True)
+    elif perfil.es_jefe_area():
+        # Jefes de área: solo pueden ver empleados de su departamento
+        if perfil.departamento:
+            empleados = Perfil.objects.filter(
+                activo=True,
+                departamento=perfil.departamento
+            )
+        else:
+            empleados = Perfil.objects.none()
+    else:
+        raise PermissionDenied
+    
+    # Filtros
+    tipo_perfil = request.GET.get('tipo_perfil')
+    departamento_id = request.GET.get('departamento')
+    busqueda = request.GET.get('busqueda')
+    
+    if tipo_perfil:
+        empleados = empleados.filter(tipo_perfil=tipo_perfil)
+    
+    if departamento_id:
+        empleados = empleados.filter(departamento_id=departamento_id)
+    
+    if busqueda:
+        from django.db.models import Q
+        empleados = empleados.filter(
+            Q(usuario__username__icontains=busqueda) |
+            Q(usuario__first_name__icontains=busqueda) |
+            Q(usuario__last_name__icontains=busqueda) |
+            Q(numero_empleado__icontains=busqueda)
+        )
+    
+    departamentos = Departamento.objects.filter(activo=True)
+    
+    # Determinar permisos
+    puede_editar = perfil.es_sistemas() or perfil.es_admin()
+    puede_crear = perfil.es_sistemas() or perfil.es_admin()  # Solo Sistemas y Admin pueden crear
+    es_gestion_completa = perfil.es_sistemas() or perfil.es_admin()  # Para mostrar columnas adicionales
+    
+    context = {
+        'empleados': empleados.order_by('usuario__first_name', 'usuario__last_name'),
+        'departamentos': departamentos,
+        'tipo_actual': tipo_perfil,
+        'departamento_actual': departamento_id,
+        'busqueda_actual': busqueda,
+        'perfil': perfil,
+        'puede_editar': puede_editar,
+        'puede_crear': puede_crear,
+        'es_gestion_completa': es_gestion_completa,
+    }
+    return render(request, 'empleados/lista_empleados.html', context)
+
+
+@login_required
 def editar_perfil(request, perfil_id):
-    """Editar perfil de usuario"""
+    """Editar perfil de usuario - Solo Sistemas y Admin pueden editar"""
     perfil = get_user_profile(request.user)
     perfil_editado = get_object_or_404(Perfil, id=perfil_id)
     
-    # Verificar permisos
-    if not (perfil.es_rh() or perfil.es_admin() or perfil == perfil_editado):
+    # Verificar permisos: Solo Sistemas y Admin pueden editar
+    if not (perfil.es_sistemas() or perfil.es_admin()):
         raise PermissionDenied
     
-    # Determinar si el usuario actual es admin o RH (puede editar todos los campos)
-    es_admin_editor = perfil.es_admin() or perfil.es_rh()
+    # Determinar si el usuario actual es admin o sistemas (puede editar todos los campos)
+    es_admin_editor = perfil.es_admin() or perfil.es_sistemas()
+    
+    # Detectar de dónde viene el usuario para redirigir correctamente
+    referer = request.META.get('HTTP_REFERER', '')
+    viene_de_lista = 'empleados/' in referer or 'lista_empleados' in referer
+    viene_de_gestion = 'gestion_usuarios' in referer or 'usuarios/' in referer
+    
+    # Determinar URL de retorno
+    if perfil.es_admin() and (viene_de_gestion or not viene_de_lista):
+        url_volver = 'empleados:gestion_usuarios'
+        texto_volver = 'Volver a Gestión'
+    else:
+        url_volver = 'empleados:lista_empleados'
+        texto_volver = 'Volver a Lista'
     
     if request.method == 'POST':
         form = EditarPerfilForm(request.POST, instance=perfil_editado, es_admin=es_admin_editor)
@@ -427,7 +461,8 @@ def editar_perfil(request, perfil_id):
                     perfil_actualizado.activo = form.cleaned_data['activo']
             perfil_actualizado.save()
             messages.success(request, 'Perfil actualizado exitosamente.')
-            return redirect('empleados:gestion_usuarios')
+            # Redirigir según el origen
+            return redirect(url_volver)
     else:
         form = EditarPerfilForm(instance=perfil_editado, es_admin=es_admin_editor)
     
@@ -440,6 +475,8 @@ def editar_perfil(request, perfil_id):
         'perfil': perfil,
         'es_admin_editor': es_admin_editor,
         'departamentos': departamentos,
+        'url_volver': url_volver,
+        'texto_volver': texto_volver,
     }
     return render(request, 'empleados/rh/editar_perfil.html', context)
 
@@ -471,9 +508,9 @@ def mis_vacaciones(request):
 
 @login_required
 def solicitar_vacaciones(request):
-    """Solicitar vacaciones - Empleados, RH y personal de sistemas"""
+    """Solicitar vacaciones - Solo Empleados (no RH, no Sistemas)"""
     perfil = get_user_profile(request.user)
-    if not perfil or not (perfil.es_empleado() or perfil.es_sistemas() or perfil.es_rh()):
+    if not perfil or not perfil.es_empleado():
         raise PermissionDenied
     
     if request.method == 'POST':
@@ -896,7 +933,26 @@ def mis_tickets(request):
 def crear_ticket(request):
     """Vista para crear un nuevo ticket"""
     from .forms import TicketForm
+    from django.http import HttpRequest
+    
     perfil = get_object_or_404(Perfil, usuario=request.user)
+    
+    # Obtener la URL de referencia (página anterior)
+    referer = request.META.get('HTTP_REFERER', '')
+    url_volver = referer if referer and 'crear-ticket' not in referer else None
+    
+    # Si no hay referer válido, usar el dashboard según el perfil
+    if not url_volver:
+        if perfil.es_sistemas():
+            url_volver = reverse('empleados:sistemas_dashboard')
+        elif perfil.es_admin():
+            url_volver = reverse('empleados:admin_dashboard')
+        elif perfil.es_rh():
+            url_volver = reverse('empleados:rh_dashboard')
+        elif perfil.es_jefe_area():
+            url_volver = reverse('empleados:jefe_dashboard')
+        else:
+            url_volver = reverse('empleados:empleado_dashboard')
     
     if request.method == 'POST':
         form = TicketForm(request.POST, empleado=perfil)
@@ -905,23 +961,23 @@ def crear_ticket(request):
             ticket.empleado = perfil
             ticket.save()
             messages.success(request, f'Ticket {ticket.codigo} creado exitosamente.')
-            # Redirección basada en el tipo de perfil
-            if perfil.es_sistemas():
-                return redirect('empleados:sistemas_dashboard')
-            elif perfil.es_admin():
-                return redirect('empleados:admin_dashboard')
-            elif perfil.es_rh():
-                return redirect('empleados:rh_dashboard')
-            elif perfil.es_jefe_area():
-                return redirect('empleados:jefe_dashboard')
-            else:
-                return redirect('empleados:mis_tickets')
+            # Renderizar la misma página con el ticket creado para mostrar el modal
+            context = {
+                'perfil': perfil,
+                'form': TicketForm(empleado=perfil),  # Formulario vacío
+                'ticket_creado': ticket,
+                'mostrar_modal': True,
+                'url_volver': url_volver,
+            }
+            return render(request, 'empleados/tickets/crear_ticket.html', context)
     else:
         form = TicketForm(empleado=perfil)
     
     context = {
         'perfil': perfil,
         'form': form,
+        'mostrar_modal': False,
+        'url_volver': url_volver,
     }
     return render(request, 'empleados/tickets/crear_ticket.html', context)
 
@@ -1168,6 +1224,12 @@ def agregar_equipo(request):
             condicion_entrega = form.cleaned_data.get('condicion_entrega', '')
             
             if empleado_asignar:
+                # Cerrar cualquier asignación activa previa antes de crear la nueva
+                asignacion_anterior = equipo.asignacion_actual
+                if asignacion_anterior:
+                    asignacion_anterior.fecha_devolucion = timezone.now().date()
+                    asignacion_anterior.save()
+                
                 # Crear la asignación
                 from .models import AsignacionEquipo
                 asignacion = AsignacionEquipo.objects.create(
@@ -1177,9 +1239,11 @@ def agregar_equipo(request):
                     fecha_asignacion=timezone.now().date(),
                     condicion_entrega=condicion_entrega
                 )
-                # Actualizar estado del equipo
-                equipo.estado = 'ASIGNADO'
-                equipo.save()
+                # Actualizar estado del equipo solo si no está en reparación
+                # Si está en reparación, mantener ese estado aunque se asigne
+                if equipo.estado != 'EN_REPARACION' and equipo.estado != 'DADO_DE_BAJA':
+                    equipo.estado = 'ASIGNADO'
+                    equipo.save()
                 messages.success(request, f'Equipo {equipo.codigo_inventario} agregado y asignado a {empleado_asignar.nombre_completo} exitosamente.')
             else:
                 messages.success(request, f'Equipo {equipo.codigo_inventario} agregado exitosamente al inventario.')
@@ -1197,54 +1261,8 @@ def agregar_equipo(request):
 
 
 @login_required
-def asignar_equipo(request):
-    """Vista para asignar equipos a empleados"""
-    from .forms import AsignacionEquipoForm
-    perfil = get_object_or_404(Perfil, usuario=request.user)
-    
-    # Verificar permisos
-    if not (perfil.es_sistemas() or perfil.es_admin() or perfil.es_rh()):
-        messages.error(request, 'No tienes permiso para realizar esta acción.')
-        return redirect('empleados:empleado_dashboard')
-    
-    if request.method == 'POST':
-        form = AsignacionEquipoForm(request.POST)
-        if form.is_valid():
-            asignacion = form.save(commit=False)
-            asignacion.asignado_por = perfil
-            asignacion.fecha_asignacion = timezone.now().date()  # Establecer fecha automáticamente
-            asignacion.save()
-            
-            # Actualizar estado del equipo
-            equipo = asignacion.equipo
-            equipo.estado = 'ASIGNADO'
-            equipo.save()
-            
-            messages.success(request, f'Equipo {equipo.codigo_inventario} asignado a {asignacion.empleado.nombre_completo}.')
-            # Redirección basada en el tipo de perfil
-            if perfil.es_sistemas():
-                return redirect('empleados:sistemas_dashboard')
-            elif perfil.es_admin():
-                return redirect('empleados:admin_dashboard')
-            elif perfil.es_rh():
-                return redirect('empleados:rh_dashboard')
-            elif perfil.es_jefe_area():
-                return redirect('empleados:jefe_dashboard')
-            else:
-                return redirect('empleados:inventario_equipos')
-    else:
-        form = AsignacionEquipoForm()
-    
-    context = {
-        'perfil': perfil,
-        'form': form,
-    }
-    return render(request, 'empleados/sistemas/asignar_equipo.html', context)
-
-
-@login_required
-def asignar_equipo_desde_inventario(request, equipo_id):
-    """Vista para asignar un equipo específico desde el inventario"""
+def gestionar_asignacion_equipo(request, equipo_id):
+    """Vista unificada para crear o editar una asignación de equipo desde el inventario"""
     from .forms import AsignacionEquipoForm
     perfil = get_object_or_404(Perfil, usuario=request.user)
     
@@ -1254,44 +1272,94 @@ def asignar_equipo_desde_inventario(request, equipo_id):
         return redirect('empleados:empleado_dashboard')
     
     equipo = get_object_or_404(Equipo, id=equipo_id)
+    asignacion_activa = equipo.asignacion_actual
+    asignacion = asignacion_activa if asignacion_activa else None
+    es_edicion = asignacion is not None  # Si hay asignación activa, es edición; si no, es creación
     
-    # Verificar que el equipo esté disponible
-    if equipo.estado != 'DISPONIBLE':
+    # Verificar que el equipo esté disponible o en reparación para nuevas asignaciones
+    if not asignacion and equipo.estado not in ['DISPONIBLE', 'EN_REPARACION']:
         messages.error(request, f'El equipo {equipo.codigo_inventario} no está disponible para asignar.')
         return redirect('empleados:inventario_equipos')
     
+    equipo_en_reparacion = equipo.estado == 'EN_REPARACION'
+    
     if request.method == 'POST':
-        form = AsignacionEquipoForm(request.POST)
+        form = AsignacionEquipoForm(
+            request.POST, 
+            instance=asignacion,
+            equipo_en_reparacion=equipo_en_reparacion,
+            estado_actual=equipo.estado,
+            es_edicion=es_edicion
+        )
+        # Asegurar que el queryset incluya este equipo específico
+        form.fields['equipo'].queryset = Equipo.objects.filter(id=equipo.id)
+        form.fields['equipo'].required = False
+        
         if form.is_valid():
-            asignacion = form.save(commit=False)
-            asignacion.equipo = equipo  # Asegurar que se use el equipo correcto
-            asignacion.asignado_por = perfil
-            asignacion.fecha_asignacion = timezone.now().date()
-            asignacion.save()
+            if es_edicion:
+                # Modo edición: actualizar asignación existente
+                asignacion = form.save()
+            else:
+                # Modo creación: cerrar asignación anterior si existe y crear nueva
+                asignacion_anterior = equipo.asignacion_actual
+                if asignacion_anterior:
+                    asignacion_anterior.fecha_devolucion = timezone.now().date()
+                    asignacion_anterior.save()
+                
+                asignacion = form.save(commit=False)
+                asignacion.equipo = equipo
+                asignacion.asignado_por = perfil
+                asignacion.fecha_asignacion = timezone.now().date()
+                asignacion.save()
             
-            # Actualizar estado del equipo
-            equipo.estado = 'ASIGNADO'
-            equipo.save()
+            # Actualizar estado del equipo según el formulario
+            nuevo_estado = form.cleaned_data.get('nuevo_estado')
+            if nuevo_estado:
+                equipo.estado = nuevo_estado
+                equipo.save()
+            elif asignacion.fecha_devolucion:
+                # Si se devuelve y no se especificó nuevo estado, cambiar a disponible solo si no está en reparación o dado de baja
+                if equipo.estado != 'EN_REPARACION' and equipo.estado != 'DADO_DE_BAJA':
+                    equipo.estado = 'DISPONIBLE'
+                    equipo.save()
+            elif not es_edicion:
+                # Si es creación y no se especificó nuevo estado, cambiar a ASIGNADO (excepto si está en reparación o dado de baja)
+                if equipo.estado != 'EN_REPARACION' and equipo.estado != 'DADO_DE_BAJA':
+                    equipo.estado = 'ASIGNADO'
+                    equipo.save()
+            # Si es edición y no se especificó nuevo estado, mantener el estado actual
             
-            messages.success(request, f'Equipo {equipo.codigo_inventario} asignado a {asignacion.empleado.nombre_completo} exitosamente.')
+            if es_edicion:
+                messages.success(request, f'Asignación del equipo {equipo.codigo_inventario} actualizada exitosamente.')
+            else:
+                messages.success(request, f'Equipo {equipo.codigo_inventario} asignado a {asignacion.empleado.nombre_completo} exitosamente.')
             return redirect('empleados:inventario_equipos')
     else:
-        form = AsignacionEquipoForm(initial={'equipo': equipo})
-        # Pre-seleccionar el equipo y ocultar el campo
+        form = AsignacionEquipoForm(
+            instance=asignacion,
+            equipo_en_reparacion=equipo_en_reparacion,
+            estado_actual=equipo.estado,
+            es_edicion=es_edicion
+        )
+        # Ocultar el campo de equipo ya que no se puede cambiar
         form.fields['equipo'].widget = forms.HiddenInput()
-        form.fields['equipo'].initial = equipo
+        # Asegurar que el equipo esté en el queryset
+        form.fields['equipo'].queryset = Equipo.objects.filter(id=equipo.id)
+        form.fields['equipo'].required = False
     
     context = {
         'perfil': perfil,
         'form': form,
+        'asignacion': asignacion,
         'equipo': equipo,
+        'es_edicion': es_edicion,
     }
-    return render(request, 'empleados/sistemas/asignar_equipo_inventario.html', context)
+    return render(request, 'empleados/sistemas/editar_asignacion_equipo.html', context)
 
 
 @login_required
 def editar_asignacion_equipo(request, asignacion_id):
-    """Vista para editar una asignación de equipo existente"""
+    """Vista para editar una asignación de equipo existente (por ID de asignación)"""
     from .forms import AsignacionEquipoForm
     perfil = get_object_or_404(Perfil, usuario=request.user)
     
@@ -1301,34 +1369,62 @@ def editar_asignacion_equipo(request, asignacion_id):
         return redirect('empleados:empleado_dashboard')
     
     asignacion = get_object_or_404(AsignacionEquipo, id=asignacion_id)
+    equipo = asignacion.equipo
+    es_edicion = True
+    equipo_en_reparacion = equipo.estado == 'EN_REPARACION'
     
     if request.method == 'POST':
-        form = AsignacionEquipoForm(request.POST, instance=asignacion)
+        form = AsignacionEquipoForm(
+            request.POST, 
+            instance=asignacion,
+            equipo_en_reparacion=equipo_en_reparacion,
+            estado_actual=equipo.estado,
+            es_edicion=True
+        )
+        # Asegurar que el queryset incluya este equipo específico
+        form.fields['equipo'].queryset = Equipo.objects.filter(id=equipo.id)
+        form.fields['equipo'].required = False
+        
         if form.is_valid():
             asignacion = form.save()
             
-            # Actualizar estado del equipo según la asignación
-            equipo = asignacion.equipo
-            if asignacion.fecha_devolucion:
-                equipo.estado = 'DISPONIBLE'
+            # Actualizar estado del equipo según el formulario
+            nuevo_estado = form.cleaned_data.get('nuevo_estado')
+            if nuevo_estado:
+                equipo.estado = nuevo_estado
+                equipo.save()
+            elif asignacion.fecha_devolucion:
+                # Si se devuelve y no se especificó nuevo estado, cambiar a disponible solo si no está en reparación o dado de baja
+                if equipo.estado != 'EN_REPARACION' and equipo.estado != 'DADO_DE_BAJA':
+                    equipo.estado = 'DISPONIBLE'
+                    equipo.save()
             else:
-                equipo.estado = 'ASIGNADO'
-            equipo.save()
+                # Si se asigna y no se especificó nuevo estado, mantener EN_REPARACION o DADO_DE_BAJA si ya lo está
+                if equipo.estado != 'EN_REPARACION' and equipo.estado != 'DADO_DE_BAJA':
+                    equipo.estado = 'ASIGNADO'
+                    equipo.save()
             
             messages.success(request, f'Asignación del equipo {equipo.codigo_inventario} actualizada exitosamente.')
             return redirect('empleados:inventario_equipos')
     else:
-        form = AsignacionEquipoForm(instance=asignacion)
+        form = AsignacionEquipoForm(
+            instance=asignacion,
+            equipo_en_reparacion=equipo_en_reparacion,
+            estado_actual=equipo.estado,
+            es_edicion=True
+        )
         # Ocultar el campo de equipo ya que no se puede cambiar
         form.fields['equipo'].widget = forms.HiddenInput()
         # Asegurar que el equipo esté en el queryset
-        form.fields['equipo'].queryset = Equipo.objects.filter(id=asignacion.equipo.id)
+        form.fields['equipo'].queryset = Equipo.objects.filter(id=equipo.id)
+        form.fields['equipo'].required = False
     
     context = {
         'perfil': perfil,
         'form': form,
         'asignacion': asignacion,
-        'equipo': asignacion.equipo,
+        'equipo': equipo,
+        'es_edicion': es_edicion,
     }
     return render(request, 'empleados/sistemas/editar_asignacion_equipo.html', context)
 
@@ -1336,6 +1432,7 @@ def editar_asignacion_equipo(request, asignacion_id):
 @login_required
 def quitar_asignacion_equipo(request, equipo_id):
     """Vista para quitar/remover una asignación de equipo (marcar como devuelto)"""
+    from .forms import AsignacionEquipoForm
     perfil = get_object_or_404(Perfil, usuario=request.user)
     
     # Verificar permisos
@@ -1351,23 +1448,118 @@ def quitar_asignacion_equipo(request, equipo_id):
         return redirect('empleados:inventario_equipos')
     
     if request.method == 'POST':
-        # Marcar la asignación como devuelta
-        asignacion_activa.fecha_devolucion = timezone.now().date()
-        asignacion_activa.save()
+        accion = request.POST.get('accion', 'quitar')
         
-        # Actualizar estado del equipo
-        equipo.estado = 'DISPONIBLE'
-        equipo.save()
+        if accion == 'quitar':
+            # Opción 1: Solo quitar la asignación
+            nuevo_estado = request.POST.get('nuevo_estado', '')
+            
+            # Marcar la asignación como devuelta
+            asignacion_activa.fecha_devolucion = timezone.now().date()
+            asignacion_activa.save()
+            
+            # Actualizar estado del equipo según lo seleccionado
+            if nuevo_estado:
+                equipo.estado = nuevo_estado
+            else:
+                # Si no se especificó, cambiar a disponible solo si no está en reparación o dado de baja
+                if equipo.estado != 'EN_REPARACION' and equipo.estado != 'DADO_DE_BAJA':
+                    equipo.estado = 'DISPONIBLE'
+            equipo.save()
+            
+            messages.success(request, f'Asignación del equipo {equipo.codigo_inventario} removida exitosamente.')
+            return redirect('empleados:inventario_equipos')
         
-        messages.success(request, f'Asignación del equipo {equipo.codigo_inventario} removida exitosamente. El equipo ahora está disponible.')
-        return redirect('empleados:inventario_equipos')
+        elif accion == 'reasignar':
+            # Opción 2: Reasignar a otro empleado/área
+            form = AsignacionEquipoForm(request.POST)
+            form.fields['equipo'].queryset = Equipo.objects.filter(id=equipo.id)
+            form.fields['equipo'].required = False
+            
+            if form.is_valid():
+                # Cerrar la asignación anterior
+                asignacion_activa.fecha_devolucion = timezone.now().date()
+                asignacion_activa.save()
+                
+                # Crear nueva asignación
+                nueva_asignacion = form.save(commit=False)
+                nueva_asignacion.equipo = equipo
+                nueva_asignacion.asignado_por = perfil
+                nueva_asignacion.fecha_asignacion = timezone.now().date()
+                nueva_asignacion.save()
+                
+                # Actualizar estado del equipo
+                nuevo_estado = form.cleaned_data.get('nuevo_estado')
+                if nuevo_estado:
+                    equipo.estado = nuevo_estado
+                elif equipo.estado != 'EN_REPARACION' and equipo.estado != 'DADO_DE_BAJA':
+                    equipo.estado = 'ASIGNADO'
+                equipo.save()
+                
+                messages.success(request, f'Equipo {equipo.codigo_inventario} reasignado a {nueva_asignacion.empleado.nombre_completo} exitosamente.')
+                return redirect('empleados:inventario_equipos')
+            else:
+                # Si hay errores en el formulario, mostrar el formulario con errores
+                context = {
+                    'perfil': perfil,
+                    'equipo': equipo,
+                    'asignacion': asignacion_activa,
+                    'form': form,
+                    'mostrar_formulario_reasignacion': True,
+                }
+                return render(request, 'empleados/sistemas/quitar_asignacion_equipo.html', context)
+    
+    # GET: Mostrar formulario
+    form = AsignacionEquipoForm(
+        initial={'equipo': equipo},
+        equipo_en_reparacion=False,
+        estado_actual=equipo.estado,
+        es_edicion=False
+    )
+    form.fields['equipo'].widget = forms.HiddenInput()
+    form.fields['equipo'].queryset = Equipo.objects.filter(id=equipo.id)
+    form.fields['equipo'].required = False
     
     context = {
         'perfil': perfil,
         'equipo': equipo,
         'asignacion': asignacion_activa,
+        'form': form,
+        'mostrar_formulario_reasignacion': False,
     }
     return render(request, 'empleados/sistemas/quitar_asignacion_equipo.html', context)
+
+
+@login_required
+def marcar_equipo_disponible(request, equipo_id):
+    """Vista para marcar un equipo como disponible después de reparación"""
+    perfil = get_object_or_404(Perfil, usuario=request.user)
+    
+    # Verificar permisos
+    if not (perfil.es_sistemas() or perfil.es_admin() or perfil.es_rh()):
+        messages.error(request, 'No tienes permiso para realizar esta acción.')
+        return redirect('empleados:empleado_dashboard')
+    
+    equipo = get_object_or_404(Equipo, id=equipo_id)
+    
+    # Verificar que el equipo esté en reparación
+    if equipo.estado != 'EN_REPARACION':
+        messages.error(request, f'El equipo {equipo.codigo_inventario} no está en reparación.')
+        return redirect('empleados:inventario_equipos')
+    
+    if request.method == 'POST':
+        # Cambiar estado a disponible
+        equipo.estado = 'DISPONIBLE'
+        equipo.save()
+        
+        messages.success(request, f'Equipo {equipo.codigo_inventario} marcado como disponible. El equipo está listo para ser asignado.')
+        return redirect('empleados:inventario_equipos')
+    
+    context = {
+        'perfil': perfil,
+        'equipo': equipo,
+    }
+    return render(request, 'empleados/sistemas/marcar_equipo_disponible.html', context)
 
 
 @login_required

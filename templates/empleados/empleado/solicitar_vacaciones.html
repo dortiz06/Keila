@@ -10,7 +10,17 @@
             <h1 class="dashboard-title">Solicitar Vacaciones</h1>
         </div>
         <div class="d-flex gap-2">
-            <a href="{% url 'empleados:empleado_dashboard' %}" class="btn btn-outline-secondary">
+            {% if perfil.es_admin %}
+                <a href="{% url 'empleados:admin_dashboard' %}" class="btn btn-outline-secondary">
+            {% elif perfil.es_rh %}
+                <a href="{% url 'empleados:rh_dashboard' %}" class="btn btn-outline-secondary">
+            {% elif perfil.es_jefe_area %}
+                <a href="{% url 'empleados:jefe_dashboard' %}" class="btn btn-outline-secondary">
+            {% elif perfil.es_sistemas %}
+                <a href="{% url 'empleados:sistemas_dashboard' %}" class="btn btn-outline-secondary">
+            {% else %}
+                <a href="{% url 'empleados:empleado_dashboard' %}" class="btn btn-outline-secondary">
+            {% endif %}
                 <i class="fas fa-arrow-left me-1"></i>Volver al Panel
             </a>
         </div>

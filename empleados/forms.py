@@ -527,6 +527,18 @@ class EquipoForm(forms.ModelForm):
 class AsignacionEquipoForm(forms.ModelForm):
     """Formulario para asignar equipos a empleados"""
     
+    # Campo adicional para cambiar el estado del equipo (solo cuando está en reparación)
+    nuevo_estado = forms.ChoiceField(
+        choices=Equipo.ESTADOS_EQUIPO,
+        required=False,
+        label='Cambiar Estado del Equipo',
+        help_text='Seleccione el nuevo estado del equipo después de la asignación',
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'style': 'background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;'
+        })
+    )
+    
     class Meta:
         model = AsignacionEquipo
         fields = ['equipo', 'empleado', 'condicion_entrega', 'observaciones']
@@ -558,6 +570,9 @@ class AsignacionEquipoForm(forms.ModelForm):
         }
     
     def __init__(self, *args, **kwargs):
+        equipo_en_reparacion = kwargs.pop('equipo_en_reparacion', False)
+        estado_actual = kwargs.pop('estado_actual', None)
+        es_edicion = kwargs.pop('es_edicion', False)
         super().__init__(*args, **kwargs)
         instance = kwargs.get('instance')
         
@@ -565,14 +580,49 @@ class AsignacionEquipoForm(forms.ModelForm):
         if instance:
             self.fields['equipo'].queryset = Equipo.objects.all()
         else:
-            # Solo mostrar equipos disponibles para nuevas asignaciones
-            self.fields['equipo'].queryset = Equipo.objects.filter(estado='DISPONIBLE')
+            # Solo mostrar equipos disponibles o en reparación para nuevas asignaciones
+            self.fields['equipo'].queryset = Equipo.objects.filter(estado__in=['DISPONIBLE', 'EN_REPARACION'])
         
         # Solo mostrar empleados activos
         self.fields['empleado'].queryset = Perfil.objects.filter(activo=True).order_by('usuario__first_name', 'usuario__last_name')
         # Hacer opcional observaciones y condición
         self.fields['observaciones'].required = False
         self.fields['condicion_entrega'].required = False
+        
+        # Mostrar campo de estado si el equipo está en reparación, es una edición, o es una nueva asignación
+        mostrar_campo_estado = equipo_en_reparacion or es_edicion
+        
+        # Si es una nueva asignación (no edición), siempre mostrar el campo de estado
+        if not instance and not es_edicion:
+            mostrar_campo_estado = True
+        
+        if mostrar_campo_estado:
+            self.fields['nuevo_estado'].required = False  # Opcional
+            self.fields['nuevo_estado'].initial = estado_actual
+            
+            # En edición, permitir todos los estados incluyendo mantener el actual
+            if es_edicion:
+                choices = [('', 'Mantener estado actual')]
+                choices.extend(Equipo.ESTADOS_EQUIPO)
+                self.fields['nuevo_estado'].choices = choices
+                self.fields['nuevo_estado'].help_text = 'Opcional: Cambie el estado si el equipo se descompuso, se dio de baja, o necesita mantenimiento'
+            elif equipo_en_reparacion:
+                # Si está en reparación y es nueva asignación, no permitir mantener "En Reparación"
+                choices = [('', 'Seleccione el nuevo estado...')]
+                choices.extend([(estado[0], estado[1]) for estado in Equipo.ESTADOS_EQUIPO if estado[0] != 'EN_REPARACION'])
+                self.fields['nuevo_estado'].choices = choices
+                self.fields['nuevo_estado'].required = True
+                self.fields['nuevo_estado'].help_text = 'Seleccione el nuevo estado del equipo después de la asignación'
+            else:
+                # Nueva asignación de equipo disponible - permitir todos los estados excepto mantener el actual
+                choices = [('', 'Mantener estado actual (se cambiará a Asignado automáticamente)')]
+                choices.extend(Equipo.ESTADOS_EQUIPO)
+                self.fields['nuevo_estado'].choices = choices
+                self.fields['nuevo_estado'].help_text = 'Opcional: Seleccione un estado específico, o deje en blanco para cambiar automáticamente a "Asignado"'
+        else:
+            # Ocultar el campo si no se debe mostrar
+            self.fields['nuevo_estado'].widget = forms.HiddenInput()
+            self.fields['nuevo_estado'].required = False
 
 
 class DevolucionEquipoForm(forms.ModelForm):

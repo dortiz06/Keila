@@ -22,13 +22,13 @@
                             <label class="small" style="color: #ffffff !important; font-weight: 400 !important;">Estado</label>
                             <div>
                                 {% if ticket.estado == 'PENDIENTE' %}
-                                    <span class="badge badge-pendiente fs-6">Pendiente</span>
+                                    <span class="badge badge-pendiente fs-6" style="border: none !important; border-radius: 16px !important; padding: 10px 20px !important; font-weight: 700 !important; font-size: 0.9rem !important; color: #ffffff !important; display: inline-block !important; text-align: center !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.3) !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important; font-family: 'Montserrat', sans-serif !important; background: linear-gradient(180deg, rgba(251, 191, 36, 1) 0%, rgba(245, 158, 11, 1) 50%, rgba(217, 119, 6, 1) 100%) !important;">Pendiente</span>
                                 {% elif ticket.estado == 'EN_PROCESO' %}
-                                    <span class="badge badge-proceso fs-6">En Proceso</span>
+                                    <span class="badge badge-proceso fs-6" style="border: none !important; border-radius: 16px !important; padding: 10px 20px !important; font-weight: 700 !important; font-size: 0.9rem !important; color: #ffffff !important; display: inline-block !important; text-align: center !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.3) !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important; font-family: 'Montserrat', sans-serif !important; background: linear-gradient(180deg, rgba(147, 197, 253, 1) 0%, rgba(96, 165, 250, 1) 50%, rgba(59, 130, 246, 1) 100%) !important;">En Proceso</span>
                                 {% elif ticket.estado == 'RESUELTO' %}
-                                    <span class="badge badge-resuelto fs-6">Resuelto</span>
+                                    <span class="badge badge-resuelto fs-6" style="border: none !important; border-radius: 16px !important; padding: 10px 20px !important; font-weight: 700 !important; font-size: 0.9rem !important; color: #ffffff !important; display: inline-block !important; text-align: center !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.3) !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important; font-family: 'Montserrat', sans-serif !important; background: linear-gradient(180deg, rgba(74, 222, 128, 1) 0%, rgba(34, 197, 94, 1) 50%, rgba(22, 163, 74, 1) 100%) !important;">Resuelto</span>
                                 {% elif ticket.estado == 'CANCELADO' %}
-                                    <span class="badge badge-cancelado fs-6">Cancelado</span>
+                                    <span class="badge badge-cancelado fs-6" style="border: none !important; border-radius: 16px !important; padding: 10px 20px !important; font-weight: 700 !important; font-size: 0.9rem !important; color: #ffffff !important; display: inline-block !important; text-align: center !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.3) !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important; font-family: 'Montserrat', sans-serif !important; background: linear-gradient(180deg, rgba(156, 163, 175, 0.95) 0%, rgba(107, 114, 128, 0.95) 50%, rgba(75, 85, 99, 1) 100%) !important;">Cancelado</span>
                                 {% endif %}
                             </div>
                         </div>
@@ -36,13 +36,13 @@
                             <label class="small" style="color: #ffffff !important; font-weight: 400 !important;">Prioridad</label>
                             <div>
                                 {% if ticket.prioridad == 'URGENTE' %}
-                                    <span class="badge badge-urgente fs-6">{{ ticket.get_prioridad_display }}</span>
+                                    <span class="badge badge-urgente fs-6" style="border: none !important; border-radius: 16px !important; padding: 10px 20px !important; font-weight: 700 !important; font-size: 0.9rem !important; color: #ffffff !important; display: inline-block !important; text-align: center !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.3) !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important; font-family: 'Montserrat', sans-serif !important; background: linear-gradient(180deg, rgba(248, 113, 113, 1) 0%, rgba(239, 68, 68, 1) 50%, rgba(220, 38, 38, 1) 100%) !important;">{{ ticket.get_prioridad_display }}</span>
                                 {% elif ticket.prioridad == 'ALTA' %}
-                                    <span class="badge badge-alta fs-6">{{ ticket.get_prioridad_display }}</span>
+                                    <span class="badge badge-alta fs-6" style="border: none !important; border-radius: 16px !important; padding: 10px 20px !important; font-weight: 700 !important; font-size: 0.9rem !important; color: #ffffff !important; display: inline-block !important; text-align: center !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.3) !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important; font-family: 'Montserrat', sans-serif !important; background: linear-gradient(180deg, rgba(245, 158, 11, 0.95) 0%, rgba(217, 119, 6, 0.95) 50%, rgba(180, 83, 9, 1) 100%) !important;">{{ ticket.get_prioridad_display }}</span>
                                 {% elif ticket.prioridad == 'MEDIA' %}
-                                    <span class="badge badge-media fs-6">{{ ticket.get_prioridad_display }}</span>
+                                    <span class="badge badge-media fs-6" style="border: none !important; border-radius: 16px !important; padding: 10px 20px !important; font-weight: 700 !important; font-size: 0.9rem !important; color: #ffffff !important; display: inline-block !important; text-align: center !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.3) !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important; font-family: 'Montserrat', sans-serif !important; background: linear-gradient(180deg, rgba(147, 197, 253, 1) 0%, rgba(96, 165, 250, 1) 50%, rgba(59, 130, 246, 1) 100%) !important;">{{ ticket.get_prioridad_display }}</span>
                                 {% else %}
-                                    <span class="badge badge-baja fs-6">{{ ticket.get_prioridad_display }}</span>
+                                    <span class="badge badge-baja fs-6" style="border: none !important; border-radius: 16px !important; padding: 10px 20px !important; font-weight: 700 !important; font-size: 0.9rem !important; color: #ffffff !important; display: inline-block !important; text-align: center !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.3) !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important; font-family: 'Montserrat', sans-serif !important; background: linear-gradient(180deg, rgba(156, 163, 175, 0.95) 0%, rgba(107, 114, 128, 0.95) 50%, rgba(75, 85, 99, 1) 100%) !important;">{{ ticket.get_prioridad_display }}</span>
                                 {% endif %}
                             </div>
                         </div>
@@ -125,7 +125,8 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
 }
 
-/* Badges con diseño del dashboard - Especificidad alta */
+/* ===== BADGES CON DISEÑO DEL DASHBOARD ===== */
+/* Estilos base para todos los badges - Máxima especificidad */
 .dashboard .badge,
 .dashboard span.badge,
 .dashboard .badge.badge-pendiente,
@@ -135,7 +136,25 @@
 .dashboard .badge.badge-urgente,
 .dashboard .badge.badge-alta,
 .dashboard .badge.badge-media,
-.dashboard .badge.badge-baja {
+.dashboard .badge.badge-baja,
+.dashboard .badge.fs-6,
+.dashboard span.badge.fs-6,
+.dashboard .badge.badge-pendiente.fs-6,
+.dashboard .badge.badge-proceso.fs-6,
+.dashboard .badge.badge-resuelto.fs-6,
+.dashboard .badge.badge-cancelado.fs-6,
+.dashboard .badge.badge-urgente.fs-6,
+.dashboard .badge.badge-alta.fs-6,
+.dashboard .badge.badge-media.fs-6,
+.dashboard .badge.badge-baja.fs-6,
+span.badge.badge-pendiente.fs-6,
+span.badge.badge-proceso.fs-6,
+span.badge.badge-resuelto.fs-6,
+span.badge.badge-cancelado.fs-6,
+span.badge.badge-urgente.fs-6,
+span.badge.badge-alta.fs-6,
+span.badge.badge-media.fs-6,
+span.badge.badge-baja.fs-6 {
     border: none !important;
     border-radius: 16px !important;
     padding: 10px 20px !important;
@@ -151,106 +170,288 @@
     transition: all 0.3s ease !important;
     position: relative !important;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    font-family: 'Montserrat', sans-serif !important;
 }
 
-/* Badge Pendiente */
+/* Badge Pendiente - Amarillo/Naranja */
 .dashboard .badge-pendiente,
-.dashboard span.badge-pendiente {
+.dashboard span.badge-pendiente,
+.dashboard .badge.badge-pendiente,
+.dashboard .badge-pendiente.fs-6,
+.dashboard .badge.badge-pendiente.fs-6,
+span.badge.badge-pendiente.fs-6 {
     background: linear-gradient(180deg, 
         rgba(251, 191, 36, 1) 0%, 
         rgba(245, 158, 11, 1) 50%,
         rgba(217, 119, 6, 1) 100%) !important;
 }
 
-/* Badge En Proceso */
+/* Badge En Proceso - Azul */
 .dashboard .badge-proceso,
-.dashboard span.badge-proceso {
+.dashboard span.badge-proceso,
+.dashboard .badge.badge-proceso,
+.dashboard .badge-proceso.fs-6,
+.dashboard .badge.badge-proceso.fs-6,
+span.badge.badge-proceso.fs-6 {
     background: linear-gradient(180deg, 
         rgba(147, 197, 253, 1) 0%, 
         rgba(96, 165, 250, 1) 50%,
         rgba(59, 130, 246, 1) 100%) !important;
 }
 
-/* Badge Resuelto */
+/* Badge Resuelto - Verde */
 .dashboard .badge-resuelto,
-.dashboard span.badge-resuelto {
+.dashboard span.badge-resuelto,
+.dashboard .badge.badge-resuelto,
+.dashboard .badge-resuelto.fs-6,
+.dashboard .badge.badge-resuelto.fs-6,
+span.badge.badge-resuelto.fs-6,
+.dashboard span.badge.badge-resuelto.fs-6,
+span.badge.badge-resuelto {
     background: linear-gradient(180deg, 
         rgba(74, 222, 128, 1) 0%, 
         rgba(34, 197, 94, 1) 50%,
         rgba(22, 163, 74, 1) 100%) !important;
 }
 
-/* Badge Cancelado */
+/* Badge Cancelado - Gris */
 .dashboard .badge-cancelado,
-.dashboard span.badge-cancelado {
+.dashboard span.badge-cancelado,
+.dashboard .badge.badge-cancelado,
+.dashboard .badge-cancelado.fs-6,
+.dashboard .badge.badge-cancelado.fs-6,
+span.badge.badge-cancelado.fs-6 {
     background: linear-gradient(180deg, 
         rgba(156, 163, 175, 0.95) 0%, 
         rgba(107, 114, 128, 0.95) 50%,
         rgba(75, 85, 99, 1) 100%) !important;
 }
 
-/* Badge Urgente */
+/* Badge Urgente - Rojo */
 .dashboard .badge-urgente,
-.dashboard span.badge-urgente {
+.dashboard span.badge-urgente,
+.dashboard .badge.badge-urgente,
+.dashboard .badge-urgente.fs-6,
+.dashboard .badge.badge-urgente.fs-6,
+span.badge.badge-urgente.fs-6 {
     background: linear-gradient(180deg, 
         rgba(248, 113, 113, 1) 0%, 
         rgba(239, 68, 68, 1) 50%,
         rgba(220, 38, 38, 1) 100%) !important;
 }
 
-/* Badge Alta */
+/* Badge Alta - Naranja */
 .dashboard .badge-alta,
-.dashboard span.badge-alta {
+.dashboard span.badge-alta,
+.dashboard .badge.badge-alta,
+.dashboard .badge-alta.fs-6,
+.dashboard .badge.badge-alta.fs-6,
+span.badge.badge-alta.fs-6 {
     background: linear-gradient(180deg, 
         rgba(245, 158, 11, 0.95) 0%, 
         rgba(217, 119, 6, 0.95) 50%,
         rgba(180, 83, 9, 1) 100%) !important;
 }
 
-/* Badge Media */
+/* Badge Media - Azul */
 .dashboard .badge-media,
-.dashboard span.badge-media {
+.dashboard span.badge-media,
+.dashboard .badge.badge-media,
+.dashboard .badge-media.fs-6,
+.dashboard .badge.badge-media.fs-6,
+span.badge.badge-media.fs-6,
+.dashboard span.badge.badge-media.fs-6,
+span.badge.badge-media {
     background: linear-gradient(180deg, 
         rgba(147, 197, 253, 1) 0%, 
         rgba(96, 165, 250, 1) 50%,
         rgba(59, 130, 246, 1) 100%) !important;
 }
 
-/* Badge Baja */
+/* Badge Baja - Gris */
 .dashboard .badge-baja,
-.dashboard span.badge-baja {
+.dashboard span.badge-baja,
+.dashboard .badge.badge-baja,
+.dashboard .badge-baja.fs-6,
+.dashboard .badge.badge-baja.fs-6,
+span.badge.badge-baja.fs-6 {
     background: linear-gradient(180deg, 
         rgba(156, 163, 175, 0.95) 0%, 
         rgba(107, 114, 128, 0.95) 50%,
         rgba(75, 85, 99, 1) 100%) !important;
 }
 
-/* Botones con estilo del dashboard */
+/* ===== BOTONES CON ESTILO DEL DASHBOARD ===== */
+.dashboard .btn-outline-primary,
+.dashboard .btn-outline-warning,
+.dashboard .btn-outline-success,
+.dashboard .btn-outline-info,
 .dashboard .btn-outline-secondary {
     background: linear-gradient(180deg, 
-        rgba(107, 114, 128, 0.95) 0%, 
-        rgba(75, 85, 99, 0.95) 50%,
-        rgba(55, 65, 81, 1) 100%) !important;
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
     box-shadow: 
-        0 4px 12px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
     border: none !important;
     border-radius: 14px !important;
-    padding: 14px 32px !important;
+    padding: 14px 24px !important;
     font-weight: 600 !important;
     color: #ffffff !important;
     transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .btn-outline-primary {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+}
+
+.dashboard .btn-outline-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-warning {
+    background: linear-gradient(180deg, 
+        rgba(245, 158, 11, 0.95) 0%, 
+        rgba(217, 119, 6, 0.95) 50%,
+        rgba(180, 83, 9, 1) 100%) !important;
+}
+
+.dashboard .btn-outline-warning:hover {
+    background: linear-gradient(180deg, 
+        rgba(251, 191, 36, 0.95) 0%, 
+        rgba(245, 158, 11, 0.95) 50%,
+        rgba(217, 119, 6, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-success {
+    background: linear-gradient(180deg, 
+        rgba(34, 197, 94, 0.95) 0%, 
+        rgba(22, 163, 74, 0.95) 50%,
+        rgba(20, 83, 45, 1) 100%) !important;
+}
+
+.dashboard .btn-outline-success:hover {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-info {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+}
+
+.dashboard .btn-outline-info:hover {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-secondary {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
 }
 
 .dashboard .btn-outline-secondary:hover {
     background: linear-gradient(180deg, 
-        rgba(156, 163, 175, 0.95) 0%, 
-        rgba(107, 114, 128, 0.95) 50%,
-        rgba(75, 85, 99, 1) 100%) !important;
+        rgba(209, 213, 219, 0.95) 0%, 
+        rgba(156, 163, 175, 0.95) 50%,
+        rgba(107, 114, 128, 1) 100%) !important;
     transform: translateY(-2px) !important;
     box-shadow: 
-        0 6px 16px rgba(0, 0, 0, 0.25),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-sm {
+    padding: 10px 20px !important;
+    font-size: 0.875rem !important;
+}
+
+/* Forzar estilos para badges específicos - Máxima prioridad */
+.dashboard .card-body .badge.badge-resuelto.fs-6,
+.dashboard .card-body span.badge.badge-resuelto.fs-6,
+.dashboard .row .badge.badge-resuelto.fs-6,
+.dashboard .row span.badge.badge-resuelto.fs-6 {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 1) 0%, 
+        rgba(34, 197, 94, 1) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+    border: none !important;
+    border-radius: 16px !important;
+    padding: 10px 20px !important;
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+    color: #ffffff !important;
+    display: inline-block !important;
+    text-align: center !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .card-body .badge.badge-media.fs-6,
+.dashboard .card-body span.badge.badge-media.fs-6,
+.dashboard .row .badge.badge-media.fs-6,
+.dashboard .row span.badge.badge-media.fs-6 {
+    background: linear-gradient(180deg, 
+        rgba(147, 197, 253, 1) 0%, 
+        rgba(96, 165, 250, 1) 50%,
+        rgba(59, 130, 246, 1) 100%) !important;
+    border: none !important;
+    border-radius: 16px !important;
+    padding: 10px 20px !important;
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+    color: #ffffff !important;
+    display: inline-block !important;
+    text-align: center !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    font-family: 'Montserrat', sans-serif !important;
 }
 </style>
 {% endblock %}

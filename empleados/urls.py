@@ -23,6 +23,7 @@ urlpatterns = [
     path('usuarios/', views.gestion_usuarios, name='gestion_usuarios'),
     path('usuarios/crear/', views.crear_usuario, name='crear_usuario'),
     path('usuarios/<int:perfil_id>/editar/', views.editar_perfil, name='editar_perfil'),
+    path('empleados/', views.lista_empleados, name='lista_empleados'),
     
     # === GESTIÓN DE VACACIONES ===
     path('vacaciones/', views.mis_vacaciones, name='mis_vacaciones'),
@@ -55,10 +56,10 @@ urlpatterns = [
     path('sistemas/tickets/<int:ticket_id>/resolver/', views.resolver_ticket, name='resolver_ticket'),
     path('sistemas/equipos/', views.inventario_equipos, name='inventario_equipos'),
     path('sistemas/equipos/agregar/', views.agregar_equipo, name='agregar_equipo'),
-    path('sistemas/equipos/asignar/', views.asignar_equipo, name='asignar_equipo'),
-    path('sistemas/equipos/<int:equipo_id>/asignar/', views.asignar_equipo_desde_inventario, name='asignar_equipo_inventario'),
+    path('sistemas/equipos/<int:equipo_id>/gestionar/', views.gestionar_asignacion_equipo, name='gestionar_asignacion_equipo'),
     path('sistemas/equipos/asignacion/<int:asignacion_id>/editar/', views.editar_asignacion_equipo, name='editar_asignacion_equipo'),
     path('sistemas/equipos/<int:equipo_id>/quitar-asignacion/', views.quitar_asignacion_equipo, name='quitar_asignacion_equipo'),
+    path('sistemas/equipos/<int:equipo_id>/marcar-disponible/', views.marcar_equipo_disponible, name='marcar_equipo_disponible'),
     path('sistemas/equipos/<int:asignacion_id>/devolver/', views.devolver_equipo, name='devolver_equipo'),
     
     # === API ENDPOINTS ===
