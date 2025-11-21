@@ -21,6 +21,14 @@ def saludo_dinamico():
         return "Buenas noches,"
 
 @register.simple_tag
+def saludo_bienvenida():
+    """
+    Retorna un saludo inclusivo que funciona para cualquier género:
+    "Bienvenido/a"
+    """
+    return "Bienvenido/a"
+
+@register.simple_tag
 def categoria_icono(nombre_categoria):
     """
     Retorna el icono de Font Awesome correspondiente a una categoría de equipo.

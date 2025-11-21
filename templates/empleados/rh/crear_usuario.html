@@ -12,7 +12,7 @@
 <style>
 /* Cambiar fondo solo en la vista de crear usuario */
 body {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/dash/elevador.jpg" %}') !important;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/dash/kga02.jpg" %}') !important;
     background-size: cover !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
@@ -354,24 +354,62 @@ body {
                             <h5 class="mb-0" style="font-size: 0.95rem;"><i class="fas fa-info-circle me-2"></i>Información Importante</h5>
                         </div>
                         <div class="card-body" style="padding: 1rem;">
-                            <h6 style="color: #ffffff !important; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 600;">Tipos de Perfil:</h6>
-                            <ul class="list-unstyled" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif; font-size: 0.8rem;">
-                                <li class="mb-1"><span class="badge bg-danger me-2" style="font-size: 0.7rem;">ADMIN</span> <span style="font-size: 0.75rem;">Acceso completo</span></li>
-                                <li class="mb-1"><span class="badge bg-info me-2" style="font-size: 0.7rem;">RH</span> <span style="font-size: 0.75rem;">Gestión personal</span></li>
-                                <li class="mb-1"><span class="badge bg-warning me-2" style="font-size: 0.7rem;">JEFE</span> <span style="font-size: 0.75rem;">Aprobación solicitudes</span></li>
-                                <li class="mb-1"><span class="badge bg-secondary me-2" style="font-size: 0.7rem;">EMPLEADO</span> <span style="font-size: 0.75rem;">Usuario estándar</span></li>
+                            <h6 style="color: #ffffff !important; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.75rem;">Tipos de Perfil:</h6>
+                            <ul class="list-unstyled" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif; font-size: 0.8rem; margin-bottom: 1rem;">
+                                <li class="mb-2 d-flex align-items-center">
+                                    <span class="badge bg-danger me-2" style="font-size: 0.7rem; padding: 0.35rem 0.6rem; border-radius: 6px;">ADMIN</span> 
+                                    <span style="font-size: 0.75rem;">Acceso completo</span>
+                                </li>
+                                <li class="mb-2 d-flex align-items-center">
+                                    <span class="badge bg-info me-2" style="font-size: 0.7rem; padding: 0.35rem 0.6rem; border-radius: 6px;">RH</span> 
+                                    <span style="font-size: 0.75rem;">Gestión personal</span>
+                                </li>
+                                <li class="mb-2 d-flex align-items-center">
+                                    <span class="badge bg-warning me-2" style="font-size: 0.7rem; padding: 0.35rem 0.6rem; border-radius: 6px;">JEFE</span> 
+                                    <span style="font-size: 0.75rem;">Aprobación solicitudes</span>
+                                </li>
+                                <li class="mb-2 d-flex align-items-center">
+                                    <span class="badge bg-purple me-2" style="font-size: 0.7rem; padding: 0.35rem 0.6rem; border-radius: 6px; background-color: #9333ea !important;">SISTEMAS</span> 
+                                    <span style="font-size: 0.75rem;">Soporte técnico</span>
+                                </li>
+                                <li class="mb-2 d-flex align-items-center">
+                                    <span class="badge bg-secondary me-2" style="font-size: 0.7rem; padding: 0.35rem 0.6rem; border-radius: 6px;">EMPLEADO</span> 
+                                    <span style="font-size: 0.75rem;">Usuario estándar</span>
+                                </li>
                             </ul>
 
-                            <h6 class="mt-3" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 600;">Política de Vacaciones:</h6>
-                            <ul class="list-unstyled" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif; font-size: 0.8rem;">
-                                <li class="mb-1"><i class="fas fa-check me-2" style="color: #22c55e !important; font-size: 0.7rem;"></i><span style="font-size: 0.75rem;">20 días anuales</span></li>
-                                <li class="mb-1"><i class="fas fa-clock me-2" style="color: #3b82f6 !important; font-size: 0.7rem;"></i><span style="font-size: 0.75rem;">Elegible después de 1 año</span></li>
-                                <li class="mb-1"><i class="fas fa-calendar me-2" style="color: #f59e0b !important; font-size: 0.7rem;"></i><span style="font-size: 0.75rem;">Fecha importante</span></li>
+                            <h6 class="mt-3" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.75rem;">Política de Vacaciones:</h6>
+                            <ul class="list-unstyled" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif; font-size: 0.8rem; margin-bottom: 1rem;">
+                                <li class="mb-2 d-flex align-items-center">
+                                    <i class="fas fa-check-circle me-2" style="color: #22c55e !important; font-size: 0.8rem;"></i>
+                                    <span style="font-size: 0.75rem;">20 días anuales</span>
+                                </li>
+                                <li class="mb-2 d-flex align-items-center">
+                                    <i class="fas fa-clock me-2" style="color: #3b82f6 !important; font-size: 0.8rem;"></i>
+                                    <span style="font-size: 0.75rem;">Elegible después de 1 año</span>
+                                </li>
+                                <li class="mb-2 d-flex align-items-center">
+                                    <i class="fas fa-calendar-alt me-2" style="color: #f59e0b !important; font-size: 0.8rem;"></i>
+                                    <span style="font-size: 0.75rem;">Acumulación mensual</span>
+                                </li>
+                                <li class="mb-2 d-flex align-items-center">
+                                    <i class="fas fa-exclamation-triangle me-2" style="color: #ef4444 !important; font-size: 0.8rem;"></i>
+                                    <span style="font-size: 0.75rem;">Fecha de contratación importante</span>
+                                </li>
                             </ul>
 
-                            <div class="alert alert-info mt-3" style="background: rgba(59, 130, 246, 0.2) !important; border: 1px solid rgba(59, 130, 246, 0.4) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif; padding: 0.75rem; font-size: 0.8rem;">
+                            <h6 class="mt-3" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.75rem;">Campos Requeridos:</h6>
+                            <ul class="list-unstyled" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif; font-size: 0.75rem; margin-bottom: 1rem;">
+                                <li class="mb-1"><i class="fas fa-asterisk me-1" style="color: #ef4444 !important; font-size: 0.6rem;"></i><span>Usuario, Email, Nombre, Apellido</span></li>
+                                <li class="mb-1"><i class="fas fa-asterisk me-1" style="color: #ef4444 !important; font-size: 0.6rem;"></i><span>Contraseña (mínimo 8 caracteres)</span></li>
+                                <li class="mb-1"><i class="fas fa-asterisk me-1" style="color: #ef4444 !important; font-size: 0.6rem;"></i><span>Tipo de Perfil, Departamento</span></li>
+                                <li class="mb-1"><i class="fas fa-asterisk me-1" style="color: #ef4444 !important; font-size: 0.6rem;"></i><span>Número de Empleado, Puesto</span></li>
+                                <li class="mb-1"><i class="fas fa-asterisk me-1" style="color: #ef4444 !important; font-size: 0.6rem;"></i><span>Fecha de Contratación</span></li>
+                            </ul>
+
+                            <div class="alert alert-info mt-3" style="background: rgba(59, 130, 246, 0.2) !important; border: 1px solid rgba(59, 130, 246, 0.4) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif; padding: 0.75rem; font-size: 0.8rem; border-radius: 8px;">
                                 <i class="fas fa-lightbulb me-2"></i>
-                                El número de empleado debe ser único.
+                                <strong>Importante:</strong> El número de empleado debe ser único en el sistema.
                             </div>
                         </div>
                     </div>

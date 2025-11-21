@@ -235,13 +235,13 @@ class SolicitudVacacionesAdmin(admin.ModelAdmin):
             'fields': ('empleado', 'fecha_inicio', 'fecha_fin', 'dias_solicitados', 'tipo', 'motivo')
         }),
         ('Estado y Aprobaciones', {
-            'fields': ('estado', 'aprobado_por_jefe', 'aprobado_por_rh')
+            'fields': ('estado', 'aprobado_por_jefe', 'aprobado_por_admin', 'aprobado_por_rh')
         }),
         ('Comentarios', {
-            'fields': ('comentarios_jefe', 'comentarios_rh')
+            'fields': ('comentarios_jefe', 'comentarios_admin', 'comentarios_rh')
         }),
         ('Fechas', {
-            'fields': ('fecha_solicitud', 'fecha_aprobacion_jefe', 'fecha_aprobacion_rh')
+            'fields': ('fecha_solicitud', 'fecha_aprobacion_jefe', 'fecha_aprobacion_admin', 'fecha_aprobacion_rh')
         }),
     )
     

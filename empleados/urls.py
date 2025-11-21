@@ -29,6 +29,7 @@ urlpatterns = [
     path('vacaciones/', views.mis_vacaciones, name='mis_vacaciones'),
     path('vacaciones/solicitar/', views.solicitar_vacaciones, name='solicitar_vacaciones'),
     path('vacaciones/<int:solicitud_id>/aprobar-jefe/', views.aprobar_jefe, name='aprobar_jefe'),
+    path('vacaciones/<int:solicitud_id>/aprobar-admin/', views.aprobar_admin, name='aprobar_admin'),
     path('vacaciones/<int:solicitud_id>/aprobar-rh/', views.aprobar_rh, name='aprobar_rh'),
     path('vacaciones/<int:solicitud_id>/pdf/', views.generar_pdf_vacaciones, name='generar_pdf_vacaciones'),
     path('vacaciones/solicitudes-jefe/', views.solicitudes_jefe, name='solicitudes_jefe'),

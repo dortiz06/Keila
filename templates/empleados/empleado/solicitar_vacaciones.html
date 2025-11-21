@@ -87,14 +87,6 @@
                                 {% endfor %}
                             {% endif %}
 
-                            {% if puede_solicitar_normales %}
-                            <div class="alert alert-info alert-dismissible fade show" role="alert">
-                                <i class="fas fa-info-circle me-2"></i>
-                                <strong>¡Buenas noticias!</strong> Tienes días acumulados disponibles para solicitar tus vacaciones normales.
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                            {% endif %}
-
                             <form method="post" id="solicitudForm">
                                 {% csrf_token %}
                                 
@@ -245,8 +237,17 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
 
 <script>
+// Bandera global para evitar que el modal se muestre múltiples veces
+window.modalYaMostrado = false;
+
 // Funciones globales para el modal (deben estar disponibles antes de DOMContentLoaded)
 function mostrarModalConfirmacion() {
+    // Evitar mostrar el modal si ya se mostró
+    if (window.modalYaMostrado) {
+        console.log('Modal ya fue mostrado, evitando mostrar nuevamente');
+        return;
+    }
+    
     console.log('=== FUNCIÓN mostrarModalConfirmacion LLAMADA ===');
     const modal = document.getElementById('modalConfirmacion');
     console.log('Modal elemento:', modal);
@@ -263,6 +264,9 @@ function mostrarModalConfirmacion() {
     
     console.log('Modal encontrado, mostrando...');
     console.log('Display antes:', window.getComputedStyle(modal).display);
+    
+    // Marcar que el modal ya se mostró
+    window.modalYaMostrado = true;
     
     // Forzar el display a flex con !important
     modal.style.setProperty('display', 'flex', 'important');
@@ -755,15 +759,15 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('sessionStorage limpiado');
         }
         
-        // Si se encontró algún mensaje de éxito, mostrar el modal
-        if (mensajeEncontrado) {
+        // Si se encontró algún mensaje de éxito, mostrar el modal (solo una vez)
+        if (mensajeEncontrado && !window.modalYaMostrado) {
             console.log('✅ Mensaje de éxito confirmado - Mostrando modal en 500ms...');
             setTimeout(function() {
                 console.log('Llamando a mostrarModalConfirmacion...');
-                if (typeof mostrarModalConfirmacion === 'function') {
+                if (typeof mostrarModalConfirmacion === 'function' && !window.modalYaMostrado) {
                     mostrarModalConfirmacion();
                 } else {
-                    console.error('ERROR: mostrarModalConfirmacion no está definida');
+                    console.log('Modal ya fue mostrado o función no disponible');
                 }
             }, 500);
         } else {

@@ -22,8 +22,8 @@ body {
                 <i class="fas fa-users me-2"></i>Lista de Empleados
             </h1>
             {% if perfil.es_jefe_area %}
-            <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important;">
-                Empleados de tu departamento: <strong>{{ perfil.departamento.nombre }}</strong>
+            <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3) !important;">
+                Empleados de tu departamento: <strong style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3) !important;">{{ perfil.departamento.nombre }}</strong>
             </p>
             {% endif %}
         </div>

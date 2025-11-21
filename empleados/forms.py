@@ -155,6 +155,11 @@ class SolicitudVacacionesForm(forms.ModelForm):
                     f'Días disponibles: {dias_disponibles}'
                 )
             else:
+                # Para empleados con antigüedad >= 1, mostrar solo TIPOS (sin legacy) para evitar duplicados
+                self.fields['tipo'].choices = [
+                    ('NORMAL', 'Vacación Normal'),
+                    ('EXTRAORDINARIA', 'Vacación Extraordinaria'),
+                ]
                 self.fields['tipo'].help_text = f'Antigüedad: {antiguedad} años. Días disponibles: {dias_disponibles}'
     
     def clean(self):
@@ -224,6 +229,30 @@ class AprobacionJefeForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.solicitud = kwargs.pop('solicitud', None)
         super().__init__(*args, **kwargs)
+
+
+class AprobacionAdminForm(forms.Form):
+    """Formulario para aprobar/rechazar solicitudes por administrador"""
+    accion = forms.ChoiceField(
+        choices=[('aprobar', 'Aprobar'), ('rechazar', 'Rechazar')],
+        widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
+        label='Decisión'
+    )
+    comentario = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={
+            'rows': 3,
+            'class': 'form-control',
+            'placeholder': 'Comentarios sobre la decisión (opcional)'
+        }),
+        label='Comentarios'
+    )
+    
+    def __init__(self, *args, **kwargs):
+        solicitud = kwargs.pop('solicitud', None)
+        super().__init__(*args, **kwargs)
+        
+        self.fields['accion'].required = True
 
 
 class AprobacionRHForm(forms.Form):

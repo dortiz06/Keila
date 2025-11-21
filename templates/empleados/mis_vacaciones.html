@@ -25,7 +25,7 @@
                 <i class="fas fa-arrow-left me-1"></i>Volver al Panel
             </a>
             {% if not perfil.es_sistemas and not perfil.es_rh %}
-            <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-primary">
+            <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-primary" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">
                 <i class="fas fa-plus me-1"></i>Solicitar Vacaciones
             </a>
             {% endif %}
@@ -126,7 +126,7 @@
                 <i class="fas fa-calendar-plus fa-4x mb-3" style="color: rgba(255, 255, 255, 0.6) !important;"></i>
                 <h4 style="color: #ffffff !important;">No tienes solicitudes de vacaciones</h4>
                 <p style="color: rgba(255, 255, 255, 0.7) !important;">Haz clic en "Solicitar Vacaciones" para crear tu primera solicitud</p>
-                <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-primary">
+                <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-primary" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">
                     <i class="fas fa-plus me-1"></i>Solicitar Vacaciones
                 </a>
             </div>

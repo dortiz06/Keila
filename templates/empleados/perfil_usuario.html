@@ -25,7 +25,22 @@ body {
                     <h1 class="dashboard-title">
                 {% if es_propio_perfil %}
                     {% if perfil and perfil.es_sistemas %}
-                        Sistemas
+                        Sistemas 
+                        {% if tiene_perfil %}
+                            {% if perfil.nombre_completo %}
+                                {{ perfil.nombre_completo }}
+                            {% elif user.get_full_name %}
+                                {{ user.get_full_name }}
+                            {% else %}
+                                {{ user.username }}
+                            {% endif %}
+                        {% else %}
+                            {% if user.get_full_name %}
+                                {{ user.get_full_name }}
+                            {% else %}
+                                {{ user.username }}
+                            {% endif %}
+                        {% endif %}
                     {% else %}
                         <span id="saludo-dinamico" class="saludo-placeholder"></span>
                         {% comment %} Nombre completo {% endcomment %}
@@ -173,6 +188,7 @@ body {
                 </div>
 
                 <!-- Información de Vacaciones -->
+                {% if es_propio_perfil and not perfil.es_sistemas and not perfil.es_rh and not perfil.es_admin %}
                 <div class="card mb-4 profile-card">
                     <div class="card-header profile-card-header">
                         <h5 class="mb-0">
@@ -211,12 +227,13 @@ body {
                             </div>
                         </div>
                         <div class="text-center mt-4">
-                            <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-success">
+                            <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-success" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">
                                 <i class="fas fa-calendar-check me-1"></i>Solicitar Vacaciones
                             </a>
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 {% else %}
                 <div class="card mb-4 profile-card">
                     <div class="card-body text-center py-5">
@@ -234,7 +251,7 @@ body {
                     <div class="card-header profile-card-header">
                         <h5 class="mb-0">
                             <i class="fas fa-laptop me-2"></i>
-                            Mis Equipos Asignados
+                            {% if es_propio_perfil %}Mis Equipos Asignados{% else %}Equipos Asignados{% endif %}
                         </h5>
                     </div>
                     <div class="card-body">
@@ -271,11 +288,13 @@ body {
                                 </tbody>
                             </table>
                         </div>
+                        {% if es_propio_perfil %}
                         <div class="mt-3">
                             <a href="{% url 'empleados:mis_equipos' %}" class="btn btn-sm btn-primary">
                                 <i class="fas fa-eye me-1"></i>Ver Detalle Completo
                             </a>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
                 {% endif %}
@@ -288,7 +307,7 @@ body {
                     <div class="card-header profile-card-header">
                         <h6 class="mb-0">
                             <i class="fas fa-user-tag me-2"></i>
-                            Mis Roles y Permisos
+                            {% if es_propio_perfil %}Mis Roles y Permisos{% else %}Roles y Permisos{% endif %}
                         </h6>
                     </div>
                     <div class="card-body">
@@ -302,6 +321,7 @@ body {
                             <p class="text-muted mb-3" style="color: rgba(255, 255, 255, 0.6) !important;">No tienes roles asignados</p>
                         {% endif %}
                         
+                        {% if es_propio_perfil %}
                         <hr style="border-color: rgba(255, 255, 255, 0.15) !important; margin: 1.5rem 0 !important;">
                         
                         <div class="d-grid gap-2">
@@ -318,15 +338,17 @@ body {
                             {% endif %}
                             
                             {% if es_empleado %}
-                                <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-success btn-sm">
+                                <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-success btn-sm" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">
                                     <i class="fas fa-calendar-check me-1"></i>Solicitar Vacaciones
                                 </a>
                             {% endif %}
                         </div>
+                        {% endif %}
                     </div>
                 </div>
 
                 <!-- Acciones Rápidas -->
+                {% if es_propio_perfil %}
                 <div class="card mb-4 profile-card">
                     <div class="card-header profile-card-header">
                         <h6 class="mb-0">
@@ -335,33 +357,98 @@ body {
                         </h6>
                     </div>
                     <div class="card-body">
-                        <div class="d-grid gap-2">
-                            <a href="{% url 'empleados:dashboard' %}" class="btn btn-primary btn-sm">
-                                <i class="fas fa-home me-1"></i>Inicio
-                            </a>
-                            {% if perfil.es_rh or perfil.es_admin or perfil.es_sistemas or perfil.es_jefe_area %}
-                            <a href="{% url 'empleados:lista_empleados' %}" class="btn btn-primary btn-sm">
-                                <i class="fas fa-users me-1"></i>Ver Empleados
-                            </a>
-                            {% endif %}
-                            {% if perfil.es_sistemas or perfil.es_admin %}
-                            <a href="{% url 'empleados:lista_empleados' %}" class="btn btn-info btn-sm">
-                                <i class="fas fa-cog me-1"></i>Gestión Usuarios
-                            </a>
-                            {% endif %}
-                            {% if not perfil.es_sistemas and not perfil.es_rh %}
-                            <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-success btn-sm">
-                                <i class="fas fa-calendar-alt me-1"></i>Solicitar Vacaciones
-                            </a>
-                            {% endif %}
-                            {% if user.is_staff %}
-                                <a href="/admin/" class="btn btn-warning btn-sm">
-                                    <i class="fas fa-cog me-1"></i>Panel Administrativo
+                        <div class="profile-quick-access-container">
+                            {% if perfil.es_sistemas %}
+                                <!-- Accesos específicos para Sistemas -->
+                                <a href="{% url 'empleados:dashboard' %}" class="profile-quick-access-btn profile-quick-access-primary">
+                                    <div class="profile-quick-access-icon">
+                                        <i class="fas fa-home"></i>
+                                    </div>
+                                    <span class="profile-quick-access-text">Inicio</span>
                                 </a>
+                                <a href="{% url 'empleados:gestionar_tickets' %}" class="profile-quick-access-btn profile-quick-access-warning">
+                                    <div class="profile-quick-access-icon">
+                                        <i class="fas fa-ticket-alt"></i>
+                                    </div>
+                                    <span class="profile-quick-access-text">Gestionar Tickets</span>
+                                </a>
+                                <a href="{% url 'empleados:inventario_equipos' %}" class="profile-quick-access-btn profile-quick-access-primary">
+                                    <div class="profile-quick-access-icon">
+                                        <i class="fas fa-boxes"></i>
+                                    </div>
+                                    <span class="profile-quick-access-text">Inventario</span>
+                                </a>
+                                <a href="{% url 'empleados:agregar_equipo' %}" class="profile-quick-access-btn profile-quick-access-success">
+                                    <div class="profile-quick-access-icon">
+                                        <i class="fas fa-plus"></i>
+                                    </div>
+                                    <span class="profile-quick-access-text">Agregar Equipo</span>
+                                </a>
+                                <a href="{% url 'empleados:lista_empleados' %}" class="profile-quick-access-btn profile-quick-access-info">
+                                    <div class="profile-quick-access-icon">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <span class="profile-quick-access-text">Lista de Empleados</span>
+                                </a>
+                                <a href="{% url 'empleados:crear_usuario' %}" class="profile-quick-access-btn profile-quick-access-info">
+                                    <div class="profile-quick-access-icon">
+                                        <i class="fas fa-user-plus"></i>
+                                    </div>
+                                    <span class="profile-quick-access-text">Crear Usuario</span>
+                                </a>
+                                {% if user.is_staff %}
+                                <a href="/admin/" class="profile-quick-access-btn profile-quick-access-warning">
+                                    <div class="profile-quick-access-icon">
+                                        <i class="fas fa-cog"></i>
+                                    </div>
+                                    <span class="profile-quick-access-text">Panel Administrativo</span>
+                                </a>
+                                {% endif %}
+                            {% else %}
+                                <!-- Accesos para otros perfiles -->
+                                <a href="{% url 'empleados:dashboard' %}" class="profile-quick-access-btn profile-quick-access-primary">
+                                    <div class="profile-quick-access-icon">
+                                        <i class="fas fa-home"></i>
+                                    </div>
+                                    <span class="profile-quick-access-text">Inicio</span>
+                                </a>
+                                {% if perfil.es_rh or perfil.es_admin or perfil.es_jefe_area %}
+                                <a href="{% url 'empleados:lista_empleados' %}" class="profile-quick-access-btn profile-quick-access-primary">
+                                    <div class="profile-quick-access-icon">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <span class="profile-quick-access-text">Ver Empleados</span>
+                                </a>
+                                {% endif %}
+                                {% if perfil.es_admin %}
+                                <a href="{% url 'empleados:lista_empleados' %}" class="profile-quick-access-btn profile-quick-access-info">
+                                    <div class="profile-quick-access-icon">
+                                        <i class="fas fa-cog"></i>
+                                    </div>
+                                    <span class="profile-quick-access-text">Gestión Usuarios</span>
+                                </a>
+                                {% endif %}
+                                {% if not perfil.es_rh %}
+                                <a href="{% url 'empleados:solicitar_vacaciones' %}" class="profile-quick-access-btn profile-quick-access-success">
+                                    <div class="profile-quick-access-icon">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    <span class="profile-quick-access-text" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">Solicitar Vacaciones</span>
+                                </a>
+                                {% endif %}
+                                {% if user.is_staff %}
+                                <a href="/admin/" class="profile-quick-access-btn profile-quick-access-warning">
+                                    <div class="profile-quick-access-icon">
+                                        <i class="fas fa-cog"></i>
+                                    </div>
+                                    <span class="profile-quick-access-text">Panel Administrativo</span>
+                                </a>
+                                {% endif %}
                             {% endif %}
                         </div>
                     </div>
                 </div>
+                {% endif %}
 
                 <!-- Información del Sistema -->
                 <div class="card profile-card">
@@ -827,6 +914,140 @@ body {
     color: #ffffff !important;
 }
 
+/* ===== BOTONES DE ACCESOS RÁPIDOS DEL PERFIL - DISEÑO MEJORADO ===== */
+.profile-quick-access-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+}
+
+.profile-quick-access-btn {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    padding: 0.625rem 0.875rem !important;
+    border-radius: 12px !important;
+    text-decoration: none !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    border: none !important;
+    box-shadow: 
+        0 3px 8px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+.profile-quick-access-btn::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent) !important;
+    opacity: 0 !important;
+    transition: opacity 0.3s ease !important;
+}
+
+.profile-quick-access-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+.profile-quick-access-btn:hover::before {
+    opacity: 1 !important;
+}
+
+.profile-quick-access-icon {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1rem !important;
+    flex-shrink: 0 !important;
+    transition: all 0.3s ease !important;
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+}
+
+.profile-quick-access-btn:hover .profile-quick-access-icon {
+    transform: scale(1.08) rotate(5deg) !important;
+    background: rgba(255, 255, 255, 0.35) !important;
+}
+
+.profile-quick-access-text {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+    flex: 1 !important;
+}
+
+/* Colores de botones */
+.profile-quick-access-primary {
+    background: linear-gradient(180deg, 
+        rgba(37, 99, 235, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 30, 100, 1) 100%) !important;
+}
+
+.profile-quick-access-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 56, 168, 1) 100%) !important;
+}
+
+.profile-quick-access-success {
+    background: linear-gradient(180deg, 
+        rgba(34, 197, 94, 0.95) 0%, 
+        rgba(22, 163, 74, 0.95) 50%,
+        rgba(15, 118, 50, 1) 100%) !important;
+}
+
+.profile-quick-access-success:hover {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+}
+
+.profile-quick-access-warning {
+    background: linear-gradient(180deg, 
+        rgba(245, 158, 11, 0.95) 0%, 
+        rgba(217, 119, 6, 0.95) 50%,
+        rgba(180, 83, 9, 1) 100%) !important;
+}
+
+.profile-quick-access-warning:hover {
+    background: linear-gradient(180deg, 
+        rgba(251, 191, 36, 0.95) 0%, 
+        rgba(245, 158, 11, 0.95) 50%,
+        rgba(217, 119, 6, 1) 100%) !important;
+}
+
+.profile-quick-access-info {
+    background: linear-gradient(180deg, 
+        rgba(168, 85, 247, 0.95) 0%, 
+        rgba(147, 51, 234, 0.95) 50%,
+        rgba(126, 34, 206, 1) 100%) !important;
+}
+
+.profile-quick-access-info:hover {
+    background: linear-gradient(180deg, 
+        rgba(192, 132, 252, 0.95) 0%, 
+        rgba(168, 85, 247, 0.95) 50%,
+        rgba(147, 51, 234, 1) 100%) !important;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .dashboard-title {
@@ -836,18 +1057,47 @@ body {
     .dashboard-subtitle {
         font-size: 1.2rem !important;
     }
+    
+    .profile-quick-access-btn {
+        padding: 0.5rem 0.75rem !important;
+        gap: 0.625rem !important;
+    }
+    
+    .profile-quick-access-icon {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 0.9rem !important;
+    }
+    
+    .profile-quick-access-text {
+        font-size: 0.8rem !important;
+    }
 }
 </style>
 
 {% block extra_js %}
 <script>
-// Mostrar solo "Sistemas" para usuarios de sistemas
+// Saludo dinámico según la hora del día
 (function() {
     const saludoElement = document.getElementById('saludo-dinamico');
     if (!saludoElement) return;
     
-    // Solo mostrar "Sistemas" en lugar del saludo dinámico
-    saludoElement.textContent = 'Sistemas';
+    // Obtener la hora actual
+    const ahora = new Date();
+    const hora = ahora.getHours();
+    
+    // Determinar el saludo según la hora
+    let saludo = '';
+    if (hora >= 5 && hora < 12) {
+        saludo = 'Buenos días';
+    } else if (hora >= 12 && hora < 19) {
+        saludo = 'Buenas tardes';
+    } else {
+        saludo = 'Buenas noches';
+    }
+    
+    // Mostrar el saludo dinámico
+    saludoElement.textContent = saludo;
 })();
 </script>
 {% endblock extra_js %}

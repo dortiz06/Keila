@@ -420,8 +420,11 @@ class SolicitudVacaciones(models.Model):
     """Solicitudes de vacaciones con flujo de aprobación"""
     ESTADOS = [
         ('PENDIENTE_JEFE', 'Pendiente Jefe de Área'),
+        ('PENDIENTE_ADMIN', 'Pendiente Administrador'),
         ('APROBADO_JEFE', 'Aprobado por Jefe'),
+        ('APROBADO_ADMIN', 'Aprobado por Administrador'),
         ('RECHAZADO_JEFE', 'Rechazado por Jefe'),
+        ('RECHAZADO_ADMIN', 'Rechazado por Administrador'),
         ('PENDIENTE_RH', 'Pendiente RH'),
         ('APROBADO_RH', 'Aprobado por RH'),
         ('RECHAZADO_RH', 'Rechazado por RH'),
@@ -448,15 +451,19 @@ class SolicitudVacaciones(models.Model):
     # Campos de aprobación
     aprobado_por_jefe = models.ForeignKey(Perfil, on_delete=models.SET_NULL, null=True, blank=True,
                                          related_name='vacaciones_aprobadas_jefe', verbose_name="Aprobado por Jefe")
+    aprobado_por_admin = models.ForeignKey(Perfil, on_delete=models.SET_NULL, null=True, blank=True,
+                                          related_name='vacaciones_aprobadas_admin', verbose_name="Aprobado por Administrador")
     aprobado_por_rh = models.ForeignKey(Perfil, on_delete=models.SET_NULL, null=True, blank=True,
                                        related_name='vacaciones_aprobadas_rh', verbose_name="Aprobado por RH")
     
     comentarios_jefe = models.TextField(blank=True, verbose_name="Comentarios del Jefe")
+    comentarios_admin = models.TextField(blank=True, verbose_name="Comentarios del Administrador")
     comentarios_rh = models.TextField(blank=True, verbose_name="Comentarios de RH")
     
     # Auditoría
     fecha_solicitud = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Solicitud")
     fecha_aprobacion_jefe = models.DateTimeField(null=True, blank=True, verbose_name="Fecha Aprobación Jefe")
+    fecha_aprobacion_admin = models.DateTimeField(null=True, blank=True, verbose_name="Fecha Aprobación Administrador")
     fecha_aprobacion_rh = models.DateTimeField(null=True, blank=True, verbose_name="Fecha Aprobación RH")
     
     class Meta:
@@ -499,11 +506,21 @@ class SolicitudVacaciones(models.Model):
         # Calcular días solicitados automáticamente (excluyendo domingos)
         if self.fecha_inicio and self.fecha_fin:
             self.dias_solicitados = self.calcular_dias_laborables(self.fecha_inicio, self.fecha_fin)
+        
+        # Si es una nueva solicitud (sin pk) y el empleado es jefe de área, establecer estado PENDIENTE_ADMIN
+        if not self.pk and self.empleado and self.empleado.es_jefe_area():
+            if self.estado == 'PENDIENTE_JEFE':  # Solo si es el estado por defecto
+                self.estado = 'PENDIENTE_ADMIN'
+        
         super().save(*args, **kwargs)
     
     def puede_ser_aprobada_por_jefe(self):
         """Verifica si puede ser aprobada por jefe"""
         return self.estado == 'PENDIENTE_JEFE'
+    
+    def puede_ser_aprobada_por_admin(self):
+        """Verifica si puede ser aprobada por administrador"""
+        return self.estado == 'PENDIENTE_ADMIN'
     
     def puede_ser_aprobada_por_rh(self):
         """Verifica si puede ser aprobada por RH"""
@@ -539,6 +556,38 @@ class SolicitudVacaciones(models.Model):
         self.aprobado_por_jefe = jefe
         self.comentarios_jefe = comentario
         self.fecha_aprobacion_jefe = timezone.now()
+        self.save()
+        return True
+    
+    def aprobar_por_admin(self, admin_user, comentario=""):
+        """Aprobar solicitud por administrador"""
+        from django.utils import timezone
+        
+        if not self.puede_ser_aprobada_por_admin():
+            return False
+        
+        self.estado = 'APROBADO_ADMIN'
+        self.aprobado_por_admin = admin_user
+        self.comentarios_admin = comentario
+        self.fecha_aprobacion_admin = timezone.now()
+        
+        # Después de aprobar por admin, va a RH
+        self.estado = 'PENDIENTE_RH'
+        
+        self.save()
+        return True
+    
+    def rechazar_por_admin(self, admin_user, comentario=""):
+        """Rechazar solicitud por administrador"""
+        from django.utils import timezone
+        
+        if not self.puede_ser_aprobada_por_admin():
+            return False
+        
+        self.estado = 'RECHAZADO_ADMIN'
+        self.aprobado_por_admin = admin_user
+        self.comentarios_admin = comentario
+        self.fecha_aprobacion_admin = timezone.now()
         self.save()
         return True
     

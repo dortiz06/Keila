@@ -11,7 +11,7 @@ from django import forms
 from .models import Perfil, Departamento, SolicitudVacaciones, ConfiguracionSistema, Ticket, Equipo, AsignacionEquipo
 from .forms import (
     UsuarioConPerfilForm, SolicitudVacacionesForm, 
-    AprobacionJefeForm, AprobacionRHForm, EditarPerfilForm, ConfigurarDepartamentoForm
+    AprobacionJefeForm, AprobacionAdminForm, AprobacionRHForm, EditarPerfilForm, ConfigurarDepartamentoForm
 )
 from datetime import date, timedelta
 from reportlab.lib.pagesizes import letter, A4
@@ -100,13 +100,14 @@ def admin_dashboard(request):
     
     # === ESTADÍSTICAS DE VACACIONES ===
     solicitudes_pendientes_jefe = SolicitudVacaciones.objects.filter(estado='PENDIENTE_JEFE').count()
+    solicitudes_pendientes_admin = SolicitudVacaciones.objects.filter(estado='PENDIENTE_ADMIN').count()
     solicitudes_pendientes_rh = SolicitudVacaciones.objects.filter(estado='PENDIENTE_RH').count()
     solicitudes_aprobadas_mes = SolicitudVacaciones.objects.filter(
         estado='APROBADO_RH',
         fecha_aprobacion_rh__month=timezone.now().month
     ).count()
     solicitudes_rechazadas_mes = SolicitudVacaciones.objects.filter(
-        estado__in=['RECHAZADO_JEFE', 'RECHAZADO_RH'],
+        estado__in=['RECHAZADO_JEFE', 'RECHAZADO_ADMIN', 'RECHAZADO_RH'],
         fecha_solicitud__month=timezone.now().month
     ).count()
     
@@ -131,7 +132,7 @@ def admin_dashboard(request):
     
     # === SOLICITUDES RECIENTES DE VACACIONES ===
     solicitudes_recientes = SolicitudVacaciones.objects.filter(
-        estado__in=['PENDIENTE_JEFE', 'PENDIENTE_RH']
+        estado__in=['PENDIENTE_JEFE', 'PENDIENTE_ADMIN', 'PENDIENTE_RH']
     ).select_related('empleado', 'empleado__departamento').order_by('-fecha_solicitud')[:8]
     
     # === TICKETS RECIENTES ===
@@ -149,6 +150,7 @@ def admin_dashboard(request):
             'total_departamentos': total_departamentos,
             'empleados_por_tipo': empleados_por_tipo,
             'solicitudes_pendientes_jefe': solicitudes_pendientes_jefe,
+            'solicitudes_pendientes_admin': solicitudes_pendientes_admin,
             'solicitudes_pendientes_rh': solicitudes_pendientes_rh,
             'solicitudes_aprobadas_mes': solicitudes_aprobadas_mes,
             'solicitudes_rechazadas_mes': solicitudes_rechazadas_mes,
@@ -209,9 +211,10 @@ def jefe_dashboard(request):
         raise PermissionDenied
     
     # Solicitudes de todos los empleados (jefes pueden gestionar cualquier departamento)
+    # Excluir las propias solicitudes del jefe (esas van a admin)
     solicitudes_pendientes = SolicitudVacaciones.objects.filter(
         estado='PENDIENTE_JEFE'
-    ).order_by('-fecha_solicitud')
+    ).exclude(empleado=perfil).order_by('-fecha_solicitud')
     
     # Estadísticas generales (jefes pueden ver estadísticas de todos los departamentos)
     empleados_departamento = Perfil.objects.filter(
@@ -508,9 +511,13 @@ def mis_vacaciones(request):
 
 @login_required
 def solicitar_vacaciones(request):
-    """Solicitar vacaciones - Solo Empleados (no RH, no Sistemas)"""
+    """Solicitar vacaciones - Solo Empleados y Jefes de Área (no RH, no Sistemas, no Admin)"""
     perfil = get_user_profile(request.user)
-    if not perfil or not perfil.es_empleado():
+    if not perfil:
+        raise PermissionDenied
+    
+    # Permitir solo a empleados y jefes de área (excluir RH, Sistemas y Admin)
+    if not (perfil.es_empleado() or perfil.es_jefe_area()):
         raise PermissionDenied
     
     if request.method == 'POST':
@@ -561,6 +568,10 @@ def aprobar_jefe(request, solicitud_id):
         raise PermissionDenied
     
     solicitud = get_object_or_404(SolicitudVacaciones, id=solicitud_id)
+    
+    # Los jefes NO pueden aprobar sus propias solicitudes
+    if solicitud.empleado == perfil:
+        raise PermissionDenied("No puedes aprobar tu propia solicitud de vacaciones.")
     
     # Los jefes pueden aprobar solicitudes de cualquier departamento
     
@@ -687,6 +698,51 @@ def solicitudes_rh(request):
         'perfil': perfil,
     }
     return render(request, 'empleados/rh/solicitudes_rh.html', context)
+
+
+@login_required
+def aprobar_admin(request, solicitud_id):
+    """Aprobar/rechazar solicitud por administrador (para solicitudes de jefes de área)"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not perfil.es_admin():
+        raise PermissionDenied
+    
+    solicitud = get_object_or_404(SolicitudVacaciones, id=solicitud_id)
+    
+    # Solo se pueden aprobar solicitudes de jefes de área que estén pendientes de admin
+    if not solicitud.empleado.es_jefe_area():
+        raise PermissionDenied("Esta solicitud no requiere aprobación de administrador.")
+    
+    if not solicitud.estado == 'PENDIENTE_ADMIN':
+        raise PermissionDenied("Esta solicitud no está pendiente de aprobación de administrador.")
+    
+    if request.method == 'POST':
+        form = AprobacionAdminForm(request.POST, solicitud=solicitud)
+        if form.is_valid():
+            accion = form.cleaned_data['accion']
+            comentario = form.cleaned_data['comentario']
+            
+            if accion == 'aprobar':
+                if solicitud.aprobar_por_admin(perfil, comentario):
+                    messages.success(request, 'Solicitud aprobada exitosamente. Ahora pasará a RH para aprobación final.')
+                else:
+                    messages.error(request, 'No se pudo aprobar la solicitud.')
+            else:
+                if solicitud.rechazar_por_admin(perfil, comentario):
+                    messages.success(request, 'Solicitud rechazada.')
+                else:
+                    messages.error(request, 'No se pudo rechazar la solicitud.')
+            
+            return redirect('empleados:admin_dashboard')
+    else:
+        form = AprobacionAdminForm(solicitud=solicitud)
+    
+    context = {
+        'form': form,
+        'solicitud': solicitud,
+        'perfil': perfil,
+    }
+    return render(request, 'empleados/admin/aprobar_solicitud.html', context)
 
 
 @login_required
