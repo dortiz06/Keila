@@ -1,0 +1,36 @@
+# Configuración para Django con Passenger (hosts compartidos)
+# Este archivo debe estar en la raíz del proyecto
+
+# Habilitar Passenger
+PassengerEnabled On
+PassengerAppRoot /ruta/completa/a/tu/proyecto
+PassengerBaseURI /
+PassengerPython /ruta/a/python3
+
+# Redirigir todo a passenger_wsgi.py
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    
+    # No redirigir archivos estáticos
+    RewriteCond %{REQUEST_URI} !^/static/
+    RewriteCond %{REQUEST_URI} !^/media/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Redirigir todo lo demás a Django
+    RewriteRule ^(.*)$ passenger_wsgi.py [QSA,L]
+</IfModule>
+
+# Servir archivos estáticos
+Alias /static /ruta/completa/a/tu/proyecto/staticfiles
+<Directory /ruta/completa/a/tu/proyecto/staticfiles>
+    Require all granted
+</Directory>
+
+# Servir archivos media
+Alias /media /ruta/completa/a/tu/proyecto/media
+<Directory /ruta/completa/a/tu/proyecto/media>
+    Require all granted
+</Directory>
+
