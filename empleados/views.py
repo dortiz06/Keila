@@ -1212,7 +1212,10 @@ def inventario_equipos(request):
         messages.error(request, 'No tienes permiso para acceder a esta sección.')
         return redirect('empleados:empleado_dashboard')
     
-    equipos = Equipo.objects.all().select_related('categoria').order_by('-fecha_adquisicion')
+    # Optimizar consultas con prefetch para asignaciones y departamentos
+    equipos = Equipo.objects.all().select_related('categoria').prefetch_related(
+        'asignaciones__empleado__departamento'
+    ).order_by('-fecha_adquisicion')
     
     # Filtros
     estado_filtro = request.GET.get('estado', '')
