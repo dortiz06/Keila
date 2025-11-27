@@ -19,11 +19,21 @@ python manage.py migrate
 # Iniciar servidor
 echo "🌐 Iniciando servidor de desarrollo..."
 echo ""
+
+# Obtener IP local
+LOCAL_IP=$(ifconfig | grep "inet " | grep -v 127.0.0.1 | awk '{print $2}' | head -1)
+
 echo "✅ El sistema estará disponible en:"
-echo "   📱 Aplicación principal: http://127.0.0.1:8000/"
-echo "   ⚙️  Panel de administración: http://127.0.0.1:8000/admin/"
+echo "   📱 Local: http://127.0.0.1:8000/"
+echo "   🌐 Red Local: http://${LOCAL_IP}:8000/"
+echo "   ⚙️  Panel Admin: http://${LOCAL_IP}:8000/admin/"
 echo ""
-echo "🔧 Si el puerto 8000 está ocupado, usa: python manage.py runserver 8001"
+echo "📋 Comparte este enlace con otros usuarios en tu red:"
+echo "   🔗 http://${LOCAL_IP}:8000/"
+echo ""
+echo "⚠️  IMPORTANTE: Asegúrate de que el firewall permita conexiones en el puerto 8000"
+echo ""
+echo "🔧 Si el puerto 8000 está ocupado, usa: python manage.py runserver 0.0.0.0:8001"
 echo ""
 echo "👤 Credenciales de administración:"
 echo "   Usuario: admin"
@@ -32,4 +42,4 @@ echo ""
 echo "🛑 Para detener el servidor presiona Ctrl+C"
 echo "============================================="
 
-python manage.py runserver
+python manage.py runserver 0.0.0.0:8000

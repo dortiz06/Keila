@@ -34,6 +34,9 @@ urlpatterns = [
     path('vacaciones/<int:solicitud_id>/pdf/', views.generar_pdf_vacaciones, name='generar_pdf_vacaciones'),
     path('vacaciones/solicitudes-jefe/', views.solicitudes_jefe, name='solicitudes_jefe'),
     path('vacaciones/solicitudes-rh/', views.solicitudes_rh, name='solicitudes_rh'),
+    path('vacaciones/reporte-mes/', views.reporte_vacaciones_mes, name='reporte_vacaciones_mes'),
+    path('vacaciones/reporte-mes/pdf/', views.generar_pdf_reporte_vacaciones, name='generar_pdf_reporte_vacaciones'),
+    path('vacaciones/reporte-mes/excel/', views.generar_excel_reporte_vacaciones, name='generar_excel_reporte_vacaciones'),
     
     # === GESTIÓN DE DEPARTAMENTOS ===
     path('departamentos/', views.gestion_departamentos, name='gestion_departamentos'),

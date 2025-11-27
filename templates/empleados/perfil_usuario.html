@@ -8,7 +8,7 @@
 <style>
 /* Cambiar fondo solo en la vista de perfil */
 body {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.55)), url('{% if perfil and perfil.es_sistemas %}{% static "images/dash/code1.jpg" %}{% elif perfil and perfil.es_admin %}{% static "images/dash/A7C.jpg" %}{% else %}{% static "images/dash/fondoAzul2.jpg" %}{% endif %}') !important;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.55)), url('{% if perfil and perfil.es_sistemas %}{% static "images/dash/code1.jpg" %}{% elif perfil and perfil.es_admin %}{% static "images/dash/A7C.jpg" %}{% elif perfil and perfil.es_rh %}{% static "images/dash/redh.jpg" %}{% elif perfil and perfil.es_jefe_area %}{% static "images/dash/darkBlue.jpg" %}{% else %}{% static "images/dash/fondoAzul2.jpg" %}{% endif %}') !important;
     background-size: cover !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
@@ -327,52 +327,7 @@ body {
 
             <!-- Sidebar -->
             <div class="col-lg-3">
-                <!-- Roles y Permisos -->
-                <div class="card mb-4 profile-card">
-                    <div class="card-header profile-card-header">
-                        <h6 class="mb-0">
-                            <i class="fas fa-user-tag me-2"></i>
-                            {% if es_propio_perfil %}Mis Roles y Permisos{% else %}Roles y Permisos{% endif %}
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        {% if grupos %}
-                            <div class="mb-3">
-                                {% for grupo in grupos %}
-                                    <span class="badge profile-badge-role me-1 mb-2">{{ grupo.name }}</span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            <p class="text-muted mb-3" style="color: rgba(255, 255, 255, 0.6) !important;">No tienes roles asignados</p>
-                        {% endif %}
-                        
-                        {% if es_propio_perfil %}
-                        <hr style="border-color: rgba(255, 255, 255, 0.15) !important; margin: 1.5rem 0 !important;">
-                        
-                        <div class="d-grid gap-2">
-                            {% if es_rh %}
-                                <a href="{% url 'empleados:gestion_usuarios' %}" class="btn btn-primary btn-sm">
-                                    <i class="fas fa-users-cog me-1"></i>Gestionar Usuarios
-                                </a>
-                            {% endif %}
-                            
-                            {% if es_jefe %}
-                                <a href="{% url 'empleados:jefe_dashboard' %}" class="btn btn-warning btn-sm">
-                                    <i class="fas fa-user-tie me-1"></i>Panel de Jefe
-                                </a>
-                            {% endif %}
-                            
-                            {% if es_empleado %}
-                                <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-success btn-sm" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">
-                                    <i class="fas fa-calendar-check me-1"></i>Solicitar Vacaciones
-                                </a>
-                            {% endif %}
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <!-- Acciones Rápidas -->
+                <!-- Accesos Rápidos -->
                 {% if es_propio_perfil %}
                 <div class="card mb-4 profile-card">
                     <div class="card-header profile-card-header">
@@ -469,20 +424,70 @@ body {
                                         </div>
                                         <span class="profile-quick-access-text">Departamentos</span>
                                     </a>
+                                    <a href="{% url 'empleados:reporte_vacaciones_mes' %}" class="profile-quick-access-btn profile-quick-access-warning">
+                                        <div class="profile-quick-access-icon">
+                                            <i class="fas fa-chart-bar"></i>
+                                        </div>
+                                        <span class="profile-quick-access-text">Reporte de Vacaciones</span>
+                                    </a>
                                 {% else %}
                                     <!-- Accesos para otros perfiles (no admin) -->
-                                    <a href="{% url 'empleados:dashboard' %}" class="profile-quick-access-btn profile-quick-access-primary">
+                                    {% if perfil.es_rh %}
+                                    <a href="{% url 'empleados:rh_dashboard' %}" class="profile-quick-access-btn profile-quick-access-primary">
                                         <div class="profile-quick-access-icon">
                                             <i class="fas fa-home"></i>
                                         </div>
-                                        <span class="profile-quick-access-text">Inicio</span>
+                                        <span class="profile-quick-access-text">Panel RH</span>
                                     </a>
-                                    {% if perfil.es_rh or perfil.es_jefe_area %}
                                     <a href="{% url 'empleados:lista_empleados' %}" class="profile-quick-access-btn profile-quick-access-secondary">
                                         <div class="profile-quick-access-icon">
                                             <i class="fas fa-users"></i>
                                         </div>
                                         <span class="profile-quick-access-text">Ver Empleados</span>
+                                    </a>
+                                    <a href="{% url 'empleados:gestion_usuarios' %}" class="profile-quick-access-btn profile-quick-access-purple">
+                                        <div class="profile-quick-access-icon">
+                                            <i class="fas fa-users-cog"></i>
+                                        </div>
+                                        <span class="profile-quick-access-text">Gestionar Usuarios</span>
+                                    </a>
+                                    <a href="{% url 'empleados:solicitudes_rh' %}" class="profile-quick-access-btn profile-quick-access-info-light">
+                                        <div class="profile-quick-access-icon">
+                                            <i class="fas fa-list"></i>
+                                        </div>
+                                        <span class="profile-quick-access-text">Ver Solicitudes</span>
+                                    </a>
+                                    <a href="{% url 'empleados:solicitudes_rh' %}?estado=APROBADO_RH" class="profile-quick-access-btn profile-quick-access-success">
+                                        <div class="profile-quick-access-icon">
+                                            <i class="fas fa-file-pdf"></i>
+                                        </div>
+                                        <span class="profile-quick-access-text">Aprobadas y PDFs</span>
+                                    </a>
+                                    <a href="{% url 'empleados:reporte_vacaciones_mes' %}" class="profile-quick-access-btn profile-quick-access-warning">
+                                        <div class="profile-quick-access-icon">
+                                            <i class="fas fa-chart-bar"></i>
+                                        </div>
+                                        <span class="profile-quick-access-text">Reporte de Vacaciones</span>
+                                    </a>
+                                    {% elif perfil.es_jefe_area %}
+                                    <!-- Accesos específicos para Jefes de Área -->
+                                    <a href="{% url 'empleados:jefe_dashboard' %}" class="profile-quick-access-btn profile-quick-access-primary">
+                                        <div class="profile-quick-access-icon">
+                                            <i class="fas fa-user-tie"></i>
+                                        </div>
+                                        <span class="profile-quick-access-text">Panel de Jefe</span>
+                                    </a>
+                                    <a href="{% url 'empleados:lista_empleados' %}" class="profile-quick-access-btn profile-quick-access-secondary">
+                                        <div class="profile-quick-access-icon">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        <span class="profile-quick-access-text">Ver Empleados</span>
+                                    </a>
+                                    <a href="{% url 'empleados:solicitudes_jefe' %}" class="profile-quick-access-btn profile-quick-access-info-light">
+                                        <div class="profile-quick-access-icon">
+                                            <i class="fas fa-clipboard-list"></i>
+                                        </div>
+                                        <span class="profile-quick-access-text">Gestionar Solicitudes</span>
                                     </a>
                                     {% endif %}
                                     {% if not perfil.es_rh and not perfil.es_admin %}
@@ -498,7 +503,7 @@ body {
                                         <div class="profile-quick-access-icon">
                                             <i class="fas fa-cog"></i>
                                         </div>
-                                        <span class="profile-quick-access-text">Panel Administrativo</span>
+                                        <span class="profile-quick-access-text">Admin Django</span>
                                     </a>
                                     {% endif %}
                                 {% endif %}
