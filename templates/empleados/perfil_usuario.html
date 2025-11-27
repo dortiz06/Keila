@@ -8,7 +8,7 @@
 <style>
 /* Cambiar fondo solo en la vista de perfil */
 body {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.55)), url('{% if perfil and perfil.es_sistemas %}{% static "images/dash/code1.jpg" %}{% else %}{% static "images/dash/fondoAzul2.jpg" %}{% endif %}') !important;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.55)), url('{% if perfil and perfil.es_sistemas %}{% static "images/dash/code1.jpg" %}{% elif perfil and perfil.es_admin %}{% static "images/dash/A7C.jpg" %}{% else %}{% static "images/dash/fondoAzul2.jpg" %}{% endif %}') !important;
     background-size: cover !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
@@ -82,12 +82,12 @@ body {
                     
                     {% comment %} Línea Secundaria - Puesto y Departamento {% endcomment %}
                     {% if tiene_perfil %}
-                        {% if perfil.puesto or perfil.departamento %}
+                        {% if perfil.puesto and perfil.puesto != "Por definir" or perfil.departamento %}
                         <p class="dashboard-subtitle mb-0">
-                    {% if perfil.puesto %}
+                    {% if perfil.puesto and perfil.puesto != "Por definir" %}
                         {{ perfil.puesto }}
                     {% endif %}
-                    {% if perfil.puesto and perfil.departamento %}
+                    {% if perfil.puesto and perfil.puesto != "Por definir" and perfil.departamento %}
                         | 
                     {% endif %}
                     {% if perfil.departamento %}
@@ -106,7 +106,7 @@ body {
         </div>
         <div class="row">
             <!-- Información del Usuario -->
-            <div class="col-lg-8">
+            <div class="col-lg-9">
                 <div class="card mb-4 profile-card">
                     <div class="card-header profile-card-header">
                         <h5 class="mb-0">
@@ -116,7 +116,7 @@ body {
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-3">
                                     <label class="form-label profile-label">Usuario</label>
                                     <p class="form-control-plaintext profile-value">{{ user.username }}</p>
@@ -125,8 +125,12 @@ body {
                                     <label class="form-label profile-label">Nombre Completo</label>
                                     <p class="form-control-plaintext profile-value">{{ user.first_name }} {{ user.last_name }}</p>
                                 </div>
+                                <div class="mb-3">
+                                    <label class="form-label profile-label">ID de Usuario</label>
+                                    <p class="form-control-plaintext profile-value">{{ user.id }}</p>
+                                </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-3">
                                     <label class="form-label profile-label">Correo Electrónico</label>
                                     <p class="form-control-plaintext profile-value">{{ user.email }}</p>
@@ -140,6 +144,25 @@ body {
                                             <span class="text-muted">Primera vez</span>
                                         {% endif %}
                                     </p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label profile-label">Miembro desde</label>
+                                    <p class="form-control-plaintext profile-value">{{ user.date_joined|date:"d/m/Y" }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label profile-label">Estado de Cuenta</label>
+                                    <div class="mt-2">
+                                        {% if user.is_active %}
+                                            <span class="badge profile-badge-success">Activo</span>
+                                        {% else %}
+                                            <span class="badge profile-badge-danger">Inactivo</span>
+                                        {% endif %}
+                                        {% if user.is_staff %}
+                                            <span class="badge profile-badge-info ms-1">Staff</span>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -166,10 +189,12 @@ body {
                                     <label class="form-label profile-label">Departamento</label>
                                     <p class="form-control-plaintext profile-value">{{ perfil.departamento.nombre }}</p>
                                 </div>
+                                {% if perfil.puesto and perfil.puesto != "Por definir" %}
                                 <div class="mb-3">
                                     <label class="form-label profile-label">Puesto</label>
                                     <p class="form-control-plaintext profile-value">{{ perfil.puesto }}</p>
                                 </div>
+                                {% endif %}
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -301,7 +326,7 @@ body {
             </div>
 
             <!-- Sidebar -->
-            <div class="col-lg-4">
+            <div class="col-lg-3">
                 <!-- Roles y Permisos -->
                 <div class="card mb-4 profile-card">
                     <div class="card-header profile-card-header">
@@ -397,7 +422,7 @@ body {
                                     <span class="profile-quick-access-text">Crear Usuario</span>
                                 </a>
                                 {% if user.is_staff %}
-                                <a href="/admin/" class="profile-quick-access-btn profile-quick-access-warning">
+                                <a href="/admin/" class="profile-quick-access-btn profile-quick-access-django">
                                     <div class="profile-quick-access-icon">
                                         <i class="fas fa-cog"></i>
                                     </div>
@@ -406,82 +431,82 @@ body {
                                 {% endif %}
                             {% else %}
                                 <!-- Accesos para otros perfiles -->
-                                <a href="{% url 'empleados:dashboard' %}" class="profile-quick-access-btn profile-quick-access-primary">
-                                    <div class="profile-quick-access-icon">
-                                        <i class="fas fa-home"></i>
-                                    </div>
-                                    <span class="profile-quick-access-text">Inicio</span>
-                                </a>
-                                {% if perfil.es_rh or perfil.es_admin or perfil.es_jefe_area %}
-                                <a href="{% url 'empleados:lista_empleados' %}" class="profile-quick-access-btn profile-quick-access-primary">
-                                    <div class="profile-quick-access-icon">
-                                        <i class="fas fa-users"></i>
-                                    </div>
-                                    <span class="profile-quick-access-text">Ver Empleados</span>
-                                </a>
-                                {% endif %}
                                 {% if perfil.es_admin %}
-                                <a href="{% url 'empleados:lista_empleados' %}" class="profile-quick-access-btn profile-quick-access-info">
-                                    <div class="profile-quick-access-icon">
-                                        <i class="fas fa-cog"></i>
-                                    </div>
-                                    <span class="profile-quick-access-text">Gestión Usuarios</span>
-                                </a>
-                                {% endif %}
-                                {% if not perfil.es_rh %}
-                                <a href="{% url 'empleados:solicitar_vacaciones' %}" class="profile-quick-access-btn profile-quick-access-success">
-                                    <div class="profile-quick-access-icon">
-                                        <i class="fas fa-calendar-alt"></i>
-                                    </div>
-                                    <span class="profile-quick-access-text" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">Solicitar Vacaciones</span>
-                                </a>
-                                {% endif %}
-                                {% if user.is_staff %}
-                                <a href="/admin/" class="profile-quick-access-btn profile-quick-access-warning">
-                                    <div class="profile-quick-access-icon">
-                                        <i class="fas fa-cog"></i>
-                                    </div>
-                                    <span class="profile-quick-access-text">Panel Administrativo</span>
-                                </a>
+                                    <!-- Accesos específicos para Administradores (igual que dashboard admin) -->
+                                    <a href="{% url 'empleados:lista_empleados' %}" class="profile-quick-access-btn profile-quick-access-primary">
+                                        <div class="profile-quick-access-icon">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        <span class="profile-quick-access-text">Lista de Usuarios</span>
+                                    </a>
+                                    <a href="{% url 'empleados:crear_usuario' %}" class="profile-quick-access-btn profile-quick-access-info-light">
+                                        <div class="profile-quick-access-icon">
+                                            <i class="fas fa-user-plus"></i>
+                                        </div>
+                                        <span class="profile-quick-access-text">Crear Usuario</span>
+                                    </a>
+                                    <a href="{% url 'empleados:gestionar_tickets' %}" class="profile-quick-access-btn profile-quick-access-warning">
+                                        <div class="profile-quick-access-icon">
+                                            <i class="fas fa-ticket-alt"></i>
+                                        </div>
+                                        <span class="profile-quick-access-text">Tickets IT</span>
+                                    </a>
+                                    <a href="{% url 'empleados:inventario_equipos' %}" class="profile-quick-access-btn profile-quick-access-success">
+                                        <div class="profile-quick-access-icon">
+                                            <i class="fas fa-laptop"></i>
+                                        </div>
+                                        <span class="profile-quick-access-text">Inventario</span>
+                                    </a>
+                                    <a href="/admin/" class="profile-quick-access-btn profile-quick-access-django">
+                                        <div class="profile-quick-access-icon">
+                                            <i class="fas fa-database"></i>
+                                        </div>
+                                        <span class="profile-quick-access-text">Admin Django</span>
+                                    </a>
+                                    <a href="{% url 'empleados:gestion_departamentos' %}" class="profile-quick-access-btn profile-quick-access-secondary">
+                                        <div class="profile-quick-access-icon">
+                                            <i class="fas fa-building"></i>
+                                        </div>
+                                        <span class="profile-quick-access-text">Departamentos</span>
+                                    </a>
+                                {% else %}
+                                    <!-- Accesos para otros perfiles (no admin) -->
+                                    <a href="{% url 'empleados:dashboard' %}" class="profile-quick-access-btn profile-quick-access-primary">
+                                        <div class="profile-quick-access-icon">
+                                            <i class="fas fa-home"></i>
+                                        </div>
+                                        <span class="profile-quick-access-text">Inicio</span>
+                                    </a>
+                                    {% if perfil.es_rh or perfil.es_jefe_area %}
+                                    <a href="{% url 'empleados:lista_empleados' %}" class="profile-quick-access-btn profile-quick-access-secondary">
+                                        <div class="profile-quick-access-icon">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        <span class="profile-quick-access-text">Ver Empleados</span>
+                                    </a>
+                                    {% endif %}
+                                    {% if not perfil.es_rh and not perfil.es_admin %}
+                                    <a href="{% url 'empleados:solicitar_vacaciones' %}" class="profile-quick-access-btn profile-quick-access-success">
+                                        <div class="profile-quick-access-icon">
+                                            <i class="fas fa-calendar-alt"></i>
+                                        </div>
+                                        <span class="profile-quick-access-text" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">Solicitar Vacaciones</span>
+                                    </a>
+                                    {% endif %}
+                                    {% if user.is_staff %}
+                                    <a href="/admin/" class="profile-quick-access-btn profile-quick-access-django">
+                                        <div class="profile-quick-access-icon">
+                                            <i class="fas fa-cog"></i>
+                                        </div>
+                                        <span class="profile-quick-access-text">Panel Administrativo</span>
+                                    </a>
+                                    {% endif %}
                                 {% endif %}
                             {% endif %}
                         </div>
                     </div>
                 </div>
                 {% endif %}
-
-                <!-- Información del Sistema -->
-                <div class="card profile-card">
-                    <div class="card-header profile-card-header">
-                        <h6 class="mb-0">
-                            <i class="fas fa-info-circle me-2"></i>
-                            Información de Cuenta
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="profile-info-item">
-                            <small style="color: rgba(255, 255, 255, 0.7) !important; display: block; margin-bottom: 0.5rem;">ID de Usuario</small>
-                            <strong style="color: #ffffff !important;">{{ user.id }}</strong>
-                        </div>
-                        <hr style="border-color: rgba(255, 255, 255, 0.1) !important; margin: 1rem 0 !important;">
-                        <div class="profile-info-item">
-                            <small style="color: rgba(255, 255, 255, 0.7) !important; display: block; margin-bottom: 0.5rem;">Miembro desde</small>
-                            <strong style="color: #ffffff !important;">{{ user.date_joined|date:"d/m/Y" }}</strong>
-                        </div>
-                        <hr style="border-color: rgba(255, 255, 255, 0.1) !important; margin: 1rem 0 !important;">
-                        <div class="profile-info-item">
-                            <small style="color: rgba(255, 255, 255, 0.7) !important; display: block; margin-bottom: 0.5rem;">Estado de Cuenta</small>
-                            {% if user.is_active %}
-                                <span class="badge profile-badge-success">Activo</span>
-                            {% else %}
-                                <span class="badge profile-badge-danger">Inactivo</span>
-                            {% endif %}
-                            {% if user.is_staff %}
-                                <span class="badge profile-badge-info ms-1">Staff</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -672,6 +697,9 @@ body {
     border-radius: 8px !important;
     font-weight: 400 !important;
     font-size: 0.8rem !important;
+    opacity: 1 !important; /* Sin opacidad reducida para badges de Estado de Cuenta */
+    cursor: default !important;
+    pointer-events: none !important;
 }
 
 .profile-badge-danger {
@@ -682,6 +710,9 @@ body {
     border-radius: 8px !important;
     font-weight: 400 !important;
     font-size: 0.8rem !important;
+    opacity: 1 !important; /* Sin opacidad reducida para badges de Estado de Cuenta */
+    cursor: default !important;
+    pointer-events: none !important;
 }
 
 .profile-badge-info {
@@ -692,6 +723,9 @@ body {
     border-radius: 8px !important;
     font-weight: 400 !important;
     font-size: 0.8rem !important;
+    opacity: 1 !important; /* Sin opacidad reducida para badges de Estado de Cuenta */
+    cursor: default !important;
+    pointer-events: none !important;
 }
 
 .profile-badge-role {
@@ -994,46 +1028,107 @@ body {
 /* Colores de botones */
 .profile-quick-access-primary {
     background: linear-gradient(180deg, 
-        rgba(37, 99, 235, 0.95) 0%, 
-        rgba(0, 56, 168, 0.95) 50%,
-        rgba(0, 30, 100, 1) 100%) !important;
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
 }
 
 .profile-quick-access-primary:hover {
     background: linear-gradient(180deg, 
-        rgba(59, 130, 246, 0.95) 0%, 
-        rgba(0, 56, 168, 0.95) 50%,
-        rgba(0, 56, 168, 1) 100%) !important;
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
 }
 
 .profile-quick-access-success {
-    background: linear-gradient(180deg, 
-        rgba(34, 197, 94, 0.95) 0%, 
-        rgba(22, 163, 74, 0.95) 50%,
-        rgba(15, 118, 50, 1) 100%) !important;
-}
-
-.profile-quick-access-success:hover {
     background: linear-gradient(180deg, 
         rgba(74, 222, 128, 0.95) 0%, 
         rgba(34, 197, 94, 0.95) 50%,
         rgba(22, 163, 74, 1) 100%) !important;
 }
 
-.profile-quick-access-warning {
+.profile-quick-access-success:hover {
     background: linear-gradient(180deg, 
-        rgba(245, 158, 11, 0.95) 0%, 
-        rgba(217, 119, 6, 0.95) 50%,
-        rgba(180, 83, 9, 1) 100%) !important;
+        rgba(134, 239, 172, 0.95) 0%, 
+        rgba(74, 222, 128, 0.95) 50%,
+        rgba(34, 197, 94, 1) 100%) !important;
 }
 
-.profile-quick-access-warning:hover {
+.profile-quick-access-warning {
     background: linear-gradient(180deg, 
         rgba(251, 191, 36, 0.95) 0%, 
         rgba(245, 158, 11, 0.95) 50%,
         rgba(217, 119, 6, 1) 100%) !important;
 }
 
+.profile-quick-access-warning:hover {
+    background: linear-gradient(180deg, 
+        rgba(253, 224, 71, 0.95) 0%, 
+        rgba(251, 191, 36, 0.95) 50%,
+        rgba(245, 158, 11, 1) 100%) !important;
+}
+
+/* Verde Django para Panel Administrativo (#064B35) */
+.profile-quick-access-django {
+    background: linear-gradient(180deg, 
+        rgba(6, 75, 53, 0.95) 0%, 
+        rgba(5, 60, 42, 0.95) 50%,
+        rgba(4, 45, 31, 1) 100%) !important;
+}
+
+.profile-quick-access-django:hover {
+    background: linear-gradient(180deg, 
+        rgba(8, 95, 67, 0.95) 0%, 
+        rgba(6, 75, 53, 0.95) 50%,
+        rgba(5, 60, 42, 1) 100%) !important;
+}
+
+/* Gris para "Ver Empleados" (diferente del azul de Inicio) */
+.profile-quick-access-secondary {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+}
+
+.profile-quick-access-secondary:hover {
+    background: linear-gradient(180deg, 
+        rgba(209, 213, 219, 0.95) 0%, 
+        rgba(156, 163, 175, 0.95) 50%,
+        rgba(107, 114, 128, 1) 100%) !important;
+}
+
+/* Morado para "Gestión Usuarios" (como btn-outline-purple del dashboard) */
+.profile-quick-access-purple {
+    background: linear-gradient(180deg, 
+        rgba(168, 85, 247, 0.95) 0%, 
+        rgba(147, 51, 234, 0.95) 50%,
+        rgba(126, 34, 206, 1) 100%) !important;
+}
+
+.profile-quick-access-purple:hover {
+    background: linear-gradient(180deg, 
+        rgba(192, 132, 252, 0.95) 0%, 
+        rgba(168, 85, 247, 0.95) 50%,
+        rgba(147, 51, 234, 1) 100%) !important;
+}
+
+/* Azul claro para "Crear Usuario" (como btn-outline-info del dashboard) */
+.profile-quick-access-info-light {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
+}
+
+.profile-quick-access-info-light:hover {
+    background: linear-gradient(180deg, 
+        rgba(147, 197, 253, 0.95) 0%, 
+        rgba(96, 165, 250, 0.95) 50%,
+        rgba(59, 130, 246, 1) 100%) !important;
+}
+
+/* Mantener info para compatibilidad con otros usos */
 .profile-quick-access-info {
     background: linear-gradient(180deg, 
         rgba(168, 85, 247, 0.95) 0%, 
