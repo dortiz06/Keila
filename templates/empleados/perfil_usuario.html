@@ -213,49 +213,101 @@ body {
                 </div>
 
                 <!-- Información de Vacaciones -->
-                {% if es_propio_perfil and not perfil.es_sistemas and not perfil.es_rh and not perfil.es_admin %}
+                {% if tiene_perfil and not perfil.es_sistemas and not perfil.es_rh and not perfil.es_admin %}
                 <div class="card mb-4 profile-card">
                     <div class="card-header profile-card-header">
                         <h5 class="mb-0">
                             <i class="fas fa-calendar-alt me-2"></i>
-                            Mis Vacaciones
+                            {% if es_propio_perfil %}Mis Vacaciones{% else %}Información de Vacaciones{% endif %}
                         </h5>
                     </div>
                     <div class="card-body">
+                        <!-- Antigüedad y días acumulados -->
+                        <div class="alert alert-info mb-4" style="background: rgba(59, 130, 246, 0.15) !important; border: 1px solid rgba(59, 130, 246, 0.3) !important; border-radius: 12px !important;">
+                            <h6 class="mb-3" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
+                                <i class="fas fa-user-clock me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>
+                                <strong>Antigüedad:</strong> {{ perfil.antiguedad_detallada }} (desde {{ perfil.fecha_contratacion|date:"d/m/Y" }})
+                            </h6>
+                            
+                            {% if perfil.antiguedad_anos >= 1 %}
+                            <div class="row">
+                                {% if perfil.mostrar_seccion_ano_anterior %}
+                                <div class="col-md-4 mb-2">
+                                    <div class="p-2 glass-box rounded">
+                                        <small class="text-muted" style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif !important;">Año Anterior Completado</small>
+                                        <div class="h5 mb-0" style="color: #3B82F6 !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important;">{{ perfil.dias_ano_anterior_completado }} días</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <div class="{% if perfil.mostrar_seccion_ano_anterior %}col-md-4{% else %}col-md-6{% endif %} mb-2">
+                                    <div class="p-2 glass-box rounded">
+                                        <small class="text-muted" style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif !important;">Acumulado Este Año (hasta hoy)</small>
+                                        <div class="h5 mb-0" style="color: #22C55E !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important;">{{ perfil.calcular_dias_acumulados_hasta_hoy }} días</div>
+                                        <small class="text-muted" style="color: rgba(255, 255, 255, 0.6) !important; font-family: 'Montserrat', sans-serif !important;">({{ perfil.calcular_acumulacion_diaria }} días/día trabajado)</small>
+                                    </div>
+                                </div>
+                                <div class="{% if perfil.mostrar_seccion_ano_anterior %}col-md-4{% else %}col-md-6{% endif %} mb-2">
+                                    <div class="p-2 glass-box rounded">
+                                        <small class="text-muted" style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif !important;">Total Proyectado Disponible</small>
+                                        <div class="h5 mb-0" style="color: #60A5FA !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important;">{{ perfil.calcular_total_disponible_proyectado }} días</div>
+                                        <small class="text-muted" style="color: rgba(255, 255, 255, 0.6) !important; font-family: 'Montserrat', sans-serif !important;">Al finalizar año: {{ perfil.dias_al_finalizar_ano_actual }} días</small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important;">
+                                <i class="fas fa-calendar-plus me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>
+                                Días acumulados hasta hoy: <strong>{{ perfil.calcular_dias_acumulados_hasta_hoy }} días</strong>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Estadísticas de Vacaciones -->
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <div class="card text-center h-100 profile-stats-card">
                                     <div class="card-body d-flex flex-column justify-content-center">
-                                        <i class="fas fa-calendar-alt fa-2x mb-2" style="color: rgba(255, 255, 255, 0.7) !important;"></i>
+                                        <i class="fas fa-calendar-alt fa-2x mb-2" style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>
                                         <h5 class="card-title small profile-stats-title">Días Anuales</h5>
                                         <h3 class="profile-stats-number">{{ perfil.dias_vacaciones_anuales }}</h3>
+                                        <small class="text-muted" style="color: rgba(255, 255, 255, 0.6) !important; font-family: 'Montserrat', sans-serif !important;">
+                                            ({{ perfil.antiguedad_anos }} año{{ perfil.antiguedad_anos|pluralize }})
+                                        </small>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <div class="card text-center h-100 profile-stats-card">
                                     <div class="card-body d-flex flex-column justify-content-center">
-                                        <i class="fas fa-calendar-minus fa-2x mb-2" style="color: rgba(255, 255, 255, 0.7) !important;"></i>
+                                        <i class="fas fa-calendar-minus fa-2x mb-2" style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>
                                         <h5 class="card-title small profile-stats-title">Días Utilizados</h5>
                                         <h3 class="profile-stats-number">{{ perfil.dias_vacaciones_usados }}</h3>
+                                        <small class="text-muted" style="color: rgba(255, 255, 255, 0.6) !important; font-family: 'Montserrat', sans-serif !important;">este año</small>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3">
                                 <div class="card text-center h-100 profile-stats-card">
                                     <div class="card-body d-flex flex-column justify-content-center">
-                                        <i class="fas fa-calendar-check fa-2x mb-2" style="color: rgba(255, 255, 255, 0.7) !important;"></i>
+                                        <i class="fas fa-calendar-check fa-2x mb-2" style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>
                                         <h5 class="card-title small profile-stats-title">Días Disponibles</h5>
                                         <h3 class="profile-stats-number">{{ perfil.dias_vacaciones_disponibles }}</h3>
+                                        <small class="text-muted" style="color: rgba(255, 255, 255, 0.6) !important; font-family: 'Montserrat', sans-serif !important;">
+                                            {% if perfil.dias_vacaciones_acumulados > 0 %}
+                                                + {{ perfil.dias_vacaciones_acumulados }} acumulados
+                                            {% endif %}
+                                        </small>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        {% if es_propio_perfil %}
                         <div class="text-center mt-4">
                             <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-success" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">
                                 <i class="fas fa-calendar-check me-1"></i>Solicitar Vacaciones
                             </a>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
                 {% endif %}
@@ -498,6 +550,13 @@ body {
                                         <span class="profile-quick-access-text" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">Solicitar Vacaciones</span>
                                     </a>
                                     {% endif %}
+                                    <!-- Botón Generar Ticket para todos los perfiles de empleado -->
+                                    <a href="{% url 'empleados:crear_ticket' %}" class="profile-quick-access-btn profile-quick-access-info">
+                                        <div class="profile-quick-access-icon">
+                                            <i class="fas fa-headset"></i>
+                                        </div>
+                                        <span class="profile-quick-access-text">Generar Ticket</span>
+                                    </a>
                                     {% if user.is_staff %}
                                     <a href="/admin/" class="profile-quick-access-btn profile-quick-access-django">
                                         <div class="profile-quick-access-icon">
