@@ -220,16 +220,16 @@ body {
                                     </div>
                                 </div>
                                 {% endif %}
-                                {% if form.direccion %}
+                                {% if form.supervisor %}
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="{{ form.direccion.id_for_label }}" class="form-label editar-perfil-label">
-                                            <i class="fas fa-map-marker-alt me-1"></i>{{ form.direccion.label }}
+                                        <label for="{{ form.supervisor.id_for_label }}" class="form-label editar-perfil-label">
+                                            <i class="fas fa-user-tie me-1"></i>{{ form.supervisor.label }}
                                         </label>
-                                        {{ form.direccion }}
-                                        {% if form.direccion.errors %}
+                                        {{ form.supervisor }}
+                                        {% if form.supervisor.errors %}
                                             <div class="editar-perfil-error">
-                                                {% for error in form.direccion.errors %}
+                                                {% for error in form.supervisor.errors %}
                                                     <small>{{ error }}</small>
                                                 {% endfor %}
                                             </div>

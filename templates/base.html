@@ -65,6 +65,19 @@
             width: 100%;
             z-index: 1030;
         }
+        
+        /* Asegurar que el contenedor del navbar tenga el mismo ancho máximo que el contenido */
+        .navbar .container {
+            max-width: 1320px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        @media (min-width: 992px) and (max-width: 1399px) {
+            .navbar .container {
+                max-width: 1140px;
+            }
+        }
 
         .navbar-brand {
             font-weight: bold;
@@ -605,6 +618,47 @@
         /* Asegurar Montserrat en TODO excepto iconos */
         *:not(i):not([class*="fa-"]):not([class^="fa-"]):not(.fa):not([class*=" icon-"]) {
             font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+        }
+        
+        /* Asegurar que TODOS los iconos de Font Awesome usen la fuente correcta */
+        i.fas,
+        i.far,
+        i.fal,
+        i.fab,
+        i.fa,
+        .fa,
+        [class*="fa-"],
+        [class^="fa-"],
+        i[class*="fa-"],
+        i[class^="fa-"],
+        i[class*="fa-"]:before,
+        [class*="fa-"]:before,
+        [class^="fa-"]:before,
+        .fa:before,
+        i.fas:before,
+        i.far:before,
+        i.fal:before,
+        i.fab:before,
+        .navbar i,
+        .nav-link i,
+        .btn i,
+        .card i,
+        .alert i,
+        .badge i,
+        h1 i, h2 i, h3 i, h4 i, h5 i, h6 i,
+        p i,
+        span i,
+        a i,
+        button i,
+        div i,
+        td i,
+        th i {
+            font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "Font Awesome 6 Brands" !important;
+            font-weight: 900 !important;
+            font-style: normal !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+            display: inline-block !important;
         }
         
         /* Estilo verde Django para enlace de Admin en navbar (#064B35) */

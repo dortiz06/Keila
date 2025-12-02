@@ -289,7 +289,7 @@ class EditarPerfilForm(forms.ModelForm):
         # Si es admin, incluir todos los campos editables
         if es_admin:
             # Agregar campos adicionales si no están ya incluidos
-            admin_fields = ['tipo_perfil', 'departamento', 'puesto', 'direccion', 'numero_empleado', 'fecha_contratacion', 'activo']
+            admin_fields = ['tipo_perfil', 'departamento', 'puesto', 'supervisor', 'numero_empleado', 'fecha_contratacion', 'activo']
             for field_name in admin_fields:
                 if field_name not in self.fields:
                     # Agregar el campo del modelo
@@ -336,11 +336,24 @@ class EditarPerfilForm(forms.ModelForm):
                     'placeholder': 'Ingrese el puesto'
                 })
             
-            if 'direccion' in self.fields:
-                self.fields['direccion'].widget.attrs.update({
-                    'class': 'form-control editar-perfil-input',
-                    'placeholder': 'Ingrese la dirección'
+            if 'supervisor' in self.fields:
+                self.fields['supervisor'].widget.attrs.update({
+                    'class': 'form-select editar-perfil-select'
                 })
+                # Filtrar solo usuarios activos que pueden ser supervisores (excluyendo empleados normales)
+                # Solo: JEFE_AREA, RH, SISTEMAS, ADMIN
+                from .models import Perfil
+                queryset = Perfil.objects.filter(
+                    activo=True
+                ).exclude(
+                    tipo_perfil='EMPLEADO'  # Excluir empleados normales
+                )
+                if self.instance and self.instance.pk:
+                    queryset = queryset.exclude(id=self.instance.id)
+                # Ordenar por nombre completo del usuario
+                self.fields['supervisor'].queryset = queryset.select_related('usuario').order_by('usuario__last_name', 'usuario__first_name')
+                self.fields['supervisor'].required = False
+                self.fields['supervisor'].empty_label = "Sin supervisor"
             
             if 'numero_empleado' in self.fields:
                 self.fields['numero_empleado'].widget.attrs.update({

@@ -52,6 +52,7 @@ urlpatterns = [
     
     # === EQUIPOS ===
     path('equipos/', views.mis_equipos, name='mis_equipos'),
+    path('jefe/equipos/', views.inventario_jefe, name='inventario_jefe'),
     
     # === SISTEMAS/IT DASHBOARD ===
     path('sistemas/', views.dashboard_sistemas, name='sistemas_dashboard'),

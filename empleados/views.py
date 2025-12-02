@@ -211,17 +211,19 @@ def jefe_dashboard(request):
     if not perfil or not perfil.es_jefe_area():
         raise PermissionDenied
     
-    # Solicitudes de todos los empleados (jefes pueden gestionar cualquier departamento)
+    # Solicitudes de empleados asignados directamente al jefe como supervisor
     # Excluir las propias solicitudes del jefe (esas van a admin)
-    solicitudes_pendientes = SolicitudVacaciones.objects.filter(
-        estado='PENDIENTE_JEFE'
-    ).exclude(empleado=perfil).order_by('-fecha_solicitud')
-    
-    # Estadísticas generales (jefes pueden ver estadísticas de todos los departamentos)
-    empleados_departamento = Perfil.objects.filter(
-        departamento=perfil.departamento,
+    empleados_asignados = Perfil.objects.filter(
+        supervisor=perfil,
         activo=True
     )
+    solicitudes_pendientes = SolicitudVacaciones.objects.filter(
+        estado='PENDIENTE_JEFE',
+        empleado__in=empleados_asignados
+    ).exclude(empleado=perfil).order_by('-fecha_solicitud')
+    
+    # Estadísticas de empleados asignados directamente al jefe
+    empleados_departamento = empleados_asignados
     
     stats = {
         'empleados_departamento': empleados_departamento.count(),
@@ -365,14 +367,11 @@ def lista_empleados(request):
         # Sistemas, Admin, RH: pueden ver todos los empleados
         empleados = Perfil.objects.filter(activo=True)
     elif perfil.es_jefe_area():
-        # Jefes de área: solo pueden ver empleados de su departamento
-        if perfil.departamento:
-            empleados = Perfil.objects.filter(
-                activo=True,
-                departamento=perfil.departamento
-            )
-        else:
-            empleados = Perfil.objects.none()
+        # Jefes de área: solo pueden ver empleados asignados directamente a ellos como supervisor
+        empleados = Perfil.objects.filter(
+            activo=True,
+            supervisor=perfil
+        )
     else:
         raise PermissionDenied
     
@@ -455,8 +454,8 @@ def editar_perfil(request, perfil_id):
                     perfil_actualizado.departamento = form.cleaned_data['departamento']
                 if 'puesto' in form.cleaned_data:
                     perfil_actualizado.puesto = form.cleaned_data['puesto']
-                if 'direccion' in form.cleaned_data:
-                    perfil_actualizado.direccion = form.cleaned_data['direccion']
+                if 'supervisor' in form.cleaned_data:
+                    perfil_actualizado.supervisor = form.cleaned_data['supervisor']
                 if 'numero_empleado' in form.cleaned_data:
                     perfil_actualizado.numero_empleado = form.cleaned_data['numero_empleado']
                 if 'fecha_contratacion' in form.cleaned_data:
@@ -574,7 +573,10 @@ def aprobar_jefe(request, solicitud_id):
     if solicitud.empleado == perfil:
         raise PermissionDenied("No puedes aprobar tu propia solicitud de vacaciones.")
     
-    # Los jefes pueden aprobar solicitudes de cualquier departamento
+    # Los jefes solo pueden aprobar solicitudes de empleados asignados directamente a ellos
+    empleados_asignados = Perfil.objects.filter(supervisor=perfil, activo=True)
+    if solicitud.empleado not in empleados_asignados:
+        raise PermissionDenied("Solo puedes aprobar solicitudes de empleados asignados a tu área.")
     
     if request.method == 'POST':
         form = AprobacionJefeForm(request.POST, solicitud=solicitud)
@@ -612,8 +614,14 @@ def solicitudes_jefe(request):
     if not perfil or not perfil.es_jefe_area():
         raise PermissionDenied
     
-    # Obtener todas las solicitudes (jefes pueden ver todas)
-    solicitudes = SolicitudVacaciones.objects.all().select_related(
+    # Obtener solo las solicitudes de empleados asignados directamente al jefe como supervisor
+    empleados_asignados = Perfil.objects.filter(
+        supervisor=perfil,
+        activo=True
+    )
+    solicitudes = SolicitudVacaciones.objects.filter(
+        empleado__in=empleados_asignados
+    ).select_related(
         'empleado', 'empleado__departamento'
     ).order_by('-fecha_solicitud')
     
@@ -1261,6 +1269,75 @@ def inventario_equipos(request):
         'texto_volver': texto_volver,
     }
     return render(request, 'empleados/sistemas/inventario.html', context)
+
+
+@login_required
+def inventario_jefe(request):
+    """Vista de inventario para jefes de área - Solo lectura"""
+    perfil = get_object_or_404(Perfil, usuario=request.user)
+    
+    # Verificar permisos - Solo jefes de área
+    if not perfil.es_jefe_area():
+        messages.error(request, 'No tienes permiso para acceder a esta sección.')
+        return redirect('empleados:empleado_dashboard')
+    
+    # Obtener empleados asignados directamente al jefe como supervisor
+    empleados_asignados = Perfil.objects.filter(
+        supervisor=perfil,
+        activo=True
+    )
+    
+    # Obtener IDs de empleados asignados (incluyendo al jefe mismo)
+    empleados_ids = list(empleados_asignados.values_list('id', flat=True))
+    empleados_ids.append(perfil.id)  # Incluir al jefe mismo
+    
+    # Obtener equipos asignados activamente al jefe o a sus empleados
+    from django.db.models import Q
+    equipos_asignados = Equipo.objects.filter(
+        asignaciones__empleado__in=empleados_ids,
+        asignaciones__fecha_devolucion__isnull=True
+    ).distinct()
+    
+    # También incluir equipos que estén en el área del jefe (departamento)
+    # aunque no estén asignados a nadie específico, pero que estén en el departamento
+    if perfil.departamento:
+        # Obtener todos los empleados del departamento del jefe
+        empleados_departamento = Perfil.objects.filter(
+            departamento=perfil.departamento,
+            activo=True
+        ).values_list('id', flat=True)
+        
+        # Equipos asignados a cualquier empleado del departamento (incluyendo el jefe)
+        equipos_departamento = Equipo.objects.filter(
+            asignaciones__empleado__in=empleados_departamento,
+            asignaciones__fecha_devolucion__isnull=True
+        ).distinct()
+        
+        # Combinar: equipos asignados al jefe/sus empleados + equipos del departamento
+        equipos = (equipos_asignados | equipos_departamento).distinct()
+    else:
+        # Si el jefe no tiene departamento, solo mostrar equipos asignados directamente
+        equipos = equipos_asignados
+    
+    # Optimizar consultas
+    equipos = equipos.select_related('categoria').prefetch_related(
+        'asignaciones__empleado__departamento'
+    ).order_by('-fecha_adquisicion')
+    
+    # Filtros
+    estado_filtro = request.GET.get('estado', '')
+    if estado_filtro:
+        equipos = equipos.filter(estado=estado_filtro)
+    
+    context = {
+        'perfil': perfil,
+        'equipos': equipos,
+        'estado_filtro': estado_filtro,
+        'url_volver': 'empleados:jefe_dashboard',
+        'texto_volver': 'Volver al Panel',
+        'es_jefe': True,  # Flag para indicar que es vista de solo lectura
+    }
+    return render(request, 'empleados/jefe/inventario.html', context)
 
 
 @login_required

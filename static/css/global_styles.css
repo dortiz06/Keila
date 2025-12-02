@@ -1,10 +1,10 @@
 /* ===== TIPOGRAFÍA GLOBAL MONSERRAT - APLICADA A TODO EL SISTEMA ===== */
-/* Regla global: Todo el sistema usa Montserrat por defecto */
-* {
+/* Regla global: Todo el sistema usa Montserrat por defecto, EXCEPTO iconos */
+*:not(i):not([class*="fa-"]):not([class^="fa-"]):not(.fa):not([class*=" icon-"]) {
     font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
 }
 
-/* Excepción: Iconos de Font Awesome mantienen su fuente original */
+/* Excepción: Iconos de Font Awesome mantienen su fuente original - REGLAS MÁS ESPECÍFICAS */
 i.fas,
 i.far,
 i.fal,
@@ -15,7 +15,29 @@ i.fa,
 [class^="fa-"],
 [class*=" icon-"],
 i[class*="fa-"],
-i[class^="fa-"] {
+i[class^="fa-"],
+i[class*="fa-"]:before,
+[class*="fa-"]:before,
+[class^="fa-"]:before,
+.fa:before,
+i.fas:before,
+i.far:before,
+i.fal:before,
+i.fab:before,
+.navbar i,
+.nav-link i,
+.btn i,
+.card i,
+.alert i,
+.badge i,
+h1 i, h2 i, h3 i, h4 i, h5 i, h6 i,
+p i,
+span i,
+a i,
+button i,
+div i,
+td i,
+th i {
     font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "Font Awesome 6 Brands" !important;
     font-weight: 900 !important;
     font-style: normal !important;
@@ -23,6 +45,8 @@ i[class^="fa-"] {
     text-rendering: auto !important;
     -webkit-font-smoothing: antialiased !important;
     -moz-osx-font-smoothing: grayscale !important;
+    speak: none !important;
+    display: inline-block !important;
 }
 
 /* Aplicar Montserrat a todos los elementos de texto */
@@ -91,6 +115,85 @@ body {
 
 main {
     flex-grow: 1; /* Permite que el contenido principal ocupe el espacio disponible */
+}
+
+/* ===== CONTENEDORES ALINEADOS CON NAVBAR - PREVENIR ESTIRAMIENTO ===== */
+/* Asegurar que todos los contenedores tengan el mismo ancho máximo que el navbar */
+body .container-fluid.dashboard,
+body .container-fluid:not(.login-container) {
+    max-width: 100% !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+/* Aplicar límites de ancho a todos los container dentro de container-fluid */
+body .container-fluid > .container,
+body .container-fluid.dashboard > .container,
+body .container-fluid:not(.login-container) > .container,
+body .dashboard > .container,
+body .dashboard .container {
+    max-width: 1320px !important; /* Mismo ancho máximo que Bootstrap container-xl */
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    width: 100% !important;
+}
+
+/* En pantallas grandes, asegurar que el contenido no se estire más allá del navbar */
+@media (min-width: 1400px) {
+    body .container-fluid > .container,
+    body .container-fluid.dashboard > .container,
+    body .dashboard > .container,
+    body .dashboard .container {
+        max-width: 1320px !important;
+    }
+}
+
+/* En pantallas medianas */
+@media (min-width: 992px) and (max-width: 1399px) {
+    body .container-fluid > .container,
+    body .container-fluid.dashboard > .container,
+    body .dashboard > .container,
+    body .dashboard .container {
+        max-width: 1140px !important;
+    }
+}
+
+/* En pantallas pequeñas */
+@media (max-width: 991px) {
+    body .container-fluid > .container,
+    body .container-fluid.dashboard > .container,
+    body .dashboard > .container,
+    body .dashboard .container {
+        max-width: 100% !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+    
+    body .navbar .container {
+        max-width: 100% !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+}
+
+/* En móviles muy pequeños */
+@media (max-width: 576px) {
+    body .container-fluid > .container,
+    body .container-fluid.dashboard > .container,
+    body .dashboard > .container,
+    body .dashboard .container {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+    
+    body .navbar .container {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
 }
 
 /* Footer global con estilo oscuro - El estilo principal está en base.html */
@@ -777,7 +880,51 @@ input[type="submit"].btn {
     pointer-events: auto !important;
 }
 
-/* Asegurar que Montserrat esté aplicado en TODO excepto iconos */
-*:not(i):not([class*="fa-"]):not([class^="fa-"]):not(.fa) {
-    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+/* ===== REGLAS FINALES PARA ICONOS FONT AWESOME - MÁXIMA PRIORIDAD ===== */
+/* Asegurar que TODOS los iconos de Font Awesome funcionen correctamente */
+i[class*="fa-"],
+i[class^="fa-"],
+[class*="fa-"]:not([class*="font-"]):not([class*="family"]),
+[class^="fa-"]:not([class*="font-"]):not([class*="family"]),
+.fa,
+i.fa,
+i.fas,
+i.far,
+i.fal,
+i.fab,
+.fas,
+.far,
+.fal,
+.fab,
+.navbar i,
+.nav-link i,
+.btn i,
+.card i,
+.alert i,
+.badge i,
+h1 i, h2 i, h3 i, h4 i, h5 i, h6 i,
+p i,
+span i,
+a i,
+button i,
+div i,
+td i,
+th i,
+li i,
+ul i,
+ol i {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "Font Awesome 6 Brands" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    speak: none !important;
+    display: inline-block !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    word-wrap: normal !important;
+    white-space: nowrap !important;
+    direction: ltr !important;
 }
