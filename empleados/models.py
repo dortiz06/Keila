@@ -698,6 +698,20 @@ class Equipo(models.Model):
         """Retorna el empleado al que está asignado actualmente"""
         asignacion = self.asignacion_actual
         return asignacion.empleado if asignacion else None
+    
+    @property
+    def fecha_disponibilidad(self):
+        """Retorna la fecha desde la cual el equipo está disponible"""
+        # Si hay una asignación con fecha de devolución, usar esa fecha
+        ultima_devolucion = self.asignaciones.filter(
+            fecha_devolucion__isnull=False
+        ).order_by('-fecha_devolucion').first()
+        
+        if ultima_devolucion:
+            return ultima_devolucion.fecha_devolucion
+        
+        # Si no hay devoluciones, usar la fecha de actualización del equipo
+        return self.fecha_actualizacion.date() if self.fecha_actualizacion else self.fecha_creacion.date()
 
 
 class AsignacionEquipo(models.Model):

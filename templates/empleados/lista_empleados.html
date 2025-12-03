@@ -16,32 +16,38 @@ body {
 </style>
 
 <div class="container-fluid dashboard">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="dashboard-title" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 0 5px 20px rgba(0, 0, 0, 0.85) !important;">
-                <i class="fas fa-users me-2"></i>Lista de Empleados
-            </h1>
-            {% if perfil.es_jefe_area %}
-            <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3) !important;">
-                Empleados de tu departamento: <strong style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3) !important;">{{ perfil.departamento.nombre }}</strong>
-            </p>
-            {% endif %}
+    <div class="container">
+        <!-- Encabezado -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                    <div class="mb-3 mb-md-0">
+                        <h1 class="dashboard-title" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 0 5px 20px rgba(0, 0, 0, 0.85) !important;">
+                            <i class="fas fa-users me-2"></i>Lista de Empleados
+                        </h1>
+                        {% if perfil.es_jefe_area %}
+                        <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3) !important;">
+                            Empleados de tu Área
+                        </p>
+                        {% endif %}
+                    </div>
+                    <div class="d-flex gap-2 flex-wrap">
+                        {% if puede_crear %}
+                        <a href="{% url 'empleados:crear_usuario' %}" class="btn btn-outline-success">
+                            <i class="fas fa-plus me-1"></i>Crear Usuario
+                        </a>
+                        {% endif %}
+                        <button type="button" class="btn btn-outline-secondary" onclick="window.history.back();">
+                            <i class="fas fa-arrow-left me-1"></i>Volver
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-            {% if puede_crear %}
-            <a href="{% url 'empleados:crear_usuario' %}" class="btn btn-outline-success">
-                <i class="fas fa-plus me-1"></i>Crear Usuario
-            </a>
-            {% endif %}
-            <button type="button" class="btn btn-outline-secondary" onclick="window.history.back();">
-                <i class="fas fa-arrow-left me-1"></i>Volver
-            </button>
-        </div>
-    </div>
 
-    <!-- Filtros -->
-    <div class="card mb-4">
-        <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
+        <!-- Filtros -->
+        <div class="card mb-4">
+            <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
             <form method="get" class="row g-3">
                 <div class="col-md-4">
                     <label for="busqueda" class="form-label" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">Buscar</label>
@@ -84,12 +90,12 @@ body {
                     </div>
                 </div>
             </form>
+            </div>
         </div>
-    </div>
 
-    <!-- Lista de empleados -->
-    <div class="card">
-        <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
+        <!-- Lista de empleados -->
+        <div class="card">
+            <div class="card-body" style="background: transparent !important; padding: 1.5rem !important;">
             <h5 class="gestion-section-title mb-4" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
                 <i class="fas fa-list me-2"></i>Empleados
                 <span class="badge" style="background: rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; border: 1px solid rgba(255, 255, 255, 0.3) !important; padding: 0.25rem 0.75rem !important; border-radius: 12px !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">{{ empleados.count }}</span>
@@ -101,13 +107,13 @@ body {
                         <thead>
                             <tr>
                                 <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Empleado</th>
-                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Número</th>
-                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Perfil</th>
-                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Departamento</th>
-                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Puesto</th>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Perfil / Departamento</th>
                                 {% if es_gestion_completa %}
                                 <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Antigüedad</th>
                                 <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Estado</th>
+                                {% endif %}
+                                {% if perfil.es_rh or perfil.es_admin or perfil.es_sistemas or perfil.es_jefe_area %}
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Vacaciones</th>
                                 {% endif %}
                                 <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Acciones</th>
                             </tr>
@@ -119,11 +125,122 @@ body {
                                     <strong>{{ empleado.nombre_completo }}</strong>
                                     <br>
                                     <small style="color: rgba(255, 255, 255, 0.6) !important;">{{ empleado.usuario.email|default:"Sin email" }}</small>
+                                    {% if empleado.numero_empleado %}
+                                    <br>
+                                    <small style="color: rgba(255, 255, 255, 0.5) !important; font-size: 0.8rem !important;">
+                                        <i class="fas fa-id-badge me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>{{ empleado.numero_empleado }}
+                                    </small>
+                                    {% endif %}
                                 </td>
                                 <td style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
-                                    {{ empleado.numero_empleado|default:"N/A" }}
+                                    <div class="mb-2">
+                                        {% if empleado.tipo_perfil == 'SISTEMAS' %}
+                                            <span class="badge badge-perfil-sistemas">
+                                                {{ empleado.get_tipo_perfil_display }}
+                                            </span>
+                                        {% elif empleado.tipo_perfil == 'ADMIN' %}
+                                            <span class="badge badge-perfil-admin">
+                                                {{ empleado.get_tipo_perfil_display }}
+                                            </span>
+                                        {% elif empleado.tipo_perfil == 'RH' %}
+                                            <span class="badge badge-perfil-rh">
+                                                {{ empleado.get_tipo_perfil_display }}
+                                            </span>
+                                        {% elif empleado.tipo_perfil == 'JEFE_AREA' %}
+                                            <span class="badge badge-perfil-jefe">
+                                                {{ empleado.get_tipo_perfil_display }}
+                                            </span>
+                                        {% else %}
+                                            <span class="badge badge-perfil-empleado">
+                                                {{ empleado.get_tipo_perfil_display }}
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                    <div style="font-size: 0.9rem !important;">
+                                        <i class="fas fa-building me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: rgba(255, 255, 255, 0.7) !important;"></i>
+                                        {{ empleado.departamento.nombre|default:"Sin departamento" }}
+                                    </div>
                                 </td>
+                                {% if es_gestion_completa %}
+                                <td style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
+                                    {% if empleado.antiguedad_anos >= 1 %}
+                                        <span style="color: #22C55E !important; font-weight: 500 !important;">{{ empleado.antiguedad_anos }} año{{ empleado.antiguedad_anos|pluralize }}</span>
+                                    {% else %}
+                                        <span style="color: #FBBF24 !important; font-weight: 500 !important;">{{ empleado.antiguedad_anos }} año{{ empleado.antiguedad_anos|pluralize }}</span>
+                                    {% endif %}
+                                </td>
+                                <td style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
+                                    {% if empleado.activo %}
+                                        <span class="badge" style="background: rgba(34, 197, 94, 0.3) !important; color: #22C55E !important; border: 1px solid rgba(34, 197, 94, 0.5) !important; padding: 0.25rem 0.75rem !important; border-radius: 12px !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">Activo</span>
+                                    {% else %}
+                                        <span class="badge" style="background: rgba(239, 68, 68, 0.3) !important; color: #EF4444 !important; border: 1px solid rgba(239, 68, 68, 0.5) !important; padding: 0.25rem 0.75rem !important; border-radius: 12px !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">Inactivo</span>
+                                    {% endif %}
+                                </td>
+                                {% endif %}
+                                {% if perfil.es_rh or perfil.es_admin or perfil.es_sistemas or perfil.es_jefe_area %}
+                                <td style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
+                                    {% if empleado.tipo_perfil == 'EMPLEADO' or empleado.tipo_perfil == 'JEFE_AREA' %}
+                                    <div style="font-size: 0.85rem !important;">
+                                        <div class="mb-1">
+                                            <i class="fas fa-calendar-check me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: #22C55E !important;"></i>
+                                            <strong style="color: #22C55E !important;">{{ empleado.dias_vacaciones_disponibles }}</strong> disponibles
+                                        </div>
+                                        <div class="mb-1">
+                                            <i class="fas fa-calendar-minus me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: #F59E0B !important;"></i>
+                                            <span style="color: #F59E0B !important;">{{ empleado.dias_vacaciones_usados }}</span> usados
+                                        </div>
+                                        <div>
+                                            <i class="fas fa-calendar-alt me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: #3B82F6 !important;"></i>
+                                            <span style="color: #3B82F6 !important;">{{ empleado.dias_vacaciones_anuales }}</span> anuales
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <span style="color: rgba(255, 255, 255, 0.5) !important;">N/A</span>
+                                    {% endif %}
+                                </td>
+                                {% endif %}
                                 <td>
+                                    <div class="d-flex gap-2" role="group">
+                                        <a href="{% url 'empleados:perfil_usuario' %}?perfil_id={{ empleado.id }}" class="btn btn-xs btn-outline-primary btn-accion" title="Ver Perfil">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        {% if puede_editar %}
+                                        <a href="{% url 'empleados:editar_perfil' empleado.id %}" class="btn btn-xs btn-outline-warning btn-accion" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Vista de tarjetas para móviles -->
+                <div class="gestion-mobile-cards" style="display: none !important;">
+                    {% for empleado in empleados %}
+                    <div class="card mb-3" style="background: rgba(255, 255, 255, 0.1) !important; backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; border-radius: 15px !important;">
+                        <div class="card-body" style="background: transparent !important; padding: 1.25rem !important;">
+                            <!-- Nombre y Email -->
+                            <div class="mb-3">
+                                <h6 style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; margin-bottom: 0.25rem !important;">
+                                    {{ empleado.nombre_completo }}
+                                </h6>
+                                <small style="color: rgba(255, 255, 255, 0.6) !important; font-family: 'Montserrat', sans-serif !important;">
+                                    {{ empleado.usuario.email|default:"Sin email" }}
+                                </small>
+                                {% if empleado.numero_empleado %}
+                                <br>
+                                <small style="color: rgba(255, 255, 255, 0.5) !important; font-size: 0.8rem !important;">
+                                    <i class="fas fa-id-badge me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>{{ empleado.numero_empleado }}
+                                </small>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Perfil y Departamento -->
+                            <div class="mb-3">
+                                <div class="mb-2">
                                     {% if empleado.tipo_perfil == 'SISTEMAS' %}
                                         <span class="badge badge-perfil-sistemas">
                                             {{ empleado.get_tipo_perfil_display }}
@@ -145,45 +262,77 @@ body {
                                             {{ empleado.get_tipo_perfil_display }}
                                         </span>
                                     {% endif %}
-                                </td>
-                                <td style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
+                                </div>
+                                <div style="font-size: 0.9rem !important; color: rgba(255, 255, 255, 0.9) !important;">
+                                    <i class="fas fa-building me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: rgba(255, 255, 255, 0.7) !important;"></i>
                                     {{ empleado.departamento.nombre|default:"Sin departamento" }}
-                                </td>
-                                <td style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
-                                    {{ empleado.puesto|default:"N/A" }}
-                                </td>
-                                {% if es_gestion_completa %}
-                                <td style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
+                                </div>
+                            </div>
+                            
+                            <!-- Información adicional (solo si es gestión completa) -->
+                            {% if es_gestion_completa %}
+                            <div class="mb-3">
+                                <div class="mb-2">
                                     {% if empleado.antiguedad_anos >= 1 %}
-                                        <span style="color: #22C55E !important; font-weight: 500 !important;">{{ empleado.antiguedad_anos }} año{{ empleado.antiguedad_anos|pluralize }}</span>
+                                        <span style="color: #22C55E !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">
+                                            <i class="fas fa-clock me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>
+                                            {{ empleado.antiguedad_anos }} año{{ empleado.antiguedad_anos|pluralize }}
+                                        </span>
                                     {% else %}
-                                        <span style="color: #FBBF24 !important; font-weight: 500 !important;">{{ empleado.antiguedad_anos }} año{{ empleado.antiguedad_anos|pluralize }}</span>
+                                        <span style="color: #FBBF24 !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">
+                                            <i class="fas fa-clock me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>
+                                            {{ empleado.antiguedad_anos }} año{{ empleado.antiguedad_anos|pluralize }}
+                                        </span>
                                     {% endif %}
-                                </td>
-                                <td style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
+                                </div>
+                                <div>
                                     {% if empleado.activo %}
                                         <span class="badge" style="background: rgba(34, 197, 94, 0.3) !important; color: #22C55E !important; border: 1px solid rgba(34, 197, 94, 0.5) !important; padding: 0.25rem 0.75rem !important; border-radius: 12px !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">Activo</span>
                                     {% else %}
                                         <span class="badge" style="background: rgba(239, 68, 68, 0.3) !important; color: #EF4444 !important; border: 1px solid rgba(239, 68, 68, 0.5) !important; padding: 0.25rem 0.75rem !important; border-radius: 12px !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">Inactivo</span>
                                     {% endif %}
-                                </td>
-                                {% endif %}
-                                <td>
-                                    <div class="d-flex gap-2" role="group">
-                                        <a href="{% url 'empleados:perfil_usuario' %}?perfil_id={{ empleado.id }}" class="btn btn-xs btn-outline-primary btn-accion" title="Ver Perfil">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        {% if puede_editar %}
-                                        <a href="{% url 'empleados:editar_perfil' empleado.id %}" class="btn btn-xs btn-outline-warning btn-accion" title="Editar">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        {% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Vacaciones (solo si tiene permisos) -->
+                            {% if perfil.es_rh or perfil.es_admin or perfil.es_sistemas or perfil.es_jefe_area %}
+                            <div class="mb-3">
+                                {% if empleado.tipo_perfil == 'EMPLEADO' or empleado.tipo_perfil == 'JEFE_AREA' %}
+                                <div style="font-size: 0.85rem !important;">
+                                    <div class="mb-1">
+                                        <i class="fas fa-calendar-check me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: #22C55E !important;"></i>
+                                        <strong style="color: #22C55E !important;">{{ empleado.dias_vacaciones_disponibles }}</strong> disponibles
                                     </div>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                                    <div class="mb-1">
+                                        <i class="fas fa-calendar-minus me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: #F59E0B !important;"></i>
+                                        <span style="color: #F59E0B !important;">{{ empleado.dias_vacaciones_usados }}</span> usados
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-calendar-alt me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: #3B82F6 !important;"></i>
+                                        <span style="color: #3B82F6 !important;">{{ empleado.dias_vacaciones_anuales }}</span> anuales
+                                    </div>
+                                </div>
+                                {% else %}
+                                <span style="color: rgba(255, 255, 255, 0.5) !important;">N/A</span>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Botones de acción -->
+                            <div class="d-flex gap-2 mt-3">
+                                <a href="{% url 'empleados:perfil_usuario' %}?perfil_id={{ empleado.id }}" class="btn btn-sm btn-outline-primary flex-fill" title="Ver Perfil">
+                                    <i class="fas fa-eye me-1"></i>Ver Perfil
+                                </a>
+                                {% if puede_editar %}
+                                <a href="{% url 'empleados:editar_perfil' empleado.id %}" class="btn btn-sm btn-outline-warning flex-fill" title="Editar">
+                                    <i class="fas fa-edit me-1"></i>Editar
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
             {% else %}
                 <div class="text-center py-5">
@@ -192,6 +341,7 @@ body {
                     <p style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif !important;">No hay empleados que coincidan con los filtros seleccionados.</p>
                 </div>
             {% endif %}
+            </div>
         </div>
     </div>
 </div>
@@ -210,13 +360,77 @@ body {
 
 .gestion-table-wrapper {
     background: rgba(255, 255, 255, 0.05) !important;
-    padding: 1.5rem !important;
+    padding: 1rem !important;
     border-radius: 15px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block !important;
+}
+
+/* En móviles, ocultar la tabla y mostrar cards */
+@media (max-width: 768px) {
+    .gestion-table-wrapper {
+        display: none !important;
+    }
+    
+    .gestion-mobile-cards {
+        display: block !important;
+    }
 }
 
 .gestion-table {
     margin-bottom: 0 !important;
     background: transparent !important;
+    table-layout: auto !important;
+    width: 100% !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+}
+
+/* Asegurar que las celdas no se corten */
+.gestion-table th,
+.gestion-table td {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    padding: 0.75rem 1rem !important;
+}
+
+/* Permitir que algunas columnas se ajusten */
+.gestion-table th:nth-child(1),
+.gestion-table td:nth-child(1) {
+    min-width: 200px !important;
+    max-width: 280px !important;
+    white-space: normal !important;
+}
+
+.gestion-table th:nth-child(2),
+.gestion-table td:nth-child(2) {
+    min-width: 160px !important;
+    max-width: 200px !important;
+    white-space: normal !important;
+}
+
+.gestion-table thead th:last-child {
+    position: sticky !important;
+    right: 0 !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    z-index: 20 !important;
+}
+
+.gestion-table tbody td:last-child {
+    min-width: 110px !important;
+    white-space: nowrap !important;
+    position: sticky !important;
+    right: 0 !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    z-index: 10 !important;
+}
+
+.gestion-table-row:hover td:last-child {
+    background: rgba(255, 255, 255, 0.15) !important;
 }
 
 .gestion-table thead th {
@@ -239,9 +453,60 @@ body {
 
 .gestion-table tbody td {
     background: transparent !important;
-    padding: 1rem !important;
+    padding: 0.75rem 1rem !important;
     vertical-align: middle !important;
     border-top: none !important;
+    position: relative !important;
+}
+
+/* Responsive: Ocultar columnas menos importantes en pantallas pequeñas */
+@media (max-width: 992px) {
+    .gestion-table th:nth-child(3),
+    .gestion-table td:nth-child(3) {
+        display: none !important;
+    }
+}
+
+/* En tablets, ocultar algunas columnas */
+@media (max-width: 768px) {
+    .gestion-table-wrapper {
+        display: none !important;
+    }
+    
+    .gestion-mobile-cards {
+        display: block !important;
+    }
+}
+
+/* Asegurar que en móviles todo se vea bien */
+@media (max-width: 576px) {
+    .dashboard > .container {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+    
+    .dashboard .card {
+        margin-bottom: 1rem !important;
+    }
+    
+    .dashboard .card-body {
+        padding: 1rem !important;
+    }
+    
+    .gestion-mobile-cards .card {
+        margin-bottom: 1rem !important;
+    }
+    
+    .gestion-mobile-cards .card-body {
+        padding: 1rem !important;
+    }
+    
+    /* Asegurar que los botones no se corten */
+    .gestion-mobile-cards .btn {
+        font-size: 0.8rem !important;
+        padding: 0.5rem 0.75rem !important;
+        white-space: nowrap !important;
+    }
 }
 
 .dashboard .btn-outline-primary,
@@ -328,14 +593,16 @@ body {
 /* Botones de acción más pequeños */
 .dashboard .btn-xs,
 .btn-xs {
-    padding: 6px 12px !important;
+    padding: 6px 10px !important;
     font-size: 0.75rem !important;
     border-radius: 10px !important;
-    min-width: 36px !important;
-    height: 36px !important;
+    min-width: 32px !important;
+    width: 32px !important;
+    height: 32px !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
+    flex-shrink: 0 !important;
 }
 
 .dashboard .btn-accion,
@@ -353,6 +620,67 @@ body {
 
 .dashboard .gap-2 {
     gap: 0.5rem !important;
+}
+
+/* Asegurar que el contenedor principal tenga padding lateral y límite de ancho */
+.dashboard > .container,
+.container-fluid.dashboard > .container {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    max-width: 1320px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    overflow-x: visible !important;
+}
+
+@media (min-width: 992px) and (max-width: 1399px) {
+    .dashboard > .container,
+    .container-fluid.dashboard > .container {
+        max-width: 1140px !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .dashboard > .container,
+    .container-fluid.dashboard > .container {
+        max-width: 100% !important;
+    }
+}
+
+/* Asegurar que las cards no se solapen */
+.dashboard .card {
+    margin-bottom: 1.5rem !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* Asegurar que los botones de acción no se corten */
+.dashboard .btn-accion {
+    flex-shrink: 0 !important;
+    margin: 0 2px !important;
+}
+
+.dashboard .d-flex.gap-2 {
+    flex-wrap: wrap !important;
+}
+
+/* Asegurar que la tabla tenga scroll horizontal cuando sea necesario */
+.gestion-table-wrapper::-webkit-scrollbar {
+    height: 8px !important;
+}
+
+.gestion-table-wrapper::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 10px !important;
+}
+
+.gestion-table-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3) !important;
+    border-radius: 10px !important;
+}
+
+.gestion-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5) !important;
 }
 
 /* ===== BADGES DE TIPO DE PERFIL ===== */

@@ -6,93 +6,141 @@
 {% block content %}
 <div class="container-fluid dashboard">
     <div class="container">
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
-            <div>
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                    <div class="mb-3 mb-md-0">
                 <h1 class="dashboard-title" style="color: #ffffff !important; text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 0 5px 20px rgba(0, 0, 0, 0.85), 0 8px 30px rgba(0, 0, 0, 0.8), 0 10px 40px rgba(0, 0, 0, 0.75), 0 0 50px rgba(0, 0, 0, 0.7) !important;">Panel Recursos Humanos</h1>
                 <p class="dashboard-subtitle mb-0" style="color: #ffffff !important; text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 0 5px 20px rgba(0, 0, 0, 0.85), 0 8px 30px rgba(0, 0, 0, 0.8), 0 10px 40px rgba(0, 0, 0, 0.75), 0 0 50px rgba(0, 0, 0, 0.7) !important;">Bienvenido, {{ perfil.nombre_completo }}</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     
+    <div class="container">
     <!-- Estadísticas de gestión de vacaciones -->
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Solicitudes Pendientes</h5>
-                    <p class="card-text" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">{{ stats.solicitudes_pendientes }}</p>
-                </div>
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+                <a href="{% url 'empleados:solicitudes_rh' %}" class="text-decoration-none" style="display: block; height: 100%;">
+                    <div class="card text-center h-100 stat-card-clickable" style="cursor: pointer; transition: all 0.3s ease !important;">
+                        <div class="card-body d-flex flex-column justify-content-center">
+                            <i class="fas fa-clock fa-2x mb-2" style="color: #D97706 !important; font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;"></i>
+                            <h5 class="card-title small" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">Solicitudes Pendientes</h5>
+                            <h3 class="text-warning" style="color: #D97706 !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ stats.solicitudes_pendientes }}</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4 mb-3">
+                <a href="{% url 'empleados:solicitudes_rh' %}?estado=APROBADO_RH" class="text-decoration-none" style="display: block; height: 100%;">
+                    <div class="card text-center h-100 stat-card-clickable" style="cursor: pointer; transition: all 0.3s ease !important;">
+                        <div class="card-body d-flex flex-column justify-content-center">
+                            <i class="fas fa-check-circle fa-2x mb-2" style="color: #15803D !important; font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;"></i>
+                            <h5 class="card-title small" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">Aprobadas Este Mes</h5>
+                            <h3 class="text-success" style="color: #15803D !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ stats.aprobadas_este_mes }}</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4 mb-3">
+                <a href="{% url 'empleados:solicitudes_rh' %}?estado=R" class="text-decoration-none" style="display: block; height: 100%;">
+                    <div class="card text-center h-100 stat-card-clickable" style="cursor: pointer; transition: all 0.3s ease !important;">
+                        <div class="card-body d-flex flex-column justify-content-center">
+                            <i class="fas fa-times-circle fa-2x mb-2" style="color: #B91C1C !important; font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;"></i>
+                            <h5 class="card-title small" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">Rechazadas Este Mes</h5>
+                            <h3 class="text-danger" style="color: #B91C1C !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ stats.rechazadas_este_mes }}</h3>
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Aprobadas Este Mes</h5>
-                    <p class="card-text" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">{{ stats.aprobadas_este_mes }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Rechazadas Este Mes</h5>
-                    <p class="card-text" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">{{ stats.rechazadas_este_mes }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
     
     <div class="row mt-4">
         <div class="col-12 mb-4">
             <div class="card h-100">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="fas fa-clipboard-list me-2"></i>Solicitudes Pendientes de RH</h5>
+                <div class="card-header" style="background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; border-bottom: none !important; padding: 1.5rem 1.5rem 1rem 1.5rem !important; margin: 0 !important;">
+                    <h5 class="mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; font-size: 1.1rem !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;">
+                        <i class="fas fa-clipboard-list me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: #3B82F6 !important;"></i>Solicitudes Pendientes de RH
+                    </h5>
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; padding: 0 1.5rem 1.5rem 1.5rem !important; margin: 0 !important;">
                     {% if solicitudes_pendientes %}
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover">
+                    <div class="table-responsive" style="overflow: visible !important; background: transparent !important;">
+                        <table class="table table-hover mb-0" style="background: transparent !important; margin-bottom: 0 !important; border-collapse: separate !important; border-spacing: 0 !important;">
                             <thead>
-                                <tr>
-                                    <th>Empleado</th>
-                                    <th>Días</th>
-                                    <th>Acciones</th>
+                                <tr style="background: transparent !important;">
+                                    <th style="color: #ffffff !important; font-weight: 700 !important; font-family: 'Montserrat', sans-serif !important; border-bottom: none !important; padding: 1rem 1.25rem 0.75rem 1.25rem !important; font-size: 0.95rem !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; position: relative !important;">
+                                        Empleado
+                                        <div style="position: absolute !important; bottom: 0 !important; left: 1.25rem !important; right: 1.25rem !important; height: 1px !important; background: rgba(255, 255, 255, 0.3) !important;"></div>
+                                    </th>
+                                    <th style="color: #ffffff !important; font-weight: 700 !important; font-family: 'Montserrat', sans-serif !important; border-bottom: none !important; text-align: center !important; padding: 1rem 1.25rem 0.75rem 1.25rem !important; font-size: 0.95rem !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; width: 120px !important; position: relative !important;">
+                                        Días
+                                        <div style="position: absolute !important; bottom: 0 !important; left: 1.25rem !important; right: 1.25rem !important; height: 1px !important; background: rgba(255, 255, 255, 0.3) !important;"></div>
+                                    </th>
+                                    <th style="color: #ffffff !important; font-weight: 700 !important; font-family: 'Montserrat', sans-serif !important; border-bottom: none !important; text-align: center !important; padding: 1rem 1.25rem 0.75rem 1.25rem !important; font-size: 0.95rem !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; width: 150px !important; position: relative !important;">
+                                        Acciones
+                                        <div style="position: absolute !important; bottom: 0 !important; left: 1.25rem !important; right: 1.25rem !important; height: 1px !important; background: rgba(255, 255, 255, 0.3) !important;"></div>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for solicitud in solicitudes_pendientes %}
-                                <tr>
-                                    <td>
-                                        <i class="fas fa-user me-1"></i>{{ solicitud.empleado.nombre_completo }} <br>
-                                        <small class="text-muted">{{ solicitud.fecha_inicio|date:"d/m/Y" }} - {{ solicitud.fecha_fin|date:"d/m/Y" }}</small>
+                                <tr style="border-bottom: none !important; transition: all 0.2s ease !important; position: relative !important; background: transparent !important;">
+                                    <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; padding: 1.25rem 1.25rem !important; vertical-align: middle !important; position: relative !important; background: transparent !important;">
+                                        {% if not forloop.last %}
+                                        <div style="position: absolute !important; bottom: 0 !important; left: 1.25rem !important; right: 1.25rem !important; height: 1px !important; background: rgba(255, 255, 255, 0.2) !important;"></div>
+                                        {% endif %}
+                                        <div class="d-flex align-items-center">
+                                            <div class="me-3" style="width: 40px; height: 40px; background: rgba(59, 130, 246, 0.2) !important; border-radius: 50% !important; display: flex !important; align-items: center !important; justify-content: center !important;">
+                                                <i class="fas fa-user" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: rgba(59, 130, 246, 1) !important; font-size: 1rem !important;"></i>
+                                            </div>
+                                            <div>
+                                                <strong style="font-size: 1rem !important; font-weight: 600 !important; color: #ffffff !important; display: block !important; margin-bottom: 0.25rem !important;">{{ solicitud.empleado.nombre_completo }}</strong>
+                                                <small style="color: rgba(255, 255, 255, 0.75) !important; font-family: 'Montserrat', sans-serif !important; font-size: 0.85rem !important; display: block !important;">
+                                                    <i class="fas fa-calendar-alt me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; font-size: 0.75rem !important;"></i>{{ solicitud.fecha_inicio|date:"d/m/Y" }} - {{ solicitud.fecha_fin|date:"d/m/Y" }}
+                                                </small>
+                                            </div>
+                                        </div>
                                     </td>
-                                    <td><span class="badge bg-warning">{{ solicitud.dias_solicitados }}</span></td>
-                                    <td>
-                                        <a href="{% url 'empleados:aprobar_rh' solicitud.id %}" class="btn btn-sm btn-outline-primary">Revisar</a>
+                                    <td style="text-align: center !important; padding: 1.25rem 1.25rem !important; vertical-align: middle !important; position: relative !important; background: transparent !important;">
+                                        {% if not forloop.last %}
+                                        <div style="position: absolute !important; bottom: 0 !important; left: 1.25rem !important; right: 1.25rem !important; height: 1px !important; background: rgba(255, 255, 255, 0.2) !important;"></div>
+                                        {% endif %}
+                                        <span class="badge badge-alta" style="font-family: 'Montserrat', sans-serif !important; font-size: 1.1rem !important; font-weight: 700 !important; padding: 0.6rem 1rem !important; min-width: 50px !important; display: inline-block !important; color: #ffffff !important; opacity: 1 !important; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;">{{ solicitud.dias_solicitados }}</span>
+                                    </td>
+                                    <td style="text-align: center !important; padding: 1.25rem 1.25rem !important; vertical-align: middle !important; position: relative !important; background: transparent !important;">
+                                        {% if not forloop.last %}
+                                        <div style="position: absolute !important; bottom: 0 !important; left: 1.25rem !important; right: 1.25rem !important; height: 1px !important; background: rgba(255, 255, 255, 0.2) !important;"></div>
+                                        {% endif %}
+                                        <a href="{% url 'empleados:aprobar_rh' solicitud.id %}" class="btn btn-sm btn-outline-primary" style="font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; padding: 0.5rem 1.25rem !important; min-width: 100px !important;">Revisar</a>
                                     </td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
-                    <div class="d-flex gap-2 mt-3">
-                        <a href="{% url 'empleados:solicitudes_rh' %}" class="btn btn-sm btn-outline-primary">Ver todas las solicitudes</a>
-                        <a href="{% url 'empleados:solicitudes_rh' %}?estado=A" class="btn btn-sm btn-success">
-                            <i class="fas fa-file-pdf me-1"></i>Ver Aprobadas y Descargar PDFs
+                    <div class="d-flex flex-wrap gap-2 mt-4">
+                        <a href="{% url 'empleados:solicitudes_rh' %}" class="btn btn-sm btn-outline-primary" style="font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; padding: 0.65rem 1.5rem !important;">
+                            <i class="fas fa-list me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Ver todas las solicitudes
+                        </a>
+                        <a href="{% url 'empleados:solicitudes_rh' %}?estado=APROBADO_RH" class="btn btn-sm btn-success" style="font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; padding: 0.65rem 1.5rem !important;">
+                            <i class="fas fa-file-pdf me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Ver Aprobadas y Descargar PDFs
+                        </a>
+                        <a href="{% url 'empleados:reporte_vacaciones_mes' %}" class="btn btn-sm btn-info" style="font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; padding: 0.65rem 1.5rem !important;">
+                            <i class="fas fa-chart-bar me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Reporte del Mes
                         </a>
                     </div>
                     {% else %}
-                        <div class="text-center py-3">
-                            <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
-                            <h5 class="text-muted">No hay solicitudes de vacaciones pendientes para RH</h5>
-                            <p class="text-muted">Todas las solicitudes han sido revisadas.</p>
+                        <div class="text-center py-5">
+                            <div class="mb-4" style="width: 80px; height: 80px; background: rgba(34, 197, 94, 0.15) !important; border-radius: 50% !important; display: inline-flex !important; align-items: center !important; justify-content: center !important; margin-bottom: 1.5rem !important;">
+                                <i class="fas fa-check-circle fa-3x" style="color: #15803D !important; font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>
+                            </div>
+                            <h5 style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; margin-bottom: 0.5rem !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;">No hay solicitudes de vacaciones pendientes para RH</h5>
+                            <p style="color: rgba(255, 255, 255, 0.75) !important; font-family: 'Montserrat', sans-serif !important; margin-bottom: 0 !important;">Todas las solicitudes han sido revisadas.</p>
                         </div>
                     {% endif %}
-                    <div class="mt-3">
-                        <a href="{% url 'empleados:solicitudes_rh' %}?estado=APROBADO_RH" class="btn btn-sm btn-success">
-                            <i class="fas fa-file-pdf me-1"></i>Ver Solicitudes Aprobadas y Descargar PDFs
-                        </a>
-                    </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -112,10 +160,114 @@
 /* Preservar iconos de Font Awesome */
 .dashboard i,
 .dashboard .fa,
-.dashboard [class*="fa-"] {
+.dashboard [class*="fa-"],
+.dashboard i.fas,
+.dashboard i.far,
+.dashboard i.fal,
+.dashboard i.fab {
     font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro" !important;
     font-weight: 900 !important;
     font-style: normal !important;
+    color: #ffffff !important;
+}
+
+/* Asegurar que los números en las cards mantengan sus colores */
+.dashboard .card h3.text-warning {
+    color: #D97706 !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+.dashboard .card h3.text-success {
+    color: #15803D !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+.dashboard .card h3.text-danger {
+    color: #B91C1C !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Estilos para las cards de estadísticas */
+.dashboard .card.text-center .card-body {
+    padding: 1.5rem !important;
+}
+
+.dashboard .card.text-center h3 {
+    font-weight: 700 !important;
+    font-size: 2rem !important;
+    margin: 0.5rem 0 !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .card.text-center h5 {
+    font-weight: 500 !important;
+    font-size: 0.9rem !important;
+    margin-bottom: 0.5rem !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Estilos para la tabla */
+.dashboard .table {
+    background: transparent !important;
+    color: #ffffff !important;
+}
+
+.dashboard .table thead th {
+    background: transparent !important;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+    padding: 1rem 0.75rem !important;
+}
+
+.dashboard .table tbody td {
+    background: transparent !important;
+    padding: 1rem 0.75rem !important;
+    vertical-align: middle !important;
+}
+
+.dashboard .table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    transition: all 0.3s ease !important;
+}
+
+.dashboard .table tbody tr {
+    background: transparent !important;
+}
+
+.dashboard .table tbody tr:last-child {
+    border-bottom: none !important;
+}
+
+/* Estilos para las cards clickeables de estadísticas */
+.dashboard .stat-card-clickable {
+    transition: all 0.3s ease !important;
+}
+
+.dashboard .stat-card-clickable:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.dashboard a.stat-card-clickable,
+.dashboard a .stat-card-clickable {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+/* Mejorar legibilidad de badges en la tabla */
+.dashboard .table .badge {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Mejorar contraste del texto en la tabla */
+.dashboard .table td strong {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dashboard .table td small {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
 }
 
 /* ===== ESTILO DE BOTONES MODERNO - Con luz arriba y sombra abajo (estilo imagen) ===== */
@@ -175,23 +327,25 @@
 /* Botón Success - Verde esmeralda con degradado oscuro (estado normal) */
 .dashboard .btn-success {
     background: linear-gradient(180deg, 
-        rgba(34, 197, 94, 0.95) 0%, 
-        rgba(22, 163, 74, 0.95) 50%,
-        rgba(15, 118, 50, 1) 100%) !important; /* Colores oscuros en estado normal */
+        rgba(22, 163, 74, 0.95) 0%, 
+        rgba(15, 118, 50, 0.95) 50%,
+        rgba(10, 88, 38, 1) 100%) !important; /* Colores más oscuros en estado normal */
     box-shadow: 
         0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
         inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+    color: #ffffff !important;
 }
 
 .dashboard .btn-success:hover {
     background: linear-gradient(180deg, 
-        rgba(74, 222, 128, 0.95) 0%, 
-        rgba(34, 197, 94, 0.95) 50%,
-        rgba(22, 163, 74, 1) 100%) !important; /* Colores más claros al hover */
+        rgba(34, 197, 94, 0.95) 0%, 
+        rgba(22, 163, 74, 0.95) 50%,
+        rgba(15, 118, 50, 1) 100%) !important; /* Colores un poco más claros al hover */
     transform: translateY(-2px) !important;
     box-shadow: 
         0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
         inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
 }
 
 /* Botón Danger - Rojo con degradado oscuro (estado normal) */

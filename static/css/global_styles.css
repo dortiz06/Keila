@@ -1,10 +1,10 @@
 /* ===== TIPOGRAFÍA GLOBAL MONSERRAT - APLICADA A TODO EL SISTEMA ===== */
-/* Regla global: Todo el sistema usa Montserrat por defecto */
-* {
+/* Regla global: Todo el sistema usa Montserrat por defecto, EXCEPTO iconos */
+*:not(i):not([class*="fa-"]):not([class^="fa-"]):not(.fa):not([class*=" icon-"]) {
     font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
 }
 
-/* Excepción: Iconos de Font Awesome mantienen su fuente original */
+/* Excepción: Iconos de Font Awesome mantienen su fuente original - REGLAS MÁS ESPECÍFICAS */
 i.fas,
 i.far,
 i.fal,
@@ -15,7 +15,29 @@ i.fa,
 [class^="fa-"],
 [class*=" icon-"],
 i[class*="fa-"],
-i[class^="fa-"] {
+i[class^="fa-"],
+i[class*="fa-"]:before,
+[class*="fa-"]:before,
+[class^="fa-"]:before,
+.fa:before,
+i.fas:before,
+i.far:before,
+i.fal:before,
+i.fab:before,
+.navbar i,
+.nav-link i,
+.btn i,
+.card i,
+.alert i,
+.badge i,
+h1 i, h2 i, h3 i, h4 i, h5 i, h6 i,
+p i,
+span i,
+a i,
+button i,
+div i,
+td i,
+th i {
     font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "Font Awesome 6 Brands" !important;
     font-weight: 900 !important;
     font-style: normal !important;
@@ -23,6 +45,8 @@ i[class^="fa-"] {
     text-rendering: auto !important;
     -webkit-font-smoothing: antialiased !important;
     -moz-osx-font-smoothing: grayscale !important;
+    speak: none !important;
+    display: inline-block !important;
 }
 
 /* Aplicar Montserrat a todos los elementos de texto */
@@ -91,6 +115,85 @@ body {
 
 main {
     flex-grow: 1; /* Permite que el contenido principal ocupe el espacio disponible */
+}
+
+/* ===== CONTENEDORES ALINEADOS CON NAVBAR - PREVENIR ESTIRAMIENTO ===== */
+/* Asegurar que todos los contenedores tengan el mismo ancho máximo que el navbar */
+body .container-fluid.dashboard,
+body .container-fluid:not(.login-container) {
+    max-width: 100% !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+/* Aplicar límites de ancho a todos los container dentro de container-fluid */
+body .container-fluid > .container,
+body .container-fluid.dashboard > .container,
+body .container-fluid:not(.login-container) > .container,
+body .dashboard > .container,
+body .dashboard .container {
+    max-width: 1320px !important; /* Mismo ancho máximo que Bootstrap container-xl */
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    width: 100% !important;
+}
+
+/* En pantallas grandes, asegurar que el contenido no se estire más allá del navbar */
+@media (min-width: 1400px) {
+    body .container-fluid > .container,
+    body .container-fluid.dashboard > .container,
+    body .dashboard > .container,
+    body .dashboard .container {
+        max-width: 1320px !important;
+    }
+}
+
+/* En pantallas medianas */
+@media (min-width: 992px) and (max-width: 1399px) {
+    body .container-fluid > .container,
+    body .container-fluid.dashboard > .container,
+    body .dashboard > .container,
+    body .dashboard .container {
+        max-width: 1140px !important;
+    }
+}
+
+/* En pantallas pequeñas */
+@media (max-width: 991px) {
+    body .container-fluid > .container,
+    body .container-fluid.dashboard > .container,
+    body .dashboard > .container,
+    body .dashboard .container {
+        max-width: 100% !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+    
+    body .navbar .container {
+        max-width: 100% !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+}
+
+/* En móviles muy pequeños */
+@media (max-width: 576px) {
+    body .container-fluid > .container,
+    body .container-fluid.dashboard > .container,
+    body .dashboard > .container,
+    body .dashboard .container {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+    
+    body .navbar .container {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
 }
 
 /* Footer global con estilo oscuro - El estilo principal está en base.html */
@@ -388,7 +491,7 @@ html body .badge,
     padding: 10px 20px !important; /* Padding generoso para aspecto de botón - Sobrescribe media queries */
     font-weight: 700 !important; /* Texto más grueso y negrita */
     font-size: 0.9rem !important; /* Tamaño fijo - Sobrescribe media queries */
-    color: #ffffff !important;
+    color: rgba(255, 255, 255, 1) !important; /* Blanco completamente opaco */
     display: inline-block !important;
     text-align: center !important;
     box-shadow: 
@@ -397,104 +500,431 @@ html body .badge,
         inset 0 1px 2px rgba(255, 255, 255, 0.3) !important; /* Highlight más visible arriba para efecto 3D */
     transition: all 0.3s ease !important;
     position: relative !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important; /* Sombra de texto sutil para mejor legibilidad */
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 0 2px rgba(0, 0, 0, 0.3) !important; /* Sombra de texto más fuerte para mejor legibilidad */
+    opacity: 1 !important; /* Asegurar que el elemento completo tenga opacidad 1 */
+    isolation: isolate !important; /* Crear contexto de apilamiento */
 }
 
-/* Badge Urgente - Rojo con degradado más suave */
-.badge-urgente,
-.badge.bg-danger:not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado) {
+/* Badge Urgente - Rojo con degradado - Opacidad reducida por defecto */
+.badge-urgente:not(.btn):not(a):not(button),
+span.badge-urgente:not(.btn):not(a):not(button),
+.badge.badge-urgente:not(.btn):not(a):not(button),
+.badge.bg-danger:not(.btn):not(a):not(button):not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
+.dashboard .badge-urgente:not(.btn):not(a):not(button),
+.dashboard span.badge-urgente:not(.btn):not(a):not(button),
+.dashboard .badge.badge-urgente:not(.btn):not(a):not(button) {
+    background: linear-gradient(180deg, 
+        rgba(248, 113, 113, 0.7) 0%, 
+        rgba(239, 68, 68, 0.7) 50%,
+        rgba(220, 38, 38, 0.7) 100%) !important;
+    color: rgba(255, 255, 255, 1) !important;
+    opacity: 1 !important;
+}
+
+/* Forzar texto blanco opaco en badges urgente */
+.badge-urgente:not(.btn):not(a):not(button),
+span.badge-urgente:not(.btn):not(a):not(button),
+.badge.badge-urgente:not(.btn):not(a):not(button),
+.dashboard .badge-urgente:not(.btn):not(a):not(button),
+.dashboard span.badge-urgente:not(.btn):not(a):not(button),
+.dashboard .badge.badge-urgente:not(.btn):not(a):not(button) {
+    color: rgba(255, 255, 255, 1) !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Badge Urgente - Opacidad completa para botones clickeables */
+.badge-urgente.btn,
+.badge-urgente a,
+.badge-urgente button,
+.badge.bg-danger.btn,
+.badge.bg-danger a,
+.badge.bg-danger button {
     background: linear-gradient(180deg, 
         rgba(248, 113, 113, 1) 0%, 
         rgba(239, 68, 68, 1) 50%,
         rgba(220, 38, 38, 1) 100%) !important;
 }
 
-/* Badge Alta - Amarillo/Naranja con degradado */
-.badge-alta {
+/* Badge Alta - Amarillo/Naranja con degradado - Opacidad reducida por defecto */
+.badge-alta:not(.btn):not(a):not(button),
+span.badge-alta:not(.btn):not(a):not(button),
+.badge.badge-alta:not(.btn):not(a):not(button),
+.dashboard .badge-alta:not(.btn):not(a):not(button),
+.dashboard span.badge-alta:not(.btn):not(a):not(button),
+.dashboard .badge.badge-alta:not(.btn):not(a):not(button) {
+    background: linear-gradient(180deg, 
+        rgba(245, 158, 11, 0.7) 0%, 
+        rgba(217, 119, 6, 0.7) 50%,
+        rgba(180, 83, 9, 0.7) 100%) !important;
+    color: rgba(255, 255, 255, 1) !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Badge Alta - Opacidad completa para botones clickeables */
+.badge-alta.btn,
+.badge-alta a,
+.badge-alta button {
     background: linear-gradient(180deg, 
         rgba(245, 158, 11, 0.95) 0%, 
         rgba(217, 119, 6, 0.95) 50%,
         rgba(180, 83, 9, 1) 100%) !important;
 }
 
-/* Badge Media - Azul con degradado más suave */
-.badge-media,
-.badge.bg-info:not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado) {
+/* Badge Media - Azul con degradado - Opacidad reducida por defecto */
+.badge-media:not(.btn):not(a):not(button),
+span.badge-media:not(.btn):not(a):not(button),
+.badge.badge-media:not(.btn):not(a):not(button),
+.badge.bg-info:not(.btn):not(a):not(button):not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
+.dashboard .badge-media:not(.btn):not(a):not(button),
+.dashboard span.badge-media:not(.btn):not(a):not(button),
+.dashboard .badge.badge-media:not(.btn):not(a):not(button) {
+    background: linear-gradient(180deg, 
+        rgba(147, 197, 253, 0.7) 0%, 
+        rgba(96, 165, 250, 0.7) 50%,
+        rgba(59, 130, 246, 0.7) 100%) !important;
+    color: rgba(255, 255, 255, 1) !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Badge Media - Opacidad completa para botones clickeables */
+.badge-media.btn,
+.badge-media a,
+.badge-media button,
+.badge.bg-info.btn,
+.badge.bg-info a,
+.badge.bg-info button {
     background: linear-gradient(180deg, 
         rgba(147, 197, 253, 1) 0%, 
         rgba(96, 165, 250, 1) 50%,
         rgba(59, 130, 246, 1) 100%) !important;
 }
 
-/* Badge Baja - Gris con degradado */
-.badge-baja,
-.badge.bg-secondary:not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado) {
+/* Badge Baja - Gris con degradado - Opacidad reducida por defecto */
+.badge-baja:not(.btn):not(a):not(button),
+span.badge-baja:not(.btn):not(a):not(button),
+.badge.badge-baja:not(.btn):not(a):not(button),
+.badge.bg-secondary:not(.btn):not(a):not(button):not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
+.dashboard .badge-baja:not(.btn):not(a):not(button),
+.dashboard span.badge-baja:not(.btn):not(a):not(button),
+.dashboard .badge.badge-baja:not(.btn):not(a):not(button) {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.7) 0%, 
+        rgba(107, 114, 128, 0.7) 50%,
+        rgba(75, 85, 99, 0.7) 100%) !important;
+    color: rgba(255, 255, 255, 1) !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Badge Baja - Opacidad completa para botones clickeables */
+.badge-baja.btn,
+.badge-baja a,
+.badge-baja button,
+.badge.bg-secondary.btn,
+.badge.bg-secondary a,
+.badge.bg-secondary button {
     background: linear-gradient(180deg, 
         rgba(156, 163, 175, 0.95) 0%, 
         rgba(107, 114, 128, 0.95) 50%,
         rgba(75, 85, 99, 1) 100%) !important;
 }
 
-/* Badge Pendiente - Naranja/Amarillo con degradado más suave */
-.badge-pendiente,
-span.badge-pendiente,
-.badge.badge-pendiente,
-.badge.bg-warning:not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado) {
+/* Badge Pendiente - Naranja/Amarillo con degradado - Opacidad reducida por defecto */
+.badge-pendiente:not(.btn):not(a):not(button),
+span.badge-pendiente:not(.btn):not(a):not(button),
+.badge.badge-pendiente:not(.btn):not(a):not(button),
+.badge.bg-warning:not(.btn):not(a):not(button):not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
+.dashboard .badge-pendiente:not(.btn):not(a):not(button),
+.dashboard span.badge-pendiente:not(.btn):not(a):not(button),
+.dashboard .badge.badge-pendiente:not(.btn):not(a):not(button),
+.dashboard .badge-pendiente.fs-6:not(.btn):not(a):not(button),
+.dashboard .badge.badge-pendiente.fs-6:not(.btn):not(a):not(button),
+span.badge.badge-pendiente.fs-6:not(.btn):not(a):not(button) {
+    background: linear-gradient(180deg, 
+        rgba(251, 191, 36, 0.7) 0%, 
+        rgba(245, 158, 11, 0.7) 50%,
+        rgba(217, 119, 6, 0.7) 100%) !important;
+    color: rgba(255, 255, 255, 1) !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Badge Pendiente - Opacidad completa para botones clickeables */
+.badge-pendiente.btn,
+.badge-pendiente a,
+.badge-pendiente button,
+.badge.bg-warning.btn,
+.badge.bg-warning a,
+.badge.bg-warning button {
     background: linear-gradient(180deg, 
         rgba(251, 191, 36, 1) 0%, 
         rgba(245, 158, 11, 1) 50%,
         rgba(217, 119, 6, 1) 100%) !important;
 }
 
-/* Badge En Proceso - Azul con degradado más suave */
-.badge-proceso,
-span.badge-proceso,
-.badge.badge-proceso {
+/* Badge En Proceso - Azul con degradado - Opacidad reducida por defecto */
+.badge-proceso:not(.btn):not(a):not(button),
+span.badge-proceso:not(.btn):not(a):not(button),
+.badge.badge-proceso:not(.btn):not(a):not(button),
+.dashboard .badge-proceso:not(.btn):not(a):not(button),
+.dashboard span.badge-proceso:not(.btn):not(a):not(button),
+.dashboard .badge.badge-proceso:not(.btn):not(a):not(button),
+.dashboard .badge-proceso.fs-6:not(.btn):not(a):not(button),
+.dashboard .badge.badge-proceso.fs-6:not(.btn):not(a):not(button),
+span.badge.badge-proceso.fs-6:not(.btn):not(a):not(button) {
+    background: linear-gradient(180deg, 
+        rgba(147, 197, 253, 0.7) 0%, 
+        rgba(96, 165, 250, 0.7) 50%,
+        rgba(59, 130, 246, 0.7) 100%) !important;
+    color: rgba(255, 255, 255, 1) !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Badge En Proceso - Opacidad completa para botones clickeables */
+.badge-proceso.btn,
+.badge-proceso a,
+.badge-proceso button {
     background: linear-gradient(180deg, 
         rgba(147, 197, 253, 1) 0%, 
         rgba(96, 165, 250, 1) 50%,
         rgba(59, 130, 246, 1) 100%) !important;
 }
 
-/* Badge Resuelto - Verde con degradado más suave */
-.badge-resuelto,
-span.badge-resuelto,
-.badge.badge-resuelto,
-.badge.bg-success:not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado) {
+/* Badge Resuelto - Verde con degradado - Opacidad reducida por defecto */
+.badge-resuelto:not(.btn):not(a):not(button),
+span.badge-resuelto:not(.btn):not(a):not(button),
+.badge.badge-resuelto:not(.btn):not(a):not(button),
+.badge.bg-success:not(.btn):not(a):not(button):not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
+.dashboard .badge-resuelto:not(.btn):not(a):not(button),
+.dashboard span.badge-resuelto:not(.btn):not(a):not(button),
+.dashboard .badge.badge-resuelto:not(.btn):not(a):not(button),
+.dashboard .badge-resuelto.fs-6:not(.btn):not(a):not(button),
+.dashboard .badge.badge-resuelto.fs-6:not(.btn):not(a):not(button),
+span.badge.badge-resuelto.fs-6:not(.btn):not(a):not(button) {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.7) 0%, 
+        rgba(34, 197, 94, 0.7) 50%,
+        rgba(22, 163, 74, 0.7) 100%) !important;
+    color: rgba(255, 255, 255, 1) !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Badge Resuelto - Opacidad completa para botones clickeables */
+.badge-resuelto.btn,
+.badge-resuelto a,
+.badge-resuelto button,
+.badge.bg-success.btn,
+.badge.bg-success a,
+.badge.bg-success button {
     background: linear-gradient(180deg, 
         rgba(74, 222, 128, 1) 0%, 
         rgba(34, 197, 94, 1) 50%,
         rgba(22, 163, 74, 1) 100%) !important;
 }
 
-/* Badge Cancelado - Gris con degradado */
-.badge-cancelado,
-span.badge-cancelado,
-.badge.badge-cancelado {
+/* Badge Cancelado - Gris con degradado - Opacidad reducida por defecto */
+.badge-cancelado:not(.btn):not(a):not(button),
+span.badge-cancelado:not(.btn):not(a):not(button),
+.badge.badge-cancelado:not(.btn):not(a):not(button),
+.dashboard .badge-cancelado:not(.btn):not(a):not(button),
+.dashboard span.badge-cancelado:not(.btn):not(a):not(button),
+.dashboard .badge.badge-cancelado:not(.btn):not(a):not(button),
+.dashboard .badge-cancelado.fs-6:not(.btn):not(a):not(button),
+.dashboard .badge.badge-cancelado.fs-6:not(.btn):not(a):not(button),
+span.badge.badge-cancelado.fs-6:not(.btn):not(a):not(button) {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.7) 0%, 
+        rgba(107, 114, 128, 0.7) 50%,
+        rgba(75, 85, 99, 0.7) 100%) !important;
+    color: rgba(255, 255, 255, 1) !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Badge Cancelado - Opacidad completa para botones clickeables */
+.badge-cancelado.btn,
+.badge-cancelado a,
+.badge-cancelado button {
     background: linear-gradient(180deg, 
         rgba(156, 163, 175, 0.95) 0%, 
         rgba(107, 114, 128, 0.95) 50%,
         rgba(75, 85, 99, 1) 100%) !important;
 }
 
-/* Badges de estados de vacaciones */
-.badge-aprobada {
+/* Badges de estados de vacaciones - Reducir opacidad del fondo si no son clickeables */
+.badge-aprobada:not(.btn):not(a):not(button):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info) {
     background: linear-gradient(180deg, 
-        rgba(34, 197, 94, 0.95) 0%, 
-        rgba(22, 163, 74, 0.95) 50%,
-        rgba(15, 118, 50, 1) 100%) !important;
+        rgba(34, 197, 94, 0.7) 0%, 
+        rgba(22, 163, 74, 0.7) 50%,
+        rgba(15, 118, 50, 0.7) 100%) !important;
 }
 
-.badge-rechazada {
+.badge-rechazada:not(.btn):not(a):not(button):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info) {
     background: linear-gradient(180deg, 
-        rgba(239, 68, 68, 0.95) 0%, 
-        rgba(220, 38, 38, 0.95) 50%,
-        rgba(185, 28, 28, 1) 100%) !important;
+        rgba(239, 68, 68, 0.7) 0%, 
+        rgba(220, 38, 38, 0.7) 50%,
+        rgba(185, 28, 28, 0.7) 100%) !important;
 }
 
-.badge-cancelada {
+.badge-cancelada:not(.btn):not(a):not(button):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info) {
     background: linear-gradient(180deg, 
-        rgba(156, 163, 175, 0.95) 0%, 
-        rgba(107, 114, 128, 0.95) 50%,
-        rgba(75, 85, 99, 1) 100%) !important;
+        rgba(156, 163, 175, 0.7) 0%, 
+        rgba(107, 114, 128, 0.7) 50%,
+        rgba(75, 85, 99, 0.7) 100%) !important;
+}
+
+/* ===== BOTÓN VERDE DJANGO PARA ADMIN DJANGO - GLOBAL (#064B35) ===== */
+/* Aplicar en todos los botones que enlazan a /admin/ */
+.btn-outline-django,
+a[href="/admin/"].btn,
+a[href*="/admin/"].btn,
+.btn-django {
+    background: linear-gradient(180deg, 
+        rgba(6, 75, 53, 0.95) 0%, 
+        rgba(5, 60, 42, 0.95) 50%,
+        rgba(4, 45, 31, 1) 100%) !important;
+    border: none !important;
+    color: #ffffff !important;
+    box-shadow: 
+        0 4px 12px rgba(6, 75, 53, 0.3),
+        0 2px 6px rgba(6, 75, 53, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.btn-outline-django:hover,
+a[href="/admin/"].btn:hover,
+a[href*="/admin/"].btn:hover,
+.btn-django:hover {
+    background: linear-gradient(180deg, 
+        rgba(8, 95, 67, 0.95) 0%, 
+        rgba(6, 75, 53, 0.95) 50%,
+        rgba(5, 60, 42, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(6, 75, 53, 0.35),
+        0 3px 8px rgba(6, 75, 53, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+}
+
+/* ===== BADGES NO CLICKABLES CON OPACIDAD SOLO EN FONDO - GLOBAL ===== */
+/* Todos los badges que NO son botones deben tener opacidad reducida SOLO en el fondo */
+/* El texto blanco mantiene opacidad completa (sin opacidad) - completamente visible */
+/* EXCEPCIÓN: Badges de Estado de Cuenta (Activo, Inactivo, Staff) mantienen opacidad completa */
+.badge:not(.btn):not(a):not(button):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
+span.badge:not(.btn):not(a):not(button):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
+.badge-non-clickable:not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info) {
+    cursor: default !important;
+    pointer-events: none !important;
+    user-select: none !important;
+    position: relative !important;
+    isolation: isolate !important; /* Crea un nuevo contexto de apilamiento */
+}
+
+/* Texto completamente opaco en una capa separada */
+.badge:not(.btn):not(a):not(button):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
+span.badge:not(.btn):not(a):not(button):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
+.badge-non-clickable:not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info) {
+    color: rgba(255, 255, 255, 1) !important; /* Blanco completamente opaco */
+    opacity: 1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 0 2px rgba(0, 0, 0, 0.3) !important; /* Sombra más fuerte para mejor legibilidad */
+    z-index: 10 !important; /* Texto en capa superior */
+    position: relative !important;
+}
+
+/* Forzar que todo el contenido de texto sea completamente opaco */
+.badge:not(.btn):not(a):not(button):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info) *,
+span.badge:not(.btn):not(a):not(button):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info) *,
+.badge-non-clickable:not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info) * {
+    color: rgba(255, 255, 255, 1) !important; /* Blanco completamente opaco */
+    opacity: 1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 0 2px rgba(0, 0, 0, 0.3) !important;
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+
+/* Badges de Estado de Cuenta mantienen opacidad completa */
+.profile-badge-success,
+.profile-badge-danger,
+.profile-badge-info {
+    opacity: 1 !important;
+    cursor: default !important;
+    pointer-events: none !important;
+}
+
+/* Badges dentro de enlaces o botones mantienen opacidad completa */
+a .badge,
+button .badge,
+.btn .badge,
+.badge.btn,
+a.badge,
+button.badge {
+    opacity: 1 !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+/* Botones siempre con opacidad completa */
+.btn,
+a.btn,
+button.btn,
+input[type="button"].btn,
+input[type="submit"].btn {
+    opacity: 1 !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+/* ===== REGLAS FINALES PARA ICONOS FONT AWESOME - MÁXIMA PRIORIDAD ===== */
+/* Asegurar que TODOS los iconos de Font Awesome funcionen correctamente */
+i[class*="fa-"],
+i[class^="fa-"],
+[class*="fa-"]:not([class*="font-"]):not([class*="family"]),
+[class^="fa-"]:not([class*="font-"]):not([class*="family"]),
+.fa,
+i.fa,
+i.fas,
+i.far,
+i.fal,
+i.fab,
+.fas,
+.far,
+.fal,
+.fab,
+.navbar i,
+.nav-link i,
+.btn i,
+.card i,
+.alert i,
+.badge i,
+h1 i, h2 i, h3 i, h4 i, h5 i, h6 i,
+p i,
+span i,
+a i,
+button i,
+div i,
+td i,
+th i,
+li i,
+ul i,
+ol i {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "Font Awesome 6 Brands" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    speak: none !important;
+    display: inline-block !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    word-wrap: normal !important;
+    white-space: nowrap !important;
+    direction: ltr !important;
 }

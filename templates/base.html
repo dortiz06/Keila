@@ -65,6 +65,19 @@
             width: 100%;
             z-index: 1030;
         }
+        
+        /* Asegurar que el contenedor del navbar tenga el mismo ancho máximo que el contenido */
+        .navbar .container {
+            max-width: 1320px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        @media (min-width: 992px) and (max-width: 1399px) {
+            .navbar .container {
+                max-width: 1140px;
+            }
+        }
 
         .navbar-brand {
             font-weight: bold;
@@ -556,6 +569,153 @@
                 transform: none;
             }
         }
+        
+        /* ===== ESTILOS GLOBALES: BADGES NO CLICKABLES CON OPACIDAD ===== */
+        /* Todos los badges que NO son botones deben tener opacidad para diferenciarse */
+        /* EXCEPCIÓN: Badges de Estado de Cuenta (Activo, Inactivo, Staff) mantienen opacidad completa */
+        .badge:not(.btn):not(a):not(button):not(.badge-clickable):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
+        span.badge:not(.btn):not(a):not(button):not(.badge-clickable):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
+        .badge-non-clickable:not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info) {
+            opacity: 0.7 !important;
+            cursor: default !important;
+            pointer-events: none !important;
+            user-select: none !important;
+        }
+        
+        /* Badges de Estado de Cuenta mantienen opacidad completa */
+        .profile-badge-success,
+        .profile-badge-danger,
+        .profile-badge-info {
+            opacity: 1 !important;
+            cursor: default !important;
+            pointer-events: none !important;
+        }
+        
+        /* Badges dentro de enlaces o botones mantienen opacidad completa */
+        a .badge,
+        button .badge,
+        .btn .badge,
+        .badge.btn,
+        a.badge,
+        button.badge,
+        .badge-clickable {
+            opacity: 1 !important;
+            cursor: pointer !important;
+            pointer-events: auto !important;
+        }
+        
+        /* Botones siempre con opacidad completa */
+        .btn,
+        a.btn,
+        button.btn,
+        input[type="button"].btn,
+        input[type="submit"].btn {
+            opacity: 1 !important;
+            cursor: pointer !important;
+            pointer-events: auto !important;
+        }
+        
+        /* Asegurar Montserrat en TODO excepto iconos */
+        *:not(i):not([class*="fa-"]):not([class^="fa-"]):not(.fa):not([class*=" icon-"]) {
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+        }
+        
+        /* Asegurar que TODOS los iconos de Font Awesome usen la fuente correcta */
+        i.fas,
+        i.far,
+        i.fal,
+        i.fab,
+        i.fa,
+        .fa,
+        [class*="fa-"],
+        [class^="fa-"],
+        i[class*="fa-"],
+        i[class^="fa-"],
+        i[class*="fa-"]:before,
+        [class*="fa-"]:before,
+        [class^="fa-"]:before,
+        .fa:before,
+        i.fas:before,
+        i.far:before,
+        i.fal:before,
+        i.fab:before,
+        .navbar i,
+        .nav-link i,
+        .btn i,
+        .card i,
+        .alert i,
+        .badge i,
+        h1 i, h2 i, h3 i, h4 i, h5 i, h6 i,
+        p i,
+        span i,
+        a i,
+        button i,
+        div i,
+        td i,
+        th i {
+            font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "Font Awesome 6 Brands" !important;
+            font-weight: 900 !important;
+            font-style: normal !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+            display: inline-block !important;
+        }
+        
+        /* Estilo verde Django para enlace de Admin en navbar (#064B35) */
+        .nav-link-django,
+        a[href="/admin/"].nav-link {
+            color: #064B35 !important;
+            font-weight: 600 !important;
+        }
+        
+        .nav-link-django:hover,
+        a[href="/admin/"].nav-link:hover {
+            color: #08A86B !important;
+            background-color: rgba(6, 75, 53, 0.1) !important;
+        }
+        
+        .nav-link-django i,
+        a[href="/admin/"].nav-link i {
+            color: #064B35 !important;
+        }
+        
+        .nav-link-django:hover i,
+        a[href="/admin/"].nav-link:hover i {
+            color: #08A86B !important;
+        }
+        
+        /* Botón verde Django para Admin Django en todo el sistema */
+        .btn-outline-django,
+        a[href="/admin/"].btn,
+        a[href*="/admin/"].btn,
+        .btn-django {
+            background: linear-gradient(180deg, 
+                rgba(6, 75, 53, 0.95) 0%, 
+                rgba(5, 60, 42, 0.95) 50%,
+                rgba(4, 45, 31, 1) 100%) !important;
+            border: none !important;
+            color: #ffffff !important;
+            box-shadow: 
+                0 4px 12px rgba(6, 75, 53, 0.3),
+                0 2px 6px rgba(6, 75, 53, 0.2),
+                inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        .btn-outline-django:hover,
+        a[href="/admin/"].btn:hover,
+        a[href*="/admin/"].btn:hover,
+        .btn-django:hover {
+            background: linear-gradient(180deg, 
+                rgba(8, 95, 67, 0.95) 0%, 
+                rgba(6, 75, 53, 0.95) 50%,
+                rgba(5, 60, 42, 1) 100%) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 
+                0 6px 16px rgba(6, 75, 53, 0.35),
+                0 3px 8px rgba(6, 75, 53, 0.25),
+                inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+            color: #ffffff !important;
+        }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -619,7 +779,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/admin/">
+                                        <a class="nav-link nav-link-django" href="/admin/">
                                             <i class="fas fa-cog me-1"></i>Admin
                                         </a>
                                     </li>

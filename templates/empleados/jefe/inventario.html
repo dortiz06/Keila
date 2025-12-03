@@ -2,11 +2,11 @@
 {% load static %}
 {% load perfil_tags %}
 
-{% block title %}Inventario de Equipos{% endblock %}
+{% block title %}Inventario de Equipos - Mi Área{% endblock %}
 
 {% block content %}
 <style>
-/* Cambiar fondo solo en la vista de inventario de equipos - Más oscuro para mejor legibilidad */
+/* Cambiar fondo solo en la vista de inventario de equipos para jefes */
 body {
     background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.65)), url('{% static "images/dash/hardw.jpg" %}') !important;
     background-size: cover !important;
@@ -18,7 +18,14 @@ body {
 <div class="container-fluid dashboard">
     <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="dashboard-title" style="color: #ffffff !important; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 0 3px 12px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 0, 0, 0.5) !important;"><i class="fas fa-boxes me-2"></i>Inventario de Equipos</h1>
+        <div>
+            <h1 class="dashboard-title" style="color: #ffffff !important; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 0 3px 12px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 0, 0, 0.5) !important;">
+                <i class="fas fa-boxes me-2"></i>Inventario de Equipos - Mi Área
+            </h1>
+            <p class="mb-0 mt-2" style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3) !important;">
+                Equipos asignados a ti y a los empleados de tu área
+            </p>
+        </div>
         <div>
             <a href="{% url url_volver %}" class="btn btn-outline-primary">
                 <i class="fas fa-arrow-left me-1"></i>{{ texto_volver }}
@@ -26,11 +33,11 @@ body {
         </div>
     </div>
 
-    <!-- Filtros y acciones -->
+    <!-- Filtros -->
     <div class="card mb-4" style="overflow: hidden !important; border-radius: 20px !important;">
         <div class="card-body" style="background: transparent !important; padding: 0.75rem 1.5rem !important; overflow: hidden !important; border-radius: 20px !important;">
             <div class="row align-items-center">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <form method="get" class="d-flex gap-2">
                         <select name="estado" class="form-control" style="background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;">
                             <option value="">Todos los estados</option>
@@ -43,13 +50,6 @@ body {
                             <i class="fas fa-filter me-1"></i>Filtrar
                         </button>
                     </form>
-                </div>
-                <div class="col-md-6 text-end">
-                    {% if perfil.es_sistemas or perfil.es_admin %}
-                    <a href="{% url 'empleados:agregar_equipo' %}" class="btn btn-outline-success">
-                        <i class="fas fa-plus me-1"></i>Agregar Equipo
-                    </a>
-                    {% endif %}
                 </div>
             </div>
         </div>
@@ -70,9 +70,6 @@ body {
                                 <th style="color: #ffffff !important;"><i class="fas fa-barcode me-1"></i>Número de Serie</th>
                                 <th style="color: #ffffff !important; width: 180px !important;"><i class="fas fa-info-circle me-1"></i>Estado</th>
                                 <th style="color: #ffffff !important; width: 280px !important;"><i class="fas fa-user me-1"></i>Asignación / Disponibilidad</th>
-                                {% if perfil.es_sistemas or perfil.es_admin or perfil.es_rh %}
-                                <th style="color: #ffffff !important;"><i class="fas fa-cog me-1"></i>Acciones</th>
-                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -177,35 +174,6 @@ body {
                                         </span>
                                     {% endif %}
                                 </td>
-                                {% if perfil.es_sistemas or perfil.es_admin or perfil.es_rh %}
-                                <td>
-                                    <div class="d-flex gap-2 action-buttons-container">
-                                        {% if equipo.estado == 'DISPONIBLE' or equipo.estado == 'EN_REPARACION' %}
-                                            {% if equipo.empleado_asignado and equipo.asignacion_actual %}
-                                                <a href="{% url 'empleados:editar_asignacion_equipo' equipo.asignacion_actual.id %}" class="action-btn action-btn-edit" title="Gestionar Asignación">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                            {% else %}
-                                                <a href="{% url 'empleados:gestionar_asignacion_equipo' equipo.id %}" class="action-btn action-btn-{% if equipo.estado == 'EN_REPARACION' %}info{% else %}success{% endif %}" title="Gestionar Asignación">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                            {% endif %}
-                                            {% if equipo.estado == 'EN_REPARACION' %}
-                                                <a href="{% url 'empleados:marcar_equipo_disponible' equipo.id %}" class="action-btn action-btn-success" title="Marcar como Disponible">
-                                                    <i class="fas fa-check-circle"></i>
-                                                </a>
-                                            {% endif %}
-                                        {% elif equipo.estado == 'ASIGNADO' and equipo.empleado_asignado %}
-                                            <a href="{% url 'empleados:editar_asignacion_equipo' equipo.asignacion_actual.id %}" class="action-btn action-btn-edit" title="Gestionar Asignación">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <a href="{% url 'empleados:quitar_asignacion_equipo' equipo.id %}" class="action-btn action-btn-danger" title="Quitar Asignación">
-                                                <i class="fas fa-user-minus"></i>
-                                            </a>
-                                        {% endif %}
-                                    </div>
-                                </td>
-                                {% endif %}
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -214,13 +182,8 @@ body {
             {% else %}
                 <div class="text-center py-5">
                     <i class="fas fa-box fa-3x mb-3" style="color: rgba(255, 255, 255, 0.5) !important;"></i>
-                    <h5 style="color: #ffffff !important;">No hay equipos en el inventario</h5>
-                    <p style="color: rgba(255, 255, 255, 0.8) !important;">Comienza agregando el primer equipo al sistema.</p>
-                    {% if perfil.es_sistemas or perfil.es_admin %}
-                    <a href="{% url 'empleados:agregar_equipo' %}" class="btn btn-outline-success mt-3">
-                        <i class="fas fa-plus me-1"></i>Agregar Primer Equipo
-                    </a>
-                    {% endif %}
+                    <h5 style="color: #ffffff !important;">No hay equipos en tu área</h5>
+                    <p style="color: rgba(255, 255, 255, 0.8) !important;">No hay equipos asignados a ti o a los empleados de tu área.</p>
                 </div>
             {% endif %}
         </div>
@@ -285,22 +248,6 @@ body {
     margin-bottom: 0 !important;
     border-radius: 0 !important;
     overflow: hidden !important;
-}
-
-.dashboard .table thead tr:first-child th:first-child {
-    border-top-left-radius: 0 !important;
-}
-
-.dashboard .table thead tr:first-child th:last-child {
-    border-top-right-radius: 0 !important;
-}
-
-.dashboard .table tbody tr:last-child td:first-child {
-    border-bottom-left-radius: 0 !important;
-}
-
-.dashboard .table tbody tr:last-child td:last-child {
-    border-bottom-right-radius: 0 !important;
 }
 
 /* Badges de Estado - Mismo estilo que el dashboard */
@@ -515,7 +462,6 @@ body {
 }
 
 /* ===== ESTILOS DE BOTONES DEL DASHBOARD ===== */
-/* Botón Primary - Azul con degradado */
 .dashboard .btn-outline-primary {
     background: linear-gradient(180deg, 
         rgba(59, 130, 246, 0.95) 0%, 
@@ -544,317 +490,6 @@ body {
         0 6px 16px rgba(0, 0, 0, 0.35),
         0 3px 8px rgba(0, 0, 0, 0.25),
         inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
-}
-
-/* Botón Success - Verde con degradado (más oscuro) */
-.dashboard .btn-outline-success {
-    background: linear-gradient(180deg, 
-        rgba(34, 197, 94, 0.95) 0%, 
-        rgba(22, 163, 74, 0.95) 50%,
-        rgba(15, 118, 50, 1) 100%) !important;
-    box-shadow: 
-        0 4px 12px rgba(0, 0, 0, 0.3),
-        0 2px 6px rgba(0, 0, 0, 0.2),
-        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
-    border: none !important;
-    border-radius: 14px !important;
-    padding: 14px 24px !important;
-    font-weight: 600 !important;
-    color: #ffffff !important;
-    transition: all 0.3s ease !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
-}
-
-.dashboard .btn-outline-success:hover {
-    background: linear-gradient(180deg, 
-        rgba(74, 222, 128, 0.95) 0%, 
-        rgba(34, 197, 94, 0.95) 50%,
-        rgba(22, 163, 74, 1) 100%) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 
-        0 6px 16px rgba(0, 0, 0, 0.35),
-        0 3px 8px rgba(0, 0, 0, 0.25),
-        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
-}
-
-/* Botón Info - Azul claro con degradado */
-.dashboard .btn-outline-info {
-    background: linear-gradient(180deg, 
-        rgba(96, 165, 250, 0.95) 0%, 
-        rgba(59, 130, 246, 0.95) 50%,
-        rgba(37, 99, 235, 1) 100%) !important;
-    box-shadow: 
-        0 4px 12px rgba(0, 0, 0, 0.3),
-        0 2px 6px rgba(0, 0, 0, 0.2),
-        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
-    border: none !important;
-    border-radius: 14px !important;
-    padding: 14px 24px !important;
-    font-weight: 600 !important;
-    color: #ffffff !important;
-    transition: all 0.3s ease !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
-}
-
-.dashboard .btn-outline-info:hover {
-    background: linear-gradient(180deg, 
-        rgba(147, 197, 253, 0.95) 0%, 
-        rgba(96, 165, 250, 0.95) 50%,
-        rgba(59, 130, 246, 1) 100%) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 
-        0 6px 16px rgba(0, 0, 0, 0.35),
-        0 3px 8px rgba(0, 0, 0, 0.25),
-        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
-}
-
-/* Estilos para botones pequeños en la tabla */
-.dashboard .btn-sm {
-    padding: 10px 20px !important;
-    font-size: 0.875rem !important;
-    border-radius: 12px !important;
-}
-
-.dashboard .btn-sm.btn-outline-info {
-    padding: 8px 16px !important;
-    font-size: 0.875rem !important;
-    border-radius: 10px !important;
-}
-
-/* Botón Warning - Amarillo/Naranja con degradado - Mismo estilo que dashboard */
-.dashboard .btn-outline-warning {
-    background: linear-gradient(180deg, 
-        rgba(245, 158, 11, 0.95) 0%, 
-        rgba(217, 119, 6, 0.95) 50%,
-        rgba(180, 83, 9, 1) 100%) !important;
-    box-shadow: 
-        0 4px 12px rgba(0, 0, 0, 0.3),
-        0 2px 6px rgba(0, 0, 0, 0.2),
-        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
-    border: none !important;
-    border-radius: 14px !important;
-    padding: 14px 24px !important;
-    font-weight: 600 !important;
-    color: #ffffff !important;
-    transition: all 0.3s ease !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
-    font-family: 'Montserrat', sans-serif !important;
-}
-
-.dashboard .btn-outline-warning:hover {
-    background: linear-gradient(180deg, 
-        rgba(251, 191, 36, 0.95) 0%, 
-        rgba(245, 158, 11, 0.95) 50%,
-        rgba(217, 119, 6, 1) 100%) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 
-        0 6px 16px rgba(0, 0, 0, 0.35),
-        0 3px 8px rgba(0, 0, 0, 0.25),
-        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
-}
-
-/* Botón Danger - Rojo con degradado */
-.dashboard .btn-outline-danger {
-    background: linear-gradient(180deg, 
-        rgba(248, 113, 113, 0.95) 0%, 
-        rgba(239, 68, 68, 0.95) 50%,
-        rgba(220, 38, 38, 1) 100%) !important;
-    box-shadow: 
-        0 4px 12px rgba(0, 0, 0, 0.3),
-        0 2px 6px rgba(0, 0, 0, 0.2),
-        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
-    border: none !important;
-    border-radius: 14px !important;
-    padding: 14px 24px !important;
-    font-weight: 600 !important;
-    color: #ffffff !important;
-    transition: all 0.3s ease !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
-}
-
-.dashboard .btn-outline-danger:hover {
-    background: linear-gradient(180deg, 
-        rgba(252, 165, 165, 0.95) 0%, 
-        rgba(248, 113, 113, 0.95) 50%,
-        rgba(239, 68, 68, 1) 100%) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 
-        0 6px 16px rgba(0, 0, 0, 0.35),
-        0 3px 8px rgba(0, 0, 0, 0.25),
-        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
-}
-
-/* Botón Secondary - Gris con degradado */
-.dashboard .btn-outline-secondary {
-    background: linear-gradient(180deg, 
-        rgba(156, 163, 175, 0.95) 0%, 
-        rgba(107, 114, 128, 0.95) 50%,
-        rgba(75, 85, 99, 1) 100%) !important;
-    box-shadow: 
-        0 4px 12px rgba(0, 0, 0, 0.3),
-        0 2px 6px rgba(0, 0, 0, 0.2),
-        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
-    border: none !important;
-    border-radius: 14px !important;
-    padding: 14px 24px !important;
-    font-weight: 600 !important;
-    color: #ffffff !important;
-    transition: all 0.3s ease !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
-}
-
-.dashboard .btn-outline-secondary:hover {
-    background: linear-gradient(180deg, 
-        rgba(209, 213, 219, 0.95) 0%, 
-        rgba(156, 163, 175, 0.95) 50%,
-        rgba(107, 114, 128, 1) 100%) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 
-        0 6px 16px rgba(0, 0, 0, 0.35),
-        0 3px 8px rgba(0, 0, 0, 0.25),
-        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
-}
-
-/* Estilos para botones pequeños en la tabla */
-.dashboard .btn-sm {
-    padding: 10px 20px !important;
-    font-size: 0.875rem !important;
-    border-radius: 12px !important;
-}
-
-.dashboard .btn-group .btn {
-    margin-right: 4px;
-}
-
-/* ===== BOTONES DE ACCIÓN ESTILO IMAGEN ===== */
-.action-buttons-container {
-    display: flex !important;
-    gap: 0.5rem !important;
-    align-items: center !important;
-}
-
-.action-btn {
-    width: 44px !important;
-    height: 44px !important;
-    border-radius: 12px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border: none !important;
-    color: #ffffff !important;
-    font-size: 1.1rem !important;
-    transition: all 0.3s ease !important;
-    box-shadow: 
-        0 4px 8px rgba(0, 0, 0, 0.25),
-        0 2px 4px rgba(0, 0, 0, 0.2),
-        inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
-    position: relative !important;
-    overflow: hidden !important;
-}
-
-.action-btn::before {
-    content: '' !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%) !important;
-    opacity: 0 !important;
-    transition: opacity 0.3s ease !important;
-}
-
-.action-btn:hover {
-    transform: translateY(-2px) scale(1.05) !important;
-    box-shadow: 
-        0 6px 12px rgba(0, 0, 0, 0.3),
-        0 3px 6px rgba(0, 0, 0, 0.25),
-        inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
-}
-
-.action-btn:hover::before {
-    opacity: 1 !important;
-}
-
-.action-btn i {
-    position: relative !important;
-    z-index: 1 !important;
-}
-
-/* Botón Info (Azul) - Para equipos en reparación */
-.action-btn-info {
-    background: linear-gradient(135deg, 
-        rgba(59, 130, 246, 0.95) 0%, 
-        rgba(37, 99, 235, 0.95) 50%,
-        rgba(29, 78, 216, 1) 100%) !important;
-}
-
-.action-btn-info:hover {
-    background: linear-gradient(135deg, 
-        rgba(96, 165, 250, 0.95) 0%, 
-        rgba(59, 130, 246, 0.95) 50%,
-        rgba(37, 99, 235, 1) 100%) !important;
-    box-shadow: 
-        0 6px 12px rgba(59, 130, 246, 0.4),
-        0 3px 6px rgba(0, 0, 0, 0.25),
-        inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
-}
-
-/* Botón Success (Verde) - Para asignar/marcar disponible */
-.action-btn-success {
-    background: linear-gradient(135deg, 
-        rgba(34, 197, 94, 0.95) 0%, 
-        rgba(22, 163, 74, 0.95) 50%,
-        rgba(20, 83, 45, 1) 100%) !important;
-}
-
-.action-btn-success:hover {
-    background: linear-gradient(135deg, 
-        rgba(74, 222, 128, 0.95) 0%, 
-        rgba(34, 197, 94, 0.95) 50%,
-        rgba(22, 163, 74, 1) 100%) !important;
-    box-shadow: 
-        0 6px 12px rgba(34, 197, 94, 0.4),
-        0 3px 6px rgba(0, 0, 0, 0.25),
-        inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
-}
-
-/* Botón Edit (Naranja/Amarillo) - Para editar/gestionar */
-.action-btn-edit {
-    background: linear-gradient(135deg, 
-        rgba(245, 158, 11, 0.95) 0%, 
-        rgba(217, 119, 6, 0.95) 50%,
-        rgba(180, 83, 9, 1) 100%) !important;
-}
-
-.action-btn-edit:hover {
-    background: linear-gradient(135deg, 
-        rgba(251, 191, 36, 0.95) 0%, 
-        rgba(245, 158, 11, 0.95) 50%,
-        rgba(217, 119, 6, 1) 100%) !important;
-    box-shadow: 
-        0 6px 12px rgba(245, 158, 11, 0.4),
-        0 3px 6px rgba(0, 0, 0, 0.25),
-        inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
-}
-
-/* Botón Danger (Rojo) - Para quitar asignación */
-.action-btn-danger {
-    background: linear-gradient(135deg, 
-        rgba(248, 113, 113, 0.95) 0%, 
-        rgba(239, 68, 68, 0.95) 50%,
-        rgba(220, 38, 38, 1) 100%) !important;
-}
-
-.action-btn-danger:hover {
-    background: linear-gradient(135deg, 
-        rgba(252, 165, 165, 0.95) 0%, 
-        rgba(248, 113, 113, 0.95) 50%,
-        rgba(239, 68, 68, 1) 100%) !important;
-    box-shadow: 
-        0 6px 12px rgba(248, 113, 113, 0.4),
-        0 3px 6px rgba(0, 0, 0, 0.25),
-        inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
 }
 </style>
 {% endblock %}

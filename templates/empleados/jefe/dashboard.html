@@ -8,7 +8,7 @@
 <style>
 /* Cambiar fondo solo en la vista del dashboard de jefe */
 body {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/dash/kc08.jpg" %}') !important;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/dash/darkBlue.jpg" %}') !important;
     background-size: cover !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
@@ -16,42 +16,72 @@ body {
 }
 </style>
 <div class="container-fluid dashboard">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="dashboard-title" style="text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 0 5px 20px rgba(0, 0, 0, 0.85), 0 8px 30px rgba(0, 0, 0, 0.8), 0 10px 40px rgba(0, 0, 0, 0.75), 0 0 50px rgba(0, 0, 0, 0.7) !important;"><i class="fas fa-user-tie me-2"></i>Panel Jefe de Área</h1>
-        <p class="dashboard-subtitle mb-0" style="color: #ffffff !important; font-size: 1.5rem !important; font-weight: 600 !important; text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 0 5px 20px rgba(0, 0, 0, 0.85), 0 8px 30px rgba(0, 0, 0, 0.8), 0 10px 40px rgba(0, 0, 0, 0.75), 0 0 50px rgba(0, 0, 0, 0.7) !important; font-family: 'Montserrat', sans-serif !important;">{% saludo_bienvenida %}, {{ perfil.nombre_completo }}</p>
-    </div>
-    
-    <!-- Botones de Acción Rápida -->
-    <div class="card mb-4">
-        <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
-            <h5 class="mb-4" style="color: #ffffff !important; font-weight: 600 !important;"><i class="fas fa-bolt me-2"></i>Accesos Rápidos</h5>
-            <div class="row g-2">
-                <div class="col mb-2">
-                    <a href="{% url 'empleados:solicitudes_jefe' %}" class="btn btn-outline-primary w-100">
-                        <i class="fas fa-clipboard-list me-1"></i>Gestionar Solicitudes
-                    </a>
-                </div>
-                <div class="col mb-2">
-                    <a href="{% url 'empleados:lista_empleados' %}" class="btn btn-outline-info w-100">
-                        <i class="fas fa-users me-1"></i>Lista de Empleados
-                    </a>
-                </div>
-                <div class="col mb-2">
-                    <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-outline-success w-100">
-                        <i class="fas fa-calendar-plus me-1"></i>Solicitar Vacaciones
-                    </a>
-                </div>
-                <div class="col mb-2">
-                    <a href="{% url 'empleados:perfil_usuario' %}" class="btn btn-outline-warning w-100">
-                        <i class="fas fa-user me-1"></i>Mi Perfil
-                    </a>
+    <div class="container">
+        <!-- Encabezado -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                    <div class="mb-3 mb-md-0">
+                        <h1 class="dashboard-title" style="text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 0 5px 20px rgba(0, 0, 0, 0.85), 0 8px 30px rgba(0, 0, 0, 0.8), 0 10px 40px rgba(0, 0, 0, 0.75), 0 0 50px rgba(0, 0, 0, 0.7) !important;"><i class="fas fa-user-tie me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Panel Jefe de Área</h1>
+                        <p class="dashboard-subtitle mb-0" style="color: #ffffff !important; font-size: 1.5rem !important; font-weight: 600 !important; text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 0 5px 20px rgba(0, 0, 0, 0.85), 0 8px 30px rgba(0, 0, 0, 0.8), 0 10px 40px rgba(0, 0, 0, 0.75), 0 0 50px rgba(0, 0, 0, 0.7) !important; font-family: 'Montserrat', sans-serif !important;">{% saludo_bienvenida %}, {{ perfil.nombre_completo }}</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <!-- ESTADÍSTICAS GENERALES - CUADROS COMPACTOS -->
-    <div class="row mb-4">
+        
+        <!-- Accesos Rápidos -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card" style="background: rgba(255, 255, 255, 0.1) !important; backdrop-filter: blur(20px) saturate(180%) !important; -webkit-backdrop-filter: blur(20px) saturate(180%) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; border-radius: 20px !important; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;">
+                    <div class="card-body" style="background: transparent !important; padding: 1.75rem !important;">
+                        <h5 class="mb-4" style="color: #ffffff !important; font-weight: 600 !important; font-family: 'Montserrat', sans-serif !important;">
+                            <i class="fas fa-bolt me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Accesos Rápidos
+                        </h5>
+                        <div class="row g-2">
+                            <!-- Prioridad 1: Gestionar Solicitudes (Acción principal del jefe) - Azul Primary -->
+                            <div class="col mb-2">
+                                <a href="{% url 'empleados:solicitudes_jefe' %}" class="btn btn-outline-primary w-100 quick-access-btn" style="font-family: 'Montserrat', sans-serif !important; background: linear-gradient(180deg, rgba(59, 130, 246, 0.95) 0%, rgba(37, 99, 235, 0.95) 50%, rgba(29, 78, 216, 1) 100%) !important; border: none !important; color: #ffffff !important;">
+                                    <i class="fas fa-clipboard-list me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Gestionar Solicitudes
+                                </a>
+                            </div>
+                            <!-- Prioridad 2: Ver Empleados (Información del departamento) - Gris Secondary -->
+                            <div class="col mb-2">
+                                <a href="{% url 'empleados:lista_empleados' %}" class="btn btn-outline-secondary w-100 quick-access-btn" style="font-family: 'Montserrat', sans-serif !important; background: linear-gradient(180deg, rgba(156, 163, 175, 0.95) 0%, rgba(107, 114, 128, 0.95) 50%, rgba(75, 85, 99, 1) 100%) !important; border: none !important; color: #ffffff !important;">
+                                    <i class="fas fa-users me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Ver Empleados
+                                </a>
+                            </div>
+                            <!-- Prioridad 3: Solicitar Vacaciones (Acción personal) - Verde Success -->
+                            <div class="col mb-2">
+                                <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-outline-success w-100 quick-access-btn" style="font-family: 'Montserrat', sans-serif !important; background: linear-gradient(180deg, rgba(74, 222, 128, 0.95) 0%, rgba(34, 197, 94, 0.95) 50%, rgba(22, 163, 74, 1) 100%) !important; border: none !important; color: #ffffff !important;">
+                                    <i class="fas fa-calendar-alt me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Solicitar Vacaciones
+                                </a>
+                            </div>
+                            <!-- Prioridad 4: Inventario de Equipos - Turquesa/Cyan -->
+                            <div class="col mb-2">
+                                <a href="{% url 'empleados:inventario_jefe' %}" class="btn btn-outline-info w-100 quick-access-btn" style="font-family: 'Montserrat', sans-serif !important; background: linear-gradient(180deg, rgba(6, 182, 212, 0.95) 0%, rgba(8, 145, 178, 0.95) 50%, rgba(14, 116, 144, 1) 100%) !important; border: none !important; color: #ffffff !important;">
+                                    <i class="fas fa-boxes me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Inventario
+                                </a>
+                            </div>
+                            <!-- Prioridad 5: Mi Perfil (Acceso secundario) - Amarillo Warning -->
+                            <div class="col mb-2">
+                                <a href="{% url 'empleados:perfil_usuario' %}" class="btn btn-outline-warning w-100 quick-access-btn" style="font-family: 'Montserrat', sans-serif !important; background: linear-gradient(180deg, rgba(251, 191, 36, 0.95) 0%, rgba(245, 158, 11, 0.95) 50%, rgba(217, 119, 6, 1) 100%) !important; border: none !important; color: #ffffff !important;">
+                                    <i class="fas fa-user me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Mi Perfil
+                                </a>
+                            </div>
+                            <!-- Prioridad 6: Generar Ticket - Morado Purple -->
+                            <div class="col mb-2">
+                                <a href="{% url 'empleados:crear_ticket' %}" class="btn btn-outline-purple w-100 quick-access-btn" style="font-family: 'Montserrat', sans-serif !important; background: linear-gradient(180deg, rgba(168, 85, 247, 0.95) 0%, rgba(147, 51, 234, 0.95) 50%, rgba(126, 34, 206, 1) 100%) !important; border: none !important; color: #ffffff !important;">
+                                    <i class="fas fa-headset me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Generar Ticket
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ESTADÍSTICAS GENERALES - CUADROS COMPACTOS -->
+        <div class="row mb-4">
         <!-- Estadísticas de Vacaciones -->
         <div class="col-12 col-lg-6 mb-3">
             <div class="card h-100" style="background: rgba(255, 255, 255, 0.1) !important; backdrop-filter: blur(20px) saturate(180%) !important; -webkit-backdrop-filter: blur(20px) saturate(180%) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; border-radius: 15px !important; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;">
@@ -92,13 +122,15 @@ body {
                     </h6>
                     <div class="row g-2">
                         <div class="col-12">
-                            <div class="card text-center admin-stat-card admin-stat-blue h-100">
-                                <div class="card-body" style="padding: 1rem 0.5rem !important;">
-                                    <i class="fas fa-users fa-lg mb-1" style="color: #ffffff !important;"></i>
-                                    <h4 style="color: #ffffff !important; font-weight: 700 !important; font-size: 1.75rem !important; margin-bottom: 0.25rem !important; font-family: 'Montserrat', sans-serif !important;">{{ stats.empleados_departamento }}</h4>
-                                    <p class="mb-0" style="color: rgba(255, 255, 255, 0.85) !important; font-size: 0.75rem !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Empleados en Departamento</p>
+                            <a href="{% url 'empleados:lista_empleados' %}" style="text-decoration: none !important; display: block !important;">
+                                <div class="card text-center admin-stat-card admin-stat-blue h-100" style="cursor: pointer !important; transition: all 0.3s ease !important;">
+                                    <div class="card-body" style="padding: 1rem 0.5rem !important;">
+                                        <i class="fas fa-users fa-lg mb-1" style="color: #ffffff !important;"></i>
+                                        <h4 style="color: #ffffff !important; font-weight: 700 !important; font-size: 1.75rem !important; margin-bottom: 0.25rem !important; font-family: 'Montserrat', sans-serif !important;">{{ stats.empleados_departamento }}</h4>
+                                        <p class="mb-0" style="color: rgba(255, 255, 255, 0.85) !important; font-size: 0.75rem !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Empleados en Departamento</p>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -106,10 +138,10 @@ body {
         </div>
     </div>
     
-    <!-- TABLA: SOLICITUDES PENDIENTES -->
-    <div class="row mt-4">
-        <div class="col-12 mb-4">
-            <div class="card h-100 jefe-solicitudes-card">
+        <!-- TABLA: SOLICITUDES PENDIENTES -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card jefe-solicitudes-card">
                 <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
                     <h5 class="gestion-section-title mb-4" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
                         <i class="fas fa-clipboard-list me-2"></i>Solicitudes Pendientes de Aprobación (Empleados)
@@ -175,9 +207,11 @@ body {
         </div>
     </div>
     
-    <!-- Información sobre Capacidades y Limitaciones -->
-    <div class="card mb-4">
-        <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
+        <!-- Información sobre Capacidades y Limitaciones -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card" style="background: rgba(255, 255, 255, 0.1) !important; backdrop-filter: blur(20px) saturate(180%) !important; -webkit-backdrop-filter: blur(20px) saturate(180%) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; border-radius: 20px !important; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;">
+                    <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
             <h5 class="mb-4" style="color: #ffffff !important; font-weight: 600 !important; font-family: 'Montserrat', sans-serif !important;">
                 <i class="fas fa-info-circle me-2"></i>Información sobre tus Permisos
             </h5>
@@ -222,22 +256,14 @@ body {
                 </p>
             </div>
         </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <style>
-/* Botones de Accesos Rápidos con diseño del dashboard - Compactos para que quepan todos */
-.dashboard .btn-outline-primary,
-.dashboard .btn-outline-info,
-.dashboard .btn-outline-purple,
-.dashboard .btn-outline-warning,
-.dashboard .btn-outline-success,
-.dashboard .btn-outline-danger,
-.dashboard .btn-outline-secondary {
-    background: linear-gradient(180deg, 
-        rgba(59, 130, 246, 0.95) 0%, 
-        rgba(37, 99, 235, 0.95) 50%,
-        rgba(29, 78, 216, 1) 100%) !important;
+/* Botones de Accesos Rápidos con diseño del dashboard - Estilos base */
+.dashboard .quick-access-btn {
     box-shadow: 
         0 4px 12px rgba(0, 0, 0, 0.3),
         0 2px 6px rgba(0, 0, 0, 0.2),
@@ -247,119 +273,166 @@ body {
     padding: 12px 16px !important;
     font-weight: 600 !important;
     font-size: 0.9rem !important;
+    font-family: 'Montserrat', sans-serif !important;
     color: #ffffff !important;
     transition: all 0.3s ease !important;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
+    opacity: 1 !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
 }
 
-.dashboard .btn-outline-primary:hover {
+/* Botón Primary - Azul (Gestionar Solicitudes) - Mayor especificidad */
+.container-fluid.dashboard .container .card .card-body .btn-outline-primary.quick-access-btn,
+.dashboard .card .card-body .btn-outline-primary.quick-access-btn,
+.dashboard .btn-outline-primary.quick-access-btn {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+}
+
+.container-fluid.dashboard .container .card .card-body .btn-outline-primary.quick-access-btn:hover,
+.dashboard .card .card-body .btn-outline-primary.quick-access-btn:hover,
+.dashboard .btn-outline-primary.quick-access-btn:hover {
     background: linear-gradient(180deg, 
         rgba(96, 165, 250, 0.95) 0%, 
         rgba(59, 130, 246, 0.95) 50%,
         rgba(37, 99, 235, 1) 100%) !important;
     transform: translateY(-2px) !important;
     box-shadow: 
-        0 6px 16px rgba(0, 0, 0, 0.4),
-        0 4px 8px rgba(0, 0, 0, 0.3),
-        inset 0 1px 2px rgba(255, 255, 255, 0.4) !important;
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
 }
 
-.dashboard .btn-outline-info {
-    background: linear-gradient(180deg, 
-        rgba(96, 165, 250, 0.95) 0%, 
-        rgba(59, 130, 246, 0.95) 50%,
-        rgba(37, 99, 235, 1) 100%) !important;
-}
-
-.dashboard .btn-outline-info:hover {
-    background: linear-gradient(180deg, 
-        rgba(147, 197, 253, 0.95) 0%, 
-        rgba(96, 165, 250, 0.95) 50%,
-        rgba(59, 130, 246, 1) 100%) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 
-        0 6px 16px rgba(0, 0, 0, 0.4),
-        0 4px 8px rgba(0, 0, 0, 0.3),
-        inset 0 1px 2px rgba(255, 255, 255, 0.4) !important;
-}
-
-.dashboard .btn-outline-warning {
-    background: linear-gradient(180deg, 
-        rgba(251, 191, 36, 0.95) 0%, 
-        rgba(245, 158, 11, 0.95) 50%,
-        rgba(217, 119, 6, 1) 100%) !important;
-}
-
-.dashboard .btn-outline-warning:hover {
-    background: linear-gradient(180deg, 
-        rgba(253, 224, 71, 0.95) 0%, 
-        rgba(251, 191, 36, 0.95) 50%,
-        rgba(245, 158, 11, 1) 100%) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 
-        0 6px 16px rgba(0, 0, 0, 0.4),
-        0 4px 8px rgba(0, 0, 0, 0.3),
-        inset 0 1px 2px rgba(255, 255, 255, 0.4) !important;
-}
-
-.dashboard .btn-outline-success {
-    background: linear-gradient(180deg, 
-        rgba(74, 222, 128, 0.95) 0%, 
-        rgba(34, 197, 94, 0.95) 50%,
-        rgba(22, 163, 74, 1) 100%) !important;
-}
-
-.dashboard .btn-outline-success:hover {
-    background: linear-gradient(180deg, 
-        rgba(134, 239, 172, 0.95) 0%, 
-        rgba(74, 222, 128, 0.95) 50%,
-        rgba(34, 197, 94, 1) 100%) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 
-        0 6px 16px rgba(0, 0, 0, 0.4),
-        0 4px 8px rgba(0, 0, 0, 0.3),
-        inset 0 1px 2px rgba(255, 255, 255, 0.4) !important;
-}
-
-.dashboard .btn-outline-danger {
-    background: linear-gradient(180deg, 
-        rgba(248, 113, 113, 0.95) 0%, 
-        rgba(239, 68, 68, 0.95) 50%,
-        rgba(220, 38, 38, 1) 100%) !important;
-}
-
-.dashboard .btn-outline-danger:hover {
-    background: linear-gradient(180deg, 
-        rgba(252, 165, 165, 0.95) 0%, 
-        rgba(248, 113, 113, 0.95) 50%,
-        rgba(239, 68, 68, 1) 100%) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 
-        0 6px 16px rgba(0, 0, 0, 0.4),
-        0 4px 8px rgba(0, 0, 0, 0.3),
-        inset 0 1px 2px rgba(255, 255, 255, 0.4) !important;
-}
-
-.dashboard .btn-outline-secondary {
+/* Botón Secondary - Gris (Ver Empleados) - Mayor especificidad */
+.container-fluid.dashboard .container .card .card-body .btn-outline-secondary.quick-access-btn,
+.dashboard .card .card-body .btn-outline-secondary.quick-access-btn,
+.dashboard .btn-outline-secondary.quick-access-btn {
     background: linear-gradient(180deg, 
         rgba(156, 163, 175, 0.95) 0%, 
         rgba(107, 114, 128, 0.95) 50%,
         rgba(75, 85, 99, 1) 100%) !important;
 }
 
-.dashboard .btn-outline-secondary:hover {
+.container-fluid.dashboard .container .card .card-body .btn-outline-secondary.quick-access-btn:hover,
+.dashboard .card .card-body .btn-outline-secondary.quick-access-btn:hover,
+.dashboard .btn-outline-secondary.quick-access-btn:hover {
     background: linear-gradient(180deg, 
         rgba(209, 213, 219, 0.95) 0%, 
         rgba(156, 163, 175, 0.95) 50%,
         rgba(107, 114, 128, 1) 100%) !important;
     transform: translateY(-2px) !important;
     box-shadow: 
-        0 6px 16px rgba(0, 0, 0, 0.4),
-        0 4px 8px rgba(0, 0, 0, 0.3),
-        inset 0 1px 2px rgba(255, 255, 255, 0.4) !important;
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Botón Success - Verde (Solicitar Vacaciones) - Mayor especificidad */
+.container-fluid.dashboard .container .card .card-body .btn-outline-success.quick-access-btn,
+.dashboard .card .card-body .btn-outline-success.quick-access-btn,
+.dashboard .btn-outline-success.quick-access-btn {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+}
+
+.container-fluid.dashboard .container .card .card-body .btn-outline-success.quick-access-btn:hover,
+.dashboard .card .card-body .btn-outline-success.quick-access-btn:hover,
+.dashboard .btn-outline-success.quick-access-btn:hover {
+    background: linear-gradient(180deg, 
+        rgba(134, 239, 172, 0.95) 0%, 
+        rgba(74, 222, 128, 0.95) 50%,
+        rgba(34, 197, 94, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Botón Info - Turquesa/Cyan (Inventario) - Mayor especificidad */
+.container-fluid.dashboard .container .card .card-body .btn-outline-info.quick-access-btn,
+.dashboard .card .card-body .btn-outline-info.quick-access-btn,
+.dashboard .btn-outline-info.quick-access-btn {
+    background: linear-gradient(180deg, 
+        rgba(6, 182, 212, 0.95) 0%, 
+        rgba(8, 145, 178, 0.95) 50%,
+        rgba(14, 116, 144, 1) 100%) !important;
+}
+
+.container-fluid.dashboard .container .card .card-body .btn-outline-info.quick-access-btn:hover,
+.dashboard .card .card-body .btn-outline-info.quick-access-btn:hover,
+.dashboard .btn-outline-info.quick-access-btn:hover {
+    background: linear-gradient(180deg, 
+        rgba(34, 211, 238, 0.95) 0%, 
+        rgba(6, 182, 212, 0.95) 50%,
+        rgba(8, 145, 178, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Botón Warning - Amarillo/Naranja (Mi Perfil) - Mayor especificidad */
+.container-fluid.dashboard .container .card .card-body .btn-outline-warning.quick-access-btn,
+.dashboard .card .card-body .btn-outline-warning.quick-access-btn,
+.dashboard .btn-outline-warning.quick-access-btn {
+    background: linear-gradient(180deg, 
+        rgba(251, 191, 36, 0.95) 0%, 
+        rgba(245, 158, 11, 0.95) 50%,
+        rgba(217, 119, 6, 1) 100%) !important;
+}
+
+.container-fluid.dashboard .container .card .card-body .btn-outline-warning.quick-access-btn:hover,
+.dashboard .card .card-body .btn-outline-warning.quick-access-btn:hover,
+.dashboard .btn-outline-warning.quick-access-btn:hover {
+    background: linear-gradient(180deg, 
+        rgba(253, 224, 71, 0.95) 0%, 
+        rgba(251, 191, 36, 0.95) 50%,
+        rgba(245, 158, 11, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Botón Purple - Morado (Generar Ticket) - Mayor especificidad */
+.container-fluid.dashboard .container .card .card-body .btn-outline-purple.quick-access-btn,
+.dashboard .card .card-body .btn-outline-purple.quick-access-btn,
+.dashboard .btn-outline-purple.quick-access-btn {
+    background: linear-gradient(180deg, 
+        rgba(168, 85, 247, 0.95) 0%, 
+        rgba(147, 51, 234, 0.95) 50%,
+        rgba(126, 34, 206, 1) 100%) !important;
+}
+
+.container-fluid.dashboard .container .card .card-body .btn-outline-purple.quick-access-btn:hover,
+.dashboard .card .card-body .btn-outline-purple.quick-access-btn:hover,
+.dashboard .btn-outline-purple.quick-access-btn:hover {
+    background: linear-gradient(180deg, 
+        rgba(192, 132, 252, 0.95) 0%, 
+        rgba(168, 85, 247, 0.95) 50%,
+        rgba(147, 51, 234, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Asegurar que los iconos Font Awesome se muestren correctamente */
+.dashboard .btn i {
+    font-family: 'Font Awesome 6 Free' !important;
+    font-weight: 900 !important;
 }
 
 /* Estilos para cuadros de estadísticas del admin */

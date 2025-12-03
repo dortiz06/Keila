@@ -2,7 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
 from django.contrib import messages
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Sum
+from django.db import models
 from django.http import JsonResponse, HttpResponse
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
@@ -210,17 +211,19 @@ def jefe_dashboard(request):
     if not perfil or not perfil.es_jefe_area():
         raise PermissionDenied
     
-    # Solicitudes de todos los empleados (jefes pueden gestionar cualquier departamento)
+    # Solicitudes de empleados asignados directamente al jefe como supervisor
     # Excluir las propias solicitudes del jefe (esas van a admin)
-    solicitudes_pendientes = SolicitudVacaciones.objects.filter(
-        estado='PENDIENTE_JEFE'
-    ).exclude(empleado=perfil).order_by('-fecha_solicitud')
-    
-    # Estadísticas generales (jefes pueden ver estadísticas de todos los departamentos)
-    empleados_departamento = Perfil.objects.filter(
-        departamento=perfil.departamento,
+    empleados_asignados = Perfil.objects.filter(
+        supervisor=perfil,
         activo=True
     )
+    solicitudes_pendientes = SolicitudVacaciones.objects.filter(
+        estado='PENDIENTE_JEFE',
+        empleado__in=empleados_asignados
+    ).exclude(empleado=perfil).order_by('-fecha_solicitud')
+    
+    # Estadísticas de empleados asignados directamente al jefe
+    empleados_departamento = empleados_asignados
     
     stats = {
         'empleados_departamento': empleados_departamento.count(),
@@ -364,14 +367,11 @@ def lista_empleados(request):
         # Sistemas, Admin, RH: pueden ver todos los empleados
         empleados = Perfil.objects.filter(activo=True)
     elif perfil.es_jefe_area():
-        # Jefes de área: solo pueden ver empleados de su departamento
-        if perfil.departamento:
-            empleados = Perfil.objects.filter(
-                activo=True,
-                departamento=perfil.departamento
-            )
-        else:
-            empleados = Perfil.objects.none()
+        # Jefes de área: solo pueden ver empleados asignados directamente a ellos como supervisor
+        empleados = Perfil.objects.filter(
+            activo=True,
+            supervisor=perfil
+        )
     else:
         raise PermissionDenied
     
@@ -454,8 +454,8 @@ def editar_perfil(request, perfil_id):
                     perfil_actualizado.departamento = form.cleaned_data['departamento']
                 if 'puesto' in form.cleaned_data:
                     perfil_actualizado.puesto = form.cleaned_data['puesto']
-                if 'direccion' in form.cleaned_data:
-                    perfil_actualizado.direccion = form.cleaned_data['direccion']
+                if 'supervisor' in form.cleaned_data:
+                    perfil_actualizado.supervisor = form.cleaned_data['supervisor']
                 if 'numero_empleado' in form.cleaned_data:
                     perfil_actualizado.numero_empleado = form.cleaned_data['numero_empleado']
                 if 'fecha_contratacion' in form.cleaned_data:
@@ -573,7 +573,10 @@ def aprobar_jefe(request, solicitud_id):
     if solicitud.empleado == perfil:
         raise PermissionDenied("No puedes aprobar tu propia solicitud de vacaciones.")
     
-    # Los jefes pueden aprobar solicitudes de cualquier departamento
+    # Los jefes solo pueden aprobar solicitudes de empleados asignados directamente a ellos
+    empleados_asignados = Perfil.objects.filter(supervisor=perfil, activo=True)
+    if solicitud.empleado not in empleados_asignados:
+        raise PermissionDenied("Solo puedes aprobar solicitudes de empleados asignados a tu área.")
     
     if request.method == 'POST':
         form = AprobacionJefeForm(request.POST, solicitud=solicitud)
@@ -611,8 +614,14 @@ def solicitudes_jefe(request):
     if not perfil or not perfil.es_jefe_area():
         raise PermissionDenied
     
-    # Obtener todas las solicitudes (jefes pueden ver todas)
-    solicitudes = SolicitudVacaciones.objects.all().select_related(
+    # Obtener solo las solicitudes de empleados asignados directamente al jefe como supervisor
+    empleados_asignados = Perfil.objects.filter(
+        supervisor=perfil,
+        activo=True
+    )
+    solicitudes = SolicitudVacaciones.objects.filter(
+        empleado__in=empleados_asignados
+    ).select_related(
         'empleado', 'empleado__departamento'
     ).order_by('-fecha_solicitud')
     
@@ -1212,7 +1221,10 @@ def inventario_equipos(request):
         messages.error(request, 'No tienes permiso para acceder a esta sección.')
         return redirect('empleados:empleado_dashboard')
     
-    equipos = Equipo.objects.all().select_related('categoria').order_by('-fecha_adquisicion')
+    # Optimizar consultas con prefetch para asignaciones y departamentos
+    equipos = Equipo.objects.all().select_related('categoria').prefetch_related(
+        'asignaciones__empleado__departamento'
+    ).order_by('-fecha_adquisicion')
     
     # Filtros
     estado_filtro = request.GET.get('estado', '')
@@ -1257,6 +1269,75 @@ def inventario_equipos(request):
         'texto_volver': texto_volver,
     }
     return render(request, 'empleados/sistemas/inventario.html', context)
+
+
+@login_required
+def inventario_jefe(request):
+    """Vista de inventario para jefes de área - Solo lectura"""
+    perfil = get_object_or_404(Perfil, usuario=request.user)
+    
+    # Verificar permisos - Solo jefes de área
+    if not perfil.es_jefe_area():
+        messages.error(request, 'No tienes permiso para acceder a esta sección.')
+        return redirect('empleados:empleado_dashboard')
+    
+    # Obtener empleados asignados directamente al jefe como supervisor
+    empleados_asignados = Perfil.objects.filter(
+        supervisor=perfil,
+        activo=True
+    )
+    
+    # Obtener IDs de empleados asignados (incluyendo al jefe mismo)
+    empleados_ids = list(empleados_asignados.values_list('id', flat=True))
+    empleados_ids.append(perfil.id)  # Incluir al jefe mismo
+    
+    # Obtener equipos asignados activamente al jefe o a sus empleados
+    from django.db.models import Q
+    equipos_asignados = Equipo.objects.filter(
+        asignaciones__empleado__in=empleados_ids,
+        asignaciones__fecha_devolucion__isnull=True
+    ).distinct()
+    
+    # También incluir equipos que estén en el área del jefe (departamento)
+    # aunque no estén asignados a nadie específico, pero que estén en el departamento
+    if perfil.departamento:
+        # Obtener todos los empleados del departamento del jefe
+        empleados_departamento = Perfil.objects.filter(
+            departamento=perfil.departamento,
+            activo=True
+        ).values_list('id', flat=True)
+        
+        # Equipos asignados a cualquier empleado del departamento (incluyendo el jefe)
+        equipos_departamento = Equipo.objects.filter(
+            asignaciones__empleado__in=empleados_departamento,
+            asignaciones__fecha_devolucion__isnull=True
+        ).distinct()
+        
+        # Combinar: equipos asignados al jefe/sus empleados + equipos del departamento
+        equipos = (equipos_asignados | equipos_departamento).distinct()
+    else:
+        # Si el jefe no tiene departamento, solo mostrar equipos asignados directamente
+        equipos = equipos_asignados
+    
+    # Optimizar consultas
+    equipos = equipos.select_related('categoria').prefetch_related(
+        'asignaciones__empleado__departamento'
+    ).order_by('-fecha_adquisicion')
+    
+    # Filtros
+    estado_filtro = request.GET.get('estado', '')
+    if estado_filtro:
+        equipos = equipos.filter(estado=estado_filtro)
+    
+    context = {
+        'perfil': perfil,
+        'equipos': equipos,
+        'estado_filtro': estado_filtro,
+        'url_volver': 'empleados:jefe_dashboard',
+        'texto_volver': 'Volver al Panel',
+        'es_jefe': True,  # Flag para indicar que es vista de solo lectura
+    }
+    return render(request, 'empleados/jefe/inventario.html', context)
 
 
 @login_required
@@ -1662,6 +1743,681 @@ def devolver_equipo(request, asignacion_id):
         'form': form,
     }
     return render(request, 'empleados/sistemas/devolver_equipo.html', context)
+
+
+# === REPORTE DE VACACIONES ===
+
+@login_required
+def reporte_vacaciones_mes(request):
+    """Reporte de vacaciones por mes y año - Solo RH y Admin"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+        raise PermissionDenied
+    
+    # Obtener mes y año de los parámetros GET, o usar el mes actual por defecto
+    hoy = timezone.now().date()
+    mes_seleccionado = request.GET.get('mes', hoy.month)
+    año_seleccionado = request.GET.get('año', hoy.year)
+    
+    try:
+        mes_seleccionado = int(mes_seleccionado)
+        año_seleccionado = int(año_seleccionado)
+        
+        # Validar rango de mes y año
+        if mes_seleccionado < 1 or mes_seleccionado > 12:
+            mes_seleccionado = hoy.month
+        if año_seleccionado < 2000 or año_seleccionado > 2100:
+            año_seleccionado = hoy.year
+            
+        # Calcular rango del mes seleccionado
+        primer_dia_mes = date(año_seleccionado, mes_seleccionado, 1)
+        
+        # Calcular último día del mes
+        if mes_seleccionado == 12:
+            ultimo_dia_mes = date(año_seleccionado + 1, 1, 1) - timedelta(days=1)
+        else:
+            ultimo_dia_mes = date(año_seleccionado, mes_seleccionado + 1, 1) - timedelta(days=1)
+            
+    except (ValueError, TypeError):
+        # Si hay error, usar el mes actual
+        primer_dia_mes = hoy.replace(day=1)
+        if primer_dia_mes.month == 12:
+            ultimo_dia_mes = date(primer_dia_mes.year + 1, 1, 1) - timedelta(days=1)
+        else:
+            ultimo_dia_mes = date(primer_dia_mes.year, primer_dia_mes.month + 1, 1) - timedelta(days=1)
+        mes_seleccionado = primer_dia_mes.month
+        año_seleccionado = primer_dia_mes.year
+    
+    # Obtener todas las solicitudes del mes seleccionado
+    solicitudes = SolicitudVacaciones.objects.filter(
+        fecha_solicitud__gte=primer_dia_mes,
+        fecha_solicitud__lte=ultimo_dia_mes
+    ).select_related(
+        'empleado', 'empleado__departamento', 'aprobado_por_jefe', 'aprobado_por_rh'
+    ).order_by('-fecha_solicitud')
+    
+    # Estadísticas
+    total_solicitudes = solicitudes.count()
+    aprobadas = solicitudes.filter(estado='APROBADO_RH').count()
+    rechazadas = solicitudes.filter(estado__in=['RECHAZADO_JEFE', 'RECHAZADO_RH', 'RECHAZADO_ADMIN']).count()
+    pendientes = solicitudes.filter(estado__in=['PENDIENTE_JEFE', 'PENDIENTE_RH', 'PENDIENTE_ADMIN']).count()
+    total_dias = solicitudes.filter(estado='APROBADO_RH').aggregate(
+        total=Sum('dias_solicitados')
+    )['total'] or 0
+    
+    # Nombres de meses en español
+    meses = {
+        1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril', 5: 'Mayo', 6: 'Junio',
+        7: 'Julio', 8: 'Agosto', 9: 'Septiembre', 10: 'Octubre', 11: 'Noviembre', 12: 'Diciembre'
+    }
+    
+    context = {
+        'solicitudes': solicitudes,
+        'perfil': perfil,
+        'mes': f"{meses.get(mes_seleccionado, '')} {año_seleccionado}",
+        'mes_numero': mes_seleccionado,
+        'año': año_seleccionado,
+        'fecha_inicio': primer_dia_mes,
+        'fecha_fin': ultimo_dia_mes,
+        'total_solicitudes': total_solicitudes,
+        'aprobadas': aprobadas,
+        'rechazadas': rechazadas,
+        'pendientes': pendientes,
+        'total_dias': total_dias,
+        'meses': meses,
+        'años_disponibles': range(2020, hoy.year + 2),  # Desde 2020 hasta el año siguiente
+    }
+    return render(request, 'empleados/rh/reporte_vacaciones.html', context)
+
+
+@login_required
+def generar_pdf_reporte_vacaciones(request):
+    """Generar PDF del reporte de vacaciones por mes y año"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+        raise PermissionDenied
+    
+    # Obtener mes y año de los parámetros GET, o usar el mes actual por defecto
+    hoy = timezone.now().date()
+    mes_seleccionado = request.GET.get('mes', hoy.month)
+    año_seleccionado = request.GET.get('año', hoy.year)
+    
+    try:
+        mes_seleccionado = int(mes_seleccionado)
+        año_seleccionado = int(año_seleccionado)
+        
+        if mes_seleccionado < 1 or mes_seleccionado > 12:
+            mes_seleccionado = hoy.month
+        if año_seleccionado < 2000 or año_seleccionado > 2100:
+            año_seleccionado = hoy.year
+            
+        primer_dia_mes = date(año_seleccionado, mes_seleccionado, 1)
+        if mes_seleccionado == 12:
+            ultimo_dia_mes = date(año_seleccionado + 1, 1, 1) - timedelta(days=1)
+        else:
+            ultimo_dia_mes = date(año_seleccionado, mes_seleccionado + 1, 1) - timedelta(days=1)
+    except (ValueError, TypeError):
+        primer_dia_mes = hoy.replace(day=1)
+        if primer_dia_mes.month == 12:
+            ultimo_dia_mes = date(primer_dia_mes.year + 1, 1, 1) - timedelta(days=1)
+        else:
+            ultimo_dia_mes = date(primer_dia_mes.year, primer_dia_mes.month + 1, 1) - timedelta(days=1)
+        mes_seleccionado = primer_dia_mes.month
+        año_seleccionado = primer_dia_mes.year
+    
+    # Obtener todas las solicitudes del mes seleccionado
+    solicitudes = SolicitudVacaciones.objects.filter(
+        fecha_solicitud__gte=primer_dia_mes,
+        fecha_solicitud__lte=ultimo_dia_mes
+    ).select_related(
+        'empleado', 'empleado__departamento', 'aprobado_por_jefe', 'aprobado_por_rh'
+    ).order_by('-fecha_solicitud')
+    
+    # Crear respuesta HTTP con PDF
+    response = HttpResponse(content_type='application/pdf')
+    
+    # Si es para imprimir, usar 'inline' para abrir en el navegador
+    # Si es para descargar, usar 'attachment'
+    if request.GET.get('imprimir'):
+        response['Content-Disposition'] = f'inline; filename="reporte_vacaciones_{año_seleccionado}_{mes_seleccionado:02d}.pdf"'
+    else:
+        response['Content-Disposition'] = f'attachment; filename="reporte_vacaciones_{año_seleccionado}_{mes_seleccionado:02d}.pdf"'
+    
+    # Crear documento PDF con formato APA 7
+    doc = SimpleDocTemplate(response, pagesize=A4, 
+                            rightMargin=2.54*cm, leftMargin=2.54*cm,
+                            topMargin=2.54*cm, bottomMargin=2.54*cm)
+    elements = []
+    
+    # Estilos APA 7
+    styles = getSampleStyleSheet()
+    
+    # Título principal - Times New Roman 12pt, negrita, centrado
+    title_style = ParagraphStyle(
+        'APATitle',
+        parent=styles['Normal'],
+        fontName='Times-Roman',
+        fontSize=12,
+        textColor=colors.black,
+        spaceAfter=12,
+        alignment=TA_CENTER,
+        leading=14.4,  # 1.2 line spacing
+    )
+    
+    # Subtítulo - Times New Roman 12pt, centrado
+    subtitle_style = ParagraphStyle(
+        'APASubtitle',
+        parent=styles['Normal'],
+        fontName='Times-Roman',
+        fontSize=12,
+        textColor=colors.black,
+        spaceAfter=18,
+        alignment=TA_CENTER,
+        leading=14.4,
+    )
+    
+    # Encabezado de sección - Times New Roman 12pt, negrita, alineado izquierda
+    heading_style = ParagraphStyle(
+        'APAHeading',
+        parent=styles['Normal'],
+        fontName='Times-Bold',
+        fontSize=12,
+        textColor=colors.black,
+        spaceAfter=12,
+        spaceBefore=12,
+        alignment=TA_LEFT,
+        leading=14.4,
+    )
+    
+    # Texto normal - Times New Roman 12pt
+    normal_style = ParagraphStyle(
+        'APANormal',
+        parent=styles['Normal'],
+        fontName='Times-Roman',
+        fontSize=12,
+        textColor=colors.black,
+        spaceAfter=6,
+        alignment=TA_LEFT,
+        leading=14.4,
+    )
+    
+    # Título del documento
+    elements.append(Paragraph('<b>Reporte de Vacaciones</b>', title_style))
+    
+    # Información del período
+    meses_esp = {
+        1: 'enero', 2: 'febrero', 3: 'marzo', 4: 'abril', 5: 'mayo', 6: 'junio',
+        7: 'julio', 8: 'agosto', 9: 'septiembre', 10: 'octubre', 11: 'noviembre', 12: 'diciembre'
+    }
+    periodo_texto = f"Período: {meses_esp.get(mes_seleccionado, '')} {año_seleccionado}"
+    elements.append(Paragraph(periodo_texto, subtitle_style))
+    elements.append(Spacer(1, 24))
+    
+    # Estadísticas resumidas (texto, no tabla)
+    aprobadas = solicitudes.filter(estado='APROBADO_RH').count()
+    rechazadas = solicitudes.filter(estado__in=['RECHAZADO_JEFE', 'RECHAZADO_RH', 'RECHAZADO_ADMIN']).count()
+    pendientes = solicitudes.filter(estado__in=['PENDIENTE_JEFE', 'PENDIENTE_RH', 'PENDIENTE_ADMIN']).count()
+    total_dias = solicitudes.filter(estado='APROBADO_RH').aggregate(
+        total=Sum('dias_solicitados')
+    )['total'] or 0
+    
+    stats_text = (
+        f"<b>Resumen:</b> Se registraron {solicitudes.count()} solicitudes de vacaciones. "
+        f"De estas, {aprobadas} fueron aprobadas ({total_dias} días en total), "
+        f"{rechazadas} fueron rechazadas y {pendientes} permanecen pendientes."
+    )
+    elements.append(Paragraph(stats_text, normal_style))
+    elements.append(Spacer(1, 18))
+    
+    # Tabla de solicitudes
+    if solicitudes.exists():
+        elements.append(Paragraph('<b>Detalle de Solicitudes</b>', heading_style))
+        
+        # Encabezados
+        data = [['Empleado', 'Departamento', 'Período', 'Días', 'Estado', 'Fecha Solicitud']]
+        
+        # Estilo para celdas de tabla
+        cell_style = ParagraphStyle(
+            'TableCell',
+            parent=styles['Normal'],
+            fontName='Times-Roman',
+            fontSize=10,
+            textColor=colors.black,
+            leading=12,
+            alignment=TA_LEFT,
+        )
+        
+        cell_style_center = ParagraphStyle(
+            'TableCellCenter',
+            parent=styles['Normal'],
+            fontName='Times-Roman',
+            fontSize=10,
+            textColor=colors.black,
+            leading=12,
+            alignment=TA_CENTER,
+        )
+        
+        # Encabezados con Paragraph para mejor control
+        header_data = [
+            Paragraph('<b>Empleado</b>', cell_style),
+            Paragraph('<b>Departamento</b>', cell_style),
+            Paragraph('<b>Período</b>', cell_style),
+            Paragraph('<b>Días</b>', cell_style_center),
+            Paragraph('<b>Estado</b>', cell_style),
+            Paragraph('<b>Fecha Solicitud</b>', cell_style),
+        ]
+        data = [header_data]
+        
+        # Datos con Paragraph para permitir word wrap
+        for solicitud in solicitudes:
+            periodo = f"{solicitud.fecha_inicio.strftime('%d/%m/%Y')} - {solicitud.fecha_fin.strftime('%d/%m/%Y')}"
+            estado_display = solicitud.get_estado_display()
+            fecha_solicitud = solicitud.fecha_solicitud.strftime('%d/%m/%Y')
+            
+            # Truncar nombres muy largos para evitar desbordamiento
+            nombre_empleado = solicitud.empleado.nombre_completo
+            if len(nombre_empleado) > 30:
+                nombre_empleado = nombre_empleado[:27] + '...'
+            
+            depto = solicitud.empleado.departamento.nombre if solicitud.empleado.departamento else 'N/A'
+            if len(depto) > 25:
+                depto = depto[:22] + '...'
+            
+            # Truncar estado si es muy largo
+            if len(estado_display) > 25:
+                estado_display = estado_display[:22] + '...'
+            
+            data.append([
+                Paragraph(nombre_empleado, cell_style),
+                Paragraph(depto, cell_style),
+                Paragraph(periodo, cell_style),
+                Paragraph(str(solicitud.dias_solicitados), cell_style_center),
+                Paragraph(estado_display, cell_style),
+                Paragraph(fecha_solicitud, cell_style),
+            ])
+        
+        # Crear tabla con estilo APA 7 - ajustar anchos para que quepa todo
+        # Ancho total disponible: A4 - márgenes = 21cm - 5.08cm = 15.92cm
+        # Distribución optimizada: 3.5 + 2.5 + 3 + 1.2 + 3 + 2.72 = 15.92cm
+        table = Table(data, colWidths=[3.5*cm, 2.5*cm, 3*cm, 1.2*cm, 3*cm, 2.72*cm])
+        table.setStyle(TableStyle([
+            # Encabezado
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#000000')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+            ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Times-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
+            ('TOPPADDING', (0, 0), (-1, 0), 8),
+            # Cuerpo de la tabla
+            ('ALIGN', (0, 1), (-1, -1), 'LEFT'),
+            ('ALIGN', (3, 1), (3, -1), 'CENTER'),  # Columna de Días centrada
+            ('FONTNAME', (0, 1), (-1, -1), 'Times-Roman'),
+            ('FONTSIZE', (0, 1), (-1, -1), 10),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
+            ('VALIGN', (0, 0), (-1, -1), 'TOP'),  # Alineación superior para mejor ajuste
+            ('LEFTPADDING', (0, 0), (-1, -1), 4),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 4),
+            ('TOPPADDING', (0, 1), (-1, -1), 4),
+            ('BOTTOMPADDING', (0, 1), (-1, -1), 4),
+            # Filas alternadas para mejor legibilidad
+            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f5f5f5')]),
+        ]))
+        elements.append(table)
+    else:
+        elements.append(Paragraph('No se registraron solicitudes de vacaciones en este período.', normal_style))
+    
+    # Pie de página con fecha de generación
+    elements.append(Spacer(1, 24))
+    meses_esp_footer = {
+        1: 'enero', 2: 'febrero', 3: 'marzo', 4: 'abril', 5: 'mayo', 6: 'junio',
+        7: 'julio', 8: 'agosto', 9: 'septiembre', 10: 'octubre', 11: 'noviembre', 12: 'diciembre'
+    }
+    fecha_actual = timezone.now()
+    fecha_generacion = f"{fecha_actual.day} de {meses_esp_footer.get(fecha_actual.month, '')} de {fecha_actual.year}, {fecha_actual.strftime('%H:%M')}"
+    footer_text = f"<i>Documento generado el {fecha_generacion}</i>"
+    footer_style = ParagraphStyle(
+        'APAFooter',
+        parent=styles['Normal'],
+        fontName='Times-Roman',
+        fontSize=10,
+        textColor=colors.HexColor('#666666'),
+        alignment=TA_CENTER,
+        spaceBefore=12,
+    )
+    elements.append(Paragraph(footer_text, footer_style))
+    
+    # Construir PDF
+    doc.build(elements)
+    return response
+
+
+@login_required
+def generar_excel_reporte_vacaciones(request):
+    """Generar Excel del reporte de vacaciones por mes y año con formato profesional"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+        raise PermissionDenied
+    
+    try:
+        from openpyxl import Workbook
+        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+        from openpyxl.utils import get_column_letter
+    except ImportError:
+        # Si openpyxl no está instalado, generar CSV como fallback
+        return generar_excel_reporte_vacaciones_csv(request)
+    
+    # Obtener mes y año de los parámetros GET, o usar el mes actual por defecto
+    hoy = timezone.now().date()
+    mes_seleccionado = request.GET.get('mes', hoy.month)
+    año_seleccionado = request.GET.get('año', hoy.year)
+    
+    try:
+        mes_seleccionado = int(mes_seleccionado)
+        año_seleccionado = int(año_seleccionado)
+        
+        if mes_seleccionado < 1 or mes_seleccionado > 12:
+            mes_seleccionado = hoy.month
+        if año_seleccionado < 2000 or año_seleccionado > 2100:
+            año_seleccionado = hoy.year
+            
+        primer_dia_mes = date(año_seleccionado, mes_seleccionado, 1)
+        if mes_seleccionado == 12:
+            ultimo_dia_mes = date(año_seleccionado + 1, 1, 1) - timedelta(days=1)
+        else:
+            ultimo_dia_mes = date(año_seleccionado, mes_seleccionado + 1, 1) - timedelta(days=1)
+    except (ValueError, TypeError):
+        primer_dia_mes = hoy.replace(day=1)
+        if primer_dia_mes.month == 12:
+            ultimo_dia_mes = date(primer_dia_mes.year + 1, 1, 1) - timedelta(days=1)
+        else:
+            ultimo_dia_mes = date(primer_dia_mes.year, primer_dia_mes.month + 1, 1) - timedelta(days=1)
+        mes_seleccionado = primer_dia_mes.month
+        año_seleccionado = primer_dia_mes.year
+    
+    # Obtener todas las solicitudes del mes seleccionado
+    solicitudes = SolicitudVacaciones.objects.filter(
+        fecha_solicitud__gte=primer_dia_mes,
+        fecha_solicitud__lte=ultimo_dia_mes
+    ).select_related(
+        'empleado', 'empleado__departamento', 'aprobado_por_jefe', 'aprobado_por_rh'
+    ).order_by('-fecha_solicitud')
+    
+    # Crear libro de trabajo Excel
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Reporte de Vacaciones"
+    
+    # Estilos
+    title_font = Font(name='Calibri', size=16, bold=True, color='FFFFFF')
+    subtitle_font = Font(name='Calibri', size=12, bold=False, color='000000')
+    header_font = Font(name='Calibri', size=11, bold=True, color='FFFFFF')
+    normal_font = Font(name='Calibri', size=10, color='000000')
+    summary_label_font = Font(name='Calibri', size=11, bold=True, color='000000')
+    
+    title_fill = PatternFill(start_color='366092', end_color='366092', fill_type='solid')
+    header_fill = PatternFill(start_color='4472C4', end_color='4472C4', fill_type='solid')
+    summary_fill = PatternFill(start_color='D9E1F2', end_color='D9E1F2', fill_type='solid')
+    
+    center_align = Alignment(horizontal='center', vertical='center', wrap_text=True)
+    left_align = Alignment(horizontal='left', vertical='center', wrap_text=True)
+    
+    thin_border = Border(
+        left=Side(style='thin'),
+        right=Side(style='thin'),
+        top=Side(style='thin'),
+        bottom=Side(style='thin')
+    )
+    
+    # Encabezado del documento
+    meses_esp = {
+        1: 'enero', 2: 'febrero', 3: 'marzo', 4: 'abril', 5: 'mayo', 6: 'junio',
+        7: 'julio', 8: 'agosto', 9: 'septiembre', 10: 'octubre', 11: 'noviembre', 12: 'diciembre'
+    }
+    
+    row = 1
+    # Título principal
+    ws.merge_cells(f'A{row}:O{row}')
+    cell = ws[f'A{row}']
+    cell.value = 'Reporte de Vacaciones'
+    cell.font = title_font
+    cell.fill = title_fill
+    cell.alignment = center_align
+    cell.border = thin_border
+    ws.row_dimensions[row].height = 25
+    
+    row += 1
+    # Período
+    ws.merge_cells(f'A{row}:O{row}')
+    cell = ws[f'A{row}']
+    cell.value = f'Período: {meses_esp.get(mes_seleccionado, "")} {año_seleccionado}'
+    cell.font = subtitle_font
+    cell.alignment = center_align
+    
+    row += 1
+    # Fecha de generación
+    ws.merge_cells(f'A{row}:O{row}')
+    cell = ws[f'A{row}']
+    fecha_actual = timezone.now()
+    cell.value = f'Fecha de generación: {fecha_actual.strftime("%d/%m/%Y %H:%M")}'
+    cell.font = subtitle_font
+    cell.alignment = center_align
+    
+    row += 2  # Línea en blanco
+    
+    # Estadísticas resumidas
+    aprobadas = solicitudes.filter(estado='APROBADO_RH').count()
+    rechazadas = solicitudes.filter(estado__in=['RECHAZADO_JEFE', 'RECHAZADO_RH', 'RECHAZADO_ADMIN']).count()
+    pendientes = solicitudes.filter(estado__in=['PENDIENTE_JEFE', 'PENDIENTE_RH', 'PENDIENTE_ADMIN']).count()
+    total_dias = solicitudes.filter(estado='APROBADO_RH').aggregate(
+        total=Sum('dias_solicitados')
+    )['total'] or 0
+    
+    # Título de resumen
+    ws.merge_cells(f'A{row}:B{row}')
+    cell = ws[f'A{row}']
+    cell.value = 'Resumen'
+    cell.font = summary_label_font
+    cell.fill = summary_fill
+    cell.alignment = left_align
+    cell.border = thin_border
+    
+    row += 1
+    # Estadísticas
+    stats = [
+        ['Total de Solicitudes', solicitudes.count()],
+        ['Aprobadas', aprobadas],
+        ['Días Aprobados (Total)', total_dias],
+        ['Rechazadas', rechazadas],
+        ['Pendientes', pendientes],
+    ]
+    
+    for stat_label, stat_value in stats:
+        ws[f'A{row}'] = stat_label
+        ws[f'A{row}'].font = summary_label_font
+        ws[f'A{row}'].alignment = left_align
+        ws[f'A{row}'].border = thin_border
+        
+        ws[f'B{row}'] = stat_value
+        ws[f'B{row}'].font = normal_font
+        ws[f'B{row}'].alignment = left_align
+        ws[f'B{row}'].border = thin_border
+        row += 1
+    
+    row += 1  # Línea en blanco
+    
+    # Encabezados de la tabla (en negritas)
+    headers = [
+        'Empleado', 'Número de Empleado', 'Departamento', 'Puesto',
+        'Fecha Inicio', 'Fecha Fin', 'Días Solicitados', 'Tipo de Vacación',
+        'Estado', 'Fecha Solicitud', 'Aprobado por Jefe', 'Fecha Aprobación Jefe',
+        'Aprobado por RH', 'Fecha Aprobación RH', 'Motivo'
+    ]
+    
+    for col_idx, header in enumerate(headers, start=1):
+        cell = ws.cell(row=row, column=col_idx)
+        cell.value = header
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = center_align
+        cell.border = thin_border
+    
+    ws.row_dimensions[row].height = 20
+    
+    row += 1
+    
+    # Escribir datos
+    for solicitud in solicitudes:
+        data_row = [
+            solicitud.empleado.nombre_completo,
+            solicitud.empleado.numero_empleado or 'N/A',
+            solicitud.empleado.departamento.nombre if solicitud.empleado.departamento else 'N/A',
+            solicitud.empleado.puesto or 'N/A',
+            solicitud.fecha_inicio.strftime('%d/%m/%Y'),
+            solicitud.fecha_fin.strftime('%d/%m/%Y'),
+            solicitud.dias_solicitados,
+            solicitud.get_tipo_display(),
+            solicitud.get_estado_display(),
+            solicitud.fecha_solicitud.strftime('%d/%m/%Y %H:%M'),
+            solicitud.aprobado_por_jefe.nombre_completo if solicitud.aprobado_por_jefe else 'N/A',
+            solicitud.fecha_aprobacion_jefe.strftime('%d/%m/%Y %H:%M') if solicitud.fecha_aprobacion_jefe else 'N/A',
+            solicitud.aprobado_por_rh.nombre_completo if solicitud.aprobado_por_rh else 'N/A',
+            solicitud.fecha_aprobacion_rh.strftime('%d/%m/%Y %H:%M') if solicitud.fecha_aprobacion_rh else 'N/A',
+            solicitud.motivo.replace('\n', ' ').replace('\r', ' ') if solicitud.motivo else 'N/A',
+        ]
+        
+        for col_idx, value in enumerate(data_row, start=1):
+            cell = ws.cell(row=row, column=col_idx)
+            cell.value = value
+            cell.font = normal_font
+            cell.alignment = left_align if col_idx != 7 else center_align  # Días centrado
+            cell.border = thin_border
+        
+        row += 1
+    
+    # Ajustar ancho de columnas
+    column_widths = [20, 15, 18, 15, 12, 12, 10, 15, 20, 18, 20, 18, 20, 18, 30]
+    for col_idx, width in enumerate(column_widths, start=1):
+        ws.column_dimensions[get_column_letter(col_idx)].width = width
+    
+    # Crear respuesta HTTP
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = f'attachment; filename="reporte_vacaciones_{año_seleccionado}_{mes_seleccionado:02d}.xlsx"'
+    
+    wb.save(response)
+    return response
+
+
+def generar_excel_reporte_vacaciones_csv(request):
+    """Fallback: Generar CSV si openpyxl no está disponible"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+        raise PermissionDenied
+    
+    # Obtener mes y año de los parámetros GET, o usar el mes actual por defecto
+    hoy = timezone.now().date()
+    mes_seleccionado = request.GET.get('mes', hoy.month)
+    año_seleccionado = request.GET.get('año', hoy.year)
+    
+    try:
+        mes_seleccionado = int(mes_seleccionado)
+        año_seleccionado = int(año_seleccionado)
+        
+        if mes_seleccionado < 1 or mes_seleccionado > 12:
+            mes_seleccionado = hoy.month
+        if año_seleccionado < 2000 or año_seleccionado > 2100:
+            año_seleccionado = hoy.year
+            
+        primer_dia_mes = date(año_seleccionado, mes_seleccionado, 1)
+        if mes_seleccionado == 12:
+            ultimo_dia_mes = date(año_seleccionado + 1, 1, 1) - timedelta(days=1)
+        else:
+            ultimo_dia_mes = date(año_seleccionado, mes_seleccionado + 1, 1) - timedelta(days=1)
+    except (ValueError, TypeError):
+        primer_dia_mes = hoy.replace(day=1)
+        if primer_dia_mes.month == 12:
+            ultimo_dia_mes = date(primer_dia_mes.year + 1, 1, 1) - timedelta(days=1)
+        else:
+            ultimo_dia_mes = date(primer_dia_mes.year, primer_dia_mes.month + 1, 1) - timedelta(days=1)
+        mes_seleccionado = primer_dia_mes.month
+        año_seleccionado = primer_dia_mes.year
+    
+    # Obtener todas las solicitudes del mes seleccionado
+    solicitudes = SolicitudVacaciones.objects.filter(
+        fecha_solicitud__gte=primer_dia_mes,
+        fecha_solicitud__lte=ultimo_dia_mes
+    ).select_related(
+        'empleado', 'empleado__departamento', 'aprobado_por_jefe', 'aprobado_por_rh'
+    ).order_by('-fecha_solicitud')
+    
+    # Crear respuesta HTTP con CSV (compatible con Excel)
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = f'attachment; filename="reporte_vacaciones_{año_seleccionado}_{mes_seleccionado:02d}.csv"'
+    
+    # Agregar BOM para Excel (UTF-8 con BOM)
+    response.write('\ufeff')
+    
+    # Escribir encabezados con formato profesional
+    import csv
+    writer = csv.writer(response)
+    
+    # Encabezado del documento
+    meses_esp = {
+        1: 'enero', 2: 'febrero', 3: 'marzo', 4: 'abril', 5: 'mayo', 6: 'junio',
+        7: 'julio', 8: 'agosto', 9: 'septiembre', 10: 'octubre', 11: 'noviembre', 12: 'diciembre'
+    }
+    writer.writerow(['Reporte de Vacaciones'])
+    writer.writerow([f'Período: {meses_esp.get(mes_seleccionado, "")} {año_seleccionado}'])
+    writer.writerow([f'Fecha de generación: {timezone.now().strftime("%d/%m/%Y %H:%M")}'])
+    writer.writerow([])  # Línea en blanco
+    
+    # Estadísticas resumidas
+    aprobadas = solicitudes.filter(estado='APROBADO_RH').count()
+    rechazadas = solicitudes.filter(estado__in=['RECHAZADO_JEFE', 'RECHAZADO_RH', 'RECHAZADO_ADMIN']).count()
+    pendientes = solicitudes.filter(estado__in=['PENDIENTE_JEFE', 'PENDIENTE_RH', 'PENDIENTE_ADMIN']).count()
+    total_dias = solicitudes.filter(estado='APROBADO_RH').aggregate(
+        total=Sum('dias_solicitados')
+    )['total'] or 0
+    
+    writer.writerow(['Resumen'])
+    writer.writerow(['Total de Solicitudes', solicitudes.count()])
+    writer.writerow(['Aprobadas', aprobadas])
+    writer.writerow(['Días Aprobados (Total)', total_dias])
+    writer.writerow(['Rechazadas', rechazadas])
+    writer.writerow(['Pendientes', pendientes])
+    writer.writerow([])  # Línea en blanco
+    
+    # Encabezados de la tabla
+    writer.writerow([
+        'Empleado', 'Número de Empleado', 'Departamento', 'Puesto',
+        'Fecha Inicio', 'Fecha Fin', 'Días Solicitados', 'Tipo de Vacación',
+        'Estado', 'Fecha Solicitud', 'Aprobado por Jefe', 'Fecha Aprobación Jefe',
+        'Aprobado por RH', 'Fecha Aprobación RH', 'Motivo'
+    ])
+    
+    # Escribir datos
+    for solicitud in solicitudes:
+        writer.writerow([
+            solicitud.empleado.nombre_completo,
+            solicitud.empleado.numero_empleado or 'N/A',
+            solicitud.empleado.departamento.nombre if solicitud.empleado.departamento else 'N/A',
+            solicitud.empleado.puesto or 'N/A',
+            solicitud.fecha_inicio.strftime('%d/%m/%Y'),
+            solicitud.fecha_fin.strftime('%d/%m/%Y'),
+            solicitud.dias_solicitados,
+            solicitud.get_tipo_display(),
+            solicitud.get_estado_display(),
+            solicitud.fecha_solicitud.strftime('%d/%m/%Y %H:%M'),
+            solicitud.aprobado_por_jefe.nombre_completo if solicitud.aprobado_por_jefe else 'N/A',
+            solicitud.fecha_aprobacion_jefe.strftime('%d/%m/%Y %H:%M') if solicitud.fecha_aprobacion_jefe else 'N/A',
+            solicitud.aprobado_por_rh.nombre_completo if solicitud.aprobado_por_rh else 'N/A',
+            solicitud.fecha_aprobacion_rh.strftime('%d/%m/%Y %H:%M') if solicitud.fecha_aprobacion_rh else 'N/A',
+            solicitud.motivo.replace('\n', ' ').replace('\r', ' ') if solicitud.motivo else 'N/A',
+        ])
+    
+    return response
 
 
 # === VISTAS DE ERROR ===
