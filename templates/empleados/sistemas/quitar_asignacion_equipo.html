@@ -1,0 +1,421 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Quitar Asignación de Equipo{% endblock %}
+
+{% block content %}
+<style>
+/* Cambiar fondo solo en la vista de quitar asignación - Más oscuro para mejor legibilidad */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.65)), url('{% static "images/dash/hardw.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+</style>
+<div class="container-fluid dashboard">
+    <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="dashboard-title" style="color: #ffffff !important; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 0 3px 12px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 0, 0, 0.5) !important;"><i class="fas fa-user-minus me-2"></i>Quitar Asignación de Equipo</h1>
+        <a href="{% url 'empleados:inventario_equipos' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Volver al Inventario
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+    <div class="card" style="overflow: hidden !important; border-radius: 20px !important;">
+        <div class="card-body" style="background: transparent !important; padding: 2rem !important; overflow: hidden !important; border-radius: 20px !important;">
+            <!-- Información del Equipo y Asignación -->
+            <div class="alert alert-warning mb-4" style="background: rgba(251, 191, 36, 0.2) !important; border: 1px solid rgba(251, 191, 36, 0.4) !important; color: #ffffff !important;">
+                <h6 class="mb-2" style="font-weight: 300 !important;"><i class="fas fa-exclamation-triangle me-2"></i>Confirmar Remoción de Asignación</h6>
+                <p class="mb-2">
+                    Está a punto de quitar la asignación del siguiente equipo:
+                </p>
+            </div>
+
+            <div class="card mb-4" style="background: rgba(255, 255, 255, 0.08) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; border-radius: 12px !important; overflow: hidden !important;">
+                <div class="card-body" style="background: transparent !important;">
+                    <h6 style="color: #ffffff !important; font-weight: 300 !important;"><i class="fas fa-laptop me-2"></i>Equipo:</h6>
+                    <p style="color: #ffffff !important;" class="mb-3">
+                        <strong>{{ equipo.codigo_inventario }}</strong> - {{ equipo.categoria.nombre }} {{ equipo.marca }} {{ equipo.modelo }}
+                    </p>
+                    
+                    <h6 style="color: #ffffff !important; font-weight: 300 !important;"><i class="fas fa-user me-2"></i>Asignado a:</h6>
+                    <p style="color: #ffffff !important;" class="mb-3">
+                        {{ asignacion.empleado.nombre_completo }}
+                    </p>
+                    
+                    <h6 style="color: #ffffff !important; font-weight: 300 !important;"><i class="fas fa-calendar me-2"></i>Fecha de Asignación:</h6>
+                    <p style="color: #ffffff !important;" class="mb-0">
+                        {{ asignacion.fecha_asignacion|date:"d/m/Y" }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Tabs para elegir acción -->
+            <ul class="nav nav-tabs mb-4" id="accionTab" role="tablist" style="border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="quitar-tab" data-bs-toggle="tab" data-bs-target="#quitar" type="button" role="tab" style="color: #ffffff !important; background: transparent !important; border: none !important; border-bottom: 2px solid rgba(245, 158, 11, 0.5) !important;">
+                        <i class="fas fa-user-minus me-1"></i>Quitar Asignación
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="reasignar-tab" data-bs-toggle="tab" data-bs-target="#reasignar" type="button" role="tab" style="color: #ffffff !important; background: transparent !important; border: none !important;">
+                        <i class="fas fa-user-plus me-1"></i>Reasignar a Otra Persona/Área
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="accionTabContent">
+                <!-- Tab: Quitar Asignación -->
+                <div class="tab-pane fade show active" id="quitar" role="tabpanel">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="accion" value="quitar">
+                        
+                        <div class="alert alert-info mb-3" style="background: rgba(59, 130, 246, 0.2) !important; border: 1px solid rgba(59, 130, 246, 0.4) !important; color: #ffffff !important;">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Al quitar esta asignación, puede cambiar el estado del equipo si se descompuso, se dio de baja, o necesita mantenimiento.
+                        </div>
+
+                        <!-- Campo de estado -->
+                        <div class="mb-3">
+                            <label for="nuevo_estado_quitar" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                                <i class="fas fa-info-circle me-1"></i>Cambiar Estado del Equipo (Opcional)
+                            </label>
+                            <select name="nuevo_estado" id="nuevo_estado_quitar" class="form-control" style="background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;">
+                                <option value="">Mantener estado actual ({{ equipo.get_estado_display }})</option>
+                                <option value="DISPONIBLE" {% if equipo.estado == 'DISPONIBLE' %}disabled{% endif %}>Disponible</option>
+                                <option value="ASIGNADO" {% if equipo.estado == 'ASIGNADO' %}disabled{% endif %}>Asignado</option>
+                                <option value="EN_REPARACION" {% if equipo.estado == 'EN_REPARACION' %}disabled{% endif %}>En Reparación</option>
+                                <option value="DADO_DE_BAJA" {% if equipo.estado == 'DADO_DE_BAJA' %}disabled{% endif %}>Dado de Baja</option>
+                            </select>
+                            <small class="form-text" style="color: rgba(255, 255, 255, 0.6) !important; display: block !important; margin-top: 4px !important;">
+                                Seleccione un nuevo estado si el equipo se descompuso, se dio de baja, o necesita mantenimiento.
+                            </small>
+                        </div>
+
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-outline-warning">
+                                <i class="fas fa-check me-1"></i>Confirmar y Quitar Asignación
+                            </button>
+                            <a href="{% url 'empleados:inventario_equipos' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-1"></i>Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tab: Reasignar -->
+                <div class="tab-pane fade" id="reasignar" role="tabpanel">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="accion" value="reasignar">
+                        <input type="hidden" name="equipo" value="{{ equipo.id }}">
+                        
+                        <div class="alert alert-info mb-3" style="background: rgba(59, 130, 246, 0.2) !important; border: 1px solid rgba(59, 130, 246, 0.4) !important; color: #ffffff !important;">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Reasigne el equipo a otra persona o área y cambie el estado si es necesario.
+                        </div>
+
+                        <!-- Campo de estado -->
+                        <div class="mb-3">
+                            <label for="{{ form.nuevo_estado.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                                <i class="fas fa-info-circle me-1"></i>{{ form.nuevo_estado.label }} (Opcional)
+                            </label>
+                            {{ form.nuevo_estado }}
+                            {% if form.nuevo_estado.errors %}
+                                <div class="text-danger mt-1">{{ form.nuevo_estado.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Campo de empleado -->
+                        <div class="mb-3">
+                            <label for="{{ form.empleado.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                                {{ form.empleado.label }} <span class="text-danger">*</span>
+                            </label>
+                            {{ form.empleado }}
+                            {% if form.empleado.errors %}
+                                <div class="text-danger mt-1">{{ form.empleado.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Campo de condición de entrega -->
+                        <div class="mb-3">
+                            <label for="{{ form.condicion_entrega.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                                {{ form.condicion_entrega.label }}
+                            </label>
+                            {{ form.condicion_entrega }}
+                            {% if form.condicion_entrega.errors %}
+                                <div class="text-danger mt-1">{{ form.condicion_entrega.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Campo de observaciones -->
+                        <div class="mb-3">
+                            <label for="{{ form.observaciones.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                                {{ form.observaciones.label }}
+                            </label>
+                            {{ form.observaciones }}
+                            {% if form.observaciones.errors %}
+                                <div class="text-danger mt-1">{{ form.observaciones.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-outline-success">
+                                <i class="fas fa-check me-1"></i>Confirmar y Reasignar
+                            </button>
+                            <a href="{% url 'empleados:inventario_equipos' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-1"></i>Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+</div>
+</div>
+
+<style>
+/* Aplicar estilos del dashboard a la vista de quitar asignación - Mejor contraste */
+.dashboard .card {
+    background: rgba(60, 60, 60, 0.4) !important;
+    backdrop-filter: blur(25px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 
+                0 4px 16px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    overflow: hidden !important;
+    position: relative !important;
+}
+
+.dashboard .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 20px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.dashboard .card-body {
+    background: transparent !important;
+    overflow: hidden !important;
+    border-radius: 20px !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+.dashboard .card-body > * {
+    position: relative !important;
+    z-index: 3 !important;
+}
+
+.dashboard-title {
+    color: #ffffff !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 
+                 0 3px 12px rgba(0, 0, 0, 0.6),
+                 0 0 20px rgba(0, 0, 0, 0.5) !important;
+    font-weight: 700 !important;
+    margin-bottom: 0 !important;
+}
+
+/* ===== ESTILOS DE BOTONES DEL DASHBOARD ===== */
+/* Botón Warning - Amarillo/Naranja con degradado */
+.dashboard .btn-outline-warning {
+    background: linear-gradient(180deg, 
+        rgba(245, 158, 11, 0.95) 0%, 
+        rgba(217, 119, 6, 0.95) 50%,
+        rgba(180, 83, 9, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .btn-outline-warning:hover {
+    background: linear-gradient(180deg, 
+        rgba(251, 191, 36, 0.95) 0%, 
+        rgba(245, 158, 11, 0.95) 50%,
+        rgba(217, 119, 6, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Botón Secondary - Gris con degradado */
+.dashboard .btn-outline-secondary {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .btn-outline-secondary:hover {
+    background: linear-gradient(180deg, 
+        rgba(209, 213, 219, 0.95) 0%, 
+        rgba(156, 163, 175, 0.95) 50%,
+        rgba(107, 114, 128, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Estilos para alertas */
+.dashboard .alert {
+    border-radius: 12px !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+}
+
+.dashboard .alert-warning {
+    background: rgba(245, 158, 11, 0.2) !important;
+    border: 1px solid rgba(245, 158, 11, 0.4) !important;
+    color: #ffffff !important;
+}
+
+.dashboard .alert-info {
+    background: rgba(59, 130, 246, 0.2) !important;
+    border: 1px solid rgba(59, 130, 246, 0.4) !important;
+    color: #ffffff !important;
+}
+
+/* Estilos para campos de formulario */
+.dashboard .form-control,
+.dashboard .form-select {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    padding: 12px 16px !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dashboard .form-control:focus,
+.dashboard .form-select:focus {
+    background: rgba(255, 255, 255, 0.35) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.35) !important;
+    outline: none !important;
+}
+
+.dashboard .form-control option,
+.dashboard .form-select option {
+    background: #0038A8 !important;
+    color: #ffffff !important;
+}
+
+.dashboard .form-label {
+    color: #ffffff !important;
+    font-weight: 500 !important;
+    margin-bottom: 8px !important;
+}
+
+.dashboard .form-text {
+    color: rgba(255, 255, 255, 0.6) !important;
+    font-size: 0.875rem !important;
+}
+
+.dashboard textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Estilos para tabs */
+.dashboard .nav-tabs {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.dashboard .nav-tabs .nav-link {
+    color: rgba(255, 255, 255, 0.7) !important;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 2px solid transparent !important;
+    padding: 12px 20px !important;
+    transition: all 0.3s ease !important;
+}
+
+.dashboard .nav-tabs .nav-link:hover {
+    color: #ffffff !important;
+    border-bottom-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .nav-tabs .nav-link.active {
+    color: #ffffff !important;
+    border-bottom-color: rgba(245, 158, 11, 0.5) !important;
+    font-weight: 600 !important;
+}
+
+.dashboard .tab-content {
+    padding-top: 1rem !important;
+}
+
+/* Botón Success */
+.dashboard .btn-outline-success {
+    background: linear-gradient(180deg, 
+        rgba(34, 197, 94, 0.95) 0%, 
+        rgba(22, 163, 74, 0.95) 50%,
+        rgba(15, 118, 50, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .btn-outline-success:hover {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+</style>
+{% endblock %}
+

@@ -70,18 +70,59 @@ def logout_view(request):
 
 @login_required
 def perfil_usuario(request):
-    """Vista del perfil del usuario actual"""
+    """Vista del perfil del usuario actual o de otro usuario si se especifica perfil_id"""
     from .models import AsignacionEquipo
+    from django.shortcuts import get_object_or_404
+    from django.core.exceptions import PermissionDenied
     
+    # Obtener perfil del usuario actual
     try:
-        perfil = Perfil.objects.get(usuario=request.user)
+        perfil_actual = Perfil.objects.get(usuario=request.user)
         tiene_perfil = True
     except Perfil.DoesNotExist:
-        perfil = None
+        perfil_actual = None
         tiene_perfil = False
     
+    # Verificar si se solicita ver el perfil de otro usuario
+    perfil_id = request.GET.get('perfil_id')
+    viene_de_lista = False
+    if perfil_id:
+        # Verificar permisos para ver otros perfiles
+        if not perfil_actual:
+            raise PermissionDenied
+        
+        # Verificar si tiene permiso para ver otros perfiles
+        puede_ver_otros = (
+            perfil_actual.es_sistemas() or 
+            perfil_actual.es_admin() or 
+            perfil_actual.es_rh() or 
+            perfil_actual.es_jefe_area()
+        )
+        
+        if not puede_ver_otros:
+            raise PermissionDenied
+        
+        # Obtener el perfil solicitado
+        perfil_ver = get_object_or_404(Perfil, id=perfil_id)
+        
+        # Si es jefe de área, solo puede ver empleados de su departamento
+        if perfil_actual.es_jefe_area():
+            if not perfil_ver.departamento or perfil_ver.departamento != perfil_actual.departamento:
+                raise PermissionDenied
+        
+        perfil = perfil_ver
+        es_propio_perfil = (perfil == perfil_actual)
+        viene_de_lista = True  # Si hay perfil_id, viene de la lista
+    else:
+        # Mostrar perfil del usuario actual
+        perfil = perfil_actual
+        es_propio_perfil = True
+        # Verificar si viene de lista usando referer
+        referer = request.META.get('HTTP_REFERER', '')
+        viene_de_lista = 'lista_empleados' in referer or 'empleados/' in referer
+    
     # Obtener grupos del usuario para mostrar roles
-    grupos = request.user.groups.all()
+    grupos = perfil.usuario.groups.all() if perfil else request.user.groups.all()
     
     # Equipos asignados
     equipos_asignados = None
@@ -95,11 +136,9 @@ def perfil_usuario(request):
     es_rh = perfil.es_rh() if perfil else False
     es_jefe = perfil.es_jefe_area() if perfil else False
     es_empleado = perfil.es_empleado() if perfil else False
-    # Esta vista siempre muestra el perfil del usuario logueado, por lo que siempre es su propio perfil
-    es_propio_perfil = True
     
     context = {
-        'user': request.user,
+        'user': perfil.usuario if perfil else request.user,
         'perfil': perfil,
         'tiene_perfil': tiene_perfil,
         'grupos': grupos,
@@ -108,6 +147,8 @@ def perfil_usuario(request):
         'es_empleado': es_empleado,
         'equipos_asignados': equipos_asignados,
         'es_propio_perfil': es_propio_perfil,
+        'perfil_actual': perfil_actual,  # Para verificar permisos de edición
+        'viene_de_lista': viene_de_lista,  # Para mostrar botón de volver
     }
     
     return render(request, 'empleados/perfil_usuario.html', context)

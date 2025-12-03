@@ -1,0 +1,396 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Reporte de Vacaciones - {{ mes }}{% endblock %}
+
+{% block content %}
+<style>
+/* Cambiar fondo solo en la vista de reporte */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/dash/redh.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+
+/* Asegurar glassmorphism en la tabla y quitar fondo blanco */
+.reporte-vacaciones .table-responsive {
+    background: transparent !important;
+}
+
+.reporte-vacaciones .table,
+.reporte-vacaciones .table thead,
+.reporte-vacaciones .table tbody,
+.reporte-vacaciones .table th,
+.reporte-vacaciones .table td,
+.reporte-vacaciones .table tr {
+    background: transparent !important;
+    border-color: transparent !important;
+}
+
+.reporte-vacaciones .table thead th {
+    background: transparent !important;
+}
+
+.reporte-vacaciones .table tbody tr {
+    background: transparent !important;
+}
+
+.reporte-vacaciones .table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Estilos para botón Volver al Panel - igual que otros dashboards */
+.dashboard .btn-outline-secondary {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-secondary:hover {
+    background: linear-gradient(180deg, 
+        rgba(209, 213, 219, 0.95) 0%, 
+        rgba(156, 163, 175, 0.95) 50%,
+        rgba(107, 114, 128, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Estilos para botones de reporte - con esquinas redondeadas, sombra y brillo */
+.dashboard .btn-reporte.btn-danger {
+    background: linear-gradient(180deg, 
+        rgba(239, 68, 68, 0.95) 0%, 
+        rgba(220, 38, 38, 0.95) 50%,
+        rgba(185, 28, 28, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-reporte.btn-danger:hover {
+    background: linear-gradient(180deg, 
+        rgba(248, 113, 113, 0.95) 0%, 
+        rgba(239, 68, 68, 0.95) 50%,
+        rgba(220, 38, 38, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Botón Excel con color del logo de Excel (#217346) */
+.dashboard .btn-reporte.btn-excel {
+    background: linear-gradient(180deg, 
+        rgba(33, 115, 70, 0.95) 0%, 
+        rgba(26, 92, 56, 0.95) 50%,
+        rgba(20, 70, 43, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-reporte.btn-excel:hover {
+    background: linear-gradient(180deg, 
+        rgba(40, 138, 84, 0.95) 0%, 
+        rgba(33, 115, 70, 0.95) 50%,
+        rgba(26, 92, 56, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-reporte.btn-primary {
+    background: linear-gradient(180deg, 
+        rgba(37, 99, 235, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 30, 100, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-reporte.btn-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 56, 168, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+</style>
+
+<div class="container-fluid dashboard">
+    <div class="container">
+        <!-- Header -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+            <div>
+                <h1 class="dashboard-title" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 0 5px 20px rgba(0, 0, 0, 0.85) !important;">
+                    <i class="fas fa-chart-bar me-3" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Reporte de Vacaciones
+                </h1>
+                <p class="dashboard-subtitle mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3) !important;">
+                    Período: {{ fecha_inicio|date:"d/m/Y" }} - {{ fecha_fin|date:"d/m/Y" }}
+                </p>
+            </div>
+            <div class="d-flex gap-2 mt-2 mt-md-0">
+                {% if perfil.es_rh %}
+                    <a href="{% url 'empleados:rh_dashboard' %}" class="btn btn-outline-secondary" style="font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; padding: 0.65rem 1.5rem !important; border: none !important; border-radius: 14px !important; color: #ffffff !important; transition: all 0.3s ease !important;">
+                {% elif perfil.es_admin %}
+                    <a href="{% url 'empleados:admin_dashboard' %}" class="btn btn-outline-secondary" style="font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; padding: 0.65rem 1.5rem !important; border: none !important; border-radius: 14px !important; color: #ffffff !important; transition: all 0.3s ease !important;">
+                {% endif %}
+                    <i class="fas fa-arrow-left me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Volver al Panel
+                </a>
+            </div>
+        </div>
+
+        <!-- Selector de Mes y Año - Más compacto -->
+        <div class="card mb-4">
+            <div class="card-body" style="background: transparent !important; padding: 1rem 1.5rem !important;">
+                <form method="get" class="row g-2 align-items-end">
+                    <div class="col-md-3">
+                        <label for="mes" class="form-label mb-1" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 500 !important; font-size: 0.9rem !important;">Mes</label>
+                        <select name="mes" id="mes" class="form-select" style="background: rgba(255, 255, 255, 0.15) !important; backdrop-filter: blur(20px) saturate(180%) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px !important; padding: 8px 12px !important; font-family: 'Montserrat', sans-serif !important; font-size: 0.9rem !important;">
+                            {% for num, nombre in meses.items %}
+                                <option value="{{ num }}" {% if num == mes_numero %}selected{% endif %} style="background: rgba(0, 0, 0, 0.8); color: #ffffff;">{{ nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="año" class="form-label mb-1" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 500 !important; font-size: 0.9rem !important;">Año</label>
+                        <select name="año" id="año" class="form-select" style="background: rgba(255, 255, 255, 0.15) !important; backdrop-filter: blur(20px) saturate(180%) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px !important; padding: 8px 12px !important; font-family: 'Montserrat', sans-serif !important; font-size: 0.9rem !important;">
+                            {% for año_opcion in años_disponibles %}
+                                <option value="{{ año_opcion }}" {% if año_opcion == año %}selected{% endif %} style="background: rgba(0, 0, 0, 0.8); color: #ffffff;">{{ año_opcion }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary w-100" style="font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; padding: 0.65rem 1.5rem !important;">
+                            <i class="fas fa-search me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Buscar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Estadísticas - Contenido más grande sin crecer el cuadro -->
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <div class="card text-center h-100">
+                    <div class="card-body d-flex flex-column justify-content-center" style="padding: 1rem 1.25rem !important; min-height: 120px !important;">
+                        <i class="fas fa-clipboard-list fa-2x mb-3" style="color: #3b82f6 !important; font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;"></i>
+                        <h5 class="card-title mb-2" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-size: 0.95rem !important; font-weight: 600 !important;">Total Solicitudes</h5>
+                        <h3 style="color: #3b82f6 !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; font-size: 2rem !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; margin-bottom: 0 !important; line-height: 1.2 !important;">{{ total_solicitudes }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card text-center h-100">
+                    <div class="card-body d-flex flex-column justify-content-center" style="padding: 1rem 1.25rem !important; min-height: 120px !important;">
+                        <i class="fas fa-check-circle fa-2x mb-3" style="color: #15803D !important; font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;"></i>
+                        <h5 class="card-title mb-2" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-size: 0.95rem !important; font-weight: 600 !important;">Aprobadas</h5>
+                        <h3 style="color: #15803D !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; font-size: 2rem !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; margin-bottom: 0 !important; line-height: 1.2 !important;">{{ aprobadas }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card text-center h-100">
+                    <div class="card-body d-flex flex-column justify-content-center" style="padding: 1rem 1.25rem !important; min-height: 120px !important;">
+                        <i class="fas fa-times-circle fa-2x mb-3" style="color: #B91C1C !important; font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;"></i>
+                        <h5 class="card-title mb-2" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-size: 0.95rem !important; font-weight: 600 !important;">Rechazadas</h5>
+                        <h3 style="color: #B91C1C !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; font-size: 2rem !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; margin-bottom: 0 !important; line-height: 1.2 !important;">{{ rechazadas }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card text-center h-100">
+                    <div class="card-body d-flex flex-column justify-content-center" style="padding: 1rem 1.25rem !important; min-height: 120px !important;">
+                        <i class="fas fa-calendar-alt fa-2x mb-3" style="color: #D97706 !important; font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;"></i>
+                        <h5 class="card-title mb-2" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-size: 0.95rem !important; font-weight: 600 !important;">Total Días</h5>
+                        <h3 style="color: #D97706 !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; font-size: 2rem !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; margin-bottom: 0 !important; line-height: 1.2 !important;">{{ total_dias }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de solicitudes -->
+        <div class="card">
+            <div class="card-header" style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important; padding: 1.5rem !important;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
+                        <i class="fas fa-list me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Detalle de Solicitudes
+                    </h5>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'empleados:generar_pdf_reporte_vacaciones' %}?mes={{ mes_numero }}&año={{ año }}" class="btn btn-sm btn-danger btn-reporte" target="_blank" style="font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; padding: 0.65rem 1.5rem !important; border: none !important; border-radius: 14px !important; color: #ffffff !important; transition: all 0.3s ease !important;">
+                            <i class="fas fa-file-pdf me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Descargar PDF
+                        </a>
+                        <a href="{% url 'empleados:generar_excel_reporte_vacaciones' %}?mes={{ mes_numero }}&año={{ año }}" class="btn btn-sm btn-success btn-reporte btn-excel" style="font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; padding: 0.65rem 1.5rem !important; border: none !important; border-radius: 14px !important; color: #ffffff !important; transition: all 0.3s ease !important;">
+                            <i class="fas fa-file-excel me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Descargar Excel
+                        </a>
+                        <a href="{% url 'empleados:generar_pdf_reporte_vacaciones' %}?mes={{ mes_numero }}&año={{ año }}&imprimir=1" class="btn btn-sm btn-primary btn-reporte" target="_blank" style="font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; padding: 0.65rem 1.5rem !important; border: none !important; border-radius: 14px !important; color: #ffffff !important; transition: all 0.3s ease !important;">
+                            <i class="fas fa-print me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Imprimir
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
+                {% if solicitudes %}
+                    <div class="table-responsive reporte-vacaciones">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr style="background: transparent !important;">
+                                    <th style="color: #ffffff !important; font-weight: 700 !important; font-family: 'Montserrat', sans-serif !important; border-bottom: none !important; padding: 1rem 1.25rem 0.75rem 1.25rem !important; font-size: 0.95rem !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; position: relative !important; background: transparent !important;">
+                                        Empleado
+                                        <div style="position: absolute !important; bottom: 0 !important; left: 1.25rem !important; right: 1.25rem !important; height: 1px !important; background: rgba(255, 255, 255, 0.3) !important;"></div>
+                                    </th>
+                                    <th style="color: #ffffff !important; font-weight: 700 !important; font-family: 'Montserrat', sans-serif !important; border-bottom: none !important; padding: 1rem 1.25rem 0.75rem 1.25rem !important; font-size: 0.95rem !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; position: relative !important; background: transparent !important;">
+                                        Departamento
+                                        <div style="position: absolute !important; bottom: 0 !important; left: 1.25rem !important; right: 1.25rem !important; height: 1px !important; background: rgba(255, 255, 255, 0.3) !important;"></div>
+                                    </th>
+                                    <th style="color: #ffffff !important; font-weight: 700 !important; font-family: 'Montserrat', sans-serif !important; border-bottom: none !important; padding: 1rem 1.25rem 0.75rem 1.25rem !important; font-size: 0.95rem !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; position: relative !important; background: transparent !important;">
+                                        Período
+                                        <div style="position: absolute !important; bottom: 0 !important; left: 1.25rem !important; right: 1.25rem !important; height: 1px !important; background: rgba(255, 255, 255, 0.3) !important;"></div>
+                                    </th>
+                                    <th style="color: #ffffff !important; font-weight: 700 !important; font-family: 'Montserrat', sans-serif !important; border-bottom: none !important; text-align: center !important; padding: 1rem 1.25rem 0.75rem 1.25rem !important; font-size: 0.95rem !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; position: relative !important; background: transparent !important;">
+                                        Días
+                                        <div style="position: absolute !important; bottom: 0 !important; left: 1.25rem !important; right: 1.25rem !important; height: 1px !important; background: rgba(255, 255, 255, 0.3) !important;"></div>
+                                    </th>
+                                    <th style="color: #ffffff !important; font-weight: 700 !important; font-family: 'Montserrat', sans-serif !important; border-bottom: none !important; padding: 1rem 1.25rem 0.75rem 1.25rem !important; font-size: 0.95rem !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; position: relative !important; background: transparent !important;">
+                                        Estado
+                                        <div style="position: absolute !important; bottom: 0 !important; left: 1.25rem !important; right: 1.25rem !important; height: 1px !important; background: rgba(255, 255, 255, 0.3) !important;"></div>
+                                    </th>
+                                    <th style="color: #ffffff !important; font-weight: 700 !important; font-family: 'Montserrat', sans-serif !important; border-bottom: none !important; padding: 1rem 1.25rem 0.75rem 1.25rem !important; font-size: 0.95rem !important; text-transform: uppercase !important; letter-spacing: 0.5px !important; position: relative !important; background: transparent !important;">
+                                        Fecha Solicitud
+                                        <div style="position: absolute !important; bottom: 0 !important; left: 1.25rem !important; right: 1.25rem !important; height: 1px !important; background: rgba(255, 255, 255, 0.3) !important;"></div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for solicitud in solicitudes %}
+                                <tr style="border-bottom: none !important; transition: all 0.2s ease !important; position: relative !important; background: transparent !important;">
+                                    <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; padding: 1.25rem 1.25rem !important; vertical-align: middle !important; position: relative !important; background: transparent !important;">
+                                        {% if not forloop.last %}
+                                        <div style="position: absolute !important; bottom: 0 !important; left: 1.25rem !important; right: 1.25rem !important; height: 1px !important; background: rgba(255, 255, 255, 0.2) !important;"></div>
+                                        {% endif %}
+                                        <strong style="font-size: 1rem !important; font-weight: 600 !important; color: #ffffff !important; display: block !important;">{{ solicitud.empleado.nombre_completo }}</strong>
+                                    </td>
+                                    <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; padding: 1.25rem 1.25rem !important; vertical-align: middle !important; position: relative !important; background: transparent !important;">
+                                        {% if not forloop.last %}
+                                        <div style="position: absolute !important; bottom: 0 !important; left: 1.25rem !important; right: 1.25rem !important; height: 1px !important; background: rgba(255, 255, 255, 0.2) !important;"></div>
+                                        {% endif %}
+                                        <span style="font-size: 0.85rem !important; color: rgba(255, 255, 255, 0.85) !important;">{{ solicitud.empleado.departamento.nombre|default:"N/A" }}</span>
+                                    </td>
+                                    <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; padding: 1.25rem 1.25rem !important; vertical-align: middle !important; position: relative !important; background: transparent !important;">
+                                        {% if not forloop.last %}
+                                        <div style="position: absolute !important; bottom: 0 !important; left: 1.25rem !important; right: 1.25rem !important; height: 1px !important; background: rgba(255, 255, 255, 0.2) !important;"></div>
+                                        {% endif %}
+                                        <span style="font-size: 0.85rem !important; color: rgba(255, 255, 255, 0.85) !important;">{{ solicitud.fecha_inicio|date:"d/m/Y" }} - {{ solicitud.fecha_fin|date:"d/m/Y" }}</span>
+                                    </td>
+                                    <td style="text-align: center !important; padding: 1.25rem 1.25rem !important; vertical-align: middle !important; position: relative !important; background: transparent !important;">
+                                        {% if not forloop.last %}
+                                        <div style="position: absolute !important; bottom: 0 !important; left: 1.25rem !important; right: 1.25rem !important; height: 1px !important; background: rgba(255, 255, 255, 0.2) !important;"></div>
+                                        {% endif %}
+                                        <span class="badge badge-alta" style="font-family: 'Montserrat', sans-serif !important; font-size: 1.1rem !important; font-weight: 700 !important; padding: 0.6rem 1rem !important; min-width: 50px !important; display: inline-block !important; color: #ffffff !important; opacity: 1 !important; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;">{{ solicitud.dias_solicitados }}</span>
+                                    </td>
+                                    <td style="padding: 1.25rem 1.25rem !important; vertical-align: middle !important; position: relative !important; background: transparent !important;">
+                                        {% if not forloop.last %}
+                                        <div style="position: absolute !important; bottom: 0 !important; left: 1.25rem !important; right: 1.25rem !important; height: 1px !important; background: rgba(255, 255, 255, 0.2) !important;"></div>
+                                        {% endif %}
+                                        {% if solicitud.estado == 'APROBADO_RH' %}
+                                            <span class="badge badge-aprobada" style="font-family: 'Montserrat', sans-serif !important; font-size: 0.9rem !important; font-weight: 600 !important; color: rgba(255, 255, 255, 1) !important; opacity: 1 !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.6) !important;">{{ solicitud.get_estado_display }}</span>
+                                        {% elif solicitud.estado in 'RECHAZADO_JEFE,RECHAZADO_RH,RECHAZADO_ADMIN' %}
+                                            <span class="badge badge-rechazada" style="font-family: 'Montserrat', sans-serif !important; font-size: 0.9rem !important; font-weight: 600 !important; color: rgba(255, 255, 255, 1) !important; opacity: 1 !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.6) !important;">{{ solicitud.get_estado_display }}</span>
+                                        {% else %}
+                                            <span class="badge badge-pendiente" style="font-family: 'Montserrat', sans-serif !important; font-size: 0.9rem !important; font-weight: 600 !important; color: rgba(255, 255, 255, 1) !important; opacity: 1 !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.6) !important;">{{ solicitud.get_estado_display }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; padding: 1.25rem 1.25rem !important; vertical-align: middle !important; position: relative !important; background: transparent !important;">
+                                        {% if not forloop.last %}
+                                        <div style="position: absolute !important; bottom: 0 !important; left: 1.25rem !important; right: 1.25rem !important; height: 1px !important; background: rgba(255, 255, 255, 0.2) !important;"></div>
+                                        {% endif %}
+                                        <span style="font-size: 0.85rem !important; color: rgba(255, 255, 255, 0.85) !important;">{{ solicitud.fecha_solicitud|date:"d/m/Y H:i" }}</span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-inbox fa-3x mb-3" style="color: rgba(255, 255, 255, 0.5) !important; font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>
+                        <h5 style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important;">No hay solicitudes en este período</h5>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@media print {
+    body {
+        background: white !important;
+    }
+    .btn, .card-header, .form-select, form {
+        display: none !important;
+    }
+    /* Ocultar cuadros de estadísticas al imprimir */
+    .row.mb-4:first-of-type {
+        display: none !important;
+    }
+    /* Ocultar selector de período */
+    .card.mb-4:first-of-type {
+        display: none !important;
+    }
+    /* Ocultar botón "Volver al Panel" */
+    .d-flex.gap-2.mt-2 {
+        display: none !important;
+    }
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        background: white !important;
+    }
+    .card-body {
+        background: white !important;
+    }
+    /* Mejorar legibilidad de la tabla al imprimir */
+    .table {
+        border-collapse: collapse !important;
+    }
+    .table th,
+    .table td {
+        border: 1px solid #000 !important;
+        padding: 8px !important;
+        color: #000 !important;
+        background: white !important;
+    }
+    .table th {
+        background: #f0f0f0 !important;
+        font-weight: bold !important;
+    }
+    .table tbody tr:nth-child(even) {
+        background: #f9f9f9 !important;
+    }
+    /* Ocultar badges con colores, mostrar solo texto */
+    .badge {
+        background: transparent !important;
+        color: #000 !important;
+        border: 1px solid #000 !important;
+        padding: 2px 6px !important;
+    }
+    /* Asegurar que el texto sea legible */
+    h1, h2, h3, h4, h5, h6, p, td, th, span, strong {
+        color: #000 !important;
+    }
+}
+</style>
+{% endblock %}

@@ -147,7 +147,6 @@ class SolicitudVacacionesForm(forms.ModelForm):
             if antiguedad < 1:
                 self.fields['tipo'].choices = [
                     ('EXTRAORDINARIA', 'Vacación Extraordinaria'),
-                    ('EMERGENCIA', 'Vacación de Emergencia'),
                 ]
                 meses_trabajados = ((timezone.now().date() - self.empleado.fecha_contratacion).days) / 30.44
                 self.fields['tipo'].help_text = (
@@ -156,6 +155,11 @@ class SolicitudVacacionesForm(forms.ModelForm):
                     f'Días disponibles: {dias_disponibles}'
                 )
             else:
+                # Para empleados con antigüedad >= 1, mostrar solo TIPOS (sin legacy) para evitar duplicados
+                self.fields['tipo'].choices = [
+                    ('NORMAL', 'Vacación Normal'),
+                    ('EXTRAORDINARIA', 'Vacación Extraordinaria'),
+                ]
                 self.fields['tipo'].help_text = f'Antigüedad: {antiguedad} años. Días disponibles: {dias_disponibles}'
     
     def clean(self):
@@ -227,6 +231,30 @@ class AprobacionJefeForm(forms.Form):
         super().__init__(*args, **kwargs)
 
 
+class AprobacionAdminForm(forms.Form):
+    """Formulario para aprobar/rechazar solicitudes por administrador"""
+    accion = forms.ChoiceField(
+        choices=[('aprobar', 'Aprobar'), ('rechazar', 'Rechazar')],
+        widget=forms.RadioSelect(attrs={'class': 'form-check-input'}),
+        label='Decisión'
+    )
+    comentario = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={
+            'rows': 3,
+            'class': 'form-control',
+            'placeholder': 'Comentarios sobre la decisión (opcional)'
+        }),
+        label='Comentarios'
+    )
+    
+    def __init__(self, *args, **kwargs):
+        solicitud = kwargs.pop('solicitud', None)
+        super().__init__(*args, **kwargs)
+        
+        self.fields['accion'].required = True
+
+
 class AprobacionRHForm(forms.Form):
     """Formulario para aprobación por RH"""
     accion = forms.ChoiceField(
@@ -254,16 +282,113 @@ class AprobacionRHForm(forms.Form):
 class EditarPerfilForm(forms.ModelForm):
     """Formulario para editar perfil de usuario"""
     
+    def __init__(self, *args, **kwargs):
+        es_admin = kwargs.pop('es_admin', False)
+        super().__init__(*args, **kwargs)
+        
+        # Si es admin, incluir todos los campos editables
+        if es_admin:
+            # Agregar campos adicionales si no están ya incluidos
+            admin_fields = ['tipo_perfil', 'departamento', 'puesto', 'supervisor', 'numero_empleado', 'fecha_contratacion', 'activo']
+            for field_name in admin_fields:
+                if field_name not in self.fields:
+                    # Agregar el campo del modelo
+                    self.fields[field_name] = self._meta.model._meta.get_field(field_name).formfield()
+                    # Inicializar el valor del campo con el valor de la instancia si existe
+                    if self.instance and self.instance.pk:
+                        try:
+                            field_value = getattr(self.instance, field_name)
+                            if field_value is not None:
+                                self.initial[field_name] = field_value
+                        except AttributeError:
+                            pass
+        
+        # Configurar widgets y estilos para todos los campos
+        if 'telefono' in self.fields:
+            self.fields['telefono'].widget.attrs.update({
+                'class': 'form-control editar-perfil-input',
+                'placeholder': 'Ingrese el teléfono'
+            })
+        
+        if 'fecha_nacimiento' in self.fields:
+            self.fields['fecha_nacimiento'].widget.attrs.update({
+                'class': 'form-control editar-perfil-input datepicker-fecha-nacimiento',
+                'placeholder': 'DD/MM/YYYY',
+                'type': 'text'
+            })
+        
+        # Si es admin, configurar campos adicionales
+        if es_admin:
+            if 'tipo_perfil' in self.fields:
+                self.fields['tipo_perfil'].widget.attrs.update({
+                    'class': 'form-select editar-perfil-select'
+                })
+            
+            if 'departamento' in self.fields:
+                self.fields['departamento'].widget.attrs.update({
+                    'class': 'form-select editar-perfil-select'
+                })
+                self.fields['departamento'].queryset = Departamento.objects.filter(activo=True).order_by('nombre')
+            
+            if 'puesto' in self.fields:
+                self.fields['puesto'].widget.attrs.update({
+                    'class': 'form-control editar-perfil-input',
+                    'placeholder': 'Ingrese el puesto'
+                })
+            
+            if 'supervisor' in self.fields:
+                self.fields['supervisor'].widget.attrs.update({
+                    'class': 'form-select editar-perfil-select'
+                })
+                # Filtrar solo usuarios activos que pueden ser supervisores (excluyendo empleados normales)
+                # Solo: JEFE_AREA, RH, SISTEMAS, ADMIN
+                from .models import Perfil
+                queryset = Perfil.objects.filter(
+                    activo=True
+                ).exclude(
+                    tipo_perfil='EMPLEADO'  # Excluir empleados normales
+                )
+                if self.instance and self.instance.pk:
+                    queryset = queryset.exclude(id=self.instance.id)
+                # Ordenar por nombre completo del usuario
+                self.fields['supervisor'].queryset = queryset.select_related('usuario').order_by('usuario__last_name', 'usuario__first_name')
+                self.fields['supervisor'].required = False
+                self.fields['supervisor'].empty_label = "Sin supervisor"
+            
+            if 'numero_empleado' in self.fields:
+                self.fields['numero_empleado'].widget.attrs.update({
+                    'class': 'form-control editar-perfil-input',
+                    'placeholder': 'Ingrese el número de empleado'
+                })
+            
+            if 'fecha_contratacion' in self.fields:
+                self.fields['fecha_contratacion'].widget.attrs.update({
+                    'class': 'form-control editar-perfil-input datepicker-fecha-contratacion',
+                    'placeholder': 'DD/MM/YYYY',
+                    'type': 'text'
+                })
+            
+            if 'activo' in self.fields:
+                self.fields['activo'].widget.attrs.update({
+                    'class': 'form-check-input editar-perfil-checkbox'
+                })
+    
     class Meta:
         model = Perfil
         fields = ['telefono', 'fecha_nacimiento']
         widgets = {
-            'fecha_nacimiento': forms.DateInput(attrs={'type': 'date'}),
+            'fecha_nacimiento': forms.DateInput(attrs={'type': 'text'}),
         }
         labels = {
             'telefono': 'Teléfono',
             'fecha_nacimiento': 'Fecha de Nacimiento',
         }
+    
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if commit:
+            instance.save()
+        return instance
 
 
 class ConfigurarDepartamentoForm(forms.ModelForm):
@@ -355,6 +480,29 @@ class TicketResolucionForm(forms.ModelForm):
 class EquipoForm(forms.ModelForm):
     """Formulario para agregar/editar equipos en inventario"""
     
+    # Campo opcional para asignar el equipo al crearlo
+    asignar_a_empleado = forms.ModelChoiceField(
+        queryset=Perfil.objects.filter(activo=True),
+        required=False,
+        label='Asignar a Empleado (Opcional)',
+        help_text='Si selecciona un empleado, el equipo se asignará automáticamente',
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'style': 'background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;'
+        })
+    )
+    condicion_entrega = forms.CharField(
+        required=False,
+        max_length=200,
+        label='Condición al Entregar',
+        help_text='Ej: Nuevo, Usado - Buen estado, etc.',
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ej: Nuevo, Usado - Buen estado, etc.',
+            'style': 'background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;'
+        })
+    )
+    
     class Meta:
         model = Equipo
         fields = [
@@ -362,14 +510,44 @@ class EquipoForm(forms.ModelForm):
             'codigo_inventario', 'estado', 'fecha_adquisicion', 'observaciones'
         ]
         widgets = {
-            'categoria': forms.Select(attrs={'class': 'form-control'}),
-            'marca': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: HP, Apple, Dell'}),
-            'modelo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: EliteBook 840'}),
-            'numero_serie': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Número de serie único'}),
-            'codigo_inventario': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Código interno de inventario'}),
-            'estado': forms.Select(attrs={'class': 'form-control'}),
-            'fecha_adquisicion': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'observaciones': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'categoria': forms.Select(attrs={
+                'class': 'form-control',
+                'style': 'background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;'
+            }),
+            'marca': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Ej: HP, Apple, Dell',
+                'style': 'background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;'
+            }),
+            'modelo': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Ej: EliteBook 840',
+                'style': 'background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;'
+            }),
+            'numero_serie': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Número de serie único',
+                'style': 'background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;'
+            }),
+            'codigo_inventario': forms.TextInput(attrs={
+                'class': 'form-control', 
+                'placeholder': 'Código interno de inventario',
+                'style': 'background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;'
+            }),
+            'estado': forms.Select(attrs={
+                'class': 'form-control',
+                'style': 'background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;'
+            }),
+            'fecha_adquisicion': forms.DateInput(attrs={
+                'class': 'form-control', 
+                'type': 'date',
+                'style': 'background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;'
+            }),
+            'observaciones': forms.Textarea(attrs={
+                'class': 'form-control', 
+                'rows': 3,
+                'style': 'background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;'
+            }),
         }
         labels = {
             'categoria': 'Categoría',
@@ -381,22 +559,50 @@ class EquipoForm(forms.ModelForm):
             'fecha_adquisicion': 'Fecha de Adquisición',
             'observaciones': 'Observaciones',
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Ordenar empleados por nombre
+        self.fields['asignar_a_empleado'].queryset = Perfil.objects.filter(activo=True).order_by('usuario__first_name', 'usuario__last_name')
 
 
 class AsignacionEquipoForm(forms.ModelForm):
     """Formulario para asignar equipos a empleados"""
     
+    # Campo adicional para cambiar el estado del equipo (solo cuando está en reparación)
+    nuevo_estado = forms.ChoiceField(
+        choices=Equipo.ESTADOS_EQUIPO,
+        required=False,
+        label='Cambiar Estado del Equipo',
+        help_text='Seleccione el nuevo estado del equipo después de la asignación',
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+            'style': 'background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;'
+        })
+    )
+    
     class Meta:
         model = AsignacionEquipo
         fields = ['equipo', 'empleado', 'condicion_entrega', 'observaciones']
         widgets = {
-            'equipo': forms.Select(attrs={'class': 'form-control'}),
-            'empleado': forms.Select(attrs={'class': 'form-control'}),
+            'equipo': forms.Select(attrs={
+                'class': 'form-control',
+                'style': 'background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;'
+            }),
+            'empleado': forms.Select(attrs={
+                'class': 'form-control',
+                'style': 'background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;'
+            }),
             'condicion_entrega': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Ej: Nuevo, Usado - Buen estado, etc.'
+                'placeholder': 'Ej: Nuevo, Usado - Buen estado, etc.',
+                'style': 'background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;'
             }),
-            'observaciones': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'observaciones': forms.Textarea(attrs={
+                'class': 'form-control', 
+                'rows': 3,
+                'style': 'background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px;'
+            }),
         }
         labels = {
             'equipo': 'Equipo',
@@ -406,13 +612,59 @@ class AsignacionEquipoForm(forms.ModelForm):
         }
     
     def __init__(self, *args, **kwargs):
+        equipo_en_reparacion = kwargs.pop('equipo_en_reparacion', False)
+        estado_actual = kwargs.pop('estado_actual', None)
+        es_edicion = kwargs.pop('es_edicion', False)
         super().__init__(*args, **kwargs)
-        # Solo mostrar equipos disponibles
-        self.fields['equipo'].queryset = Equipo.objects.filter(estado='DISPONIBLE')
+        instance = kwargs.get('instance')
+        
+        # Si es una edición, permitir cualquier equipo (ya está asignado)
+        if instance:
+            self.fields['equipo'].queryset = Equipo.objects.all()
+        else:
+            # Solo mostrar equipos disponibles o en reparación para nuevas asignaciones
+            self.fields['equipo'].queryset = Equipo.objects.filter(estado__in=['DISPONIBLE', 'EN_REPARACION'])
+        
         # Solo mostrar empleados activos
-        self.fields['empleado'].queryset = Perfil.objects.filter(activo=True)
-        # Hacer opcional observaciones
+        self.fields['empleado'].queryset = Perfil.objects.filter(activo=True).order_by('usuario__first_name', 'usuario__last_name')
+        # Hacer opcional observaciones y condición
         self.fields['observaciones'].required = False
+        self.fields['condicion_entrega'].required = False
+        
+        # Mostrar campo de estado si el equipo está en reparación, es una edición, o es una nueva asignación
+        mostrar_campo_estado = equipo_en_reparacion or es_edicion
+        
+        # Si es una nueva asignación (no edición), siempre mostrar el campo de estado
+        if not instance and not es_edicion:
+            mostrar_campo_estado = True
+        
+        if mostrar_campo_estado:
+            self.fields['nuevo_estado'].required = False  # Opcional
+            self.fields['nuevo_estado'].initial = estado_actual
+            
+            # En edición, permitir todos los estados incluyendo mantener el actual
+            if es_edicion:
+                choices = [('', 'Mantener estado actual')]
+                choices.extend(Equipo.ESTADOS_EQUIPO)
+                self.fields['nuevo_estado'].choices = choices
+                self.fields['nuevo_estado'].help_text = 'Opcional: Cambie el estado si el equipo se descompuso, se dio de baja, o necesita mantenimiento'
+            elif equipo_en_reparacion:
+                # Si está en reparación y es nueva asignación, no permitir mantener "En Reparación"
+                choices = [('', 'Seleccione el nuevo estado...')]
+                choices.extend([(estado[0], estado[1]) for estado in Equipo.ESTADOS_EQUIPO if estado[0] != 'EN_REPARACION'])
+                self.fields['nuevo_estado'].choices = choices
+                self.fields['nuevo_estado'].required = True
+                self.fields['nuevo_estado'].help_text = 'Seleccione el nuevo estado del equipo después de la asignación'
+            else:
+                # Nueva asignación de equipo disponible - permitir todos los estados excepto mantener el actual
+                choices = [('', 'Mantener estado actual (se cambiará a Asignado automáticamente)')]
+                choices.extend(Equipo.ESTADOS_EQUIPO)
+                self.fields['nuevo_estado'].choices = choices
+                self.fields['nuevo_estado'].help_text = 'Opcional: Seleccione un estado específico, o deje en blanco para cambiar automáticamente a "Asignado"'
+        else:
+            # Ocultar el campo si no se debe mostrar
+            self.fields['nuevo_estado'].widget = forms.HiddenInput()
+            self.fields['nuevo_estado'].required = False
 
 
 class DevolucionEquipoForm(forms.ModelForm):

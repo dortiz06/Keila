@@ -1,15 +1,440 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Resolver Ticket{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>Resolver Ticket: {{ ticket.codigo }}</h2>
+<style>
+/* Cambiar fondo solo en la vista de resolver ticket */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/dash/KC07.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+</style>
+<div class="container-fluid dashboard">
+    <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="dashboard-title" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important;">
+            <i class="fas fa-check-circle me-2"></i>Resolver Ticket: {{ ticket.codigo }}
+        </h1>
+        <a href="{% url 'empleados:gestionar_tickets' %}" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left me-1"></i>Volver a Tickets
+        </a>
+    </div>
+
+    <!-- Mensajes de Django -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="background: rgba(34, 197, 94, 0.2) !important; border: 1px solid rgba(34, 197, 94, 0.5) !important; color: #22c55e !important; border-radius: 12px !important; padding: 1rem 1.5rem !important; margin-bottom: 1.5rem !important; font-family: 'Montserrat', sans-serif !important;">
+                <i class="fas fa-check-circle me-2"></i>{{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="filter: brightness(0) invert(1);"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Información del Ticket -->
+    <div class="card mb-4">
+        <div class="card-body" style="background: transparent !important; padding: 1.5rem !important;">
+            <h5 class="gestion-section-title mb-3" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
+                <i class="fas fa-info-circle me-2"></i>Información del Ticket
+            </h5>
+            <div class="row">
+                <div class="col-md-6 mb-2">
+                    <p style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important; margin-bottom: 0.5rem !important;">
+                        <strong style="color: #ffffff !important;">Solicitante:</strong> {{ ticket.empleado.nombre_completo }}
+                    </p>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <p style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important; margin-bottom: 0.5rem !important;">
+                        <strong style="color: #ffffff !important;">Tipo:</strong> {{ ticket.get_tipo_display }}
+                    </p>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <p style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important; margin-bottom: 0.5rem !important;">
+                        <strong style="color: #ffffff !important;">Prioridad:</strong> 
+                        {% if ticket.prioridad == 'URGENTE' %}
+                            <span class="badge badge-prioridad-urgente">{{ ticket.get_prioridad_display }}</span>
+                        {% elif ticket.prioridad == 'ALTA' %}
+                            <span class="badge badge-prioridad-alta">{{ ticket.get_prioridad_display }}</span>
+                        {% elif ticket.prioridad == 'MEDIA' %}
+                            <span class="badge badge-prioridad-media">{{ ticket.get_prioridad_display }}</span>
+                        {% else %}
+                            <span class="badge badge-prioridad-baja">{{ ticket.get_prioridad_display }}</span>
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <p style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important; margin-bottom: 0.5rem !important;">
+                        <strong style="color: #ffffff !important;">Estado Actual:</strong> 
+                        {% if ticket.estado == 'PENDIENTE' %}
+                            <span class="badge badge-estado-pendiente">Pendiente</span>
+                        {% elif ticket.estado == 'EN_PROCESO' %}
+                            <span class="badge badge-estado-proceso">En Proceso</span>
+                        {% elif ticket.estado == 'RESUELTO' %}
+                            <span class="badge badge-estado-resuelto">Resuelto</span>
+                        {% elif ticket.estado == 'CANCELADO' %}
+                            <span class="badge badge-estado-cancelado">Cancelado</span>
+                        {% endif %}
+                    </p>
+                </div>
+                {% if ticket.descripcion %}
+                <div class="col-12 mb-2">
+                    <p style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important; margin-bottom: 0.5rem !important;">
+                        <strong style="color: #ffffff !important;">Descripción:</strong> {{ ticket.descripcion }}
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario de Resolución -->
+    <div class="card">
+        <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
+            <h5 class="gestion-section-title mb-4" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
+                <i class="fas fa-edit me-2"></i>Actualizar Estado y Solución
+            </h5>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Guardar</button>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label for="{{ form.estado.id_for_label }}" class="form-label" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 500 !important;">
+                            <i class="fas fa-tasks me-2"></i>{{ form.estado.label }} <span class="text-danger">*</span>
+                        </label>
+                        <select name="{{ form.estado.name }}" 
+                                id="{{ form.estado.id_for_label }}" 
+                                class="form-select gestion-input">
+                            {% for choice in form.estado.field.choices %}
+                                <option value="{{ choice.0 }}" {% if form.estado.value == choice.0 %}selected{% endif %} style="background: #0038A8 !important; color: #ffffff !important;">
+                                    {{ choice.1 }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        {% if form.estado.errors %}
+                            <div style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif !important; margin-top: 0.5rem !important;">
+                                {{ form.estado.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <label for="{{ form.solucion.id_for_label }}" class="form-label" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 500 !important;">
+                            <i class="fas fa-comment-alt me-2"></i>{{ form.solucion.label }} <span class="text-danger">*</span>
+                        </label>
+                        <textarea name="{{ form.solucion.name }}" 
+                                  id="{{ form.solucion.id_for_label }}" 
+                                  class="form-control gestion-textarea" 
+                                  rows="5"
+                                  placeholder="Describe la solución aplicada...">{{ form.solucion.value|default:'' }}</textarea>
+                        {% if form.solucion.errors %}
+                            <div style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif !important; margin-top: 0.5rem !important;">
+                                {{ form.solucion.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3 mt-4">
+                    <button type="submit" class="btn btn-outline-success">
+                        <i class="fas fa-save me-1"></i>Guardar Cambios
+                    </button>
+                    <a href="{% url 'empleados:gestionar_tickets' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </a>
+                </div>
     </form>
+        </div>
+    </div>
+        </div>
 </div>
+</div>
+
+<style>
+/* ===== ESTILOS GLOBALES DEL DASHBOARD ===== */
+.dashboard .card {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .card-body {
+    background: transparent !important;
+}
+
+.dashboard-title {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    margin-bottom: 0 !important;
+}
+
+.gestion-section-title {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 1.25rem !important;
+}
+
+.gestion-input {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    padding: 12px 16px !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.gestion-input:focus {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+    outline: none !important;
+}
+
+.gestion-input option {
+    background: #0038A8 !important;
+    color: #ffffff !important;
+}
+
+.gestion-textarea {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    padding: 12px 16px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    resize: vertical !important;
+}
+
+.gestion-textarea:focus {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+    outline: none !important;
+}
+
+.gestion-textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Badges de Prioridad */
+.badge-prioridad-urgente {
+    background: linear-gradient(135deg, 
+        rgba(239, 68, 68, 0.3) 0%, 
+        rgba(220, 38, 38, 0.25) 100%) !important;
+    color: #ef4444 !important;
+    border: 1px solid rgba(239, 68, 68, 0.5) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    padding: 0.5rem 0.75rem !important;
+    border-radius: 12px !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+}
+
+.badge-prioridad-alta {
+    background: linear-gradient(135deg, 
+        rgba(245, 158, 11, 0.3) 0%, 
+        rgba(217, 119, 6, 0.25) 100%) !important;
+    color: #f59e0b !important;
+    border: 1px solid rgba(245, 158, 11, 0.5) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    padding: 0.5rem 0.75rem !important;
+    border-radius: 12px !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+}
+
+.badge-prioridad-media {
+    background: linear-gradient(135deg, 
+        rgba(59, 130, 246, 0.3) 0%, 
+        rgba(37, 99, 235, 0.25) 100%) !important;
+    color: #3b82f6 !important;
+    border: 1px solid rgba(59, 130, 246, 0.5) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    padding: 0.5rem 0.75rem !important;
+    border-radius: 12px !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+}
+
+.badge-prioridad-baja {
+    background: linear-gradient(135deg, 
+        rgba(107, 114, 128, 0.3) 0%, 
+        rgba(75, 85, 99, 0.25) 100%) !important;
+    color: #9ca3af !important;
+    border: 1px solid rgba(107, 114, 128, 0.5) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    padding: 0.5rem 0.75rem !important;
+    border-radius: 12px !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+}
+
+/* Badges de Estado */
+.badge-estado-pendiente {
+    background: linear-gradient(135deg, 
+        rgba(245, 158, 11, 0.3) 0%, 
+        rgba(217, 119, 6, 0.25) 100%) !important;
+    color: #f59e0b !important;
+    border: 1px solid rgba(245, 158, 11, 0.5) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    padding: 0.5rem 0.75rem !important;
+    border-radius: 12px !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+}
+
+.badge-estado-proceso {
+    background: linear-gradient(135deg, 
+        rgba(59, 130, 246, 0.3) 0%, 
+        rgba(37, 99, 235, 0.25) 100%) !important;
+    color: #3b82f6 !important;
+    border: 1px solid rgba(59, 130, 246, 0.5) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    padding: 0.5rem 0.75rem !important;
+    border-radius: 12px !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+}
+
+.badge-estado-resuelto {
+    background: linear-gradient(135deg, 
+        rgba(34, 197, 94, 0.3) 0%, 
+        rgba(22, 163, 74, 0.25) 100%) !important;
+    color: #22c55e !important;
+    border: 1px solid rgba(34, 197, 94, 0.5) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    padding: 0.5rem 0.75rem !important;
+    border-radius: 12px !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+}
+
+.badge-estado-cancelado {
+    background: linear-gradient(135deg, 
+        rgba(239, 68, 68, 0.3) 0%, 
+        rgba(220, 38, 38, 0.25) 100%) !important;
+    color: #ef4444 !important;
+    border: 1px solid rgba(239, 68, 68, 0.5) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    padding: 0.5rem 0.75rem !important;
+    border-radius: 12px !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+}
+
+/* ===== DISEÑO MODERNO DE BOTONES ===== */
+.dashboard .btn-outline-primary {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .btn-outline-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-success {
+    background: linear-gradient(180deg, 
+        rgba(34, 197, 94, 0.95) 0%, 
+        rgba(22, 163, 74, 0.95) 50%,
+        rgba(20, 83, 45, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .btn-outline-success:hover {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-secondary {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .btn-outline-secondary:hover {
+    background: linear-gradient(180deg, 
+        rgba(209, 213, 219, 0.95) 0%, 
+        rgba(156, 163, 175, 0.95) 50%,
+        rgba(107, 114, 128, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Asegurar que los iconos de Font Awesome mantengan su fuente */
+.dashboard .fas,
+.dashboard .fa,
+.dashboard i[class*="fa-"] {
+    font-family: "Font Awesome 6 Free" !important;
+    font-weight: 900 !important;
+}
+</style>
 {% endblock %}
 

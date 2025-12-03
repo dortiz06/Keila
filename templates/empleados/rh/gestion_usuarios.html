@@ -4,165 +4,559 @@
 {% block title %}Gestión de Usuarios{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2><i class="fas fa-users me-2"></i>Gestión de Usuarios</h2>
-                <div>
-                    <a href="{% url 'empleados:crear_usuario' %}" class="btn btn-outline-primary">
-                        <i class="fas fa-plus me-1"></i>Crear Usuario
-                    </a>
-                    <a href="{% url 'empleados:rh_dashboard' %}" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left me-1"></i>Volver al Panel
-                    </a>
-                </div>
-            </div>
+<style>
+/* Cambiar fondo solo en la vista de gestión de usuarios */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/dash/KC07.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+</style>
+<div class="container-fluid dashboard">
+    <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="dashboard-title">
+            <i class="fas fa-users me-2"></i>Gestión de Usuarios
+        </h1>
+        <div>
+            <a href="{% url 'empleados:crear_usuario' %}" class="btn btn-outline-success">
+                <i class="fas fa-plus me-1"></i>Crear Usuario
+            </a>
+            <a href="{% url url_dashboard %}" class="btn btn-outline-primary">
+                <i class="fas fa-arrow-left me-1"></i>{{ texto_dashboard }}
+            </a>
+        </div>
+    </div>
 
+    <!-- Contenedor único con glassmorphism -->
+    <div class="card gestion-usuarios-card">
+        <div class="card-body">
+            <!-- Título de Filtros -->
+            <h5 class="gestion-section-title mb-3">
+                <i class="fas fa-filter me-2"></i>Filtros y Búsqueda
+            </h5>
+            
             <!-- Filtros -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Filtros de Búsqueda</h5>
+            <form method="get" class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <label for="busqueda" class="form-label gestion-label">Buscar</label>
+                    <input type="text" class="form-control gestion-input" id="busqueda" name="busqueda" 
+                           value="{{ busqueda_actual }}" placeholder="Nombre, usuario, número...">
                 </div>
-                <div class="card-body">
-                    <form method="get" class="row g-3">
-                        <div class="col-md-3">
-                            <label for="busqueda" class="form-label">Buscar</label>
-                            <input type="text" class="form-control" id="busqueda" name="busqueda" 
-                                   value="{{ busqueda_actual }}" placeholder="Nombre, usuario, número...">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="tipo_perfil" class="form-label">Tipo de Perfil</label>
-                            <select class="form-select" id="tipo_perfil" name="tipo_perfil">
-                                <option value="">Todos</option>
-                                <option value="EMPLEADO" {% if tipo_actual == 'EMPLEADO' %}selected{% endif %}>Empleado</option>
-                                <option value="JEFE_AREA" {% if tipo_actual == 'JEFE_AREA' %}selected{% endif %}>Jefe de Área</option>
-                                <option value="RH" {% if tipo_actual == 'RH' %}selected{% endif %}>Recursos Humanos</option>
-                                <option value="ADMIN" {% if tipo_actual == 'ADMIN' %}selected{% endif %}>Administrador</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="departamento" class="form-label">Departamento</label>
-                            <select class="form-select" id="departamento" name="departamento">
-                                <option value="">Todos</option>
-                                {% for dept in departamentos %}
-                                    <option value="{{ dept.id }}" {% if departamento_actual == dept.id|stringformat:"s" %}selected{% endif %}>
-                                        {{ dept.nombre }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">&nbsp;</label>
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-outline-primary">
-                                    <i class="fas fa-search me-1"></i>Filtrar
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                <div class="col-md-3">
+                    <label for="tipo_perfil" class="form-label gestion-label">Tipo de Perfil</label>
+                    <select class="form-select gestion-input" id="tipo_perfil" name="tipo_perfil">
+                        <option value="">Todos</option>
+                        <option value="EMPLEADO" {% if tipo_actual == 'EMPLEADO' %}selected{% endif %}>Empleado</option>
+                        <option value="JEFE_AREA" {% if tipo_actual == 'JEFE_AREA' %}selected{% endif %}>Jefe de Área</option>
+                        <option value="RH" {% if tipo_actual == 'RH' %}selected{% endif %}>Recursos Humanos</option>
+                        <option value="ADMIN" {% if tipo_actual == 'ADMIN' %}selected{% endif %}>Administrador</option>
+                    </select>
                 </div>
-            </div>
+                <div class="col-md-3">
+                    <label for="departamento" class="form-label gestion-label">Departamento</label>
+                    <select class="form-select gestion-input" id="departamento" name="departamento">
+                        <option value="">Todos</option>
+                        {% for dept in departamentos %}
+                            <option value="{{ dept.id }}" {% if departamento_actual == dept.id|stringformat:"s" %}selected{% endif %}>
+                                {{ dept.nombre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label gestion-label">&nbsp;</label>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="fas fa-search me-1"></i>Filtrar
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <hr style="border-color: rgba(255, 255, 255, 0.15) !important; margin: 1.5rem 0 !important;">
 
             <!-- Lista de usuarios -->
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">
-                        <i class="fas fa-list me-2"></i>Usuarios 
-                        <span class="badge bg-secondary">{{ usuarios.count }}</span>
-                    </h5>
-                </div>
-                <div class="card-body">
-                    {% if usuarios %}
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Usuario</th>
-                                        <th>Número</th>
-                                        <th>Perfil</th>
-                                        <th>Departamento</th>
-                                        <th>Puesto</th>
-                                        <th>Antigüedad</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for usuario in usuarios %}
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2">
-                                                        {{ usuario.usuario.first_name|first|default:usuario.usuario.username|first|upper }}
-                                                    </div>
-                                                    <div>
-                                                        <strong>{{ usuario.nombre_completo }}</strong>
-                                                        <br>
-                                                        <small class="text-muted">{{ usuario.usuario.username }}</small>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-light text-dark">{{ usuario.numero_empleado }}</span>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-{% if usuario.tipo_perfil == 'ADMIN' %}danger{% elif usuario.tipo_perfil == 'RH' %}info{% elif usuario.tipo_perfil == 'JEFE_AREA' %}warning{% else %}secondary{% endif %}">
-                                                    {{ usuario.get_tipo_perfil_display }}
-                                                </span>
-                                            </td>
-                                            <td>{{ usuario.departamento.nombre|default:"Sin asignar" }}</td>
-                                            <td>{{ usuario.puesto }}</td>
-                                            <td>
-                                                {% if usuario.antiguedad_anos >= 1 %}
-                                                    <span class="text-success">{{ usuario.antiguedad_anos }} año{{ usuario.antiguedad_anos|pluralize }}</span>
-                                                {% else %}
-                                                    <span class="text-warning">{{ usuario.antiguedad_anos }} año{{ usuario.antiguedad_anos|pluralize }}</span>
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                {% if usuario.activo %}
-                                                    <span class="badge bg-success">Activo</span>
-                                                {% else %}
-                                                    <span class="badge bg-danger">Inactivo</span>
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                <div class="btn-group" role="group">
-                                                    <a href="{% url 'empleados:editar_perfil' usuario.id %}" 
-                                                       class="btn btn-sm btn-outline-primary" title="Editar">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    <a href="{% url 'admin:empleados_perfil_change' usuario.id %}" 
-                                                       class="btn btn-sm btn-outline-info" title="Admin" target="_blank">
-                                                        <i class="fas fa-cog"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% else %}
-                        <div class="text-center py-5">
-                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                            <h5 class="text-muted">No se encontraron usuarios</h5>
-                            <p class="text-muted">Intenta ajustar los filtros de búsqueda</p>
-                        </div>
-                    {% endif %}
-                </div>
+            <div class="mb-3">
+                <h5 class="gestion-section-title">
+                    <i class="fas fa-list me-2"></i>Usuarios del Sistema
+                    <span class="badge gestion-badge-count">{{ usuarios.count }}</span>
+                </h5>
             </div>
+
+            {% if usuarios %}
+                <div class="table-responsive gestion-table-wrapper">
+                    <table class="table table-hover gestion-table">
+                        <thead>
+                            <tr>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important;">Usuario</th>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important;">Número</th>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important;">Perfil</th>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important;">Departamento</th>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important;">Puesto</th>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important;">Antigüedad</th>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important;">Estado</th>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for usuario in usuarios %}
+                                <tr class="gestion-table-row">
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="gestion-avatar">
+                                                {{ usuario.usuario.first_name|first|default:usuario.usuario.username|first|upper }}
+                                            </div>
+                                            <div class="ms-2">
+                                                <strong style="color: #ffffff !important; font-weight: 500 !important;">{{ usuario.nombre_completo }}</strong>
+                                                <br>
+                                                <small style="color: rgba(255, 255, 255, 0.7) !important;">{{ usuario.usuario.username }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge gestion-badge">{{ usuario.numero_empleado }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge gestion-badge-{% if usuario.tipo_perfil == 'ADMIN' %}danger{% elif usuario.tipo_perfil == 'RH' %}info{% elif usuario.tipo_perfil == 'JEFE_AREA' %}warning{% elif usuario.tipo_perfil == 'SISTEMAS' %}purple{% else %}secondary{% endif %}">
+                                            {{ usuario.get_tipo_perfil_display }}
+                                        </span>
+                                    </td>
+                                    <td style="color: rgba(255, 255, 255, 0.9) !important;">{{ usuario.departamento.nombre|default:"Sin asignar" }}</td>
+                                    <td style="color: rgba(255, 255, 255, 0.9) !important;">{{ usuario.puesto|default:"-" }}</td>
+                                    <td>
+                                        {% if usuario.antiguedad_anos >= 1 %}
+                                            <span style="color: #22C55E !important; font-weight: 500 !important;">{{ usuario.antiguedad_anos }} año{{ usuario.antiguedad_anos|pluralize }}</span>
+                                        {% else %}
+                                            <span style="color: #FBBF24 !important; font-weight: 500 !important;">{{ usuario.antiguedad_anos }} año{{ usuario.antiguedad_anos|pluralize }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if usuario.activo %}
+                                            <span class="badge gestion-badge-success">Activo</span>
+                                        {% else %}
+                                            <span class="badge gestion-badge-danger">Inactivo</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'empleados:editar_perfil' usuario.id %}" 
+                                               class="btn btn-sm btn-outline-warning" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'admin:empleados_perfil_change' usuario.id %}" 
+                                               class="btn btn-sm btn-outline-info" title="Admin" target="_blank">
+                                                <i class="fas fa-cog"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-users fa-3x mb-3" style="color: rgba(255, 255, 255, 0.4) !important;"></i>
+                    <h5 style="color: #ffffff !important; font-weight: 500 !important;">No se encontraron usuarios</h5>
+                    <p style="color: rgba(255, 255, 255, 0.7) !important;">Intenta ajustar los filtros de búsqueda</p>
+                </div>
+            {% endif %}
         </div>
+    </div>
     </div>
 </div>
 
 <style>
-.avatar-sm {
-    width: 32px;
-    height: 32px;
-    font-size: 14px;
-    font-weight: bold;
+/* ===== GLASSMORPHISM PARA GESTIÓN DE USUARIOS ===== */
+.gestion-usuarios-card {
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(25px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(200%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 24px !important;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.12), 
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.1) !important;
+    overflow: hidden !important;
+}
+
+.gestion-usuarios-card .card-body {
+    background: transparent !important;
+    padding: 1.5rem !important;
+}
+
+/* Labels con Montserrat */
+.gestion-label {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 0.9rem !important;
+    margin-bottom: 0.5rem !important;
+    letter-spacing: 0.2px !important;
+}
+
+/* Inputs y selects transparentes */
+.gestion-input {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 12px !important;
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    padding: 0.75rem 1rem !important;
+    transition: all 0.2s ease !important;
+}
+
+.gestion-input:focus {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.15) !important;
+    outline: none !important;
+}
+
+.gestion-input::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.gestion-input option {
+    background: #0038A8 !important;
+    color: #ffffff !important;
+}
+
+/* Título de sección */
+.gestion-section-title {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 1.1rem !important;
+    margin-bottom: 1rem !important;
+    letter-spacing: 0.3px !important;
+}
+
+/* Avatar */
+.gestion-avatar {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.8), rgba(37, 99, 235, 0.8)) !important;
+    color: #ffffff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    border: 2px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Tabla */
+.gestion-table-wrapper {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+}
+
+.gestion-table {
+    background: transparent !important;
+    border-collapse: collapse !important;
+    width: 100% !important;
+}
+
+.gestion-table thead {
+    background: transparent !important;
+}
+
+.gestion-table thead th {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+    padding: 1rem 0.75rem !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.gestion-table tbody {
+    background: transparent !important;
+}
+
+.gestion-table-row {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+    transition: all 0.2s ease !important;
+}
+
+.gestion-table-row:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+
+.gestion-table tbody td {
+    background: transparent !important;
+    border: none !important;
+    padding: 1rem 0.75rem !important;
+    vertical-align: middle !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.gestion-table tbody td strong {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.gestion-table tbody td small {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Badges */
+.gestion-badge {
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 0.8rem !important;
+}
+
+.gestion-badge-count {
+    background: rgba(59, 130, 246, 0.3) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(59, 130, 246, 0.4) !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 0.85rem !important;
+    margin-left: 0.5rem !important;
+}
+
+.gestion-badge-success {
+    background: rgba(34, 197, 94, 0.25) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(34, 197, 94, 0.4) !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 0.8rem !important;
+}
+
+.gestion-badge-danger {
+    background: rgba(239, 68, 68, 0.25) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(239, 68, 68, 0.4) !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 0.8rem !important;
+}
+
+.gestion-badge-info {
+    background: rgba(59, 130, 246, 0.25) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(59, 130, 246, 0.4) !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 0.8rem !important;
+}
+
+.gestion-badge-warning {
+    background: rgba(245, 158, 11, 0.25) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(245, 158, 11, 0.4) !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 0.8rem !important;
+}
+
+.gestion-badge-secondary {
+    background: rgba(156, 163, 175, 0.25) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(156, 163, 175, 0.4) !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 0.8rem !important;
+}
+
+.gestion-badge-purple {
+    background: rgba(147, 51, 234, 0.25) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(147, 51, 234, 0.4) !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 0.8rem !important;
+}
+
+/* Título del dashboard */
+.dashboard-title {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    margin-bottom: 0 !important;
+    letter-spacing: -0.5px !important;
+}
+
+/* Asegurar que los iconos Font Awesome usen su fuente correcta */
+.gestion-usuarios-card i,
+.gestion-usuarios-card .fa,
+.gestion-usuarios-card [class*="fa-"],
+.dashboard i,
+.dashboard .fa,
+.dashboard [class*="fa-"] {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* ===== ESTILOS DE BOTONES DEL DASHBOARD ===== */
+.dashboard .btn-outline-primary {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .btn-outline-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-success {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .btn-outline-success:hover {
+    background: linear-gradient(180deg, 
+        rgba(134, 239, 172, 0.95) 0%, 
+        rgba(74, 222, 128, 0.95) 50%,
+        rgba(34, 197, 94, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-warning {
+    background: linear-gradient(180deg, 
+        rgba(251, 191, 36, 0.95) 0%, 
+        rgba(245, 158, 11, 0.95) 50%,
+        rgba(217, 119, 6, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 8px 12px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .btn-outline-warning:hover {
+    background: linear-gradient(180deg, 
+        rgba(253, 224, 71, 0.95) 0%, 
+        rgba(251, 191, 36, 0.95) 50%,
+        rgba(245, 158, 11, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-info {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 8px 12px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .btn-outline-info:hover {
+    background: linear-gradient(180deg, 
+        rgba(147, 197, 253, 0.95) 0%, 
+        rgba(96, 165, 250, 0.95) 50%,
+        rgba(59, 130, 246, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-sm {
+    padding: 8px 12px !important;
+    font-size: 0.875rem !important;
+    border-radius: 10px !important;
+}
+
+.dashboard .btn-group .btn {
+    margin-right: 4px;
 }
 </style>
 {% endblock %}
