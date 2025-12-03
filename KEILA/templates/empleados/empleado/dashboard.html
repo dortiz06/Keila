@@ -1,0 +1,788 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load perfil_tags %}
+
+{% block title %}Panel Empleado{% endblock %}
+
+{% block content %}
+<div class="container-fluid dashboard">
+    <div class="container">
+        <!-- Header alineado con los cuadros -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                    <div class="mb-3 mb-md-0">
+                        <h1 class="dashboard-title">Mi Panel</h1>
+                        <p class="dashboard-subtitle mb-0">Bienvenido, {{ perfil.nombre_completo }}</p>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 ms-md-auto">
+                        <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-outline-primary" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">
+                            <i class="fas fa-calendar-plus me-1"></i><span class="d-none d-sm-inline">Solicitar Vacaciones</span><span class="d-inline d-sm-none">Vacaciones</span>
+                        </a>
+                        <a href="{% url 'empleados:crear_ticket' %}" class="btn btn-success btn-generar-ticket">
+                            <i class="fas fa-headset me-1"></i><span class="d-none d-sm-inline">Generar Ticket</span><span class="d-inline d-sm-none">Ticket</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    <!-- Mostrar días acumulados hasta hoy -->
+    <div class="container">
+        <div class="alert alert-info">
+            <h6 class="mb-3">
+                <i class="fas fa-user-clock me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>
+                <strong>Tu Antigüedad:</strong> {{ perfil.antiguedad_detallada }} (desde {{ perfil.fecha_contratacion|date:"d/m/Y" }})
+            </h6>
+        
+        {% if perfil.antiguedad_anos >= 1 %}
+    <div class="row">
+            {% if perfil.mostrar_seccion_ano_anterior %}
+            <div class="col-md-4">
+                <div class="p-2 glass-box rounded">
+                    <small class="text-muted">Año Anterior Completado</small>
+                    <div class="h5 mb-0 text-primary">{{ perfil.dias_ano_anterior_completado }} días</div>
+                </div>
+            </div>
+            {% endif %}
+            <div class="{% if perfil.mostrar_seccion_ano_anterior %}col-md-4{% else %}col-md-6{% endif %}">
+                <div class="p-2 glass-box rounded">
+                    <small class="text-muted">Acumulado Este Año (hasta hoy)</small>
+                    <div class="h5 mb-0 text-success">{{ perfil.calcular_dias_acumulados_hasta_hoy }} días</div>
+                    <small class="text-muted">({{ perfil.calcular_acumulacion_diaria }} días/día trabajado)</small>
+                </div>
+            </div>
+            <div class="{% if perfil.mostrar_seccion_ano_anterior %}col-md-4{% else %}col-md-6{% endif %}">
+                <div class="p-2 glass-box rounded">
+                    <small class="text-muted">Total Proyectado Disponible</small>
+                    <div class="h5 mb-0 text-info">{{ perfil.calcular_total_disponible_proyectado }} días</div>
+                    <small class="text-muted">Al finalizar año: {{ perfil.dias_al_finalizar_ano_actual }} días</small>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-muted">
+            <i class="fas fa-calendar-plus me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>
+            Días acumulados hasta hoy: <strong>{{ perfil.calcular_dias_acumulados_hasta_hoy }} días</strong>
+        </div>
+        {% endif %}
+        </div>
+    </div>
+    
+    <!-- Estadísticas de Vacaciones -->
+    <div class="container">
+        <div class="row">
+        <div class="col-6 col-md-3 mb-3">
+            <div class="card text-center h-100">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <i class="fas fa-calendar-check fa-2x mb-2" style="color: #ffffff !important;"></i>
+                    <h5 class="card-title small">Días Disponibles</h5>
+                    <h3 class="text-success">{{ stats.dias_disponibles }}</h3>
+                    <small class="text-muted">
+                        de {{ perfil.dias_vacaciones_anuales }} anuales 
+                        {% if perfil.dias_vacaciones_acumulados > 0 %}
+                            + {{ perfil.dias_vacaciones_acumulados }} acumulados
+                        {% endif %}
+                        ({{ perfil.antiguedad_anos }} año{{ perfil.antiguedad_anos|pluralize }})
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+            <div class="card text-center h-100">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <i class="fas fa-calendar-times fa-2x mb-2" style="color: #ffffff !important;"></i>
+                    <h5 class="card-title small">Días Usados</h5>
+                    <h3 class="text-warning">{{ stats.dias_usados }}</h3>
+                    <small class="text-muted">este año</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 mb-3">
+            <div class="card text-center h-100">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <i class="fas fa-clock fa-2x mb-2" style="color: #ffffff !important;"></i>
+                    <h5 class="card-title small">Pendientes</h5>
+                    <h3 class="text-info">{{ stats.solicitudes_pendientes }}</h3> 
+                    <small class="text-muted">solicitudes</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 mb-3">
+            <div class="card text-center h-100">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <i class="fas fa-laptop fa-2x mb-2" style="color: #ffffff !important;"></i>
+                    <h5 class="card-title small">Equipos</h5>
+                    <h3 class="text-primary">{{ stats.equipos_asignados }}</h3>
+                    <a href="{% url 'empleados:mis_equipos' %}" class="btn btn-sm btn-outline-primary mt-1">Ver</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2 mb-3">
+            <div class="card text-center h-100">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <i class="fas fa-ticket-alt fa-2x mb-2" style="color: #ffffff !important;"></i>
+                    <h5 class="card-title small">Tickets</h5>
+                    <h3 class="text-danger">{{ stats.tickets_pendientes }}</h3>
+                    <a href="{% url 'empleados:mis_tickets' %}" class="btn btn-sm btn-outline-danger mt-1">Ver</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    
+    <div class="container">
+        <div class="row mt-4 justify-content-center">
+        <div class="col-12 col-lg-4 mb-4">
+            <div class="card h-100 square-container">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-history me-2"></i>Mis Solicitudes de Vacaciones</h5>
+                </div>
+                <div class="card-body">
+                    {% if solicitudes %}
+                        <div class="list-group list-group-flush">
+                            {% for solicitud in solicitudes|slice:":3" %}
+                            <div class="list-group-item list-group-item-action vacaciones-item">
+                                <div class="d-flex w-100 justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex w-100 justify-content-between align-items-start mb-1">
+                                            <h6 class="mb-0">
+                                                <i class="fas fa-calendar me-1" style="color: #ffffff !important;"></i>
+                                                {{ solicitud.fecha_inicio|date:"d/m/Y" }} - {{ solicitud.fecha_fin|date:"d/m/Y" }}
+                                            </h6>
+                                            <div class="ms-2 flex-shrink-0">
+                                                {% if solicitud.estado == 'APROBADO_RH' %}
+                                                    <span class="badge vacaciones-badge-estado bg-success">
+                                                        <i class="fas fa-check me-1"></i>{{ solicitud.get_estado_display }}
+                                                    </span>
+                                                {% elif solicitud.estado == 'RECHAZADO_RH' or solicitud.estado == 'RECHAZADO_JEFE' %}
+                                                    <span class="badge vacaciones-badge-estado bg-danger">
+                                                        <i class="fas fa-times me-1"></i>{{ solicitud.get_estado_display }}
+                                                    </span>
+                                                {% elif solicitud.estado == 'PENDIENTE_JEFE' %}
+                                                    <span class="badge vacaciones-badge-estado bg-warning">
+                                                        <i class="fas fa-clock me-1"></i>{{ solicitud.get_estado_display }}
+                                                    </span>
+                                                {% elif solicitud.estado == 'PENDIENTE_RH' %}
+                                                    <span class="badge vacaciones-badge-estado bg-info">
+                                                        <i class="fas fa-hourglass-half me-1"></i>{{ solicitud.get_estado_display }}
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge vacaciones-badge-estado bg-secondary">{{ solicitud.get_estado_display }}</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <p class="mb-1 small">
+                                            {{ solicitud.dias_solicitados }} día{{ solicitud.dias_solicitados|pluralize }} · {{ solicitud.get_tipo_display }}
+                                        </p>
+                                        <small class="text-muted">{{ solicitud.fecha_solicitud|date:"d/m/Y H:i" }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="mt-2 text-center">
+                            <a href="{% url 'empleados:mis_vacaciones' %}" class="btn btn-sm btn-outline-primary">Ver todas mis solicitudes</a>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-3">
+                            <i class="fas fa-calendar-plus fa-2x mb-2" style="color: #ffffff !important;"></i>
+                            <p class="text-muted mb-2">No tienes solicitudes de vacaciones</p>
+                            <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-sm btn-outline-primary" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">
+                                <i class="fas fa-calendar-plus me-1"></i>Solicitar Vacaciones
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-lg-4 mb-4">
+            <div class="card h-100 square-container">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-laptop me-2"></i>Mis Equipos Asignados</h5>
+                </div>
+                <div class="card-body">
+                    {% if equipos_asignados %}
+                        <div class="list-group list-group-flush">
+                            {% for asignacion in equipos_asignados|slice:":3" %}
+                            <div class="list-group-item list-group-item-action equipos-item">
+                                <div class="d-flex w-100 justify-content-between align-items-start">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">
+                                            <i class="fas {% categoria_icono asignacion.equipo.categoria.nombre %} me-1" style="color: #ffffff !important;"></i>
+                                            {{ asignacion.equipo.categoria.nombre }}
+                                        </h6>
+                                        <p class="mb-1 small">{{ asignacion.equipo.marca }} {{ asignacion.equipo.modelo }}</p>
+                                        <small class="text-muted">{{ asignacion.fecha_asignacion|date:"d/m/Y" }}</small>
+                                    </div>
+                                    <div class="ms-2 flex-shrink-0">
+                                        <span class="badge equipos-badge">{{ asignacion.equipo.codigo_inventario }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="mt-2 text-center">
+                            <a href="{% url 'empleados:mis_equipos' %}" class="btn btn-sm btn-outline-primary">Ver todos mis equipos</a>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-3">
+                            <i class="fas fa-laptop fa-2x mb-2" style="color: #ffffff !important;"></i>
+                            <p class="text-muted mb-2">No tienes equipos asignados actualmente</p>
+                            <a href="{% url 'empleados:mis_equipos' %}" class="btn btn-sm btn-primary">
+                                <i class="fas fa-search me-1"></i>Ver inventario
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-lg-4 mb-4">
+            <div class="card h-100 square-container">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-ticket-alt me-2"></i>Mis Tickets Recientes</h5>
+                </div>
+                <div class="card-body">
+                    {% if tickets_recientes %}
+                        <div class="list-group list-group-flush">
+                            {% for ticket in tickets_recientes|slice:":3" %}
+                            <a href="{% url 'empleados:detalle_ticket' ticket.id %}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ ticket.codigo }}</h6>
+                                    <small>
+                                        {% if ticket.estado == 'PENDIENTE' %}
+                                            <span class="badge badge-pendiente">Pendiente</span>
+                                        {% elif ticket.estado == 'EN_PROCESO' %}
+                                            <span class="badge badge-proceso">En Proceso</span>
+                                        {% elif ticket.estado == 'RESUELTO' %}
+                                            <span class="badge badge-resuelto">Resuelto</span>
+                                        {% elif ticket.estado == 'CANCELADO' %}
+                                            <span class="badge badge-cancelado">Cancelado</span>
+                                        {% else %}
+                                            <span class="badge badge-cancelado">{{ ticket.get_estado_display }}</span>
+                                        {% endif %}
+                                    </small>
+                                </div>
+                                <p class="mb-1 small">{{ ticket.descripcion|truncatewords:15 }}</p>
+                                <small class="text-muted">{{ ticket.fecha_creacion|date:"d/m/Y H:i" }}</small>
+                            </a>
+                            {% endfor %}
+                        </div>
+                        <div class="mt-2 text-center">
+                            <a href="{% url 'empleados:mis_tickets' %}" class="btn btn-sm btn-outline-danger">Ver todos mis tickets</a>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-3">
+                            <i class="fas fa-ticket-alt fa-2x mb-2" style="color: #ffffff !important;"></i>
+                            <p class="text-muted mb-2">No tienes tickets creados</p>
+                            <a href="{% url 'empleados:crear_ticket' %}" class="btn btn-sm btn-success">
+                                <i class="fas fa-plus me-1"></i>Crear mi primer ticket
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<style>
+
+/* Título y subtítulo del dashboard - Texto blanco con sombra para efecto flotante */
+.dashboard-title {
+    color: #ffffff !important;
+    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 
+                 0 5px 20px rgba(0, 0, 0, 0.85),
+                 0 8px 30px rgba(0, 0, 0, 0.8),
+                 0 10px 40px rgba(0, 0, 0, 0.75),
+                 0 0 50px rgba(0, 0, 0, 0.7) !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.dashboard-subtitle {
+    color: #ffffff !important;
+    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 
+                 0 5px 20px rgba(0, 0, 0, 0.85),
+                 0 8px 30px rgba(0, 0, 0, 0.8),
+                 0 10px 40px rgba(0, 0, 0, 0.75),
+                 0 0 50px rgba(0, 0, 0, 0.7) !important;
+    font-weight: 400 !important;
+}
+
+/* Color del número en "Días Disponibles" - Mismo verde del botón "Generar Ticket" */
+.dashboard .card.text-center .card-body h5.card-title.small + h3.text-success {
+    color: #22C55E !important; /* Verde esmeralda del botón Generar Ticket */
+}
+
+/* Selector más específico para la primera card con "Días Disponibles" */
+.dashboard .row > .col-6.col-md-3:first-child .card h3.text-success {
+    color: #22C55E !important; /* Verde esmeralda del botón Generar Ticket */
+}
+
+/* Mantener colores de números en las cards - Sobrescribir el blanco global */
+.dashboard .card h3.text-success:not(.dashboard-title),
+.dashboard .card h3.text-warning,
+.dashboard .card h3.text-info,
+.dashboard .card h3.text-primary,
+.dashboard .card h3.text-danger {
+    /* Mantener colores Bootstrap originales para números */
+}
+
+/* Texto blanco para labels y descripciones en cards */
+.dashboard .card .card-title,
+.dashboard .card small.text-muted,
+.dashboard .card .text-muted {
+    color: #ffffff !important;
+}
+
+/* Tipografía menos gruesa para "Tu Antigüedad:" */
+.alert-info h6 strong {
+    font-weight: 400 !important; /* Menos grueso que el bold normal (700) */
+}
+
+/* Estilos para tickets en "Mis Tickets Recientes" - Sin fondo, efecto hover sutil */
+.dashboard .list-group-item {
+    background: transparent !important; /* Sin fondo */
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; /* Borde sutil entre items */
+    padding: 1rem !important;
+    transition: all 0.3s ease !important;
+    border-radius: 8px !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.dashboard .list-group-item:last-child {
+    border-bottom: none !important;
+}
+
+/* Efecto hover - Brillo sutil con glassmorphism */
+.dashboard .list-group-item:hover {
+    background: rgba(255, 255, 255, 0.1) !important; /* Fondo sutil al hover */
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    transform: translateX(5px) !important; /* Ligero desplazamiento a la derecha */
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1) !important; /* Sombra sutil */
+}
+
+.dashboard .list-group-item:active {
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Estilos específicos para items de vacaciones */
+.dashboard .vacaciones-item {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding: 1rem !important;
+    transition: all 0.3s ease !important;
+    border-radius: 8px !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.dashboard .vacaciones-item:last-child {
+    border-bottom: none !important;
+}
+
+.dashboard .vacaciones-item:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    transform: translateX(5px) !important;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1) !important;
+}
+
+.dashboard .vacaciones-item h6 {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    margin-bottom: 0.5rem !important;
+    line-height: 1.4 !important;
+    font-size: 0.95rem !important;
+}
+
+.dashboard .vacaciones-item p {
+    color: rgba(255, 255, 255, 0.9) !important;
+    margin-bottom: 0.5rem !important;
+    line-height: 1.5 !important;
+    font-size: 0.85rem !important;
+}
+
+.dashboard .vacaciones-item p .badge {
+    margin-right: 0.5rem !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    font-size: 0.75rem !important;
+}
+
+.dashboard .vacaciones-item small {
+    color: rgba(255, 255, 255, 0.7) !important;
+    display: block !important;
+    line-height: 1.4 !important;
+    font-size: 0.8rem !important;
+}
+
+.dashboard .vacaciones-badge-dias {
+    background: rgba(37, 99, 235, 0.3) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-weight: 500 !important;
+    padding: 0.3rem 0.6rem !important;
+    border-radius: 6px !important;
+    margin-right: 0.5rem !important;
+}
+
+.dashboard .vacaciones-badge-tipo {
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-weight: 500 !important;
+    padding: 0.3rem 0.6rem !important;
+    border-radius: 6px !important;
+}
+
+.dashboard .vacaciones-badge-estado {
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-weight: 500 !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    white-space: nowrap !important;
+}
+
+/* Los estilos de badges están en global_styles.css - Se aplican automáticamente */
+
+/* Glassmorphism para cajas pequeñas de información - Mismo estilo que alerts */
+.glass-box {
+    background: rgba(255, 255, 255, 0.15) !important; /* Transparencia más sutil */
+    backdrop-filter: blur(20px) saturate(180%) !important; /* Blur más pronunciado y saturación */
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important; /* Borde sutil pero visible */
+    border-radius: 20px !important; /* Bordes más redondeados */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important; /* Sombra externa e interna para profundidad */
+    overflow: hidden; /* Asegura que el contenido respete los bordes redondeados */
+}
+
+/* Estilos Glassmorphism para tarjetas de métricas - Mismo estilo que alerts */
+.dashboard .card {
+    background: rgba(255, 255, 255, 0.15) !important; /* Transparencia más sutil */
+    backdrop-filter: blur(20px) saturate(180%) !important; /* Blur más pronunciado y saturación */
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important; /* Borde sutil pero visible */
+    border-radius: 20px !important; /* Bordes más redondeados */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important; /* Sombra externa e interna para profundidad */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden; /* Asegura que el contenido respete los bordes redondeados */
+}
+
+.dashboard .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== ICONOS BLANCOS Y DELGADOS ===== */
+/* Todos los iconos Font Awesome en el dashboard - Color blanco (sobrescribe clases de color Bootstrap) */
+.dashboard i.fas,
+.dashboard i.far,
+.dashboard i.fal,
+.dashboard i.fab,
+.dashboard .fa,
+.dashboard [class*="fa-"],
+.dashboard i.text-success,
+.dashboard i.text-primary,
+.dashboard i.text-warning,
+.dashboard i.text-info,
+.dashboard i.text-danger,
+.dashboard i.text-muted,
+.dashboard .text-success i,
+.dashboard .text-primary i,
+.dashboard .text-warning i,
+.dashboard .text-info i,
+.dashboard .text-danger i,
+.dashboard .text-muted i,
+.dashboard .card-header i,
+.dashboard .btn i,
+.dashboard .alert i,
+.dashboard .list-group-item i {
+    color: #ffffff !important;
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro" !important;
+    font-weight: 900 !important; /* Font Awesome requiere font-weight 900 */
+    font-style: normal !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Excepción: Iconos en alertas de advertencia mantienen su color amarillo */
+.alert.alert-warning i,
+.alert.alert-warning .fa,
+.alert.alert-warning [class*="fa-"],
+.alert-warning i.fas,
+.alert-warning i.fa-exclamation-triangle,
+.dashboard .alert-warning i,
+.dashboard .alert-warning .fa,
+.dashboard .alert-warning [class*="fa-"] {
+    color: #FFDE21 !important;
+}
+
+/* ===== ESTILO DE BOTONES MODERNO - Con luz arriba y sombra abajo (estilo imagen) ===== */
+/* Base común para todos los botones */
+.dashboard .btn,
+.dashboard .btn-primary,
+.dashboard .btn-success,
+.dashboard .btn-danger,
+.dashboard .btn-info,
+.dashboard .btn-warning,
+.dashboard .btn-outline-primary,
+.dashboard .btn-outline-danger,
+.dashboard .btn-outline-success {
+    border: none !important;
+    border-radius: 14px !important; /* Bordes muy redondeados */
+    padding: 14px 32px !important; /* Padding generoso */
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    color: #ffffff !important; /* Texto blanco */
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* Botones pequeños */
+.dashboard .btn-sm {
+    padding: 10px 24px !important;
+    font-size: 0.85rem !important;
+    border-radius: 12px !important;
+}
+
+/* Botón Primary - Azul corporativo con degradado oscuro (estado normal) */
+.dashboard .btn-primary,
+.dashboard .btn-outline-primary {
+    background: linear-gradient(180deg, 
+        rgba(37, 99, 235, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 30, 100, 1) 100%) !important; /* Colores oscuros en estado normal */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+}
+
+.dashboard .btn-primary:hover,
+.dashboard .btn-outline-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 56, 168, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Botón Success - Verde esmeralda con degradado oscuro (estado normal) */
+.dashboard .btn-success,
+.dashboard .btn-generar-ticket {
+    background: linear-gradient(180deg, 
+        rgba(34, 197, 94, 0.95) 0%, 
+        rgba(22, 163, 74, 0.95) 50%,
+        rgba(15, 118, 50, 1) 100%) !important; /* Colores oscuros en estado normal */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+}
+
+.dashboard .btn-success:hover,
+.dashboard .btn-generar-ticket:hover {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Botón Danger - Rojo con degradado oscuro (estado normal) */
+.dashboard .btn-danger,
+.dashboard .btn-outline-danger {
+    background: linear-gradient(180deg, 
+        rgba(239, 68, 68, 0.95) 0%, 
+        rgba(220, 38, 38, 0.95) 50%,
+        rgba(185, 28, 28, 1) 100%) !important; /* Colores oscuros en estado normal */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+}
+
+.dashboard .btn-danger:hover,
+.dashboard .btn-outline-danger:hover {
+    background: linear-gradient(180deg, 
+        rgba(248, 113, 113, 0.95) 0%, 
+        rgba(239, 68, 68, 0.95) 50%,
+        rgba(220, 38, 38, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Botón Info - Azul claro con degradado oscuro (estado normal) */
+.dashboard .btn-info {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important; /* Colores oscuros en estado normal */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+}
+
+.dashboard .btn-info:hover {
+    background: linear-gradient(180deg, 
+        rgba(147, 197, 253, 0.95) 0%, 
+        rgba(96, 165, 250, 0.95) 50%,
+        rgba(59, 130, 246, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Botón Warning - Amarillo/Naranja con degradado oscuro (estado normal) */
+.dashboard .btn-warning {
+    background: linear-gradient(180deg, 
+        rgba(245, 158, 11, 0.95) 0%, 
+        rgba(217, 119, 6, 0.95) 50%,
+        rgba(180, 83, 9, 1) 100%) !important; /* Colores oscuros en estado normal */
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2), /* Sombra sutil debajo */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Highlight interno arriba */
+    color: #000000 !important; /* Texto negro para contraste */
+}
+
+.dashboard .btn-warning:hover {
+    background: linear-gradient(180deg, 
+        rgba(251, 191, 36, 0.95) 0%, 
+        rgba(245, 158, 11, 0.95) 50%,
+        rgba(217, 119, 6, 1) 100%) !important; /* Colores más claros al hover */
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25), /* Sombra más pronunciada al hover */
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    color: #000000 !important;
+}
+
+/* Encabezados de secciones inferiores - Sin fondo azul, completamente transparentes */
+.dashboard .card-header.bg-primary,
+.dashboard .card-header.bg-success {
+    background: transparent !important; /* Sin fondo de color */
+    backdrop-filter: none !important; /* Sin blur adicional en el header */
+    -webkit-backdrop-filter: none !important;
+    border-bottom: none !important; /* La línea se maneja con ::after */
+    font-weight: 600;
+    color: white !important;
+}
+
+/* Asegurar que el cuerpo de las tarjetas sea Glassmorphism semitransparente */
+.dashboard .card .card-body {
+    background: transparent !important; /* Transparente para que se vea el fondo del card */
+    backdrop-filter: none !important; /* Sin blur adicional, el card ya lo tiene */
+    -webkit-backdrop-filter: none !important;
+}
+
+/* Mejoras en las tarjetas de métricas */
+.dashboard .card.text-center .card-body {
+    padding: 1.5rem;
+}
+
+.dashboard .card.text-center h3 {
+    font-weight: 700;
+    font-size: 2rem;
+    margin: 0.5rem 0;
+}
+
+.dashboard .card.text-center h5 {
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Responsive para tarjetas de métricas */
+@media (max-width: 768px) {
+    .dashboard .card.text-center h3 {
+        font-size: 1.5rem;
+    }
+    
+    .dashboard .card.text-center .fa-2x {
+        font-size: 1.5rem !important;
+    }
+}
+
+/* Estilos para la lista de equipos asignados - Similar a Mis Tickets Recientes */
+.dashboard .equipos-item {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding: 1rem !important;
+    transition: all 0.3s ease !important;
+    border-radius: 8px !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.dashboard .equipos-item:last-child {
+    border-bottom: none !important;
+}
+
+/* Efecto hover - Brillo sutil con glassmorphism */
+.dashboard .equipos-item:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    transform: translateX(5px) !important;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1) !important;
+}
+
+.dashboard .equipos-item h6 {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.dashboard .equipos-item p {
+    color: rgba(255, 255, 255, 0.9) !important;
+    margin-bottom: 0.25rem !important;
+}
+
+.dashboard .equipos-item small {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.dashboard .equipos-badge {
+    background: rgba(108, 117, 125, 0.3) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-weight: 500 !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    white-space: nowrap !important;
+}
+
+/* Texto blanco para mensajes vacíos en equipos */
+.dashboard .card-body .text-center .text-muted {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+</style>
+{% endblock %}
+
+
+

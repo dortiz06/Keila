@@ -1,0 +1,327 @@
+/* Estilos personalizados para el Admin de Django - Sistema de RH */
+
+/* Variables de colores */
+:root {
+    /* Paleta 2025 - Azul Rey */
+    --primary-color: #0038A8; /* Azul rey */
+    --secondary-color: #1E3A8A; /* Indigo profundo */
+    --success-color: #16A34A;
+    --warning-color: #F59E0B;
+    --danger-color: #DC2626;
+    --light-bg: #F7F9FB;
+    --dark-text: #0F172A;
+    --border-color: #E5E7EB;
+    --shadow: 0 6px 24px rgba(2, 6, 23, 0.12);
+}
+
+/* Contenedor principal del formulario */
+.form-row {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.form-row:hover {
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+}
+
+/* Títulos de secciones */
+.form-row h2 {
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    color: white;
+    padding: 15px 20px;
+    margin: -25px -25px 20px -25px;
+    border-radius: 15px 15px 0 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Campos de formulario */
+.form-row .field-box {
+    margin-bottom: 20px;
+}
+
+.form-row label {
+    display: block;
+    font-weight: 600;
+    color: var(--dark-text);
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Inputs de texto */
+.form-row input[type="text"],
+.form-row input[type="email"],
+.form-row input[type="tel"],
+.form-row input[type="number"],
+.form-row input[type="date"],
+.form-row select,
+.form-row textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.form-row input[type="text"]:focus,
+.form-row input[type="email"]:focus,
+.form-row input[type="tel"]:focus,
+.form-row input[type="number"]:focus,
+.form-row input[type="date"]:focus,
+.form-row select:focus,
+.form-row textarea:focus {
+    border-color: var(--accent-color, #3B82F6);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    outline: none;
+    transform: translateY(-1px);
+}
+
+/* Textarea */
+.form-row textarea {
+    min-height: 100px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+/* Select dropdown */
+.form-row select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    padding-right: 40px;
+    appearance: none;
+}
+
+/* Botones */
+.submit-row {
+    background: linear-gradient(135deg, var(--success-color), #58d68d);
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 30px;
+    text-align: center;
+    box-shadow: var(--shadow);
+}
+
+.submit-row input[type="submit"] {
+    background: linear-gradient(135deg, var(--accent-color, #3B82F6), var(--primary-color));
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 9999px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 10px 24px rgba(59, 130, 246, 0.35);
+}
+
+.submit-row input[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+/* Botón de guardar y continuar */
+.submit-row .default {
+    background: linear-gradient(135deg, #22C55E, var(--success-color));
+    margin-right: 10px;
+}
+
+/* Botón de guardar y agregar otro */
+.submit-row .addanother {
+    background: linear-gradient(135deg, #FBBF24, var(--warning-color));
+    color: #111827;
+}
+
+/* Botón de guardar y continuar editando */
+.submit-row .viewsitelink {
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+}
+
+/* Campos requeridos */
+.form-row .required label::after {
+    content: " *";
+    color: var(--danger-color);
+    font-weight: bold;
+}
+
+/* Mensajes de ayuda */
+.form-row .help {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+/* Errores de validación */
+.form-row .errorlist {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border-left: 4px solid var(--danger-color);
+    margin-top: 5px;
+    list-style: none;
+}
+
+/* Widgets especiales */
+.form-row .date input {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3e%3cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'/%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 20px;
+    padding-right: 45px;
+}
+
+/* Relacionados (Foreign Keys) */
+.form-row .related-widget-wrapper {
+    position: relative;
+}
+
+.form-row .related-widget-wrapper a {
+    background: var(--secondary-color);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    margin-left: 5px;
+    transition: all 0.3s ease;
+}
+
+.form-row .related-widget-wrapper a:hover {
+    background: var(--primary-color);
+    transform: translateY(-1px);
+}
+
+/* Campos de moneda */
+.form-row input[type="number"] {
+    text-align: right;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .form-row {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .form-row h2 {
+        margin: -15px -15px 15px -15px;
+        padding: 12px 15px;
+        font-size: 1rem;
+    }
+    
+    .submit-row {
+        padding: 15px;
+    }
+    
+    .submit-row input[type="submit"] {
+        padding: 12px 20px;
+        font-size: 1rem;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-row {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Iconos para campos */
+.form-row .field-numero_empleado::before {
+    content: "👤";
+    margin-right: 8px;
+}
+
+.form-row .field-nombre::before {
+    content: "📝";
+    margin-right: 8px;
+}
+
+.form-row .field-telefono::before {
+    content: "📞";
+    margin-right: 8px;
+}
+
+.form-row .field-email::before {
+    content: "📧";
+    margin-right: 8px;
+}
+
+.form-row .field-direccion::before {
+    content: "🏠";
+    margin-right: 8px;
+}
+
+.form-row .field-departamento::before {
+    content: "🏢";
+    margin-right: 8px;
+}
+
+.form-row .field-puesto::before {
+    content: "💼";
+    margin-right: 8px;
+}
+
+.form-row .field-salario::before {
+    content: "💰";
+    margin-right: 8px;
+}
+
+.form-row .field-fecha_nacimiento::before {
+    content: "🎂";
+    margin-right: 8px;
+}
+
+.form-row .field-fecha_ingreso::before {
+    content: "📅";
+    margin-right: 8px;
+}
+
+/* Mejoras adicionales */
+.form-row .field-box:last-child {
+    margin-bottom: 0;
+}
+
+/* Estilo para campos deshabilitados */
+.form-row input:disabled,
+.form-row select:disabled,
+.form-row textarea:disabled {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Estilo para campos de solo lectura */
+.form-row .readonly {
+    background-color: #e9ecef;
+    color: #495057;
+}

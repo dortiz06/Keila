@@ -1,0 +1,517 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Lista de Empleados{% endblock %}
+
+{% block content %}
+<style>
+/* Cambiar fondo solo en la vista de lista de empleados */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/dash/keila.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+</style>
+
+<div class="container-fluid dashboard">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="dashboard-title" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 0 5px 20px rgba(0, 0, 0, 0.85) !important;">
+                <i class="fas fa-users me-2"></i>Lista de Empleados
+            </h1>
+            {% if perfil.es_jefe_area %}
+            <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3) !important;">
+                Empleados de tu departamento: <strong style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3) !important;">{{ perfil.departamento.nombre }}</strong>
+            </p>
+            {% endif %}
+        </div>
+        <div>
+            {% if puede_crear %}
+            <a href="{% url 'empleados:crear_usuario' %}" class="btn btn-outline-success">
+                <i class="fas fa-plus me-1"></i>Crear Usuario
+            </a>
+            {% endif %}
+            <button type="button" class="btn btn-outline-secondary" onclick="window.history.back();">
+                <i class="fas fa-arrow-left me-1"></i>Volver
+            </button>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card mb-4">
+        <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label for="busqueda" class="form-label" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">Buscar</label>
+                    <input type="text" class="form-control" id="busqueda" name="busqueda" 
+                           value="{{ busqueda_actual }}" placeholder="Nombre, usuario, número..." 
+                           style="background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important;">
+                </div>
+                <div class="col-md-3">
+                    <label for="tipo_perfil" class="form-label" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">Tipo de Perfil</label>
+                    <select class="form-select" id="tipo_perfil" name="tipo_perfil" 
+                            style="background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important;">
+                        <option value="">Todos</option>
+                        <option value="EMPLEADO" {% if tipo_actual == 'EMPLEADO' %}selected{% endif %}>Empleado</option>
+                        <option value="JEFE_AREA" {% if tipo_actual == 'JEFE_AREA' %}selected{% endif %}>Jefe de Área</option>
+                        <option value="RH" {% if tipo_actual == 'RH' %}selected{% endif %}>Recursos Humanos</option>
+                        <option value="SISTEMAS" {% if tipo_actual == 'SISTEMAS' %}selected{% endif %}>Sistemas</option>
+                        <option value="ADMIN" {% if tipo_actual == 'ADMIN' %}selected{% endif %}>Administrador</option>
+                    </select>
+                </div>
+                {% if not perfil.es_jefe_area %}
+                <div class="col-md-3">
+                    <label for="departamento" class="form-label" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">Departamento</label>
+                    <select class="form-select" id="departamento" name="departamento" 
+                            style="background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important;">
+                        <option value="">Todos</option>
+                        {% for dept in departamentos %}
+                            <option value="{{ dept.id }}" {% if departamento_actual == dept.id|stringformat:"s" %}selected{% endif %}>
+                                {{ dept.nombre }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+                <div class="col-md-2">
+                    <label class="form-label" style="color: #ffffff !important;">&nbsp;</label>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="fas fa-search me-1"></i>Filtrar
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lista de empleados -->
+    <div class="card">
+        <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
+            <h5 class="gestion-section-title mb-4" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
+                <i class="fas fa-list me-2"></i>Empleados
+                <span class="badge" style="background: rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; border: 1px solid rgba(255, 255, 255, 0.3) !important; padding: 0.25rem 0.75rem !important; border-radius: 12px !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">{{ empleados.count }}</span>
+            </h5>
+
+            {% if empleados %}
+                <div class="table-responsive gestion-table-wrapper">
+                    <table class="table table-hover gestion-table">
+                        <thead>
+                            <tr>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Empleado</th>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Número</th>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Perfil</th>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Departamento</th>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Puesto</th>
+                                {% if es_gestion_completa %}
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Antigüedad</th>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Estado</th>
+                                {% endif %}
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for empleado in empleados %}
+                            <tr class="gestion-table-row">
+                                <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">
+                                    <strong>{{ empleado.nombre_completo }}</strong>
+                                    <br>
+                                    <small style="color: rgba(255, 255, 255, 0.6) !important;">{{ empleado.usuario.email|default:"Sin email" }}</small>
+                                </td>
+                                <td style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
+                                    {{ empleado.numero_empleado|default:"N/A" }}
+                                </td>
+                                <td>
+                                    {% if empleado.tipo_perfil == 'SISTEMAS' %}
+                                        <span class="badge badge-perfil-sistemas">
+                                            {{ empleado.get_tipo_perfil_display }}
+                                        </span>
+                                    {% elif empleado.tipo_perfil == 'ADMIN' %}
+                                        <span class="badge badge-perfil-admin">
+                                            {{ empleado.get_tipo_perfil_display }}
+                                        </span>
+                                    {% elif empleado.tipo_perfil == 'RH' %}
+                                        <span class="badge badge-perfil-rh">
+                                            {{ empleado.get_tipo_perfil_display }}
+                                        </span>
+                                    {% elif empleado.tipo_perfil == 'JEFE_AREA' %}
+                                        <span class="badge badge-perfil-jefe">
+                                            {{ empleado.get_tipo_perfil_display }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge badge-perfil-empleado">
+                                            {{ empleado.get_tipo_perfil_display }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
+                                    {{ empleado.departamento.nombre|default:"Sin departamento" }}
+                                </td>
+                                <td style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
+                                    {{ empleado.puesto|default:"N/A" }}
+                                </td>
+                                {% if es_gestion_completa %}
+                                <td style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
+                                    {% if empleado.antiguedad_anos >= 1 %}
+                                        <span style="color: #22C55E !important; font-weight: 500 !important;">{{ empleado.antiguedad_anos }} año{{ empleado.antiguedad_anos|pluralize }}</span>
+                                    {% else %}
+                                        <span style="color: #FBBF24 !important; font-weight: 500 !important;">{{ empleado.antiguedad_anos }} año{{ empleado.antiguedad_anos|pluralize }}</span>
+                                    {% endif %}
+                                </td>
+                                <td style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
+                                    {% if empleado.activo %}
+                                        <span class="badge" style="background: rgba(34, 197, 94, 0.3) !important; color: #22C55E !important; border: 1px solid rgba(34, 197, 94, 0.5) !important; padding: 0.25rem 0.75rem !important; border-radius: 12px !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">Activo</span>
+                                    {% else %}
+                                        <span class="badge" style="background: rgba(239, 68, 68, 0.3) !important; color: #EF4444 !important; border: 1px solid rgba(239, 68, 68, 0.5) !important; padding: 0.25rem 0.75rem !important; border-radius: 12px !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">Inactivo</span>
+                                    {% endif %}
+                                </td>
+                                {% endif %}
+                                <td>
+                                    <div class="d-flex gap-2" role="group">
+                                        <a href="{% url 'empleados:perfil_usuario' %}?perfil_id={{ empleado.id }}" class="btn btn-xs btn-outline-primary btn-accion" title="Ver Perfil">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        {% if puede_editar %}
+                                        <a href="{% url 'empleados:editar_perfil' empleado.id %}" class="btn btn-xs btn-outline-warning btn-accion" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-user-slash fa-3x mb-3" style="color: rgba(255, 255, 255, 0.5) !important;"></i>
+                    <h5 style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">No se encontraron empleados</h5>
+                    <p style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif !important;">No hay empleados que coincidan con los filtros seleccionados.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+/* Aplicar estilos del dashboard */
+.dashboard .card {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+.gestion-table-wrapper {
+    background: rgba(255, 255, 255, 0.05) !important;
+    padding: 1.5rem !important;
+    border-radius: 15px !important;
+}
+
+.gestion-table {
+    margin-bottom: 0 !important;
+    background: transparent !important;
+}
+
+.gestion-table thead th {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+    padding: 1rem !important;
+    background: transparent !important;
+    border-top: none !important;
+}
+
+.gestion-table-row {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    transition: all 0.3s ease !important;
+}
+
+.gestion-table-row:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    transform: translateY(-2px) !important;
+}
+
+.gestion-table tbody td {
+    background: transparent !important;
+    padding: 1rem !important;
+    vertical-align: middle !important;
+    border-top: none !important;
+}
+
+.dashboard .btn-outline-primary,
+.dashboard .btn-outline-warning,
+.dashboard .btn-outline-success,
+.dashboard .btn-outline-secondary {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .btn-outline-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-warning {
+    background: linear-gradient(180deg, 
+        rgba(245, 158, 11, 0.95) 0%, 
+        rgba(217, 119, 6, 0.95) 50%,
+        rgba(180, 83, 9, 1) 100%) !important;
+}
+
+.dashboard .btn-outline-warning:hover {
+    background: linear-gradient(180deg, 
+        rgba(251, 191, 36, 0.95) 0%, 
+        rgba(245, 158, 11, 0.95) 50%,
+        rgba(217, 119, 6, 1) 100%) !important;
+}
+
+.dashboard .btn-outline-success {
+    background: linear-gradient(180deg, 
+        rgba(34, 197, 94, 0.95) 0%, 
+        rgba(22, 163, 74, 0.95) 50%,
+        rgba(20, 83, 45, 1) 100%) !important;
+}
+
+.dashboard .btn-outline-success:hover {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+}
+
+.dashboard .btn-outline-secondary {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+}
+
+.dashboard .btn-outline-secondary:hover {
+    background: linear-gradient(180deg, 
+        rgba(209, 213, 219, 0.95) 0%, 
+        rgba(156, 163, 175, 0.95) 50%,
+        rgba(107, 114, 128, 1) 100%) !important;
+}
+
+.dashboard .btn-sm {
+    padding: 10px 20px !important;
+    font-size: 0.875rem !important;
+}
+
+/* Botones de acción más pequeños */
+.dashboard .btn-xs,
+.btn-xs {
+    padding: 6px 12px !important;
+    font-size: 0.75rem !important;
+    border-radius: 10px !important;
+    min-width: 36px !important;
+    height: 36px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.dashboard .btn-accion,
+.btn-accion {
+    margin: 0 !important;
+    transition: all 0.3s ease !important;
+}
+
+.dashboard .btn-accion:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .gap-2 {
+    gap: 0.5rem !important;
+}
+
+/* ===== BADGES DE TIPO DE PERFIL ===== */
+.dashboard .badge-perfil-sistemas,
+.dashboard .badge-perfil-admin,
+.dashboard .badge-perfil-rh,
+.dashboard .badge-perfil-jefe,
+.dashboard .badge-perfil-empleado,
+.badge-perfil-sistemas,
+.badge-perfil-admin,
+.badge-perfil-rh,
+.badge-perfil-jefe,
+.badge-perfil-empleado {
+    border: none !important;
+    border-radius: 16px !important;
+    padding: 10px 20px !important;
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+    color: #ffffff !important;
+    display: inline-block !important;
+    text-align: center !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Badge Sistemas/IT - Morado */
+.dashboard .badge-perfil-sistemas,
+.badge-perfil-sistemas {
+    background: linear-gradient(180deg, 
+        rgba(168, 85, 247, 0.5) 0%, 
+        rgba(147, 51, 234, 0.5) 50%,
+        rgba(126, 34, 206, 0.6) 100%) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(168, 85, 247, 0.5) !important;
+}
+
+.dashboard .badge-perfil-sistemas:hover,
+.badge-perfil-sistemas:hover {
+    background: linear-gradient(180deg, 
+        rgba(192, 132, 252, 0.65) 0%, 
+        rgba(168, 85, 247, 0.65) 50%,
+        rgba(147, 51, 234, 0.75) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(168, 85, 247, 0.4),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border-color: rgba(192, 132, 252, 0.6) !important;
+}
+
+/* Badge Administrador - Rojo/Naranja */
+.dashboard .badge-perfil-admin,
+.badge-perfil-admin {
+    background: linear-gradient(180deg, 
+        rgba(239, 68, 68, 0.5) 0%, 
+        rgba(220, 38, 38, 0.5) 50%,
+        rgba(185, 28, 28, 0.6) 100%) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(239, 68, 68, 0.5) !important;
+}
+
+.dashboard .badge-perfil-admin:hover,
+.badge-perfil-admin:hover {
+    background: linear-gradient(180deg, 
+        rgba(248, 113, 113, 0.65) 0%, 
+        rgba(239, 68, 68, 0.65) 50%,
+        rgba(220, 38, 38, 0.75) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(239, 68, 68, 0.4),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border-color: rgba(248, 113, 113, 0.6) !important;
+}
+
+/* Badge Recursos Humanos - Verde */
+.dashboard .badge-perfil-rh,
+.badge-perfil-rh {
+    background: linear-gradient(180deg, 
+        rgba(34, 197, 94, 0.5) 0%, 
+        rgba(22, 163, 74, 0.5) 50%,
+        rgba(20, 83, 45, 0.6) 100%) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(34, 197, 94, 0.5) !important;
+}
+
+.dashboard .badge-perfil-rh:hover,
+.badge-perfil-rh:hover {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.65) 0%, 
+        rgba(34, 197, 94, 0.65) 50%,
+        rgba(22, 163, 74, 0.75) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(34, 197, 94, 0.4),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border-color: rgba(74, 222, 128, 0.6) !important;
+}
+
+/* Badge Jefe de Área - Azul */
+.dashboard .badge-perfil-jefe,
+.badge-perfil-jefe {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.5) 0%, 
+        rgba(37, 99, 235, 0.5) 50%,
+        rgba(29, 78, 216, 0.6) 100%) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(59, 130, 246, 0.5) !important;
+}
+
+.dashboard .badge-perfil-jefe:hover,
+.badge-perfil-jefe:hover {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.65) 0%, 
+        rgba(59, 130, 246, 0.65) 50%,
+        rgba(37, 99, 235, 0.75) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(59, 130, 246, 0.4),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border-color: rgba(96, 165, 250, 0.6) !important;
+}
+
+/* Badge Empleado - Gris */
+.dashboard .badge-perfil-empleado,
+.badge-perfil-empleado {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.5) 0%, 
+        rgba(107, 114, 128, 0.5) 50%,
+        rgba(75, 85, 99, 0.6) 100%) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(156, 163, 175, 0.5) !important;
+}
+
+.dashboard .badge-perfil-empleado:hover,
+.badge-perfil-empleado:hover {
+    background: linear-gradient(180deg, 
+        rgba(209, 213, 219, 0.65) 0%, 
+        rgba(156, 163, 175, 0.65) 50%,
+        rgba(107, 114, 128, 0.75) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(156, 163, 175, 0.4),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border-color: rgba(209, 213, 219, 0.6) !important;
+}
+</style>
+{% endblock %}

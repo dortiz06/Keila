@@ -46,4 +46,7 @@ public/
 .env
 .env.local
 
+# Archivos de documentación Markdown
+*.md
+
 

@@ -1,0 +1,571 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Aprobar Solicitud - RH{% endblock %}
+
+{% block content %}
+<div class="container-fluid dashboard">
+    <div class="container">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                    <div class="mb-3 mb-md-0">
+                        <h1 class="dashboard-title" style="color: #ffffff !important; text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 0 5px 20px rgba(0, 0, 0, 0.85), 0 8px 30px rgba(0, 0, 0, 0.8), 0 10px 40px rgba(0, 0, 0, 0.75), 0 0 50px rgba(0, 0, 0, 0.7) !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important;">
+                            <i class="fas fa-user-check me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Aprobar Solicitud de Vacaciones
+                        </h1>
+                        <p class="dashboard-subtitle mb-0" style="color: rgba(255, 255, 255, 0.8) !important; text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 0 5px 20px rgba(0, 0, 0, 0.85), 0 8px 30px rgba(0, 0, 0, 0.8), 0 10px 40px rgba(0, 0, 0, 0.75), 0 0 50px rgba(0, 0, 0, 0.7) !important; font-family: 'Montserrat', sans-serif !important;">
+                            Revisa y aprueba la solicitud de vacaciones como Recursos Humanos
+                        </p>
+                    </div>
+                    <div>
+                        <a href="{% url 'empleados:rh_dashboard' %}" class="btn btn-outline-secondary" style="font-family: 'Montserrat', sans-serif !important;">
+                            <i class="fas fa-arrow-left me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Volver
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Información de la Solicitud -->
+                <div class="card mb-4">
+                    <div class="card-header" style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;">
+                        <h5 class="mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
+                            <i class="fas fa-calendar-alt me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>
+                            Detalles de la Solicitud
+                        </h5>
+                    </div>
+                    <div class="card-body" style="background: transparent !important;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold" style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">Empleado</label>
+                                    <p class="form-control-plaintext" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; background: rgba(255, 255, 255, 0.1) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; border-radius: 8px !important; padding: 0.75rem 1rem !important;">{{ solicitud.empleado.usuario.get_full_name|default:solicitud.empleado.usuario.username }}</p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold" style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">Departamento</label>
+                                    <p class="form-control-plaintext" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; background: rgba(255, 255, 255, 0.1) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; border-radius: 8px !important; padding: 0.75rem 1rem !important;">{{ solicitud.empleado.departamento }}</p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold" style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">Puesto</label>
+                                    <p class="form-control-plaintext" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; background: rgba(255, 255, 255, 0.1) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; border-radius: 8px !important; padding: 0.75rem 1rem !important;">{{ solicitud.empleado.puesto }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold" style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">Fecha de Inicio</label>
+                                    <p class="form-control-plaintext" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; background: rgba(255, 255, 255, 0.1) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; border-radius: 8px !important; padding: 0.75rem 1rem !important;">{{ solicitud.fecha_inicio|date:"d/m/Y" }}</p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold" style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">Fecha de Fin</label>
+                                    <p class="form-control-plaintext" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; background: rgba(255, 255, 255, 0.1) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; border-radius: 8px !important; padding: 0.75rem 1rem !important;">{{ solicitud.fecha_fin|date:"d/m/Y" }}</p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold" style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">Días Solicitados</label>
+                                    <p class="form-control-plaintext">
+                                        <span class="badge badge-media" style="font-family: 'Montserrat', sans-serif !important; font-size: 1rem !important; padding: 0.5rem 1rem !important;">{{ solicitud.dias_solicitados }} días</span>
+                                    </p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold" style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">Días Disponibles del Empleado</label>
+                                    <p class="form-control-plaintext">
+                                        <span class="badge" style="background: linear-gradient(180deg, rgba(59, 130, 246, 0.9) 0%, rgba(37, 99, 235, 0.9) 50%, rgba(29, 78, 216, 1) 100%) !important; color: #ffffff !important; font-size: 1rem !important; padding: 0.5rem 1rem !important; font-weight: 700 !important; font-family: 'Montserrat', sans-serif !important;">
+                                        {{ solicitud.empleado.dias_vacaciones_disponibles }} días
+                                    </span>
+                                    {% if solicitud.dias_solicitados > solicitud.empleado.dias_vacaciones_disponibles %}
+                                    <br><small style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif !important; margin-top: 0.5rem !important; display: block;">
+                                        <i class="fas fa-exclamation-triangle"></i> El empleado no tiene suficientes días disponibles
+                                    </small>
+                                    {% endif %}
+                                </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold" style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">Tipo de Vacación</label>
+                                    <p class="form-control-plaintext">
+                                        <span class="badge badge-baja" style="font-family: 'Montserrat', sans-serif !important;">{{ solicitud.get_tipo_display }}</span>
+                                    </p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold" style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">Motivo</label>
+                                    <div class="form-control-plaintext" style="min-height: 60px; color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; background: rgba(255, 255, 255, 0.1) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; border-radius: 8px !important; padding: 0.75rem 1rem !important;">
+                                        {{ solicitud.motivo|linebreaks }}
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold" style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">Estado Actual</label>
+                                    <p class="form-control-plaintext">
+                                        <span class="badge badge-pendiente" style="font-family: 'Montserrat', sans-serif !important;">{{ solicitud.get_estado_display }}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información de Aprobación del Jefe -->
+                {% if solicitud.aprobado_por_jefe %}
+                <div class="card mb-4">
+                    <div class="card-header" style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;">
+                        <h5 class="mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
+                            <i class="fas fa-user-tie me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>
+                            Aprobación del Jefe
+                        </h5>
+                    </div>
+                    <div class="card-body" style="background: transparent !important;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold" style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">Jefe que Aprobó</label>
+                                    <p class="form-control-plaintext" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; background: rgba(255, 255, 255, 0.1) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; border-radius: 8px !important; padding: 0.75rem 1rem !important;">{{ solicitud.aprobado_por_jefe.usuario.get_full_name|default:solicitud.aprobado_por_jefe.usuario.username }}</p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold" style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">Fecha de Aprobación</label>
+                                    <p class="form-control-plaintext" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; background: rgba(255, 255, 255, 0.1) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; border-radius: 8px !important; padding: 0.75rem 1rem !important;">{{ solicitud.fecha_aprobacion_jefe|date:"d/m/Y H:i" }}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold" style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">Comentarios del Jefe</label>
+                                    <div class="form-control-plaintext" style="min-height: 60px; color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; background: rgba(255, 255, 255, 0.1) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; border-radius: 8px !important; padding: 0.75rem 1rem !important;">
+                                        {{ solicitud.comentarios_jefe|default:"Sin comentarios"|linebreaks }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Formulario de Decisión -->
+                <div class="card">
+                    <div class="card-header" style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;">
+                        <h5 class="mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
+                            <i class="fas fa-gavel me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>
+                            Decisión Final de RH
+                        </h5>
+                    </div>
+                    <div class="card-body" style="background: transparent !important;">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        
+                        <form method="post" id="aprobacionForm">
+                            {% csrf_token %}
+                            
+                            <!-- Acción -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold" style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">¿Cuál es tu decisión final?</label>
+                                {% if form.accion.errors %}
+                                    <div class="text-danger mb-2">
+                                        {% for error in form.accion.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-check-card mb-3">
+                                            <input class="form-check-input" type="radio" name="accion" id="aprobar" value="aprobar" {% if form.accion.value == 'aprobar' %}checked{% endif %} required>
+                                            <label class="form-check-label d-block" for="aprobar" style="cursor: pointer; margin: 0;">
+                                                <div class="card border-success" id="card-aprobar" style="background: rgba(21, 128, 61, 0.15) !important; backdrop-filter: blur(20px) saturate(180%) !important; border: 2px solid rgba(21, 128, 61, 0.7) !important; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.2) !important;">
+                                                    <div class="card-body text-center" style="background: transparent !important;">
+                                                        <i class="fas fa-check-circle fa-2x mb-2" style="color: #15803D !important; font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;"></i>
+                                                        <h6 style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6), 0 3px 10px rgba(0, 0, 0, 0.5) !important;">Aprobar Solicitud</h6>
+                                                        <small style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif !important;">La solicitud será aprobada definitivamente</small>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check-card mb-3">
+                                            <input class="form-check-input" type="radio" name="accion" id="rechazar" value="rechazar" {% if form.accion.value == 'rechazar' %}checked{% endif %} required>
+                                            <label class="form-check-label d-block" for="rechazar" style="cursor: pointer; margin: 0;">
+                                                <div class="card border-danger" id="card-rechazar" style="background: rgba(185, 28, 28, 0.15) !important; backdrop-filter: blur(20px) saturate(180%) !important; border: 2px solid rgba(185, 28, 28, 0.7) !important; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.2) !important;">
+                                                    <div class="card-body text-center" style="background: transparent !important;">
+                                                        <i class="fas fa-times-circle fa-2x mb-2" style="color: #B91C1C !important; font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;"></i>
+                                                        <h6 style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; text-shadow: 0 2px 6px rgba(0, 0,0, 0.6), 0 3px 10px rgba(0, 0, 0, 0.5) !important;">Rechazar Solicitud</h6>
+                                                        <small style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif !important;">La solicitud será rechazada definitivamente</small>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Comentarios -->
+                            <div class="mb-4">
+                                <label for="{{ form.comentario.id_for_label }}" class="form-label fw-bold" style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
+                                    <i class="fas fa-comment me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>{{ form.comentario.label }}
+                                </label>
+                                <textarea name="comentario" id="{{ form.comentario.id_for_label }}" 
+                                          class="form-control" rows="3" 
+                                          placeholder="Comentarios sobre la decisión..."
+                                          style="background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.3) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; border-radius: 12px !important; padding: 0.75rem 1rem !important;">{{ form.comentario.value|default:'' }}</textarea>
+                                {% if form.comentario.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.comentario.errors %}
+                                            <small>{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text" style="color: rgba(255, 255, 255, 0.6) !important; font-family: 'Montserrat', sans-serif !important;">Explica brevemente tu decisión (opcional pero recomendado)</div>
+                            </div>
+
+                            <!-- Botones de Acción -->
+                            <div class="d-flex justify-content-between">
+                                <a href="{% url 'empleados:rh_dashboard' %}" class="btn btn-outline-secondary" style="font-family: 'Montserrat', sans-serif !important;">
+                                    <i class="fas fa-arrow-left me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Volver al Panel
+                                </a>
+                                <button type="submit" class="btn btn-primary" id="submitBtn" style="font-family: 'Montserrat', sans-serif !important;">
+                                    <i class="fas fa-save me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Guardar Decisión Final
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const form = document.getElementById('aprobacionForm');
+                            const submitBtn = document.getElementById('submitBtn');
+                            const radioAprobar = document.getElementById('aprobar');
+                            const radioRechazar = document.getElementById('rechazar');
+                            const cardAprobar = document.getElementById('card-aprobar');
+                            const cardRechazar = document.getElementById('card-rechazar');
+                            
+                            // Actualizar estilos cuando cambia la selección
+                            function updateCardStyles() {
+                                // Resetear ambos cards
+                                cardAprobar.style.borderWidth = '2px';
+                                cardAprobar.style.borderColor = 'rgba(21, 128, 61, 0.7)';
+                                cardAprobar.style.boxShadow = '';
+                                cardAprobar.style.backgroundColor = 'rgba(21, 128, 61, 0.15)';
+                                cardRechazar.style.borderWidth = '2px';
+                                cardRechazar.style.borderColor = 'rgba(185, 28, 28, 0.7)';
+                                cardRechazar.style.boxShadow = '';
+                                cardRechazar.style.backgroundColor = 'rgba(185, 28, 28, 0.15)';
+                                
+                                // Aplicar estilos según la selección
+                                if (radioAprobar.checked) {
+                                    cardAprobar.style.borderWidth = '3px';
+                                    cardAprobar.style.borderColor = 'rgba(21, 128, 61, 0.95)';
+                                    cardAprobar.style.boxShadow = '0 0 0 0.3rem rgba(21, 128, 61, 0.4), 0 8px 32px rgba(0, 0, 0, 0.3), 0 12px 40px rgba(0, 0, 0, 0.25)';
+                                    cardAprobar.style.backgroundColor = 'rgba(21, 128, 61, 0.25)';
+                                } else if (radioRechazar.checked) {
+                                    cardRechazar.style.borderWidth = '3px';
+                                    cardRechazar.style.borderColor = 'rgba(185, 28, 28, 0.95)';
+                                    cardRechazar.style.boxShadow = '0 0 0 0.3rem rgba(185, 28, 28, 0.4), 0 8px 32px rgba(0, 0, 0, 0.3), 0 12px 40px rgba(0, 0, 0, 0.25)';
+                                    cardRechazar.style.backgroundColor = 'rgba(185, 28, 28, 0.25)';
+                                }
+                            }
+                            
+                            // Agregar event listeners para cambios en los radios
+                            radioAprobar.addEventListener('change', updateCardStyles);
+                            radioRechazar.addEventListener('change', updateCardStyles);
+                            
+                            // También escuchar clicks en los cards (backup)
+                            cardAprobar.addEventListener('click', function() {
+                                if (!radioAprobar.checked) {
+                                    radioAprobar.checked = true;
+                                    radioAprobar.dispatchEvent(new Event('change'));
+                                }
+                            });
+                            
+                            cardRechazar.addEventListener('click', function() {
+                                if (!radioRechazar.checked) {
+                                    radioRechazar.checked = true;
+                                    radioRechazar.dispatchEvent(new Event('change'));
+                                }
+                            });
+                            
+                            // Inicializar estilos al cargar
+                            updateCardStyles();
+                            
+                            // Validar antes de enviar
+                            form.addEventListener('submit', function(e) {
+                                const accionSeleccionada = document.querySelector('input[name="accion"]:checked');
+                                if (!accionSeleccionada) {
+                                    e.preventDefault();
+                                    alert('Por favor, selecciona una acción (Aprobar o Rechazar) antes de enviar.');
+                                    return false;
+                                }
+                                
+                                submitBtn.disabled = true;
+                                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2" style="font-family: \'Font Awesome 6 Free\' !important; font-weight: 900 !important;"></i>Procesando...';
+                            });
+                        });
+                        </script>
+                    </div>
+                </div>
+
+                <!-- Información Adicional -->
+                <div class="card mt-4">
+                    <div class="card-header" style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;">
+                        <h6 class="mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
+                            <i class="fas fa-info-circle me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>
+                            Información Importante
+                        </h6>
+                    </div>
+                    <div class="card-body" style="background: transparent !important;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
+                                    <i class="fas fa-check-circle me-2" style="color: #15803D !important; font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Si Apruebas
+                                </h6>
+                                <ul class="list-unstyled">
+                                    <li style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important;">• La solicitud será aprobada definitivamente</li>
+                                    <li style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important;">• Se descontarán los días de vacaciones</li>
+                                    <li style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important;">• El empleado será notificado</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
+                                    <i class="fas fa-times-circle me-2" style="color: #B91C1C !important; font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Si Rechazas
+                                </h6>
+                                <ul class="list-unstyled">
+                                    <li style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important;">• La solicitud será rechazada</li>
+                                    <li style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important;">• El empleado será notificado</li>
+                                    <li style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important;">• Puede solicitar nuevamente</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Aplicar glassmorphism a las cards */
+.card {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    transition: all 0.3s ease !important;
+    overflow: hidden !important;
+}
+
+.card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.card-header {
+    background: transparent !important;
+    color: #ffffff !important;
+    border-radius: 20px 20px 0 0 !important;
+    font-weight: 600 !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.form-check-card {
+    position: relative;
+}
+
+.form-check-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    z-index: -1;
+}
+
+.form-check-card input[type="radio"]:checked ~ label #card-aprobar {
+    border-width: 3px !important;
+    border-color: rgba(21, 128, 61, 0.95) !important;
+    box-shadow: 0 0 0 0.3rem rgba(21, 128, 61, 0.4), 0 8px 32px rgba(0, 0, 0, 0.3), 0 12px 40px rgba(0, 0, 0, 0.25) !important;
+    background-color: rgba(21, 128, 61, 0.25) !important;
+}
+
+.form-check-card input[type="radio"]:checked ~ label #card-rechazar {
+    border-width: 3px !important;
+    border-color: rgba(185, 28, 28, 0.95) !important;
+    box-shadow: 0 0 0 0.3rem rgba(185, 28, 28, 0.4), 0 8px 32px rgba(0, 0, 0, 0.3), 0 12px 40px rgba(0, 0, 0, 0.25) !important;
+    background-color: rgba(185, 28, 28, 0.25) !important;
+}
+
+/* Fondo con tono verde/rojo para las cards */
+#card-aprobar {
+    background: rgba(21, 128, 61, 0.15) !important;
+}
+
+#card-rechazar {
+    background: rgba(185, 28, 28, 0.15) !important;
+}
+
+.form-check-card label {
+    cursor: pointer;
+    display: block;
+}
+
+.form-check-card .card {
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.form-check-card .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12) !important;
+}
+
+.form-control, .form-select {
+    border-radius: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    padding: 0.75rem 1rem !important;
+    transition: all 0.3s ease !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: rgba(59, 130, 246, 0.8) !important;
+    box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25) !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    outline: none !important;
+}
+
+.form-control-plaintext {
+    background: rgba(255, 255, 255, 0.1) !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    transition: all 0.2s ease !important;
+}
+
+.form-control-plaintext:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Botones con estilo moderno */
+.btn {
+    border-radius: 14px !important;
+    padding: 14px 32px !important;
+    font-weight: 600 !important;
+    font-family: 'Montserrat', sans-serif !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+    color: #ffffff !important;
+}
+
+.btn-primary {
+    background: linear-gradient(180deg, 
+        rgba(37, 99, 235, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 30, 100, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 56, 168, 1) 100%) !important;
+}
+
+.btn-outline-secondary {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.btn-outline-secondary:hover {
+    background: linear-gradient(180deg, 
+        rgba(209, 213, 219, 0.95) 0%, 
+        rgba(156, 163, 175, 0.95) 50%,
+        rgba(107, 114, 128, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Cards de decisión con hover mejorado */
+.form-check-card .card {
+    transition: all 0.3s ease !important;
+}
+
+.form-check-card .card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Aplicar Montserrat a todo */
+.dashboard,
+.dashboard * {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Iconos Font Awesome */
+.dashboard i,
+.dashboard .fa,
+.dashboard [class*="fa-"] {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+}
+
+/* Texto blanco global */
+.dashboard {
+    color: #ffffff !important;
+}
+
+.dashboard label,
+.dashboard p,
+.dashboard h1,
+.dashboard h5,
+.dashboard h6 {
+    color: #ffffff !important;
+}
+
+/* Alerts con glassmorphism */
+.alert {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 20px !important;
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+</style>
+{% endblock %}
+

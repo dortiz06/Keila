@@ -1,0 +1,841 @@
+{% extends 'base.html' %}
+{% load static %}
+{% csrf_token %} 
+{% block title %}Recursos Humanos{% endblock %}
+
+{% block content %}
+<div class="login-page-wrapper">
+    <div class="login-container">
+        <div class="login-card-wrapper">
+            <div class="card glass-card shadow-lg border-0">
+                <div class="card-header text-center border-0">
+                    <div class="mb-4">
+                        <img src="{% static 'images/logos/logo-keila.png' %}" alt="Logo Grupo Keila" class="login-logo">
+                    </div>
+                    <p class="mb-0 login-subtitle">Inicia sesión para continuar</p>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Mensajes -->
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show glass-alert" role="alert" aria-live="polite">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post" id="loginForm" novalidate>
+                        {% csrf_token %}
+                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                        <div class="mb-3 form-field">
+                            <label for="username" class="form-label" style="color: rgba(255, 255, 255, 0.95) !important; font-weight: 500 !important;">
+                                <i class="fas fa-user me-2"></i>Usuario
+                            </label>
+                            <input type="text" 
+                                   class="form-control form-control-lg interactive-input" 
+                                   id="username" 
+                                   name="username" 
+                                   placeholder="Ingresa tu usuario"
+                                   required
+                                   autofocus
+                                   style="background: rgba(255, 255, 255, 0.1) !important; backdrop-filter: blur(10px) saturate(150%) !important; -webkit-backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.3) !important; border-radius: 12px !important; color: #ffffff !important; padding: 12px 16px !important;">
+                            <div class="invalid-feedback">Ingresa tu usuario.</div>
+                        </div>
+                        
+                        <div class="mb-4 form-field">
+                            <label for="password" class="form-label" style="color: rgba(255, 255, 255, 0.95) !important; font-weight: 500 !important;">
+                                <i class="fas fa-lock me-2"></i>Contraseña
+                            </label>
+                            <div class="input-group" style="display: flex !important; width: 100% !important; gap: 0 !important; background: rgba(255, 255, 255, 0.1) !important; backdrop-filter: blur(10px) saturate(150%) !important; -webkit-backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.3) !important; border-radius: 12px !important; overflow: hidden !important;">
+                                <input type="password" 
+                                       class="form-control form-control-lg interactive-input" 
+                                       id="password" 
+                                       name="password" 
+                                       placeholder="Ingresa tu contraseña"
+                                       required
+                                       style="background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; border: none !important; border-radius: 0 !important; color: #ffffff !important; padding: 12px 16px !important; flex: 1 !important; margin: 0 !important; box-shadow: none !important;">
+                                <button class="btn btn-outline-secondary" 
+                                        type="button" 
+                                        id="togglePassword"
+                                        style="background: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; border: none !important; border-left: 1px solid rgba(255, 255, 255, 0.2) !important; border-radius: 0 !important; color: #ffffff !important; padding: 12px 16px !important; margin: 0 !important; flex-shrink: 0 !important; box-shadow: none !important;">
+                                    <i class="fas fa-eye" id="toggleIcon"></i>
+                                </button>
+                            </div>
+                            <div class="invalid-feedback">Ingresa tu contraseña.</div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-login btn-lg" id="submitBtn">
+                                <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
+                            </button>
+                        </div>
+                        <div id="formError" class="form-error visually-hidden" role="alert"></div>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3">
+                    <small class="text-muted">
+                        <i class="fas fa-shield-alt me-1"></i>
+                        Acceso seguro y encriptado
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* ===== CORRECCIÓN DE UX Y CENTRADO FIJO DEL LOGIN ===== */
+
+/* Estilos para navbar y footer en página de login */
+body.login-page {
+    padding-top: 0 !important;
+    overflow: hidden !important;
+    height: 100vh !important;
+    margin: 0 !important;
+}
+
+body.login-page main {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+}
+
+/* Navbar fijo en la parte superior para login */
+body.login-page .navbar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 1000 !important;
+    background: rgba(0, 56, 168, 0.9) !important;
+    backdrop-filter: saturate(140%) blur(8px) !important;
+    -webkit-backdrop-filter: saturate(140%) blur(8px) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Footer fijo en la parte inferior para login */
+body.login-page .footer {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 1000 !important;
+    background: rgba(0, 0, 0, 0.6) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    padding: 1rem 0 !important;
+    margin: 0 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+body.login-page .footer p {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 0.9rem !important;
+    margin: 0 !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Contenedor principal del login - Fondo fijo sin scroll */
+.login-page-wrapper {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+    background-image: url('{% static "images/login/login1.png" %}');
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    z-index: 0;
+}
+
+/* Overlay oscuro para contraste */
+.login-page-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+/* Contenedor de centrado perfecto - Ajustado para navbar y footer */
+.login-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    padding: 80px 1rem 60px 1rem; /* Espacio superior para navbar, inferior para footer */
+    box-sizing: border-box;
+}
+
+/* Wrapper de la tarjeta de login */
+.login-card-wrapper {
+    width: 100%;
+    max-width: 450px;
+    position: relative;
+    z-index: 1001; /* Por encima del navbar (1000) y footer (1000) */
+}
+
+/* Contenedor principal con Glassmorphism mejorado - Degradado de opacidad */
+.glass-card {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    overflow: hidden;
+}
+
+/* Card Header con Glassmorphism - Transparente para mostrar el degradado del cuadro */
+.glass-card .card-header {
+    background: transparent !important; /* Transparente para mostrar el degradado del cuadro */
+    backdrop-filter: none !important; /* Sin blur adicional, usa el del cuadro principal */
+    -webkit-backdrop-filter: none !important;
+    border: none !important; /* Sin línea blanca */
+    border-radius: 20px 20px 0 0 !important;
+    padding: 2rem 1.5rem !important;
+}
+
+/* Logo con mejor contraste - Más grande */
+.login-logo {
+    max-width: 240px;
+    height: auto;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease !important;
+}
+
+.login-logo:hover {
+    transform: scale(1.05) !important;
+}
+
+/* Tipografía Montserrat consistente */
+.login-subtitle {
+    color: rgba(255, 255, 255, 0.95) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 1rem;
+    letter-spacing: 0.3px;
+}
+
+/* Campos de formulario con Glassmorphism mejorado - Especificidad alta */
+.login-page-wrapper .form-control,
+.login-page-wrapper input[type="text"],
+.login-page-wrapper input[type="password"],
+.login-page-wrapper input[type="email"],
+body.login-page .form-control,
+body.login-page input[type="text"],
+body.login-page input[type="password"],
+body.login-page input[type="email"] {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 12px !important;
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    padding: 12px 16px !important;
+    transition: all 0.3s ease !important;
+}
+
+.login-page-wrapper .form-control::placeholder,
+.login-page-wrapper input::placeholder,
+body.login-page .form-control::placeholder,
+body.login-page input::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+}
+
+.login-page-wrapper .form-control:hover,
+body.login-page .form-control:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.login-page-wrapper .form-control:focus,
+body.login-page .form-control:focus {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.2) !important;
+    outline: none !important;
+    color: #ffffff !important;
+}
+
+/* Labels con Montserrat - Especificidad alta */
+.login-page-wrapper .form-label,
+body.login-page .form-label {
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 500 !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+    margin-bottom: 0.5rem;
+}
+
+/* Input-group como contenedor único con glassmorphism */
+.login-page-wrapper .input-group,
+body.login-page .input-group {
+    display: flex !important;
+    width: 100% !important;
+    gap: 0 !important;
+    margin: 0 !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+}
+
+.login-page-wrapper .input-group .form-control,
+body.login-page .input-group .form-control {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    flex: 1 !important;
+    box-shadow: none !important;
+}
+
+.login-page-wrapper .input-group .form-control:focus,
+body.login-page .input-group .form-control:focus {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Botón de toggle password sin bordes individuales */
+.login-page-wrapper .input-group .btn,
+.login-page-wrapper .input-group button,
+body.login-page .input-group .btn,
+body.login-page .input-group button {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 0 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    padding: 12px 16px !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+    box-shadow: none !important;
+}
+
+.login-page-wrapper .input-group .btn:hover,
+body.login-page .input-group .btn:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    transform: scale(1.02);
+    color: #ffffff !important;
+}
+
+.login-page-wrapper .input-group .form-control:focus + .btn,
+body.login-page .input-group .form-control:focus + .btn {
+    border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Botón de login con estilo del dashboard - Especificidad alta */
+.login-page-wrapper .btn-login,
+body.login-page .btn-login,
+.login-page-wrapper button.btn-login,
+body.login-page button.btn-login {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.4px !important;
+    padding: 14px 32px !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.login-page-wrapper .btn-login:hover,
+body.login-page .btn-login:hover {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.login-page-wrapper .btn-login:active,
+body.login-page .btn-login:active {
+    transform: translateY(0) !important;
+    box-shadow: 
+        0 2px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Card Body con Glassmorphism - Transparente para mostrar el degradado del cuadro */
+.glass-card .card-body {
+    background: transparent !important; /* Transparente para mostrar el degradado del cuadro */
+    backdrop-filter: none !important; /* Sin blur adicional, usa el del cuadro principal */
+    -webkit-backdrop-filter: none !important;
+    padding: 2rem 1.5rem !important;
+}
+
+/* Card Footer con Glassmorphism - Transparente para mostrar el degradado del cuadro */
+.glass-card .card-footer {
+    background: transparent !important; /* Transparente para mostrar el degradado del cuadro */
+    backdrop-filter: none !important; /* Sin blur adicional, usa el del cuadro principal */
+    -webkit-backdrop-filter: none !important;
+    border: none !important; /* Sin línea blanca */
+    border-radius: 0 0 20px 20px !important;
+    padding: 1rem 1.5rem !important;
+}
+
+.glass-card .card-footer small {
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Alerts con Glassmorphism mejorado - Especificidad alta */
+.login-page-wrapper .glass-alert,
+.login-page-wrapper .alert,
+body.login-page .glass-alert,
+body.login-page .alert {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+    color: #ffffff !important;
+}
+
+.login-page-wrapper .alert-success,
+body.login-page .alert-success { 
+    border-left: 4px solid #16A34A !important;
+}
+
+.login-page-wrapper .alert-danger,
+body.login-page .alert-danger { 
+    border-left: 4px solid #DC2626 !important;
+}
+
+.login-page-wrapper .alert-warning,
+body.login-page .alert-warning { 
+    border-left: 4px solid #F59E0B !important;
+}
+
+.login-page-wrapper .alert-info,
+body.login-page .alert-info { 
+    border-left: 4px solid #3B82F6 !important;
+}
+
+/* Mensajes de error del formulario - Especificidad alta */
+.login-page-wrapper .form-error,
+body.login-page .form-error {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    background: rgba(220, 38, 38, 0.2) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 500 !important;
+}
+
+.login-page-wrapper .invalid-feedback,
+body.login-page .invalid-feedback {
+    display: none;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 500 !important;
+    color: #ff6b6b !important;
+}
+
+.form-control.is-invalid ~ .invalid-feedback,
+.input-group ~ .invalid-feedback {
+    display: block;
+}
+
+.visually-hidden { 
+    position: absolute; 
+    width: 1px; 
+    height: 1px; 
+    padding: 0; 
+    margin: -1px; 
+    overflow: hidden; 
+    clip: rect(0,0,0,0); 
+    border: 0; 
+}
+
+/* ===== ANIMACIONES ===== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.glass-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes shake {
+    10%, 90% { transform: translateX(-1px); }
+    20%, 80% { transform: translateX(2px); }
+    30%, 50%, 70% { transform: translateX(-4px); }
+    40%, 60% { transform: translateX(4px); }
+}
+
+.shake {
+    animation: shake 0.4s ease both;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .login-container {
+        padding: 70px 0.75rem 55px 0.75rem; /* Ajuste responsive para navbar/footer */
+    }
+    
+    body.login-page .footer {
+        padding: 0.75rem 0 !important;
+    }
+    
+    body.login-page .footer p {
+        font-size: 0.8rem !important;
+    }
+    
+    .login-card-wrapper {
+        max-width: 100%;
+    }
+    
+    .glass-card {
+        margin: 0;
+    }
+    
+    .glass-card .card-header {
+        padding: 1.5rem 1rem !important;
+    }
+    
+    .glass-card .card-body {
+        padding: 1.5rem 1rem !important;
+    }
+    
+    .login-logo {
+        max-width: 200px;
+    }
+    
+    /* iOS/Safari mobile - optimización de fondo */
+    .login-page-wrapper {
+        background-attachment: scroll;
+        background-position: center center;
+    }
+    
+    .login-page-wrapper .form-control,
+    body.login-page .form-control {
+        padding: 10px 14px !important;
+        font-size: 0.95rem !important;
+    }
+    
+    .login-page-wrapper .btn-login,
+    body.login-page .btn-login {
+        padding: 10px 20px !important;
+        font-size: 0.95rem !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .login-container {
+        padding: 65px 0.5rem 50px 0.5rem; /* Ajuste móvil para navbar/footer */
+    }
+    
+    body.login-page .footer {
+        padding: 0.5rem 0 !important;
+    }
+    
+    body.login-page .footer p {
+        font-size: 0.75rem !important;
+    }
+    
+    .glass-card {
+        border-radius: 20px !important;
+    }
+    
+    .glass-card .card-header {
+        border-radius: 20px 20px 0 0 !important;
+        padding: 1.25rem 0.75rem !important;
+    }
+    
+    .glass-card .card-footer {
+        border-radius: 0 0 20px 20px !important;
+        padding: 0.75rem !important;
+    }
+    
+    .login-logo {
+        max-width: 160px;
+    }
+    
+    .login-subtitle {
+        font-size: 0.9rem !important;
+    }
+}
+
+/* Asegurar que no haya scroll en ningún caso */
+html.login-page-html,
+html.login-page-html body {
+    overflow: hidden !important;
+    height: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+</style>
+
+<script>
+// Agregar clases al body y html para ocultar navbar/footer y prevenir scroll
+document.addEventListener('DOMContentLoaded', function() {
+    // Agregar clases especiales al body y html
+    document.body.classList.add('login-page');
+    document.documentElement.classList.add('login-page-html');
+    
+    // Asegurar que no haya scroll
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    // Toggle password visibility
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const toggleIcon = document.getElementById('toggleIcon');
+    const usernameInput = document.getElementById('username');
+    const form = document.getElementById('loginForm');
+    const formError = document.getElementById('formError');
+    const submitBtn = document.getElementById('submitBtn');
+
+    togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        if (type === 'text') {
+            toggleIcon.classList.remove('fa-eye');
+            toggleIcon.classList.add('fa-eye-slash');
+        } else {
+            toggleIcon.classList.remove('fa-eye-slash');
+            toggleIcon.classList.add('fa-eye');
+        }
+    });
+    
+    // Estilos para placeholders (una sola vez)
+    if (!document.getElementById('placeholder-styles')) {
+        const style = document.createElement('style');
+        style.id = 'placeholder-styles';
+        style.textContent = `
+            #username::placeholder,
+            #password::placeholder {
+                color: rgba(255, 255, 255, 0.6) !important;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    // Aplicar estilos glassmorphism a los inputs dinámicamente
+    function applyInputStyles(input) {
+        input.style.background = 'rgba(255, 255, 255, 0.1)';
+        input.style.backdropFilter = 'blur(10px) saturate(150%)';
+        input.style.webkitBackdropFilter = 'blur(10px) saturate(150%)';
+        input.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+        input.style.borderRadius = '12px';
+        input.style.color = '#ffffff';
+        input.style.padding = '12px 16px';
+    }
+    
+    // Aplicar estilos iniciales
+    applyInputStyles(usernameInput);
+    applyInputStyles(passwordInput);
+    
+    // Asegurar que el input-group tenga el fondo y borde glassmorphism
+    const inputGroup = passwordInput.closest('.input-group');
+    if (inputGroup) {
+        inputGroup.style.display = 'flex';
+        inputGroup.style.width = '100%';
+        inputGroup.style.gap = '0';
+        inputGroup.style.margin = '0';
+        inputGroup.style.background = 'rgba(255, 255, 255, 0.1)';
+        inputGroup.style.backdropFilter = 'blur(10px) saturate(150%)';
+        inputGroup.style.webkitBackdropFilter = 'blur(10px) saturate(150%)';
+        inputGroup.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+        inputGroup.style.borderRadius = '12px';
+        inputGroup.style.overflow = 'hidden';
+    }
+    
+    // Input de password sin bordes ni fondo individual
+    passwordInput.style.background = 'transparent';
+    passwordInput.style.backdropFilter = 'none';
+    passwordInput.style.webkitBackdropFilter = 'none';
+    passwordInput.style.border = 'none';
+    passwordInput.style.borderRadius = '0';
+    passwordInput.style.margin = '0';
+    passwordInput.style.flex = '1';
+    passwordInput.style.boxShadow = 'none';
+    
+    // Botón toggle sin bordes ni fondo individual, solo línea divisoria sutil
+    togglePassword.style.background = 'transparent';
+    togglePassword.style.backdropFilter = 'none';
+    togglePassword.style.webkitBackdropFilter = 'none';
+    togglePassword.style.border = 'none';
+    togglePassword.style.borderLeft = '1px solid rgba(255, 255, 255, 0.2)';
+    togglePassword.style.borderRadius = '0';
+    togglePassword.style.color = '#ffffff';
+    togglePassword.style.padding = '12px 16px';
+    togglePassword.style.boxShadow = 'none';
+    
+    // Micro-interactions: focus/blur visual feedback
+    usernameInput.addEventListener('focus', () => {
+        usernameInput.style.background = 'rgba(255, 255, 255, 0.15)';
+        usernameInput.style.borderColor = 'rgba(255, 255, 255, 0.5)';
+        usernameInput.style.boxShadow = '0 0 0 0.2rem rgba(255, 255, 255, 0.2)';
+    });
+    usernameInput.addEventListener('blur', () => {
+        usernameInput.style.background = 'rgba(255, 255, 255, 0.1)';
+        usernameInput.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+        usernameInput.style.boxShadow = 'none';
+    });
+    
+    // Para el input de password, cambiar el fondo del contenedor input-group
+    passwordInput.addEventListener('focus', () => {
+        if (inputGroup) {
+            inputGroup.style.background = 'rgba(255, 255, 255, 0.15)';
+            inputGroup.style.borderColor = 'rgba(255, 255, 255, 0.5)';
+        }
+    });
+    passwordInput.addEventListener('blur', () => {
+        if (inputGroup) {
+            inputGroup.style.background = 'rgba(255, 255, 255, 0.1)';
+            inputGroup.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+        }
+    });
+    
+    // Hover para el input-group de password
+    if (inputGroup) {
+        inputGroup.addEventListener('mouseenter', () => {
+            if (document.activeElement !== passwordInput) {
+                inputGroup.style.background = 'rgba(255, 255, 255, 0.15)';
+                inputGroup.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+            }
+        });
+        inputGroup.addEventListener('mouseleave', () => {
+            if (document.activeElement !== passwordInput) {
+                inputGroup.style.background = 'rgba(255, 255, 255, 0.1)';
+                inputGroup.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+            }
+        });
+    }
+
+    // Form validation with visual errors
+    form.addEventListener('submit', function(e) {
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
+        let valid = true;
+
+        if (!username) {
+            usernameInput.classList.add('is-invalid');
+            valid = false;
+        } else {
+            usernameInput.classList.remove('is-invalid');
+        }
+
+        if (!password) {
+            passwordInput.classList.add('is-invalid');
+            valid = false;
+        } else {
+            passwordInput.classList.remove('is-invalid');
+        }
+
+        if (!valid) {
+            e.preventDefault();
+            formError.textContent = 'Por favor, completa todos los campos.';
+            formError.classList.remove('visually-hidden');
+            form.closest('.card').classList.add('shake');
+            setTimeout(() => form.closest('.card').classList.remove('shake'), 450);
+            return false;
+        }
+    });
+    
+    // Auto-hide alerts after 5 seconds
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            if (alert.parentNode) {
+                alert.style.transition = 'opacity 0.5s ease';
+                alert.style.opacity = '0';
+                setTimeout(() => {
+                    if (alert.parentNode) {
+                        alert.remove();
+                    }
+                }, 500);
+            }
+        }, 5000);
+    });
+});
+
+// Configuración CSRF para AJAX
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Asegurar que el token CSRF esté disponible
+document.addEventListener('DOMContentLoaded', function() {
+    const csrfToken = getCookie('csrftoken');
+    if (csrfToken) {
+        // Actualizar el valor del token en el formulario
+        const csrfInput = document.querySelector('input[name="csrfmiddlewaretoken"]');
+        if (csrfInput) {
+            csrfInput.value = csrfToken;
+        }
+    }
+});
+</script>
+{% endblock %}

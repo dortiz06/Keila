@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Solicitudes de Vacaciones - RH{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="page-header">
+    <div class="container">
+      <h1><i class="fas fa-clipboard-list me-3"></i>Solicitudes de Vacaciones (RH)</h1>
+      <p>Gestiona las solicitudes aprobando o rechazando</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="card mb-4">
+      <div class="card-body">
+        <form method="get" class="row g-3">
+          <div class="col-md-4">
+            <label for="estado" class="form-label">Estado</label>
+            <select name="estado" id="estado" class="form-select">
+              <option value="">Todos los estados</option>
+              <option value="P" {% if estado_actual == 'P' %}selected{% endif %}>Pendiente</option>
+              <option value="A" {% if estado_actual == 'A' %}selected{% endif %}>Aprobada</option>
+              <option value="R" {% if estado_actual == 'R' %}selected{% endif %}>Rechazada</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="busqueda" class="form-label">Buscar empleado</label>
+            <input type="text" name="busqueda" id="busqueda" class="form-control" placeholder="Nombre, apellido, puesto" value="{{ busqueda_actual }}">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">&nbsp;</label>
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search me-1"></i>Filtrar
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Solicitudes</div>
+      <div class="card-body">
+        {% if solicitudes %}
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Empleado</th>
+                <th>Departamento</th>
+                <th>Período</th>
+                <th>Días</th>
+                <th>Etapa</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for s in solicitudes %}
+              <tr>
+                <td>{{ s.empleado.nombre_completo }}</td>
+                <td>{{ s.empleado.departamento.nombre }}</td>
+                <td>{{ s.fecha_inicio|date:"d/m/Y" }} - {{ s.fecha_fin|date:"d/m/Y" }}</td>
+                <td>{{ s.dias_solicitados }}</td>
+                <td>{{ s.get_etapa_display }}</td>
+                <td>{{ s.get_estado_display }}</td>
+                <td>
+                  <a class="btn btn-sm btn-primary" href="{% url 'empleados:aprobar_rh' s.id %}">Revisar</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+          <p class="text-muted mb-0">No hay solicitudes para mostrar.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="row mt-4">
+      <div class="col-12">
+        <a href="{% url 'empleados:rh_dashboard' %}" class="btn btn-outline-secondary">
+          <i class="fas fa-arrow-left me-1"></i>Volver al Panel RH
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
