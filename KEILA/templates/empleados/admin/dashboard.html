@@ -5,6 +5,16 @@
 {% block title %}Panel Administrador{% endblock %}
 
 {% block content %}
+<style>
+/* Cambiar fondo solo en la vista del dashboard de administrador */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/dash/dash1.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+</style>
 <div class="container-fluid dashboard">
     <div class="container">
         <div class="row mb-4">
