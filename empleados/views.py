@@ -1782,6 +1782,49 @@ def devolver_equipo(request, asignacion_id):
     return render(request, 'empleados/sistemas/devolver_equipo.html', context)
 
 
+# === KARDEX DE VACACIONES ===
+
+@login_required
+def kardex_vacaciones(request):
+    """Kardex de vacaciones - Lista de todos los empleados con sus vacaciones acumuladas"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+        raise PermissionDenied
+    
+    # Obtener todos los empleados activos
+    empleados = Perfil.objects.filter(activo=True).select_related(
+        'usuario', 'departamento'
+    ).order_by('usuario__last_name', 'usuario__first_name')
+    
+    # Preparar datos de vacaciones para cada empleado
+    empleados_data = []
+    for empleado in empleados:
+        # Vacaciones del año actual
+        dias_anuales = empleado.dias_vacaciones_anuales
+        dias_usados = empleado.dias_vacaciones_usados
+        dias_acumulados_ano_actual = empleado.calcular_dias_acumulados_hasta_hoy()
+        dias_ano_anterior = empleado.dias_vacaciones_acumulados
+        
+        # Calcular total disponible
+        total_disponible = empleado.calcular_total_disponible_proyectado()
+        
+        empleados_data.append({
+            'empleado': empleado,
+            'dias_anuales': dias_anuales,
+            'dias_usados': dias_usados,
+            'dias_acumulados_ano_actual': round(dias_acumulados_ano_actual, 2),
+            'total_disponible': round(total_disponible, 2),
+            'antiguedad': empleado.antiguedad_detallada,
+        })
+    
+    context = {
+        'perfil': perfil,
+        'empleados_data': empleados_data,
+        'total_empleados': len(empleados_data),
+    }
+    return render(request, 'empleados/rh/kardex_vacaciones.html', context)
+
+
 # === REPORTE DE VACACIONES ===
 
 @login_required
