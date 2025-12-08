@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Marcar Equipo como Disponible{% endblock %}
+
+{% block content %}
+<style>
+/* Cambiar fondo solo en la vista de marcar equipo disponible - Más oscuro para mejor legibilidad */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.65)), url('{% static "images/dash/hardw.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+</style>
+<div class="container-fluid dashboard">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="dashboard-title" style="color: #ffffff !important; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 0 3px 12px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 0, 0, 0.5) !important;"><i class="fas fa-check-circle me-2"></i>Marcar Equipo como Disponible</h1>
+        <a href="{% url 'empleados:inventario_equipos' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Volver al Inventario
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+    <div class="card" style="overflow: hidden !important; border-radius: 20px !important;">
+        <div class="card-body" style="background: transparent !important; padding: 2rem !important; overflow: hidden !important; border-radius: 20px !important;">
+            <!-- Información del Equipo -->
+            <div class="alert alert-success mb-4" style="background: rgba(34, 197, 94, 0.2) !important; border: 1px solid rgba(34, 197, 94, 0.4) !important; color: #ffffff !important;">
+                <h6 class="mb-2" style="font-weight: 300 !important;"><i class="fas fa-check-circle me-2"></i>Confirmar Disponibilidad</h6>
+                <p class="mb-2">
+                    El equipo ha sido reparado y está listo para ser asignado a un empleado.
+                </p>
+            </div>
+
+            <div class="card mb-4" style="background: rgba(255, 255, 255, 0.08) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; border-radius: 12px !important; overflow: hidden !important;">
+                <div class="card-body" style="background: transparent !important;">
+                    <h6 style="color: #ffffff !important; font-weight: 300 !important;"><i class="fas fa-laptop me-2"></i>Equipo:</h6>
+                    <p style="color: #ffffff !important;" class="mb-3">
+                        <strong>{{ equipo.codigo_inventario }}</strong> - {{ equipo.categoria.nombre }} {{ equipo.marca }} {{ equipo.modelo }}
+                    </p>
+                    
+                    <h6 style="color: #ffffff !important; font-weight: 300 !important;"><i class="fas fa-info-circle me-2"></i>Estado Actual:</h6>
+                    <p style="color: #ffffff !important;" class="mb-3">
+                        <span class="badge badge-estado-pendiente">
+                            <i class="fas fa-wrench me-1"></i>En Reparación
+                        </span>
+                    </p>
+                    
+                    <h6 style="color: #ffffff !important; font-weight: 300 !important;"><i class="fas fa-arrow-right me-2"></i>Nuevo Estado:</h6>
+                    <p style="color: #ffffff !important;" class="mb-0">
+                        <span class="badge badge-estado-resuelto">
+                            <i class="fas fa-check-circle me-1"></i>Disponible
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="alert alert-info" style="background: rgba(59, 130, 246, 0.2) !important; border: 1px solid rgba(59, 130, 246, 0.4) !important; color: #ffffff !important;">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Al marcar este equipo como disponible, quedará listo para ser asignado a cualquier empleado cuando sea necesario.
+                </div>
+
+                <div class="d-flex gap-3">
+                    <button type="submit" class="btn btn-outline-success">
+                        <i class="fas fa-check me-1"></i>Confirmar y Marcar como Disponible
+                    </button>
+                    <a href="{% url 'empleados:inventario_equipos' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </a>
+                </div>
+            </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Aplicar estilos del dashboard a la vista de marcar equipo disponible - Mejor contraste */
+.dashboard .card {
+    background: rgba(60, 60, 60, 0.4) !important;
+    backdrop-filter: blur(25px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 
+                0 4px 16px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    overflow: hidden !important;
+    position: relative !important;
+}
+
+.dashboard .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 20px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.dashboard .card-body {
+    background: transparent !important;
+    overflow: hidden !important;
+    border-radius: 20px !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+.dashboard .card-body > * {
+    position: relative !important;
+    z-index: 3 !important;
+}
+
+.dashboard-title {
+    color: #ffffff !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 
+                 0 3px 12px rgba(0, 0, 0, 0.6),
+                 0 0 20px rgba(0, 0, 0, 0.5) !important;
+    font-weight: 700 !important;
+    margin-bottom: 0 !important;
+}
+
+/* ===== ESTILOS DE BOTONES DEL DASHBOARD ===== */
+/* Botón Success - Verde con degradado (más oscuro) */
+.dashboard .btn-outline-success {
+    background: linear-gradient(180deg, 
+        rgba(34, 197, 94, 0.95) 0%, 
+        rgba(22, 163, 74, 0.95) 50%,
+        rgba(15, 118, 50, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .btn-outline-success:hover {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Botón Secondary - Gris con degradado */
+.dashboard .btn-outline-secondary {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .btn-outline-secondary:hover {
+    background: linear-gradient(180deg, 
+        rgba(209, 213, 219, 0.95) 0%, 
+        rgba(156, 163, 175, 0.95) 50%,
+        rgba(107, 114, 128, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Badges de Estado */
+.badge-estado-pendiente {
+    background: linear-gradient(135deg, 
+        rgba(245, 158, 11, 0.3) 0%, 
+        rgba(217, 119, 6, 0.25) 100%) !important;
+    color: #f59e0b !important;
+    border: 1px solid rgba(245, 158, 11, 0.5) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    padding: 0.5rem 0.75rem !important;
+    border-radius: 12px !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+}
+
+.badge-estado-resuelto {
+    background: linear-gradient(135deg, 
+        rgba(34, 197, 94, 0.3) 0%, 
+        rgba(22, 163, 74, 0.25) 100%) !important;
+    color: #22c55e !important;
+    border: 1px solid rgba(34, 197, 94, 0.5) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    padding: 0.5rem 0.75rem !important;
+    border-radius: 12px !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+}
+
+/* Estilos para alertas */
+.dashboard .alert {
+    border-radius: 12px !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+}
+
+.dashboard .alert-success {
+    background: rgba(34, 197, 94, 0.2) !important;
+    border: 1px solid rgba(34, 197, 94, 0.4) !important;
+    color: #ffffff !important;
+}
+
+.dashboard .alert-info {
+    background: rgba(59, 130, 246, 0.2) !important;
+    border: 1px solid rgba(59, 130, 246, 0.4) !important;
+    color: #ffffff !important;
+}
+</style>
+{% endblock %}
+

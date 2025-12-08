@@ -1,4 +1,4 @@
-"""
+	"""
 Configuración de producción para el Sistema de Recursos Humanos
 """
 
@@ -12,6 +12,7 @@ import os
 
 # Configuración de seguridad para producción
 DEBUG = False
+<<<<<<< HEAD
 
 ALLOWED_HOSTS = [
     "sistemagk.gruaskeila.com.mx",
@@ -27,6 +28,15 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 
+=======
+ALLOWED_HOSTS = [
+    'localhost', 
+    '127.0.0.1', 
+    'tu-dominio.com',
+    'sistemagk.gruaskeila.com.mx',
+    'www.sistemagk.gruaskeila.com.mx',
+]
+>>>>>>> origin/ALEX
 
 # Base de datos de producción (PostgreSQL recomendado)
 DATABASES = {
@@ -41,6 +51,7 @@ DATABASES = {
 }
 
 # Configuración de archivos estáticos
+<<<<<<< HEAD
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
@@ -48,6 +59,10 @@ STATIC_URL = '/static/'
 
 """
 # No STATICFILES_DIRS aquí, es solo para desarrollo.
+=======
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+>>>>>>> origin/ALEX
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
@@ -75,6 +90,7 @@ WSGI_APPLICATION = 'rh_project.wsgi.application'
 
 
 # Configuración de archivos de medios
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Configuración de seguridad
@@ -88,8 +104,15 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 
 # Configuración de sesiones
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# Si usas HTTPS, cambia estos a True
+SESSION_COOKIE_SECURE = False  # Cambiar a True si usas HTTPS
+CSRF_COOKIE_SECURE = False  # Cambiar a True si usas HTTPS
+CSRF_TRUSTED_ORIGINS = [
+    'https://sistemagk.gruaskeila.com.mx',
+    'http://sistemagk.gruaskeila.com.mx',
+    'https://www.sistemagk.gruaskeila.com.mx',
+    'http://www.sistemagk.gruaskeila.com.mx',
+]
 
 # Application definition
 INSTALLED_APPS = [

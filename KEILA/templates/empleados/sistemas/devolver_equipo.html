@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Devolver Equipo{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Registrar Devolución de Equipo</h2>
+    <p>Equipo: {{ asignacion.equipo.codigo_inventario }} - {{ asignacion.empleado.nombre_completo }}</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-warning">Registrar Devolución</button>
+    </form>
+</div>
+{% endblock %}
+

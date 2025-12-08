@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mis Tickets{% endblock %}
+
+{% block content %}
+<div class="container-fluid dashboard">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+        <div>
+            <h1 class="dashboard-title">Mis Tickets de Soporte</h1>
+            <p class="dashboard-subtitle mb-0">Historial de tickets de soporte técnico</p>
+        </div>
+        <a href="{% url 'empleados:crear_ticket' %}" class="btn btn-success">
+            <i class="fas fa-plus me-1"></i>Nuevo Ticket
+        </a>
+    </div>
+    
+    {% if tickets %}
+        <div class="card">
+            <div class="card-body" style="background: transparent !important; padding: 1.5rem !important;">
+                <div class="table-responsive" style="background: transparent !important; border: none !important; box-shadow: none !important; border-radius: 0 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th style="color: #ffffff !important;">Código</th>
+                                <th style="color: #ffffff !important;">Tipo</th>
+                                <th style="color: #ffffff !important;">Descripción</th>
+                                <th style="color: #ffffff !important;">Prioridad</th>
+                                <th style="color: #ffffff !important;">Estado</th>
+                                <th style="color: #ffffff !important;">Asignado A</th>
+                                <th style="color: #ffffff !important;">Fecha Creación</th>
+                                <th style="color: #ffffff !important;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ticket in tickets %}
+                            <tr style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
+                                <td style="color: #ffffff !important;"><strong>{{ ticket.codigo }}</strong></td>
+                                <td style="color: #ffffff !important;">
+                                    {% if ticket.tipo == 'HARDWARE' %}
+                                        <i class="fas fa-tools"></i>
+                                    {% elif ticket.tipo == 'SOFTWARE' %}
+                                        <i class="fas fa-code"></i>
+                                    {% elif ticket.tipo == 'RED' %}
+                                        <i class="fas fa-network-wired"></i>
+                                    {% elif ticket.tipo == 'ACCESO' %}
+                                        <i class="fas fa-key"></i>
+                                    {% else %}
+                                        <i class="fas fa-question-circle"></i>
+                                    {% endif %}
+                                    {{ ticket.get_tipo_display }}
+                                </td>
+                                <td style="color: #ffffff !important;">{{ ticket.descripcion|truncatewords:10 }}</td>
+                                <td>
+                                    {% if ticket.prioridad == 'URGENTE' %}
+                                        <span class="badge badge-urgente">{{ ticket.get_prioridad_display }}</span>
+                                    {% elif ticket.prioridad == 'ALTA' %}
+                                        <span class="badge badge-alta">{{ ticket.get_prioridad_display }}</span>
+                                    {% elif ticket.prioridad == 'MEDIA' %}
+                                        <span class="badge badge-media">{{ ticket.get_prioridad_display }}</span>
+                                    {% else %}
+                                        <span class="badge badge-baja">{{ ticket.get_prioridad_display }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if ticket.estado == 'PENDIENTE' %}
+                                        <span class="badge badge-pendiente">Pendiente</span>
+                                    {% elif ticket.estado == 'EN_PROCESO' %}
+                                        <span class="badge badge-proceso">En Proceso</span>
+                                    {% elif ticket.estado == 'RESUELTO' %}
+                                        <span class="badge badge-resuelto">Resuelto</span>
+                                    {% elif ticket.estado == 'CANCELADO' %}
+                                        <span class="badge badge-cancelado">Cancelado</span>
+                                    {% endif %}
+                                </td>
+                                <td style="color: #ffffff !important;">
+                                    {% if ticket.asignado_a %}
+                                        <i class="fas fa-user me-1"></i>{{ ticket.asignado_a.nombre_completo }}
+                                    {% else %}
+                                        <span style="color: rgba(255, 255, 255, 0.6) !important;">No asignado</span>
+                                    {% endif %}
+                                </td>
+                                <td style="color: #ffffff !important;">{{ ticket.fecha_creacion|date:"d/m/Y H:i" }}</td>
+                                <td>
+                                    <a href="{% url 'empleados:detalle_ticket' ticket.id %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i> Ver
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="card">
+            <div class="card-body text-center py-5" style="background: transparent !important;">
+                <i class="fas fa-ticket-alt fa-4x mb-3" style="color: rgba(255, 255, 255, 0.6) !important;"></i>
+                <h4 style="color: #ffffff !important;">No tienes tickets creados</h4>
+                <p style="color: rgba(255, 255, 255, 0.7) !important;">Cuando tengas un problema técnico, puedes crear un ticket aquí</p>
+                <a href="{% url 'empleados:crear_ticket' %}" class="btn btn-success">
+                    <i class="fas fa-plus me-1"></i>Crear mi primer ticket
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+/* Asegurar que el card tenga el estilo glassmorphism del dashboard */
+.dashboard .card {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+/* El table-responsive debe ser completamente transparente */
+.dashboard .table-responsive {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+.dashboard .table {
+    margin-bottom: 0 !important;
+    background: transparent !important;
+}
+
+.dashboard .table thead th {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    padding: 1rem !important;
+}
+
+.dashboard .table tbody tr {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    transition: all 0.3s ease !important;
+}
+
+.dashboard .table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    transform: translateX(3px) !important;
+}
+
+.dashboard .table tbody tr:last-child {
+    border-bottom: none !important;
+}
+
+.dashboard .table tbody td {
+    padding: 1rem !important;
+    color: #ffffff !important;
+    vertical-align: middle !important;
+    background: transparent !important;
+}
+
+/* Asegurar que todos los textos sean blancos */
+.dashboard .table th,
+.dashboard .table td,
+.dashboard .table td strong,
+.dashboard .table td span:not(.badge) {
+    color: #ffffff !important;
+}
+
+/* Iconos blancos */
+.dashboard .table td i {
+    color: #ffffff !important;
+}
+
+/* Los estilos de badges están en global_styles.css - No sobrescribir aquí */
+
+/* Botones con estilo del dashboard */
+.dashboard .btn-outline-primary {
+    background: linear-gradient(180deg, 
+        rgba(37, 99, 235, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 30, 100, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 8px 20px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    font-size: 0.85rem !important;
+}
+
+.dashboard .btn-outline-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 56, 168, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+}
+
+.dashboard .btn-success {
+    background: linear-gradient(180deg, 
+        rgba(34, 197, 94, 0.95) 0%, 
+        rgba(22, 163, 74, 0.95) 50%,
+        rgba(15, 118, 50, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 32px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+}
+
+.dashboard .btn-success:hover {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+</style>
+{% endblock %}
+

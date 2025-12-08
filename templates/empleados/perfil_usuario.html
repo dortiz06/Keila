@@ -235,21 +235,21 @@ body {
                                 <div class="col-md-4 mb-2">
                                     <div class="p-2 glass-box rounded">
                                         <small class="text-muted" style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif !important;">Año Anterior Completado</small>
-                                        <div class="h5 mb-0" style="color: #3B82F6 !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important;">{{ perfil.dias_ano_anterior_completado }} días</div>
+                                        <div class="h5 mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 4px 16px rgba(0, 0, 0, 0.6) !important;">{{ perfil.dias_ano_anterior_completado }} días</div>
                                     </div>
                                 </div>
                                 {% endif %}
                                 <div class="{% if perfil.mostrar_seccion_ano_anterior %}col-md-4{% else %}col-md-6{% endif %} mb-2">
                                     <div class="p-2 glass-box rounded">
                                         <small class="text-muted" style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif !important;">Acumulado Este Año (hasta hoy)</small>
-                                        <div class="h5 mb-0" style="color: #22C55E !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important;">{{ perfil.calcular_dias_acumulados_hasta_hoy }} días</div>
+                                        <div class="h5 mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 4px 16px rgba(0, 0, 0, 0.6) !important;">{{ perfil.calcular_dias_acumulados_hasta_hoy }} días</div>
                                         <small class="text-muted" style="color: rgba(255, 255, 255, 0.6) !important; font-family: 'Montserrat', sans-serif !important;">({{ perfil.calcular_acumulacion_diaria }} días/día trabajado)</small>
                                     </div>
                                 </div>
                                 <div class="{% if perfil.mostrar_seccion_ano_anterior %}col-md-4{% else %}col-md-6{% endif %} mb-2">
                                     <div class="p-2 glass-box rounded">
                                         <small class="text-muted" style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif !important;">Total Proyectado Disponible</small>
-                                        <div class="h5 mb-0" style="color: #60A5FA !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important;">{{ perfil.calcular_total_disponible_proyectado }} días</div>
+                                        <div class="h5 mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 4px 16px rgba(0, 0, 0, 0.6) !important;">{{ perfil.calcular_total_disponible_proyectado }} días</div>
                                         <small class="text-muted" style="color: rgba(255, 255, 255, 0.6) !important; font-family: 'Montserrat', sans-serif !important;">Al finalizar año: {{ perfil.dias_al_finalizar_ano_actual }} días</small>
                                     </div>
                                 </div>
@@ -257,7 +257,7 @@ body {
                             {% else %}
                             <div style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important;">
                                 <i class="fas fa-calendar-plus me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>
-                                Días acumulados hasta hoy: <strong>{{ perfil.calcular_dias_acumulados_hasta_hoy }} días</strong>
+                                Días acumulados hasta hoy: <strong style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8), 0 4px 16px rgba(0, 0, 0, 0.6) !important;">{{ perfil.calcular_dias_acumulados_hasta_hoy }} días</strong>
                             </div>
                             {% endif %}
                         </div>

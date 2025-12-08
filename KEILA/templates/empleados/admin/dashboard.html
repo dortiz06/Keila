@@ -1,0 +1,853 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load perfil_tags %}
+
+{% block title %}Panel Administrador{% endblock %}
+
+{% block content %}
+<style>
+/* Cambiar fondo solo en la vista del dashboard de administrador */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/dash/dash1.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+</style>
+<div class="container-fluid dashboard">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                    <div class="mb-3 mb-md-0">
+                        <h1 class="dashboard-title" style="text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 0 5px 20px rgba(0, 0, 0, 0.85), 0 8px 30px rgba(0, 0, 0, 0.8), 0 10px 40px rgba(0, 0, 0, 0.75), 0 0 50px rgba(0, 0, 0, 0.7) !important;"><i class="fas fa-crown me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Panel Administrador</h1>
+                        <p class="dashboard-subtitle mb-0" style="color: #ffffff !important; font-size: 1.5rem !important; font-weight: 600 !important; text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 0 5px 20px rgba(0, 0, 0, 0.85), 0 8px 30px rgba(0, 0, 0, 0.8), 0 10px 40px rgba(0, 0, 0, 0.75), 0 0 50px rgba(0, 0, 0, 0.7) !important; font-family: 'Montserrat', sans-serif !important;">{% saludo_bienvenida %}, {{ perfil.nombre_completo }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Botones de Acción Rápida -->
+        <div class="card mb-4">
+        <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
+            <h5 class="mb-4" style="color: #ffffff !important; font-weight: 600 !important; font-family: 'Montserrat', sans-serif !important;"><i class="fas fa-bolt me-2"></i>Accesos Rápidos</h5>
+            <div class="row g-2">
+                <div class="col mb-2">
+                    <a href="{% url 'empleados:lista_empleados' %}" class="btn btn-outline-primary w-100 quick-access-btn" style="font-family: 'Montserrat', sans-serif !important;">
+                        <i class="fas fa-users me-1"></i>Lista de Usuarios
+                    </a>
+                </div>
+                <div class="col mb-2">
+                    <a href="{% url 'empleados:crear_usuario' %}" class="btn btn-outline-info w-100 quick-access-btn" style="font-family: 'Montserrat', sans-serif !important;">
+                        <i class="fas fa-user-plus me-1"></i>Crear Usuario
+                    </a>
+                </div>
+                <div class="col mb-2">
+                    <a href="{% url 'empleados:gestionar_tickets' %}" class="btn btn-outline-warning w-100 quick-access-btn" style="font-family: 'Montserrat', sans-serif !important;">
+                        <i class="fas fa-ticket-alt me-1"></i>Tickets IT
+                    </a>
+                </div>
+                <div class="col mb-2">
+                    <a href="{% url 'empleados:inventario_equipos' %}" class="btn btn-outline-success w-100 quick-access-btn" style="font-family: 'Montserrat', sans-serif !important;">
+                        <i class="fas fa-laptop me-1"></i>Inventario
+                    </a>
+                </div>
+                <div class="col mb-2">
+                    <a href="/admin/" class="btn btn-outline-django w-100 quick-access-btn" style="font-family: 'Montserrat', sans-serif !important;">
+                        <i class="fas fa-database me-1"></i>Admin Django
+                    </a>
+                </div>
+                <div class="col mb-2">
+                    <a href="{% url 'empleados:gestion_departamentos' %}" class="btn btn-outline-secondary w-100 quick-access-btn" style="font-family: 'Montserrat', sans-serif !important;">
+                        <i class="fas fa-building me-1"></i>Departamentos
+                    </a>
+                </div>
+                <div class="col mb-2">
+                    <a href="{% url 'empleados:reporte_vacaciones_mes' %}" class="btn btn-outline-info w-100 quick-access-btn" style="font-family: 'Montserrat', sans-serif !important;">
+                        <i class="fas fa-chart-bar me-1"></i>Reporte Vacaciones
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ESTADÍSTICAS GENERALES - CUADROS COMPACTOS -->
+    <div class="row mb-4 mt-4">
+        <!-- Estadísticas de Empleados y Departamentos -->
+        <div class="col-12 col-lg-3 mb-4">
+            <div class="card h-100">
+                <div class="card-body" style="background: transparent !important; padding: 1.5rem !important;">
+                    <h6 class="mb-3" style="color: #ffffff !important; font-weight: 600 !important; font-size: 0.9rem !important;"><i class="fas fa-users me-2"></i>Empleados y Departamentos</h6>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <div class="card text-center admin-stat-card admin-stat-blue h-100">
+                                <div class="card-body d-flex flex-column justify-content-center" style="padding: 1rem !important; min-height: 120px !important;">
+                                    <i class="fas fa-users fa-lg mb-2" style="color: #ffffff !important;"></i>
+                                    <h3 style="color: #ffffff !important; font-weight: 700 !important; font-size: 1.75rem !important; margin-bottom: 0.25rem !important;">{{ stats.total_empleados }}</h3>
+                                    <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.75rem !important;">Total Empleados</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card text-center admin-stat-card admin-stat-blue h-100">
+                                <div class="card-body d-flex flex-column justify-content-center" style="padding: 1rem !important; min-height: 120px !important;">
+                                    <i class="fas fa-building fa-lg mb-2" style="color: #ffffff !important;"></i>
+                                    <h3 style="color: #ffffff !important; font-weight: 700 !important; font-size: 1.75rem !important; margin-bottom: 0.25rem !important;">{{ stats.total_departamentos }}</h3>
+                                    <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.75rem !important;">Departamentos</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card text-center admin-stat-card admin-stat-blue h-100">
+                                <div class="card-body d-flex flex-column justify-content-center" style="padding: 1rem !important; min-height: 120px !important;">
+                                    <i class="fas fa-user-tie fa-lg mb-2" style="color: #ffffff !important;"></i>
+                                    <h3 style="color: #ffffff !important; font-weight: 700 !important; font-size: 1.75rem !important; margin-bottom: 0.25rem !important;">{{ stats.empleados_por_tipo.jefes }}</h3>
+                                    <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.75rem !important;">Jefes de Área</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card text-center admin-stat-card admin-stat-blue h-100">
+                                <div class="card-body d-flex flex-column justify-content-center" style="padding: 1rem !important; min-height: 120px !important;">
+                                    <i class="fas fa-cogs fa-lg mb-2" style="color: #ffffff !important;"></i>
+                                    <h3 style="color: #ffffff !important; font-weight: 700 !important; font-size: 1.75rem !important; margin-bottom: 0.25rem !important;">{{ stats.empleados_por_tipo.sistemas }}</h3>
+                                    <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.75rem !important;">Personal IT</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Módulo de Vacaciones -->
+        <div class="col-12 col-lg-3 mb-4">
+            <div class="card h-100">
+                <div class="card-body" style="background: transparent !important; padding: 1.5rem !important;">
+                    <h6 class="mb-3" style="color: #ffffff !important; font-weight: 600 !important; font-size: 0.9rem !important;"><i class="fas fa-calendar-alt me-2"></i>Módulo de Vacaciones</h6>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <div class="card text-center admin-stat-card admin-stat-green h-100">
+                                <div class="card-body d-flex flex-column justify-content-center" style="padding: 1rem !important; min-height: 120px !important;">
+                                    <i class="fas fa-clock fa-lg mb-2" style="color: #ffffff !important;"></i>
+                                    <h3 style="color: #ffffff !important; font-weight: 700 !important; font-size: 1.75rem !important; margin-bottom: 0.25rem !important;">{{ stats.solicitudes_pendientes_jefe }}</h3>
+                                    <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.75rem !important;">Pendientes Jefe</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card text-center admin-stat-card admin-stat-green h-100">
+                                <div class="card-body d-flex flex-column justify-content-center" style="padding: 1rem !important; min-height: 120px !important;">
+                                    <i class="fas fa-hourglass-half fa-lg mb-2" style="color: #ffffff !important;"></i>
+                                    <h3 style="color: #ffffff !important; font-weight: 700 !important; font-size: 1.75rem !important; margin-bottom: 0.25rem !important;">{{ stats.solicitudes_pendientes_rh }}</h3>
+                                    <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.75rem !important;">Pendientes RH</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card text-center admin-stat-card admin-stat-green h-100">
+                                <div class="card-body d-flex flex-column justify-content-center" style="padding: 1rem !important; min-height: 120px !important;">
+                                    <i class="fas fa-check-circle fa-lg mb-2" style="color: #ffffff !important;"></i>
+                                    <h3 style="color: #ffffff !important; font-weight: 700 !important; font-size: 1.75rem !important; margin-bottom: 0.25rem !important;">{{ stats.solicitudes_aprobadas_mes }}</h3>
+                                    <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.75rem !important;">Aprobadas Este Mes</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card text-center admin-stat-card admin-stat-green h-100">
+                                <div class="card-body d-flex flex-column justify-content-center" style="padding: 1rem !important; min-height: 120px !important;">
+                                    <i class="fas fa-times-circle fa-lg mb-2" style="color: #ffffff !important;"></i>
+                                    <h3 style="color: #ffffff !important; font-weight: 700 !important; font-size: 1.75rem !important; margin-bottom: 0.25rem !important;">{{ stats.solicitudes_rechazadas_mes }}</h3>
+                                    <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.75rem !important;">Rechazadas Este Mes</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Módulo de Tickets IT -->
+        <div class="col-12 col-lg-3 mb-4">
+            <div class="card h-100">
+                <div class="card-body" style="background: transparent !important; padding: 1.5rem !important;">
+                    <h6 class="mb-3" style="color: #ffffff !important; font-weight: 600 !important; font-size: 0.9rem !important;"><i class="fas fa-ticket-alt me-2"></i>Módulo de Tickets IT</h6>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <div class="card text-center admin-stat-card admin-stat-purple h-100">
+                                <div class="card-body d-flex flex-column justify-content-center" style="padding: 1rem !important; min-height: 120px !important;">
+                                    <i class="fas fa-exclamation-triangle fa-lg mb-2" style="color: #ffffff !important;"></i>
+                                    <h3 style="color: #ffffff !important; font-weight: 700 !important; font-size: 1.75rem !important; margin-bottom: 0.25rem !important;">{{ stats.tickets_pendientes }}</h3>
+                                    <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.75rem !important;">Tickets Pendientes</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card text-center admin-stat-card admin-stat-purple h-100">
+                                <div class="card-body d-flex flex-column justify-content-center" style="padding: 1rem !important; min-height: 120px !important;">
+                                    <i class="fas fa-sync-alt fa-lg mb-2" style="color: #ffffff !important;"></i>
+                                    <h3 style="color: #ffffff !important; font-weight: 700 !important; font-size: 1.75rem !important; margin-bottom: 0.25rem !important;">{{ stats.tickets_en_proceso }}</h3>
+                                    <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.75rem !important;">En Proceso</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card text-center admin-stat-card admin-stat-purple h-100">
+                                <div class="card-body d-flex flex-column justify-content-center" style="padding: 1rem !important; min-height: 120px !important;">
+                                    <i class="fas fa-check-double fa-lg mb-2" style="color: #ffffff !important;"></i>
+                                    <h3 style="color: #ffffff !important; font-weight: 700 !important; font-size: 1.75rem !important; margin-bottom: 0.25rem !important;">{{ stats.tickets_resueltos_hoy }}</h3>
+                                    <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.75rem !important;">Resueltos Hoy</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card text-center admin-stat-card admin-stat-purple h-100">
+                                <div class="card-body d-flex flex-column justify-content-center" style="padding: 1rem !important; min-height: 120px !important;">
+                                    <i class="fas fa-archive fa-lg mb-2" style="color: #ffffff !important;"></i>
+                                    <h3 style="color: #ffffff !important; font-weight: 700 !important; font-size: 1.75rem !important; margin-bottom: 0.25rem !important;">{{ stats.tickets_cancelados_hoy }}</h3>
+                                    <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.75rem !important;">Cancelados Hoy</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Módulo de Equipos e Inventario -->
+        <div class="col-12 col-lg-3 mb-4">
+            <div class="card h-100">
+                <div class="card-body" style="background: transparent !important; padding: 1.5rem !important;">
+                    <h6 class="mb-3" style="color: #ffffff !important; font-weight: 600 !important; font-size: 0.9rem !important;"><i class="fas fa-laptop me-2"></i>Módulo de Equipos e Inventario</h6>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <div class="card text-center admin-stat-card admin-stat-orange h-100">
+                                <div class="card-body d-flex flex-column justify-content-center" style="padding: 1rem !important; min-height: 120px !important;">
+                                    <i class="fas fa-warehouse fa-lg mb-2" style="color: #ffffff !important;"></i>
+                                    <h3 style="color: #ffffff !important; font-weight: 700 !important; font-size: 1.75rem !important; margin-bottom: 0.25rem !important;">{{ stats.total_equipos }}</h3>
+                                    <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.75rem !important;">Total Equipos</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card text-center admin-stat-card admin-stat-orange h-100">
+                                <div class="card-body d-flex flex-column justify-content-center" style="padding: 1rem !important; min-height: 120px !important;">
+                                    <i class="fas fa-check-circle fa-lg mb-2" style="color: #ffffff !important;"></i>
+                                    <h3 style="color: #ffffff !important; font-weight: 700 !important; font-size: 1.75rem !important; margin-bottom: 0.25rem !important;">{{ stats.equipos_disponibles }}</h3>
+                                    <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.75rem !important;">Disponibles</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card text-center admin-stat-card admin-stat-orange h-100">
+                                <div class="card-body d-flex flex-column justify-content-center" style="padding: 1rem !important; min-height: 120px !important;">
+                                    <i class="fas fa-user-check fa-lg mb-2" style="color: #ffffff !important;"></i>
+                                    <h3 style="color: #ffffff !important; font-weight: 700 !important; font-size: 1.75rem !important; margin-bottom: 0.25rem !important;">{{ stats.equipos_asignados }}</h3>
+                                    <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.75rem !important;">Asignados</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card text-center admin-stat-card admin-stat-orange h-100">
+                                <div class="card-body d-flex flex-column justify-content-center" style="padding: 1rem !important; min-height: 120px !important;">
+                                    <i class="fas fa-wrench fa-lg mb-2" style="color: #ffffff !important;"></i>
+                                    <h3 style="color: #ffffff !important; font-weight: 700 !important; font-size: 1.75rem !important; margin-bottom: 0.25rem !important;">{{ stats.equipos_en_reparacion }}</h3>
+                                    <p class="mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-size: 0.75rem !important;">En Reparación</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- TABLA 1: SOLICITUDES DE VACACIONES RECIENTES -->
+    <div class="row mt-4">
+        <div class="col-12 col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body" style="background: transparent !important; padding: 1rem !important;">
+                    <h6 class="mb-3" style="color: #ffffff !important; font-weight: 600 !important; font-size: 0.95rem !important;"><i class="fas fa-calendar-check me-2"></i>Solicitudes de Vacaciones Pendientes</h6>
+                    {% if solicitudes_recientes %}
+                        <div class="table-responsive admin-table-compact" style="background: transparent !important;">
+                            <table class="table table-hover admin-table" style="width: 100% !important; table-layout: auto !important; font-size: 0.75rem !important;">
+                                <thead>
+                                    <tr>
+                                        <th style="color: #ffffff !important; font-size: 0.7rem !important; padding: 0.4rem 0.3rem !important; white-space: nowrap !important;"><i class="fas fa-user me-1"></i>Empleado</th>
+                                        <th style="color: #ffffff !important; font-size: 0.7rem !important; padding: 0.4rem 0.3rem !important; white-space: nowrap !important;"><i class="fas fa-calendar me-1"></i>Período</th>
+                                        <th style="color: #ffffff !important; font-size: 0.7rem !important; padding: 0.4rem 0.3rem !important; white-space: nowrap !important;">Días</th>
+                                        <th style="color: #ffffff !important; font-size: 0.7rem !important; padding: 0.4rem 0.3rem !important; white-space: nowrap !important;"><i class="fas fa-info-circle me-1"></i>Estado</th>
+                                        <th style="color: #ffffff !important; font-size: 0.7rem !important; padding: 0.4rem 0.3rem !important; white-space: nowrap !important;"><i class="fas fa-cog me-1"></i>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for solicitud in solicitudes_recientes %}
+                                    <tr style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
+                                        <td style="color: #ffffff !important; padding: 0.4rem 0.3rem !important; font-size: 0.75rem !important;">
+                                            <div style="display: flex; align-items: center; gap: 0.3rem;">
+                                                <span class="badge badge-media badge-non-clickable" style="font-size: 0.65rem !important; padding: 0.15rem 0.3rem !important;">{{ solicitud.empleado.departamento.nombre|default:"Sin depto"|truncatechars:8 }}</span>
+                                            </div>
+                                            <div style="margin-top: 0.2rem;">
+                                                <strong style="font-size: 0.8rem !important;">{{ solicitud.empleado.nombre_completo|truncatechars:18 }}</strong>
+                                            </div>
+                                        </td>
+                                        <td style="color: #ffffff !important; padding: 0.4rem 0.3rem !important; font-size: 0.7rem !important; white-space: nowrap !important;">
+                                            <div>{{ solicitud.fecha_inicio|date:"d/m/Y" }}</div>
+                                            <div style="color: rgba(255, 255, 255, 0.7) !important;">{{ solicitud.fecha_fin|date:"d/m/Y" }}</div>
+                                        </td>
+                                        <td style="padding: 0.4rem 0.3rem !important; text-align: center !important;">
+                                            <span style="color: #ffffff !important; font-size: 1.1rem !important; font-weight: 700 !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important; display: inline-block !important;">{{ solicitud.dias_solicitados }}</span>
+                                        </td>
+                                        <td style="padding: 0.4rem 0.3rem !important;">
+                                            {% if solicitud.estado == 'PENDIENTE_JEFE' %}
+                                                <span class="badge badge-pendiente badge-non-clickable" style="font-size: 0.65rem !important; padding: 0.2rem 0.35rem !important; white-space: nowrap !important;">Jefe</span>
+                                            {% elif solicitud.estado == 'PENDIENTE_ADMIN' %}
+                                                <span class="badge badge-pendiente badge-non-clickable" style="font-size: 0.65rem !important; padding: 0.2rem 0.35rem !important; white-space: nowrap !important;">Admin</span>
+                                            {% elif solicitud.estado == 'PENDIENTE_RH' %}
+                                                <span class="badge badge-proceso badge-non-clickable" style="font-size: 0.65rem !important; padding: 0.2rem 0.35rem !important; white-space: nowrap !important;">RH</span>
+                                            {% endif %}
+                                        </td>
+                                        <td style="padding: 0.4rem 0.3rem !important; text-align: center !important;">
+                                            {% if solicitud.estado == 'PENDIENTE_ADMIN' %}
+                                                <a href="{% url 'empleados:aprobar_admin' solicitud.id %}" class="btn btn-sm btn-outline-primary" style="font-size: 0.65rem !important; padding: 0.15rem 0.4rem !important; white-space: nowrap !important;">Revisar</a>
+                                            {% else %}
+                                                <span style="color: rgba(255, 255, 255, 0.3) !important; font-size: 0.7rem !important;">-</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-check-circle fa-3x mb-3" style="color: rgba(34, 197, 94, 0.8) !important;"></i>
+                            <p style="color: rgba(255, 255, 255, 0.8) !important;">No hay solicitudes de vacaciones pendientes</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- TABLA 2: TICKETS RECIENTES -->
+        <div class="col-12 col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body" style="background: transparent !important; padding: 1rem !important;">
+                    <h6 class="mb-3" style="color: #ffffff !important; font-weight: 600 !important; font-size: 0.95rem !important;"><i class="fas fa-headset me-2"></i>Tickets IT Recientes</h6>
+                    {% if tickets_recientes %}
+                        <div class="table-responsive admin-table-compact" style="background: transparent !important;">
+                            <table class="table table-hover admin-table" style="width: 100% !important; table-layout: auto !important; font-size: 0.75rem !important;">
+                                <thead>
+                                    <tr>
+                                        <th style="color: #ffffff !important; font-size: 0.7rem !important; padding: 0.4rem 0.3rem !important; white-space: nowrap !important;">Solicitante</th>
+                                        <th style="color: #ffffff !important; font-size: 0.7rem !important; padding: 0.4rem 0.3rem !important; white-space: nowrap !important;">Tipo</th>
+                                        <th style="color: #ffffff !important; font-size: 0.7rem !important; padding: 0.4rem 0.3rem !important; white-space: nowrap !important;">Prioridad</th>
+                                        <th style="color: #ffffff !important; font-size: 0.7rem !important; padding: 0.4rem 0.3rem !important; white-space: nowrap !important;">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for ticket in tickets_recientes %}
+                                    <tr style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
+                                        <td style="color: #ffffff !important; padding: 0.4rem 0.3rem !important; font-size: 0.75rem !important;">
+                                            <div style="font-size: 0.7rem !important; color: rgba(255, 255, 255, 0.6) !important; margin-bottom: 0.2rem !important;">{{ ticket.codigo|truncatechars:18 }}</div>
+                                            <strong style="font-size: 0.8rem !important;">{{ ticket.empleado.nombre_completo|truncatechars:20 }}</strong>
+                                        </td>
+                                        <td style="padding: 0.4rem 0.3rem !important;">
+                                            <span class="badge badge-baja badge-non-clickable" style="font-size: 0.65rem !important; padding: 0.2rem 0.35rem !important; white-space: nowrap !important;">{{ ticket.get_tipo_display|truncatechars:15 }}</span>
+                                        </td>
+                                        <td style="padding: 0.4rem 0.3rem !important;">
+                                            {% if ticket.prioridad == 'URGENTE' %}
+                                                <span class="badge badge-urgente badge-non-clickable" style="font-size: 0.65rem !important; padding: 0.2rem 0.35rem !important; white-space: nowrap !important;">Urgente</span>
+                                            {% elif ticket.prioridad == 'ALTA' %}
+                                                <span class="badge badge-alta badge-non-clickable" style="font-size: 0.65rem !important; padding: 0.2rem 0.35rem !important; white-space: nowrap !important;">Alta</span>
+                                            {% elif ticket.prioridad == 'MEDIA' %}
+                                                <span class="badge badge-media badge-non-clickable" style="font-size: 0.65rem !important; padding: 0.2rem 0.35rem !important; white-space: nowrap !important;">Media</span>
+                                            {% else %}
+                                                <span class="badge badge-baja badge-non-clickable" style="font-size: 0.65rem !important; padding: 0.2rem 0.35rem !important; white-space: nowrap !important;">Baja</span>
+                                            {% endif %}
+                                        </td>
+                                        <td style="padding: 0.4rem 0.3rem !important;">
+                                            {% if ticket.estado == 'PENDIENTE' %}
+                                                <span class="badge badge-pendiente badge-non-clickable" style="font-size: 0.65rem !important; padding: 0.2rem 0.35rem !important; white-space: nowrap !important;">Pend.</span>
+                                            {% elif ticket.estado == 'EN_PROCESO' %}
+                                                <span class="badge badge-proceso badge-non-clickable" style="font-size: 0.65rem !important; padding: 0.2rem 0.35rem !important; white-space: nowrap !important;">Proceso</span>
+                                            {% elif ticket.estado == 'RESUELTO' %}
+                                                <span class="badge badge-resuelto badge-non-clickable" style="font-size: 0.65rem !important; padding: 0.2rem 0.35rem !important; white-space: nowrap !important;">Resuelto</span>
+                                            {% elif ticket.estado == 'CANCELADO' %}
+                                                <span class="badge badge-cancelado badge-non-clickable" style="font-size: 0.65rem !important; padding: 0.2rem 0.35rem !important; white-space: nowrap !important;">Cancel.</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-inbox fa-3x mb-3" style="color: rgba(255, 255, 255, 0.5) !important;"></i>
+                            <p style="color: rgba(255, 255, 255, 0.8) !important;">No hay tickets registrados</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- TABLA 3: EQUIPOS RECIÉN ASIGNADOS -->
+        <div class="col-12 col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body" style="background: transparent !important; padding: 1rem !important;">
+                    <h6 class="mb-3" style="color: #ffffff !important; font-weight: 600 !important; font-size: 0.95rem !important;"><i class="fas fa-box-open me-2"></i>Equipos Recién Asignados</h6>
+                    {% if asignaciones_recientes %}
+                        <div class="table-responsive admin-table-compact" style="background: transparent !important;">
+                            <table class="table table-hover admin-table" style="width: 100% !important; table-layout: auto !important; font-size: 0.75rem !important;">
+                                <thead>
+                                    <tr>
+                                        <th style="color: #ffffff !important; font-size: 0.7rem !important; padding: 0.4rem 0.3rem !important; white-space: nowrap !important;">Categoría</th>
+                                        <th style="color: #ffffff !important; font-size: 0.7rem !important; padding: 0.4rem 0.3rem !important; white-space: nowrap !important;">Equipo</th>
+                                        <th style="color: #ffffff !important; font-size: 0.7rem !important; padding: 0.4rem 0.3rem !important; white-space: nowrap !important;">Código</th>
+                                        <th style="color: #ffffff !important; font-size: 0.7rem !important; padding: 0.4rem 0.3rem !important; white-space: nowrap !important;">Asignado a</th>
+                                        <th style="color: #ffffff !important; font-size: 0.7rem !important; padding: 0.4rem 0.3rem !important; white-space: nowrap !important;">Fecha</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for asignacion in asignaciones_recientes %}
+                                    <tr style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
+                                        <td style="color: #ffffff !important; padding: 0.4rem 0.3rem !important; font-size: 0.75rem !important;">
+                                            <div style="display: flex; align-items: center; gap: 0.3rem;">
+                                                <i class="fas {% categoria_icono asignacion.equipo.categoria.nombre %}" style="font-size: 0.75rem !important;"></i>
+                                                <strong style="font-size: 0.8rem !important;">{{ asignacion.equipo.categoria.nombre|truncatechars:12 }}</strong>
+                                            </div>
+                                        </td>
+                                        <td style="color: #ffffff !important; padding: 0.4rem 0.3rem !important; font-size: 0.75rem !important;">
+                                            <div>{{ asignacion.equipo.marca|truncatechars:12 }}</div>
+                                            <div style="color: rgba(255, 255, 255, 0.7) !important; font-size: 0.7rem !important;">{{ asignacion.equipo.modelo|truncatechars:15 }}</div>
+                                        </td>
+                                        <td style="padding: 0.4rem 0.3rem !important; text-align: center !important;">
+                                            <span class="badge badge-baja badge-non-clickable" style="font-size: 0.65rem !important; padding: 0.2rem 0.4rem !important; white-space: nowrap !important;">{{ asignacion.equipo.codigo_inventario }}</span>
+                                        </td>
+                                        <td style="color: #ffffff !important; padding: 0.4rem 0.3rem !important; font-size: 0.75rem !important;">
+                                            <i class="fas fa-user me-1" style="font-size: 0.7rem !important;"></i>
+                                            <span style="white-space: nowrap !important;">{{ asignacion.empleado.nombre_completo|truncatechars:18 }}</span>
+                                        </td>
+                                        <td style="color: rgba(255, 255, 255, 0.8) !important; padding: 0.4rem 0.3rem !important; font-size: 0.7rem !important; white-space: nowrap !important;">{{ asignacion.fecha_asignacion|date:"d/m/Y" }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-box fa-3x mb-3" style="color: rgba(255, 255, 255, 0.5) !important;"></i>
+                            <p style="color: rgba(255, 255, 255, 0.8) !important;">No hay equipos asignados recientemente</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<style>
+/* Botones de Accesos Rápidos con diseño del dashboard - Compactos para que quepan todos */
+.dashboard .btn-outline-primary,
+.dashboard .btn-outline-info,
+.dashboard .btn-outline-purple,
+.dashboard .btn-outline-warning,
+.dashboard .btn-outline-success,
+.dashboard .btn-outline-danger,
+.dashboard .btn-outline-secondary,
+.dashboard .quick-access-btn {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 12px 16px !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    font-family: 'Montserrat', sans-serif !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    opacity: 1 !important; /* Botones funcionales mantienen opacidad completa */
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+.dashboard .btn-outline-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-info {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
+}
+
+.dashboard .btn-outline-info:hover {
+    background: linear-gradient(180deg, 
+        rgba(147, 197, 253, 0.95) 0%, 
+        rgba(96, 165, 250, 0.95) 50%,
+        rgba(59, 130, 246, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-warning {
+    background: linear-gradient(180deg, 
+        rgba(251, 191, 36, 0.95) 0%, 
+        rgba(245, 158, 11, 0.95) 50%,
+        rgba(217, 119, 6, 1) 100%) !important;
+}
+
+.dashboard .btn-outline-warning:hover {
+    background: linear-gradient(180deg, 
+        rgba(253, 224, 71, 0.95) 0%, 
+        rgba(251, 191, 36, 0.95) 50%,
+        rgba(245, 158, 11, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-success {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+}
+
+.dashboard .btn-outline-success:hover {
+    background: linear-gradient(180deg, 
+        rgba(134, 239, 172, 0.95) 0%, 
+        rgba(74, 222, 128, 0.95) 50%,
+        rgba(34, 197, 94, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-danger {
+    background: linear-gradient(180deg, 
+        rgba(248, 113, 113, 0.95) 0%, 
+        rgba(239, 68, 68, 0.95) 50%,
+        rgba(220, 38, 38, 1) 100%) !important;
+}
+
+.dashboard .btn-outline-danger:hover {
+    background: linear-gradient(180deg, 
+        rgba(252, 165, 165, 0.95) 0%, 
+        rgba(248, 113, 113, 0.95) 50%,
+        rgba(239, 68, 68, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-secondary {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+}
+
+.dashboard .btn-outline-secondary:hover {
+    background: linear-gradient(180deg, 
+        rgba(209, 213, 219, 0.95) 0%, 
+        rgba(156, 163, 175, 0.95) 50%,
+        rgba(107, 114, 128, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Botón verde Django para Admin Django (#064B35) */
+.dashboard .btn-outline-django {
+    background: linear-gradient(180deg, 
+        rgba(6, 75, 53, 0.95) 0%, 
+        rgba(5, 60, 42, 0.95) 50%,
+        rgba(4, 45, 31, 1) 100%) !important;
+}
+
+.dashboard .btn-outline-django:hover {
+    background: linear-gradient(180deg, 
+        rgba(8, 95, 67, 0.95) 0%, 
+        rgba(6, 75, 53, 0.95) 50%,
+        rgba(5, 60, 42, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(6, 75, 53, 0.35),
+        0 3px 8px rgba(6, 75, 53, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Botón morado para Lista de Empleados (similar al de Sistemas) */
+.dashboard .btn-outline-purple {
+    background: linear-gradient(180deg, 
+        rgba(168, 85, 247, 0.95) 0%, 
+        rgba(147, 51, 234, 0.95) 50%,
+        rgba(126, 34, 206, 1) 100%) !important;
+}
+
+.dashboard .btn-outline-purple:hover {
+    background: linear-gradient(180deg, 
+        rgba(192, 132, 252, 0.95) 0%, 
+        rgba(168, 85, 247, 0.95) 50%,
+        rgba(147, 51, 234, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Estilos para tablas con glassmorphism */
+.dashboard .table-responsive {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+.dashboard .table {
+    background: transparent !important;
+    border-collapse: collapse !important;
+    width: 100% !important;
+    margin-bottom: 0 !important;
+}
+
+.dashboard .table thead {
+    background: transparent !important;
+}
+
+.dashboard .table thead th {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    padding: 12px 8px !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+}
+
+.dashboard .table tbody {
+    background: transparent !important;
+}
+
+.dashboard .table tbody tr {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.dashboard .table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.dashboard .table tbody tr:last-child {
+    border-bottom: none !important;
+}
+
+.dashboard .table tbody td {
+    background: transparent !important;
+    border: none !important;
+    padding: 12px 8px !important;
+    color: #ffffff !important;
+    vertical-align: middle !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: none !important;
+    min-width: fit-content !important;
+}
+
+.dashboard .table tbody td:first-child {
+    white-space: nowrap !important;
+}
+
+.dashboard .table {
+    table-layout: auto !important;
+    width: auto !important;
+    min-width: 100% !important;
+}
+
+.dashboard .table tbody td strong {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+.dashboard .table tbody td small {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Estilos para tablas compactas del admin */
+.admin-table-compact {
+    max-width: 100% !important;
+    overflow-x: auto !important;
+}
+
+.admin-table {
+    font-size: 0.75rem !important;
+    table-layout: auto !important;
+    width: 100% !important;
+}
+
+.admin-table thead th {
+    font-size: 0.7rem !important;
+    padding: 0.4rem 0.3rem !important;
+    white-space: nowrap !important;
+    font-weight: 600 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.admin-table tbody td {
+    padding: 0.4rem 0.3rem !important;
+    font-size: 0.75rem !important;
+    vertical-align: middle !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+}
+
+.admin-table tbody td strong {
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    display: block !important;
+}
+
+.admin-table .badge {
+    font-size: 0.65rem !important;
+    padding: 0.2rem 0.35rem !important;
+    white-space: nowrap !important;
+    display: inline-block !important;
+    line-height: 1.2 !important;
+}
+
+.admin-table tbody tr {
+    transition: background-color 0.2s ease !important;
+}
+
+.admin-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Estilos para cuadros de estadísticas del admin */
+.admin-stat-card {
+    border-radius: 12px !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.admin-stat-card .card-body {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-height: 120px !important;
+    height: 100% !important;
+}
+
+.admin-stat-card:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Azul para Empleados y Departamentos */
+.admin-stat-blue {
+    background: linear-gradient(135deg, 
+        rgba(59, 130, 246, 0.25) 0%, 
+        rgba(37, 99, 235, 0.3) 50%,
+        rgba(29, 78, 216, 0.35) 100%) !important;
+    border: 1px solid rgba(59, 130, 246, 0.4) !important;
+}
+
+/* Verde para Vacaciones */
+.admin-stat-green {
+    background: linear-gradient(135deg, 
+        rgba(34, 197, 94, 0.25) 0%, 
+        rgba(22, 163, 74, 0.3) 50%,
+        rgba(15, 118, 50, 0.35) 100%) !important;
+    border: 1px solid rgba(34, 197, 94, 0.4) !important;
+}
+
+/* Morado para Tickets IT */
+.admin-stat-purple {
+    background: linear-gradient(135deg, 
+        rgba(168, 85, 247, 0.25) 0%, 
+        rgba(147, 51, 234, 0.3) 50%,
+        rgba(126, 34, 206, 0.35) 100%) !important;
+    border: 1px solid rgba(168, 85, 247, 0.4) !important;
+}
+
+/* Naranja para Equipos */
+.admin-stat-orange {
+    background: linear-gradient(135deg, 
+        rgba(245, 158, 11, 0.25) 0%, 
+        rgba(217, 119, 6, 0.3) 50%,
+        rgba(180, 83, 9, 0.35) 100%) !important;
+    border: 1px solid rgba(245, 158, 11, 0.4) !important;
+}
+
+/* Badges no clickables con opacidad para diferenciarlos de botones */
+.badge-non-clickable {
+    opacity: 0.7 !important;
+    cursor: default !important;
+    pointer-events: none !important;
+}
+
+/* Botones mantienen opacidad completa - Son elementos funcionales */
+.btn,
+a.btn,
+button.btn,
+.quick-access-btn,
+.dashboard .btn,
+.dashboard a.btn {
+    opacity: 1 !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+</style>
+{% endblock %}
+
+
+

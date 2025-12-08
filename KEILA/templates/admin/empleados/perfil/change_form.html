@@ -1,0 +1,85 @@
+{% extends "admin/change_form.html" %}
+{% load static %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+    .vacation-info {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 10px 0;
+    }
+    .vacation-info h3 {
+        margin-top: 0;
+        color: #495057;
+    }
+    .vacation-status {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 3px;
+        font-weight: bold;
+        margin: 5px 0;
+    }
+    .vacation-eligible {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    .vacation-not-eligible {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    .vacation-pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    .date-info {
+        font-size: 0.9em;
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{{ block.super }}
+
+{% if original %}
+<div class="vacation-info">
+    <h3>📅 Información de Vacaciones</h3>
+    
+    <div class="date-info">
+        <strong>Fecha de Contratación:</strong> {{ original.fecha_contratacion|date:"d/m/Y" }}<br>
+        <strong>Antigüedad:</strong> {{ original.antiguedad_anos }} año{{ original.antiguedad_anos|pluralize }}<br>
+        <strong>Días de Vacaciones Anuales:</strong> {{ original.dias_vacaciones_anuales }}<br>
+        <strong>Días Usados:</strong> {{ original.dias_vacaciones_usados }}<br>
+        <strong>Días Disponibles:</strong> {{ original.dias_vacaciones_disponibles }}
+    </div>
+    
+    {% if original.antiguedad_anos >= 1 %}
+        <div class="vacation-status vacation-eligible">
+            ✅ Puede solicitar vacaciones normales
+        </div>
+    {% else %}
+        <div class="vacation-status vacation-not-eligible">
+            ❌ No puede solicitar vacaciones normales (menos de 1 año)
+        </div>
+        <div class="date-info">
+            Faltan {{ 365|add:"-"|add:original.fecha_contratacion|timesince|slice:":3" }} días para cumplir 1 año
+        </div>
+    {% endif %}
+    
+    {% if original.dias_vacaciones_disponibles <= 0 %}
+        <div class="vacation-status vacation-pending">
+            ⚠️ Sin días de vacaciones disponibles
+        </div>
+    {% endif %}
+    
+    <div style="margin-top: 15px;">
+        <h4>📊 Historial de Solicitudes</h4>
+        <p><a href="{% url 'admin:empleados_solicitudvacaciones_changelist' %}?empleado__id__exact={{ original.id }}" 
+              target="_blank">Ver todas las solicitudes de este empleado →</a></p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

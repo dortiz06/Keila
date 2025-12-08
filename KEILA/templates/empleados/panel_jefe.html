@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Panel de Jefe - Sistema RH{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header del Panel -->
+    <div class="page-header">
+        <div class="container">
+            <h1><i class="fas fa-user-tie me-3"></i>Panel de Jefe de Área</h1>
+            <p>Gestión de empleados y solicitudes de vacaciones</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Información del Jefe -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user me-2"></i>
+                            Bienvenido, {{ empleado_actual.nombre_completo }}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Departamento:</strong> {{ empleado_actual.departamento.nombre }}</p>
+                                <p><strong>Puesto:</strong> {{ empleado_actual.puesto }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Empleados a cargo:</strong> {{ total_empleados }}</p>
+                                <p><strong>Solicitudes pendientes:</strong> {{ solicitudes_pendientes_count }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <div class="stats-number">{{ total_empleados }}</div>
+                        <div class="stats-label">Empleados a Cargo</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <div class="stats-number">{{ solicitudes_pendientes_count }}</div>
+                        <div class="stats-label">Solicitudes Pendientes</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <div class="stats-number">{{ proximas_vacaciones.count }}</div>
+                        <div class="stats-label">Próximas Vacaciones</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Solicitudes Pendientes -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-clock me-2"></i>
+                            Solicitudes Pendientes de Aprobación
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if solicitudes_pendientes %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Empleado</th>
+                                            <th>Período</th>
+                                            <th>Días</th>
+                                            <th>Tipo</th>
+                                            <th>Fecha Solicitud</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for solicitud in solicitudes_pendientes %}
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar me-2">
+                                                        {{ solicitud.empleado.nombre|first }}{{ solicitud.empleado.apellido_paterno|first }}
+                                                    </div>
+                                                    <div>
+                                                        <strong>{{ solicitud.empleado.nombre_completo }}</strong><br>
+                                                        <small class="text-muted">{{ solicitud.empleado.puesto }}</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {{ solicitud.fecha_inicio|date:"d/m/Y" }}<br>
+                                                <small class="text-muted">a {{ solicitud.fecha_fin|date:"d/m/Y" }}</small>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-primary">{{ solicitud.dias_solicitados }}</span>
+                                            </td>
+                                            <td>
+                                                {% if solicitud.tipo == 'N' %}
+                                                    <span class="badge bg-success">Normal</span>
+                                                {% else %}
+                                                    <span class="badge bg-warning">Extraordinaria</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ solicitud.fecha_solicitud|date:"d/m/Y H:i" }}</td>
+                                            <td>
+                                                <a href="{% url 'aprobar_jefe' solicitud.id %}" class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-check me-1"></i>Revisar
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center mt-3">
+                                <a href="{% url 'solicitudes_jefe' %}" class="btn btn-outline-primary">
+                                    <i class="fas fa-list me-1"></i>Ver Todas las Solicitudes
+                                </a>
+                            </div>
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                                <h5>¡Excelente!</h5>
+                                <p class="text-muted">No tienes solicitudes pendientes de aprobación.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empleados a Cargo -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-users me-2"></i>
+                            Empleados a Cargo
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if empleados_supervisados %}
+                            <div class="list-group list-group-flush">
+                                {% for empleado in empleados_supervisados %}
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>{{ empleado.nombre_completo }}</strong><br>
+                                        <small class="text-muted">{{ empleado.puesto }}</small>
+                                    </div>
+                                    <span class="badge bg-info">{{ empleado.dias_vacaciones_disponibles }} días</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-3">
+                                <i class="fas fa-user-friends fa-2x text-muted mb-2"></i>
+                                <p class="text-muted">No tienes empleados asignados.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Próximas Vacaciones -->
+                {% if proximas_vacaciones %}
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-calendar-alt me-2"></i>
+                            Próximas Vacaciones
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        {% for vacacion in proximas_vacaciones %}
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <small><strong>{{ vacacion.empleado.nombre_completo }}</strong></small><br>
+                                <small class="text-muted">{{ vacacion.fecha_inicio|date:"d/m" }} - {{ vacacion.fecha_fin|date:"d/m" }}</small>
+                            </div>
+                            <span class="badge bg-success">{{ vacacion.dias_solicitados }}d</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.stats-card {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    border: none;
+}
+
+.stats-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.stats-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,1005 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar Perfil - Sistema RH{% endblock %}
+
+{% block content %}
+<style>
+/* Cambiar fondo solo en la vista de editar perfil */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/dash/elevador.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+</style>
+<div class="container-fluid dashboard">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="dashboard-title">
+                <i class="fas fa-user-edit me-2"></i>Editar Perfil
+            </h1>
+            <p class="dashboard-subtitle mb-0">
+                Actualiza la información del perfil de {{ perfil_editado.usuario.get_full_name|default:perfil_editado.usuario.username }}
+            </p>
+        </div>
+        <a href="{% url url_volver %}" class="btn btn-outline-primary">
+            <i class="fas fa-arrow-left me-1"></i>{{ texto_volver }}
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Contenedor único con glassmorphism -->
+            <div class="card editar-perfil-card">
+                <div class="card-header editar-perfil-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user-cog me-2"></i>Información del Perfil
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Información Personal -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h6 class="editar-perfil-section-title">
+                                    <i class="fas fa-user-circle me-2"></i>Datos Personales
+                                </h6>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.telefono.id_for_label }}" class="form-label editar-perfil-label">
+                                        <i class="fas fa-phone me-1"></i>{{ form.telefono.label }}
+                                    </label>
+                                    <input type="text" 
+                                           name="{{ form.telefono.name }}" 
+                                           id="{{ form.telefono.id_for_label }}" 
+                                           value="{% if form.telefono.value %}{{ form.telefono.value }}{% elif perfil_editado.telefono %}{{ perfil_editado.telefono }}{% endif %}" 
+                                           class="form-control editar-perfil-input"
+                                           placeholder="Ingrese el teléfono">
+                                    {% if form.telefono.errors %}
+                                        <div class="editar-perfil-error">
+                                            {% for error in form.telefono.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="{{ form.fecha_nacimiento.id_for_label }}" class="form-label editar-perfil-label">
+                                        <i class="fas fa-calendar-alt me-1"></i>{{ form.fecha_nacimiento.label }}
+                                    </label>
+                                    <input type="text" 
+                                           name="{{ form.fecha_nacimiento.name }}" 
+                                           id="{{ form.fecha_nacimiento.id_for_label }}" 
+                                           value="{% if form.fecha_nacimiento.value %}{{ form.fecha_nacimiento.value|date:'d/m/Y' }}{% elif perfil_editado.fecha_nacimiento %}{{ perfil_editado.fecha_nacimiento|date:'d/m/Y' }}{% endif %}" 
+                                           class="form-control editar-perfil-input datepicker-fecha-nacimiento"
+                                           placeholder="DD/MM/YYYY">
+                                    {% if form.fecha_nacimiento.errors %}
+                                        <div class="editar-perfil-error">
+                                            {% for error in form.fecha_nacimiento.errors %}
+                                                <small>{{ error }}</small>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr style="border-color: rgba(255, 255, 255, 0.15) !important; margin: 2rem 0 !important;">
+
+                        <!-- Información del Perfil Actual -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h6 class="editar-perfil-section-title">
+                                    <i class="fas fa-info-circle me-2"></i>Información Actual
+                                </h6>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label editar-perfil-label">
+                                        <i class="fas fa-user me-1"></i>Usuario
+                                    </label>
+                                    <div class="editar-perfil-plaintext">
+                                        {{ perfil_editado.usuario.username }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label editar-perfil-label">
+                                        <i class="fas fa-envelope me-1"></i>Email
+                                    </label>
+                                    <div class="editar-perfil-plaintext">
+                                        {{ perfil_editado.usuario.email }}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {% if es_admin_editor and form.tipo_perfil %}
+                                <!-- Campos editables para administradores -->
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="{{ form.tipo_perfil.id_for_label }}" class="form-label editar-perfil-label">
+                                            <i class="fas fa-user-tag me-1"></i>{{ form.tipo_perfil.label }}
+                                        </label>
+                                        {{ form.tipo_perfil }}
+                                        {% if form.tipo_perfil.errors %}
+                                            <div class="editar-perfil-error">
+                                                {% for error in form.tipo_perfil.errors %}
+                                                    <small>{{ error }}</small>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if form.departamento %}
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="{{ form.departamento.id_for_label }}" class="form-label editar-perfil-label">
+                                            <i class="fas fa-building me-1"></i>{{ form.departamento.label }}
+                                        </label>
+                                        {{ form.departamento }}
+                                        {% if form.departamento.errors %}
+                                            <div class="editar-perfil-error">
+                                                {% for error in form.departamento.errors %}
+                                                    <small>{{ error }}</small>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if form.puesto %}
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="{{ form.puesto.id_for_label }}" class="form-label editar-perfil-label">
+                                            <i class="fas fa-briefcase me-1"></i>{{ form.puesto.label }}
+                                        </label>
+                                        {{ form.puesto }}
+                                        {% if form.puesto.errors %}
+                                            <div class="editar-perfil-error">
+                                                {% for error in form.puesto.errors %}
+                                                    <small>{{ error }}</small>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if form.numero_empleado %}
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="{{ form.numero_empleado.id_for_label }}" class="form-label editar-perfil-label">
+                                            <i class="fas fa-id-card me-1"></i>{{ form.numero_empleado.label }}
+                                        </label>
+                                        {{ form.numero_empleado }}
+                                        {% if form.numero_empleado.errors %}
+                                            <div class="editar-perfil-error">
+                                                {% for error in form.numero_empleado.errors %}
+                                                    <small>{{ error }}</small>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if form.fecha_contratacion %}
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="{{ form.fecha_contratacion.id_for_label }}" class="form-label editar-perfil-label">
+                                            <i class="fas fa-calendar-check me-1"></i>{{ form.fecha_contratacion.label }}
+                                        </label>
+                                        <input type="text" 
+                                               name="{{ form.fecha_contratacion.name }}" 
+                                               id="{{ form.fecha_contratacion.id_for_label }}" 
+                                               value="{% if form.fecha_contratacion.value %}{{ form.fecha_contratacion.value|date:'d/m/Y' }}{% elif perfil_editado.fecha_contratacion %}{{ perfil_editado.fecha_contratacion|date:'d/m/Y' }}{% endif %}" 
+                                               class="form-control editar-perfil-input datepicker-fecha-contratacion"
+                                               placeholder="DD/MM/YYYY">
+                                        {% if form.fecha_contratacion.errors %}
+                                            <div class="editar-perfil-error">
+                                                {% for error in form.fecha_contratacion.errors %}
+                                                    <small>{{ error }}</small>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if form.direccion %}
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="{{ form.direccion.id_for_label }}" class="form-label editar-perfil-label">
+                                            <i class="fas fa-map-marker-alt me-1"></i>{{ form.direccion.label }}
+                                        </label>
+                                        {{ form.direccion }}
+                                        {% if form.direccion.errors %}
+                                            <div class="editar-perfil-error">
+                                                {% for error in form.direccion.errors %}
+                                                    <small>{{ error }}</small>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if form.activo %}
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label editar-perfil-label">
+                                            <i class="fas fa-toggle-on me-1"></i>Estado del Perfil
+                                        </label>
+                                        <div class="form-check mt-2">
+                                            {{ form.activo }}
+                                            <label class="form-check-label editar-perfil-checkbox-label" for="{{ form.activo.id_for_label }}">
+                                                Perfil Activo
+                                            </label>
+                                        </div>
+                                        {% if form.activo.errors %}
+                                            <div class="editar-perfil-error">
+                                                {% for error in form.activo.errors %}
+                                                    <small>{{ error }}</small>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% else %}
+                                <!-- Campos de solo lectura para usuarios normales -->
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label editar-perfil-label">
+                                            <i class="fas fa-user-tag me-1"></i>Tipo de Perfil
+                                        </label>
+                                        <div class="editar-perfil-plaintext">
+                                            <span class="badge editar-perfil-badge-info">{{ perfil_editado.get_tipo_perfil_display }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label editar-perfil-label">
+                                            <i class="fas fa-building me-1"></i>Departamento
+                                        </label>
+                                        <div class="editar-perfil-plaintext">
+                                            {{ perfil_editado.departamento|default:"Sin asignar" }}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Botones de Acción -->
+                        <div class="d-flex justify-content-between mt-4 pt-3" style="border-top: 1px solid rgba(255, 255, 255, 0.15) !important;">
+                            <a href="{% url url_volver %}" class="btn btn-outline-primary">
+                                <i class="fas fa-arrow-left me-2"></i>{{ texto_volver }}
+                            </a>
+                            <button type="submit" class="btn btn-outline-success">
+                                <i class="fas fa-save me-2"></i>Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Información Adicional -->
+            <div class="card editar-perfil-card mt-4">
+                <div class="card-header editar-perfil-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Información Importante
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="editar-perfil-info-title">
+                                <i class="fas fa-check-circle me-2" style="color: #22C55E !important;"></i>Campos Editables
+                            </h6>
+                            <ul class="editar-perfil-list">
+                                <li>• Teléfono de contacto</li>
+                                <li>• Fecha de nacimiento</li>
+                                {% if es_admin_editor %}
+                                <li>• Tipo de perfil</li>
+                                <li>• Departamento</li>
+                                <li>• Puesto</li>
+                                <li>• Número de empleado</li>
+                                <li>• Fecha de contratación</li>
+                                <li>• Dirección</li>
+                                <li>• Estado del perfil</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="editar-perfil-info-title">
+                                <i class="fas fa-lock me-2" style="color: #FBBF24 !important;"></i>Campos Restringidos
+                            </h6>
+                            <ul class="editar-perfil-list">
+                                <li>• Usuario y email (contactar admin)</li>
+                                {% if not es_admin_editor %}
+                                <li>• Tipo de perfil (contactar RH)</li>
+                                <li>• Departamento (contactar RH)</li>
+                                <li>• Puesto (contactar RH)</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* ===== GLASSMORPHISM PARA EDITAR PERFIL ===== */
+.editar-perfil-card {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(25px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(200%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 24px !important;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.12), 
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.1) !important;
+    overflow: hidden !important;
+}
+
+.editar-perfil-header {
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+    padding: 1.25rem 1.5rem !important;
+}
+
+.editar-perfil-header h5,
+.editar-perfil-header h6 {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.3px !important;
+}
+
+.editar-perfil-card .card-body {
+    background: transparent !important;
+    padding: 1.5rem !important;
+}
+
+/* Título del dashboard */
+.dashboard-title {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    margin-bottom: 0.5rem !important;
+    letter-spacing: -0.5px !important;
+}
+
+.dashboard-subtitle {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 300 !important;
+    letter-spacing: 0.2px !important;
+}
+
+/* Labels con Montserrat */
+.editar-perfil-label {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 0.9rem !important;
+    margin-bottom: 0.5rem !important;
+    letter-spacing: 0.2px !important;
+}
+
+/* Inputs transparentes */
+.editar-perfil-input {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 12px !important;
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    padding: 0.75rem 1rem !important;
+    transition: all 0.2s ease !important;
+    width: 100% !important;
+}
+
+.editar-perfil-input:focus {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.15) !important;
+    outline: none !important;
+}
+
+.editar-perfil-input::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Selects con estilo glassmorphism */
+.editar-perfil-select {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 12px !important;
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    padding: 0.75rem 1rem !important;
+    transition: all 0.2s ease !important;
+    width: 100% !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 12px center !important;
+    padding-right: 40px !important;
+}
+
+.editar-perfil-select:focus {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.15) !important;
+    outline: none !important;
+}
+
+.editar-perfil-select option {
+    background: #0038A8 !important;
+    color: #ffffff !important;
+}
+
+/* Checkbox con estilo glassmorphism */
+.editar-perfil-checkbox {
+    width: 20px !important;
+    height: 20px !important;
+    cursor: pointer !important;
+    accent-color: rgba(59, 130, 246, 0.8) !important;
+}
+
+.editar-perfil-checkbox-label {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 0.9rem !important;
+    margin-left: 0.5rem !important;
+    cursor: pointer !important;
+}
+
+/* Campos de solo lectura */
+.editar-perfil-plaintext {
+    background: rgba(255, 255, 255, 0.05) !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 1rem !important;
+    min-height: 2.5rem !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Títulos de sección */
+.editar-perfil-section-title {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 1rem !important;
+    margin-bottom: 1rem !important;
+    letter-spacing: 0.3px !important;
+}
+
+/* Badges */
+.editar-perfil-badge-info {
+    background: rgba(59, 130, 246, 0.25) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(59, 130, 246, 0.4) !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 0.85rem !important;
+}
+
+/* Errores */
+.editar-perfil-error {
+    color: #F87171 !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 0.85rem !important;
+    margin-top: 0.5rem !important;
+}
+
+/* Información importante */
+.editar-perfil-info-title {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 0.95rem !important;
+    margin-bottom: 0.75rem !important;
+    letter-spacing: 0.2px !important;
+}
+
+.editar-perfil-list {
+    list-style: none !important;
+    padding-left: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.editar-perfil-list li {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+    font-size: 0.9rem !important;
+    padding: 0.25rem 0 !important;
+    letter-spacing: 0.2px !important;
+}
+
+/* Asegurar que los iconos Font Awesome usen su fuente correcta */
+.editar-perfil-card i,
+.editar-perfil-card .fa,
+.editar-perfil-card [class*="fa-"],
+.dashboard i,
+.dashboard .fa,
+.dashboard [class*="fa-"] {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* ===== ESTILOS DE BOTONES DEL DASHBOARD ===== */
+.dashboard .btn-outline-primary {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .btn-outline-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-success {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .btn-outline-success:hover {
+    background: linear-gradient(180deg, 
+        rgba(134, 239, 172, 0.95) 0%, 
+        rgba(74, 222, 128, 0.95) 50%,
+        rgba(34, 197, 94, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+</style>
+
+<!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fechaNacimientoInput = document.getElementById('{{ form.fecha_nacimiento.id_for_label }}');
+    
+    if (!fechaNacimientoInput) {
+        console.error('ERROR: No se encontró el input de fecha de nacimiento');
+        return;
+    }
+    
+    // Convertir valores existentes de YYYY-MM-DD a DD/MM/YYYY si los hay
+    function convertirFechaAFormato(fechaStr) {
+        if (fechaStr && fechaStr.includes('-')) {
+            const parts = fechaStr.split('-');
+            if (parts.length === 3) {
+                return `${parts[2]}/${parts[1]}/${parts[0]}`;
+            }
+        }
+        return fechaStr;
+    }
+    
+    // Si hay valor inicial en formato YYYY-MM-DD, convertirlo
+    if (fechaNacimientoInput.value && fechaNacimientoInput.value.includes('-')) {
+        fechaNacimientoInput.value = convertirFechaAFormato(fechaNacimientoInput.value);
+    }
+    
+    // Función para crear dropdown de año (igual que el mes)
+    function crearYearDropdown(instance) {
+        const yearInputWrapper = instance.calendarContainer.querySelector('.numInputWrapper');
+        if (!yearInputWrapper) return;
+        
+        // Verificar si ya existe el dropdown
+        if (yearInputWrapper.querySelector('.flatpickr-yearDropdown')) {
+            // Actualizar el valor del dropdown si ya existe
+            const existingSelect = yearInputWrapper.querySelector('.flatpickr-yearDropdown');
+            const currentYear = instance.currentYear || new Date().getFullYear();
+            existingSelect.value = currentYear;
+            return;
+        }
+        
+        // Obtener el año actual
+        const currentYear = instance.currentYear || new Date().getFullYear();
+        
+        // Crear el select dropdown para años (desde 100 años atrás hasta el año actual)
+        const yearSelect = document.createElement('select');
+        yearSelect.classList.add('flatpickr-yearDropdown');
+        yearSelect.size = 1;
+        
+        // Generar años (desde 100 años atrás hasta el año actual)
+        const startYear = currentYear - 100;
+        const endYear = currentYear;
+        
+        for (let year = endYear; year >= startYear; year--) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            if (year === currentYear) {
+                option.selected = true;
+            }
+            yearSelect.appendChild(option);
+        }
+        
+        // Manejar cambio de año
+        yearSelect.addEventListener('change', function() {
+            const selectedYear = parseInt(this.value);
+            instance.changeYear(selectedYear);
+            // Actualizar el valor si hay una fecha seleccionada
+            if (instance.selectedDates.length > 0) {
+                const date = new Date(instance.selectedDates[0]);
+                date.setFullYear(selectedYear);
+                instance.setDate(date, false);
+            }
+        });
+        
+        // Reemplazar el input number con el select
+        const yearInput = yearInputWrapper.querySelector('input');
+        if (yearInput) {
+            yearInput.style.display = 'none';
+            yearInputWrapper.appendChild(yearSelect);
+        }
+        
+        // Aplicar tipografía gruesa al mes
+        const monthSelect = instance.calendarContainer.querySelector('.flatpickr-monthDropdown-months');
+        if (monthSelect) {
+            monthSelect.style.fontWeight = '700';
+        }
+    }
+    
+    // Verificar que flatpickr esté disponible
+    if (typeof flatpickr === 'undefined') {
+        console.error('ERROR: Flatpickr no está cargado');
+        return;
+    }
+    
+    // Inicializar Flatpickr para Fecha de Nacimiento
+    try {
+        window.fechaNacimiento = flatpickr(fechaNacimientoInput, {
+            dateFormat: 'd/m/Y',
+            altInput: false,
+            locale: 'es',
+            maxDate: 'today', // No permitir fechas futuras
+            defaultDate: fechaNacimientoInput.value || null,
+            allowInput: true,
+            clickOpens: true,
+            enableTime: false,
+            animate: true,
+            // Convertir el selector de año en dropdown como el mes
+            onReady: function(selectedDates, dateStr, instance) {
+                crearYearDropdown(instance);
+            },
+            onOpen: function(selectedDates, dateStr, instance) {
+                setTimeout(function() {
+                    crearYearDropdown(instance);
+                }, 50);
+            },
+            onChange: function(selectedDates, dateStr, instance) {
+                // Actualizar el valor en formato YYYY-MM-DD para el backend
+                if (selectedDates.length > 0) {
+                    const date = selectedDates[0];
+                    const yyyy = date.getFullYear();
+                    const mm = String(date.getMonth() + 1).padStart(2, '0');
+                    const dd = String(date.getDate()).padStart(2, '0');
+                    fechaNacimientoInput.setAttribute('data-date-value', `${yyyy}-${mm}-${dd}`);
+                }
+                // Actualizar el dropdown de año
+                crearYearDropdown(instance);
+            }
+        });
+        
+        // Interceptar el submit del formulario para convertir el formato
+        const form = fechaNacimientoInput.closest('form');
+        if (form && !form.hasAttribute('data-date-handler-attached')) {
+            form.setAttribute('data-date-handler-attached', 'true');
+            form.addEventListener('submit', function(e) {
+                // Manejar fecha de nacimiento
+                const dataDateValue = fechaNacimientoInput.getAttribute('data-date-value');
+                if (dataDateValue) {
+                    // Crear un input hidden con el valor en formato YYYY-MM-DD
+                    let hiddenInput = document.getElementById('fecha_nacimiento_hidden');
+                    if (!hiddenInput) {
+                        hiddenInput = document.createElement('input');
+                        hiddenInput.type = 'hidden';
+                        hiddenInput.name = '{{ form.fecha_nacimiento.name }}';
+                        hiddenInput.id = 'fecha_nacimiento_hidden';
+                        form.appendChild(hiddenInput);
+                    }
+                    hiddenInput.value = dataDateValue;
+                    // Ocultar el input visible para que no se envíe
+                    fechaNacimientoInput.disabled = true;
+                }
+            });
+        }
+        
+        console.log('Flatpickr fecha de nacimiento inicializado correctamente');
+    } catch (error) {
+        console.error('Error al inicializar Flatpickr para fecha de nacimiento:', error);
+    }
+    
+    // Inicializar Flatpickr para Fecha de Contratación (solo si existe el campo)
+    const fechaContratacionInput = document.getElementById('{{ form.fecha_contratacion.id_for_label }}');
+    if (fechaContratacionInput) {
+        // Si hay valor inicial en formato YYYY-MM-DD, convertirlo
+        if (fechaContratacionInput.value && fechaContratacionInput.value.includes('-')) {
+            fechaContratacionInput.value = convertirFechaAFormato(fechaContratacionInput.value);
+        }
+        
+        try {
+            window.fechaContratacion = flatpickr(fechaContratacionInput, {
+                dateFormat: 'd/m/Y',
+                altInput: false,
+                locale: 'es',
+                maxDate: 'today', // No permitir fechas futuras
+                defaultDate: fechaContratacionInput.value || null,
+                allowInput: true,
+                clickOpens: true,
+                enableTime: false,
+                animate: true,
+                // Convertir el selector de año en dropdown como el mes
+                onReady: function(selectedDates, dateStr, instance) {
+                    crearYearDropdown(instance);
+                },
+                onOpen: function(selectedDates, dateStr, instance) {
+                    setTimeout(function() {
+                        crearYearDropdown(instance);
+                    }, 50);
+                },
+                onChange: function(selectedDates, dateStr, instance) {
+                    // Actualizar el valor en formato YYYY-MM-DD para el backend
+                    if (selectedDates.length > 0) {
+                        const date = selectedDates[0];
+                        const yyyy = date.getFullYear();
+                        const mm = String(date.getMonth() + 1).padStart(2, '0');
+                        const dd = String(date.getDate()).padStart(2, '0');
+                        fechaContratacionInput.setAttribute('data-date-value', `${yyyy}-${mm}-${dd}`);
+                    }
+                    // Actualizar el dropdown de año
+                    crearYearDropdown(instance);
+                }
+            });
+            
+            // Interceptar el submit del formulario para convertir el formato (usar el mismo handler del form)
+            const form = fechaContratacionInput.closest('form');
+            if (form) {
+                // El handler ya está adjunto al form, solo necesitamos actualizar el valor
+                const originalSubmit = form.onsubmit;
+                form.addEventListener('submit', function(e) {
+                    const dataDateValue = fechaContratacionInput.getAttribute('data-date-value');
+                    if (dataDateValue) {
+                        // Crear un input hidden con el valor en formato YYYY-MM-DD
+                        let hiddenInput = document.getElementById('fecha_contratacion_hidden');
+                        if (!hiddenInput) {
+                            hiddenInput = document.createElement('input');
+                            hiddenInput.type = 'hidden';
+                            hiddenInput.name = '{{ form.fecha_contratacion.name }}';
+                            hiddenInput.id = 'fecha_contratacion_hidden';
+                            form.appendChild(hiddenInput);
+                        }
+                        hiddenInput.value = dataDateValue;
+                        // Ocultar el input visible para que no se envíe
+                        fechaContratacionInput.disabled = true;
+                    }
+                }, { once: false });
+            }
+            
+            console.log('Flatpickr fecha de contratación inicializado correctamente');
+        } catch (error) {
+            console.error('Error al inicializar Flatpickr para fecha de contratación:', error);
+        }
+    }
+});
+</script>
+
+<!-- Estilos para Flatpickr con glassmorphism (mismo que solicitar vacaciones) -->
+<style>
+/* ===== ESTILOS PARA FLATPICKR CALENDAR - GLASSMORPHISM ===== */
+.flatpickr-calendar {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    padding: 20px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    z-index: 9999 !important;
+    min-width: 320px !important;
+    width: auto !important;
+}
+
+.flatpickr-months {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+    padding-bottom: 10px !important;
+    margin-bottom: 10px !important;
+}
+
+.flatpickr-month {
+    background: transparent !important;
+}
+
+.flatpickr-current-month {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+}
+
+.flatpickr-monthDropdown-months {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 700 !important;
+    padding: 4px 8px !important;
+}
+
+.flatpickr-prev-month,
+.flatpickr-next-month {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
+
+.flatpickr-prev-month:hover,
+.flatpickr-next-month:hover {
+    color: rgba(255, 255, 255, 0.8) !important;
+    fill: rgba(255, 255, 255, 0.8) !important;
+}
+
+.flatpickr-weekdays {
+    background: transparent !important;
+}
+
+.flatpickr-weekday {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 500 !important;
+}
+
+.flatpickr-days {
+    background: transparent !important;
+}
+
+.flatpickr-day {
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 400 !important;
+}
+
+.flatpickr-day:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+.flatpickr-day.today {
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    font-weight: 600 !important;
+}
+
+.flatpickr-day.today.selected {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+}
+
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.prevMonthDay,
+.flatpickr-day.nextMonthDay {
+    color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.flatpickr-yearDropdown {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    padding: 4px 8px !important;
+    cursor: pointer !important;
+    outline: none !important;
+}
+
+.flatpickr-yearDropdown:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+.flatpickr-yearDropdown:focus {
+    background: rgba(255, 255, 255, 0.25) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.flatpickr-yearDropdown option {
+    background: #0038A8 !important;
+    color: #ffffff !important;
+}
+</style>
+{% endblock %}

@@ -1055,9 +1055,46 @@ def detalle_ticket(request, ticket_id):
     
     # Verificar permisos
     if perfil.es_sistemas() or perfil.es_admin() or perfil.es_rh() or ticket.empleado == perfil:
+        # Detectar desde dónde viene el usuario para redirigir correctamente
+        referer = request.META.get('HTTP_REFERER', '')
+        url_volver = 'empleados:mis_tickets'  # Por defecto
+        texto_volver = 'Volver'
+        
+        if referer:
+            # Si viene de gestión de tickets (sistemas/admin)
+            if '/sistemas/tickets/' in referer:
+                if perfil.es_admin():
+                    url_volver = 'empleados:admin_dashboard'
+                    texto_volver = 'Volver al Panel'
+                else:
+                    url_volver = 'empleados:gestionar_tickets'
+                    texto_volver = 'Volver a Tickets'
+            # Si viene del dashboard de sistemas
+            elif '/sistemas/' in referer and '/tickets/' not in referer:
+                url_volver = 'empleados:sistemas_dashboard'
+                texto_volver = 'Volver al Panel'
+            # Si viene del dashboard de admin
+            elif '/administrador/' in referer:
+                url_volver = 'empleados:admin_dashboard'
+                texto_volver = 'Volver al Panel'
+            # Si viene de mis_tickets (usuarios normales)
+            elif '/tickets/' in referer and '/sistemas/' not in referer:
+                url_volver = 'empleados:mis_tickets'
+                texto_volver = 'Volver'
+        else:
+            # Si no hay referer, determinar según el tipo de perfil
+            if perfil.es_sistemas() or perfil.es_admin():
+                if perfil.es_admin():
+                    url_volver = 'empleados:admin_dashboard'
+                else:
+                    url_volver = 'empleados:gestionar_tickets'
+                texto_volver = 'Volver al Panel' if perfil.es_admin() else 'Volver a Tickets'
+        
         context = {
             'perfil': perfil,
             'ticket': ticket,
+            'url_volver': url_volver,
+            'texto_volver': texto_volver,
         }
         return render(request, 'empleados/tickets/detalle_ticket.html', context)
     else:
@@ -1743,6 +1780,49 @@ def devolver_equipo(request, asignacion_id):
         'form': form,
     }
     return render(request, 'empleados/sistemas/devolver_equipo.html', context)
+
+
+# === KARDEX DE VACACIONES ===
+
+@login_required
+def kardex_vacaciones(request):
+    """Kardex de vacaciones - Lista de todos los empleados con sus vacaciones acumuladas"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+        raise PermissionDenied
+    
+    # Obtener todos los empleados activos
+    empleados = Perfil.objects.filter(activo=True).select_related(
+        'usuario', 'departamento'
+    ).order_by('usuario__last_name', 'usuario__first_name')
+    
+    # Preparar datos de vacaciones para cada empleado
+    empleados_data = []
+    for empleado in empleados:
+        # Vacaciones del año actual
+        dias_anuales = empleado.dias_vacaciones_anuales
+        dias_usados = empleado.dias_vacaciones_usados
+        dias_acumulados_ano_actual = empleado.calcular_dias_acumulados_hasta_hoy()
+        dias_ano_anterior = empleado.dias_vacaciones_acumulados
+        
+        # Calcular total disponible
+        total_disponible = empleado.calcular_total_disponible_proyectado()
+        
+        empleados_data.append({
+            'empleado': empleado,
+            'dias_anuales': dias_anuales,
+            'dias_usados': dias_usados,
+            'dias_acumulados_ano_actual': round(dias_acumulados_ano_actual, 2),
+            'total_disponible': round(total_disponible, 2),
+            'antiguedad': empleado.antiguedad_detallada,
+        })
+    
+    context = {
+        'perfil': perfil,
+        'empleados_data': empleados_data,
+        'total_empleados': len(empleados_data),
+    }
+    return render(request, 'empleados/rh/kardex_vacaciones.html', context)
 
 
 # === REPORTE DE VACACIONES ===
