@@ -7,7 +7,13 @@ import os
 
 # Configuración de seguridad para producción
 DEBUG = False
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'tu-dominio.com']
+ALLOWED_HOSTS = [
+    'localhost', 
+    '127.0.0.1', 
+    'tu-dominio.com',
+    'sistemagk.gruaskeila.com.mx',
+    'www.sistemagk.gruaskeila.com.mx',
+]
 
 # Base de datos de producción (PostgreSQL recomendado)
 DATABASES = {
@@ -22,12 +28,14 @@ DATABASES = {
 }
 
 # Configuración de archivos estáticos
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
 # Configuración de archivos de medios
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Configuración de seguridad
@@ -37,8 +45,15 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 
 # Configuración de sesiones
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# Si usas HTTPS, cambia estos a True
+SESSION_COOKIE_SECURE = False  # Cambiar a True si usas HTTPS
+CSRF_COOKIE_SECURE = False  # Cambiar a True si usas HTTPS
+CSRF_TRUSTED_ORIGINS = [
+    'https://sistemagk.gruaskeila.com.mx',
+    'http://sistemagk.gruaskeila.com.mx',
+    'https://www.sistemagk.gruaskeila.com.mx',
+    'http://www.sistemagk.gruaskeila.com.mx',
+]
 
 # Configuración de logging
 LOGGING = {

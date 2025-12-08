@@ -1055,9 +1055,46 @@ def detalle_ticket(request, ticket_id):
     
     # Verificar permisos
     if perfil.es_sistemas() or perfil.es_admin() or perfil.es_rh() or ticket.empleado == perfil:
+        # Detectar desde dónde viene el usuario para redirigir correctamente
+        referer = request.META.get('HTTP_REFERER', '')
+        url_volver = 'empleados:mis_tickets'  # Por defecto
+        texto_volver = 'Volver'
+        
+        if referer:
+            # Si viene de gestión de tickets (sistemas/admin)
+            if '/sistemas/tickets/' in referer:
+                if perfil.es_admin():
+                    url_volver = 'empleados:admin_dashboard'
+                    texto_volver = 'Volver al Panel'
+                else:
+                    url_volver = 'empleados:gestionar_tickets'
+                    texto_volver = 'Volver a Tickets'
+            # Si viene del dashboard de sistemas
+            elif '/sistemas/' in referer and '/tickets/' not in referer:
+                url_volver = 'empleados:sistemas_dashboard'
+                texto_volver = 'Volver al Panel'
+            # Si viene del dashboard de admin
+            elif '/administrador/' in referer:
+                url_volver = 'empleados:admin_dashboard'
+                texto_volver = 'Volver al Panel'
+            # Si viene de mis_tickets (usuarios normales)
+            elif '/tickets/' in referer and '/sistemas/' not in referer:
+                url_volver = 'empleados:mis_tickets'
+                texto_volver = 'Volver'
+        else:
+            # Si no hay referer, determinar según el tipo de perfil
+            if perfil.es_sistemas() or perfil.es_admin():
+                if perfil.es_admin():
+                    url_volver = 'empleados:admin_dashboard'
+                else:
+                    url_volver = 'empleados:gestionar_tickets'
+                texto_volver = 'Volver al Panel' if perfil.es_admin() else 'Volver a Tickets'
+        
         context = {
             'perfil': perfil,
             'ticket': ticket,
+            'url_volver': url_volver,
+            'texto_volver': texto_volver,
         }
         return render(request, 'empleados/tickets/detalle_ticket.html', context)
     else:

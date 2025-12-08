@@ -28,7 +28,9 @@ handler403 = 'empleados.views.error_403'
 handler404 = 'empleados.views.error_404'
 handler500 = 'empleados.views.error_500'
 
-# Servir archivos estáticos y media en desarrollo
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Servir archivos estáticos y media
+# En desarrollo (DEBUG=True) y en producción si el servidor web no los sirve
+# NOTA: En producción idealmente el servidor web (Apache/Nginx) debería servir estos archivos
+# pero esta configuración permite que Django los sirva como fallback
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
