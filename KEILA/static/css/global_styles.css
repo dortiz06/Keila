@@ -1,0 +1,783 @@
+/* ===== TIPOGRAFÍA GLOBAL MONSERRAT - APLICADA A TODO EL SISTEMA ===== */
+/* Regla global: Todo el sistema usa Montserrat por defecto */
+* {
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+/* Excepción: Iconos de Font Awesome mantienen su fuente original */
+i.fas,
+i.far,
+i.fal,
+i.fab,
+i.fa,
+.fa,
+[class*="fa-"],
+[class^="fa-"],
+[class*=" icon-"],
+i[class*="fa-"],
+i[class^="fa-"] {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "Font Awesome 6 Brands" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Aplicar Montserrat a todos los elementos de texto */
+html,
+body,
+div,
+span,
+p,
+h1, h2, h3, h4, h5, h6,
+a,
+button,
+input,
+textarea,
+select,
+label,
+table,
+th,
+td,
+tr,
+ul,
+ol,
+li,
+strong,
+em,
+small,
+b,
+i:not([class*="fa-"]):not([class^="fa-"]),
+.navbar,
+.navbar-brand,
+.nav-link,
+.card,
+.card-body,
+.card-title,
+.card-text,
+.alert,
+.badge,
+.btn,
+.form-control,
+.form-label,
+.form-select,
+.table,
+.dashboard,
+.container,
+.container-fluid {
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+/* Estilos del body */
+html body,
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #0038A8; /* Azul rey corporativo */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('../images/dash/dash1.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+main {
+    flex-grow: 1; /* Permite que el contenido principal ocupe el espacio disponible */
+}
+
+/* Footer global con estilo oscuro - El estilo principal está en base.html */
+/* Este archivo mantiene compatibilidad pero el estilo principal está en base.html */
+
+
+/* ===== GLASSMORPHISM ESTILO MODERNO - Similar a la imagen de referencia ===== */
+/* Tarjetas con efecto glassmorphism pronunciado */
+.card {
+    background: rgba(255, 255, 255, 0.15) !important; /* Transparencia más sutil */
+    backdrop-filter: blur(20px) saturate(180%) !important; /* Blur más pronunciado y saturación */
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important; /* Borde sutil pero visible */
+    border-radius: 20px !important; /* Bordes más redondeados */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important; /* Sombra externa e interna para profundidad */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Asegura que el contenido respete los bordes redondeados */
+}
+
+/* Alerts con glassmorphism - Mismo estilo que las cards */
+.alert {
+    background: rgba(255, 255, 255, 0.15) !important; /* Transparencia más sutil */
+    backdrop-filter: blur(20px) saturate(180%) !important; /* Blur más pronunciado y saturación */
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important; /* Borde sutil pero visible */
+    border-radius: 20px !important; /* Bordes más redondeados - igual que las cards */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important; /* Sombra externa e interna para profundidad */
+    overflow: hidden; /* Asegura que el contenido respete los bordes redondeados */
+}
+
+/* Alerta de advertencia - Texto amarillo */
+.alert-warning {
+    color: #FFDE21 !important; /* Amarillo especificado */
+}
+
+.alert-warning strong,
+.alert-warning i,
+.alert-warning .fa-exclamation-triangle {
+    color: #FFDE21 !important; /* Amarillo para texto fuerte e iconos */
+}
+
+/* Glass-box con efecto glassmorphism - Mismo estilo que las cards */
+.glass-box {
+    background: rgba(255, 255, 255, 0.15) !important; /* Transparencia más sutil */
+    backdrop-filter: blur(20px) saturate(180%) !important; /* Blur más pronunciado y saturación */
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important; /* Borde sutil pero visible */
+    border-radius: 20px !important; /* Bordes más redondeados - igual que las cards */
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important; /* Sombra externa e interna para profundidad */
+    overflow: hidden; /* Asegura que el contenido respete los bordes redondeados */
+}
+
+/* ===== TEXTO BLANCO GLOBAL - Excepto números con colores ===== */
+/* Color de texto blanco para todo el dashboard */
+body, main, .container, .container-fluid, .dashboard {
+    color: #ffffff !important;
+}
+
+/* Títulos en blanco - Excepto los que tienen clases de color Bootstrap */
+h1:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+h2:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+h3:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+h4:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+h5:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+h6:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+.h1:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+.h2:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+.h3:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+.h4:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+.h5:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+.h6:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger) {
+    color: #ffffff !important;
+}
+
+/* Texto en cards y contenedores - Blanco (excepto elementos con clases de color Bootstrap) */
+.card:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+.card-body, 
+.card-title:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+.card-text:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+.card-header,
+.alert:not(.alert-warning),
+.alert-body,
+.glass-box,
+.table, .table th, .table td,
+p:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+span:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+div:not(.text-success):not(.text-primary):not(.text-warning):not(.text-info):not(.text-danger),
+label,
+small.text-muted,
+.text-muted {
+    color: #ffffff !important;
+}
+
+/* EXCEPCIONES: Los números con clases text-success, text-primary, text-warning, text-info, text-danger 
+   mantendrán sus colores Bootstrap originales por especificidad de las clases de Bootstrap */
+
+/* Color específico para "Días Disponibles" - Verde brillante */
+.dashboard .card.text-center .card-body h5.card-title.small + h3.text-success,
+.dashboard .row > .col-6.col-md-3:first-child .card h3.text-success {
+    color: #00FF00 !important;
+}
+
+/* Advertencia - Amarillo */
+.alert-warning {
+    color: #FFDE21 !important;
+}
+
+.alert-warning strong,
+.alert-warning i,
+.alert-warning .fa-exclamation-triangle {
+    color: #FFDE21 !important;
+}
+
+
+/* Estilos duplicados eliminados - ya están definidos arriba */
+
+.card-body {
+    flex-grow: 1;
+    overflow: auto; /* Permite desplazamiento si el contenido excede el tamaño */
+}
+
+.square-container {
+    aspect-ratio: 1 / 1; /* Hace que el contenedor sea cuadrado */
+    max-height: 400px; /* Limita la altura máxima para que no se estire demasiado */
+}
+
+.card-header {
+    background: rgba(0, 56, 168, 0.4) !important; /* Azul rey con más transparencia para glassmorphism */
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Headers de cards del dashboard - Sin fondo azul, completamente transparentes */
+.dashboard .card-header.bg-primary,
+.dashboard .card-header.bg-success,
+.dashboard .card-header.bg-info,
+.dashboard .card-header.bg-warning,
+.dashboard .card-header.bg-danger {
+    background: transparent !important; /* Sin fondo de color */
+    background-color: transparent !important; /* Asegurar que no haya color de fondo */
+    background-image: none !important; /* Sin gradientes */
+    backdrop-filter: none !important; /* Sin blur en el header, solo en el card */
+    -webkit-backdrop-filter: none !important;
+    border: none !important; /* Sin bordes */
+    box-shadow: none !important;
+    text-align: center !important; /* Centrar el contenido */
+    padding: 1rem !important;
+    position: relative !important; /* Para el pseudo-elemento de la línea */
+}
+
+/* Sobrescribir cualquier color de Bootstrap para estos headers */
+.dashboard .card-header.bg-primary,
+.dashboard .card-header.bg-success {
+    --bs-bg-opacity: 0 !important; /* Forzar opacidad 0 para clases bg-* de Bootstrap */
+}
+
+/* Línea blanca delgada que no llega a los bordes */
+.dashboard .card-header.bg-primary::after,
+.dashboard .card-header.bg-success::after,
+.dashboard .card-header.bg-info::after,
+.dashboard .card-header.bg-warning::after,
+.dashboard .card-header.bg-danger::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 20px !important; /* Margen izquierdo */
+    right: 20px !important; /* Margen derecho */
+    height: 1px !important;
+    background: rgba(255, 255, 255, 0.5) !important; /* Línea blanca delgada */
+}
+
+/* Centrar el contenido del header (texto e icono) */
+.dashboard .card-header h5,
+.dashboard .card-header .mb-0 {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+}
+
+.table-responsive {
+    background: rgba(255, 255, 255, 0.15) !important; /* Transparencia más sutil */
+    backdrop-filter: blur(20px) saturate(180%) !important; /* Blur más pronunciado y saturación */
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important; /* Borde sutil pero visible */
+    border-radius: 20px !important; /* Bordes más redondeados - igual que las cards */
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important; /* Sombra externa e interna para profundidad */
+}
+
+.table thead th {
+    background: rgba(30, 58, 138, 0.7) !important; /* Indigo profundo con transparencia */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.table tbody tr {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* ===== ICONOS BLANCOS Y DELGADOS - GLOBAL ===== */
+/* Todos los iconos Font Awesome - Color blanco y más delgados */
+/* IMPORTANTE: Mantener fuente Font Awesome (ya definida arriba) */
+i.fas,
+i.far,
+i.fal,
+i.fab,
+i.fa,
+.fa,
+[class*="fa-"],
+[class^="fa-"],
+i[class*="fa-"],
+i[class^="fa-"] {
+    color: #ffffff !important;
+    font-weight: 900 !important; /* Font Awesome requiere font-weight 900 */
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro", "Font Awesome 6 Brands" !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Excepción: Iconos en alertas de advertencia mantienen su color amarillo */
+.alert.alert-warning i,
+.alert.alert-warning .fa,
+.alert.alert-warning [class*="fa-"],
+.alert-warning i.fas,
+.alert-warning i.fa-exclamation-triangle,
+.dashboard .alert-warning i,
+.dashboard .alert-warning .fa,
+.dashboard .alert-warning [class*="fa-"] {
+    color: #FFDE21 !important;
+}
+
+/* Excepción: Iconos con clases de color Bootstrap mantienen su color */
+.text-success i,
+.text-success .fa,
+.text-primary i,
+.text-primary .fa,
+.text-warning i,
+.text-warning .fa,
+.text-info i,
+.text-info .fa,
+.text-danger i,
+.text-danger .fa {
+    color: inherit !important; /* Hereda el color de la clase Bootstrap */
+}
+
+/* Sobrescribir: En el dashboard, todos los iconos deben ser blancos (excepto alertas) */
+.dashboard i.text-success,
+.dashboard i.text-primary,
+.dashboard i.text-warning,
+.dashboard i.text-info,
+.dashboard i.text-danger,
+.dashboard .text-success i,
+.dashboard .text-primary i,
+.dashboard .text-warning i,
+.dashboard .text-info i,
+.dashboard .text-danger i {
+    color: #ffffff !important; /* Forzar iconos blancos en dashboard */
+}
+
+/* ===== BADGES CON ESTILO DE BOTONES - GLOBAL PARA TODAS LAS VISTAS ===== */
+/* Estilo base para todos los badges - Rectangulares redondeados con efecto elevado */
+/* Alta especificidad para sobrescribir estilos en base.html y media queries */
+.badge,
+span.badge,
+.badge.badge-pendiente,
+.badge.badge-proceso,
+.badge.badge-resuelto,
+.badge.badge-cancelado,
+.badge.badge-urgente,
+.badge.badge-alta,
+.badge.badge-media,
+.badge.badge-baja,
+body .badge,
+html body .badge,
+.dashboard .badge,
+.dashboard span.badge {
+    border: none !important;
+    border-radius: 16px !important; /* Esquinas muy redondeadas (squircle/pill shape) */
+    padding: 10px 20px !important; /* Padding generoso para aspecto de botón - Sobrescribe media queries */
+    font-weight: 700 !important; /* Texto más grueso y negrita */
+    font-size: 0.9rem !important; /* Tamaño fijo - Sobrescribe media queries */
+    color: rgba(255, 255, 255, 1) !important; /* Blanco completamente opaco */
+    display: inline-block !important;
+    text-align: center !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3), /* Sombra más pronunciada por debajo para efecto de elevación */
+        0 2px 6px rgba(0, 0, 0, 0.2), /* Sombra adicional para más profundidad */
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important; /* Highlight más visible arriba para efecto 3D */
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 0 2px rgba(0, 0, 0, 0.3) !important; /* Sombra de texto más fuerte para mejor legibilidad */
+    opacity: 1 !important; /* Asegurar que el elemento completo tenga opacidad 1 */
+    isolation: isolate !important; /* Crear contexto de apilamiento */
+}
+
+/* Badge Urgente - Rojo con degradado - Opacidad reducida por defecto */
+.badge-urgente:not(.btn):not(a):not(button),
+span.badge-urgente:not(.btn):not(a):not(button),
+.badge.badge-urgente:not(.btn):not(a):not(button),
+.badge.bg-danger:not(.btn):not(a):not(button):not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
+.dashboard .badge-urgente:not(.btn):not(a):not(button),
+.dashboard span.badge-urgente:not(.btn):not(a):not(button),
+.dashboard .badge.badge-urgente:not(.btn):not(a):not(button) {
+    background: linear-gradient(180deg, 
+        rgba(248, 113, 113, 0.7) 0%, 
+        rgba(239, 68, 68, 0.7) 50%,
+        rgba(220, 38, 38, 0.7) 100%) !important;
+    color: rgba(255, 255, 255, 1) !important;
+    opacity: 1 !important;
+}
+
+/* Forzar texto blanco opaco en badges urgente */
+.badge-urgente:not(.btn):not(a):not(button),
+span.badge-urgente:not(.btn):not(a):not(button),
+.badge.badge-urgente:not(.btn):not(a):not(button),
+.dashboard .badge-urgente:not(.btn):not(a):not(button),
+.dashboard span.badge-urgente:not(.btn):not(a):not(button),
+.dashboard .badge.badge-urgente:not(.btn):not(a):not(button) {
+    color: rgba(255, 255, 255, 1) !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Badge Urgente - Opacidad completa para botones clickeables */
+.badge-urgente.btn,
+.badge-urgente a,
+.badge-urgente button,
+.badge.bg-danger.btn,
+.badge.bg-danger a,
+.badge.bg-danger button {
+    background: linear-gradient(180deg, 
+        rgba(248, 113, 113, 1) 0%, 
+        rgba(239, 68, 68, 1) 50%,
+        rgba(220, 38, 38, 1) 100%) !important;
+}
+
+/* Badge Alta - Amarillo/Naranja con degradado - Opacidad reducida por defecto */
+.badge-alta:not(.btn):not(a):not(button),
+span.badge-alta:not(.btn):not(a):not(button),
+.badge.badge-alta:not(.btn):not(a):not(button),
+.dashboard .badge-alta:not(.btn):not(a):not(button),
+.dashboard span.badge-alta:not(.btn):not(a):not(button),
+.dashboard .badge.badge-alta:not(.btn):not(a):not(button) {
+    background: linear-gradient(180deg, 
+        rgba(245, 158, 11, 0.7) 0%, 
+        rgba(217, 119, 6, 0.7) 50%,
+        rgba(180, 83, 9, 0.7) 100%) !important;
+    color: rgba(255, 255, 255, 1) !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Badge Alta - Opacidad completa para botones clickeables */
+.badge-alta.btn,
+.badge-alta a,
+.badge-alta button {
+    background: linear-gradient(180deg, 
+        rgba(245, 158, 11, 0.95) 0%, 
+        rgba(217, 119, 6, 0.95) 50%,
+        rgba(180, 83, 9, 1) 100%) !important;
+}
+
+/* Badge Media - Azul con degradado - Opacidad reducida por defecto */
+.badge-media:not(.btn):not(a):not(button),
+span.badge-media:not(.btn):not(a):not(button),
+.badge.badge-media:not(.btn):not(a):not(button),
+.badge.bg-info:not(.btn):not(a):not(button):not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
+.dashboard .badge-media:not(.btn):not(a):not(button),
+.dashboard span.badge-media:not(.btn):not(a):not(button),
+.dashboard .badge.badge-media:not(.btn):not(a):not(button) {
+    background: linear-gradient(180deg, 
+        rgba(147, 197, 253, 0.7) 0%, 
+        rgba(96, 165, 250, 0.7) 50%,
+        rgba(59, 130, 246, 0.7) 100%) !important;
+    color: rgba(255, 255, 255, 1) !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Badge Media - Opacidad completa para botones clickeables */
+.badge-media.btn,
+.badge-media a,
+.badge-media button,
+.badge.bg-info.btn,
+.badge.bg-info a,
+.badge.bg-info button {
+    background: linear-gradient(180deg, 
+        rgba(147, 197, 253, 1) 0%, 
+        rgba(96, 165, 250, 1) 50%,
+        rgba(59, 130, 246, 1) 100%) !important;
+}
+
+/* Badge Baja - Gris con degradado - Opacidad reducida por defecto */
+.badge-baja:not(.btn):not(a):not(button),
+span.badge-baja:not(.btn):not(a):not(button),
+.badge.badge-baja:not(.btn):not(a):not(button),
+.badge.bg-secondary:not(.btn):not(a):not(button):not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
+.dashboard .badge-baja:not(.btn):not(a):not(button),
+.dashboard span.badge-baja:not(.btn):not(a):not(button),
+.dashboard .badge.badge-baja:not(.btn):not(a):not(button) {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.7) 0%, 
+        rgba(107, 114, 128, 0.7) 50%,
+        rgba(75, 85, 99, 0.7) 100%) !important;
+    color: rgba(255, 255, 255, 1) !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Badge Baja - Opacidad completa para botones clickeables */
+.badge-baja.btn,
+.badge-baja a,
+.badge-baja button,
+.badge.bg-secondary.btn,
+.badge.bg-secondary a,
+.badge.bg-secondary button {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+}
+
+/* Badge Pendiente - Naranja/Amarillo con degradado - Opacidad reducida por defecto */
+.badge-pendiente:not(.btn):not(a):not(button),
+span.badge-pendiente:not(.btn):not(a):not(button),
+.badge.badge-pendiente:not(.btn):not(a):not(button),
+.badge.bg-warning:not(.btn):not(a):not(button):not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
+.dashboard .badge-pendiente:not(.btn):not(a):not(button),
+.dashboard span.badge-pendiente:not(.btn):not(a):not(button),
+.dashboard .badge.badge-pendiente:not(.btn):not(a):not(button),
+.dashboard .badge-pendiente.fs-6:not(.btn):not(a):not(button),
+.dashboard .badge.badge-pendiente.fs-6:not(.btn):not(a):not(button),
+span.badge.badge-pendiente.fs-6:not(.btn):not(a):not(button) {
+    background: linear-gradient(180deg, 
+        rgba(251, 191, 36, 0.7) 0%, 
+        rgba(245, 158, 11, 0.7) 50%,
+        rgba(217, 119, 6, 0.7) 100%) !important;
+    color: rgba(255, 255, 255, 1) !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Badge Pendiente - Opacidad completa para botones clickeables */
+.badge-pendiente.btn,
+.badge-pendiente a,
+.badge-pendiente button,
+.badge.bg-warning.btn,
+.badge.bg-warning a,
+.badge.bg-warning button {
+    background: linear-gradient(180deg, 
+        rgba(251, 191, 36, 1) 0%, 
+        rgba(245, 158, 11, 1) 50%,
+        rgba(217, 119, 6, 1) 100%) !important;
+}
+
+/* Badge En Proceso - Azul con degradado - Opacidad reducida por defecto */
+.badge-proceso:not(.btn):not(a):not(button),
+span.badge-proceso:not(.btn):not(a):not(button),
+.badge.badge-proceso:not(.btn):not(a):not(button),
+.dashboard .badge-proceso:not(.btn):not(a):not(button),
+.dashboard span.badge-proceso:not(.btn):not(a):not(button),
+.dashboard .badge.badge-proceso:not(.btn):not(a):not(button),
+.dashboard .badge-proceso.fs-6:not(.btn):not(a):not(button),
+.dashboard .badge.badge-proceso.fs-6:not(.btn):not(a):not(button),
+span.badge.badge-proceso.fs-6:not(.btn):not(a):not(button) {
+    background: linear-gradient(180deg, 
+        rgba(147, 197, 253, 0.7) 0%, 
+        rgba(96, 165, 250, 0.7) 50%,
+        rgba(59, 130, 246, 0.7) 100%) !important;
+    color: rgba(255, 255, 255, 1) !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Badge En Proceso - Opacidad completa para botones clickeables */
+.badge-proceso.btn,
+.badge-proceso a,
+.badge-proceso button {
+    background: linear-gradient(180deg, 
+        rgba(147, 197, 253, 1) 0%, 
+        rgba(96, 165, 250, 1) 50%,
+        rgba(59, 130, 246, 1) 100%) !important;
+}
+
+/* Badge Resuelto - Verde con degradado - Opacidad reducida por defecto */
+.badge-resuelto:not(.btn):not(a):not(button),
+span.badge-resuelto:not(.btn):not(a):not(button),
+.badge.badge-resuelto:not(.btn):not(a):not(button),
+.badge.bg-success:not(.btn):not(a):not(button):not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
+.dashboard .badge-resuelto:not(.btn):not(a):not(button),
+.dashboard span.badge-resuelto:not(.btn):not(a):not(button),
+.dashboard .badge.badge-resuelto:not(.btn):not(a):not(button),
+.dashboard .badge-resuelto.fs-6:not(.btn):not(a):not(button),
+.dashboard .badge.badge-resuelto.fs-6:not(.btn):not(a):not(button),
+span.badge.badge-resuelto.fs-6:not(.btn):not(a):not(button) {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.7) 0%, 
+        rgba(34, 197, 94, 0.7) 50%,
+        rgba(22, 163, 74, 0.7) 100%) !important;
+    color: rgba(255, 255, 255, 1) !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Badge Resuelto - Opacidad completa para botones clickeables */
+.badge-resuelto.btn,
+.badge-resuelto a,
+.badge-resuelto button,
+.badge.bg-success.btn,
+.badge.bg-success a,
+.badge.bg-success button {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 1) 0%, 
+        rgba(34, 197, 94, 1) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+}
+
+/* Badge Cancelado - Gris con degradado - Opacidad reducida por defecto */
+.badge-cancelado:not(.btn):not(a):not(button),
+span.badge-cancelado:not(.btn):not(a):not(button),
+.badge.badge-cancelado:not(.btn):not(a):not(button),
+.dashboard .badge-cancelado:not(.btn):not(a):not(button),
+.dashboard span.badge-cancelado:not(.btn):not(a):not(button),
+.dashboard .badge.badge-cancelado:not(.btn):not(a):not(button),
+.dashboard .badge-cancelado.fs-6:not(.btn):not(a):not(button),
+.dashboard .badge.badge-cancelado.fs-6:not(.btn):not(a):not(button),
+span.badge.badge-cancelado.fs-6:not(.btn):not(a):not(button) {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.7) 0%, 
+        rgba(107, 114, 128, 0.7) 50%,
+        rgba(75, 85, 99, 0.7) 100%) !important;
+    color: rgba(255, 255, 255, 1) !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Badge Cancelado - Opacidad completa para botones clickeables */
+.badge-cancelado.btn,
+.badge-cancelado a,
+.badge-cancelado button {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+}
+
+/* Badges de estados de vacaciones - Reducir opacidad del fondo si no son clickeables */
+.badge-aprobada:not(.btn):not(a):not(button):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info) {
+    background: linear-gradient(180deg, 
+        rgba(34, 197, 94, 0.7) 0%, 
+        rgba(22, 163, 74, 0.7) 50%,
+        rgba(15, 118, 50, 0.7) 100%) !important;
+}
+
+.badge-rechazada:not(.btn):not(a):not(button):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info) {
+    background: linear-gradient(180deg, 
+        rgba(239, 68, 68, 0.7) 0%, 
+        rgba(220, 38, 38, 0.7) 50%,
+        rgba(185, 28, 28, 0.7) 100%) !important;
+}
+
+.badge-cancelada:not(.btn):not(a):not(button):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info) {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.7) 0%, 
+        rgba(107, 114, 128, 0.7) 50%,
+        rgba(75, 85, 99, 0.7) 100%) !important;
+}
+
+/* ===== BOTÓN VERDE DJANGO PARA ADMIN DJANGO - GLOBAL (#064B35) ===== */
+/* Aplicar en todos los botones que enlazan a /admin/ */
+.btn-outline-django,
+a[href="/admin/"].btn,
+a[href*="/admin/"].btn,
+.btn-django {
+    background: linear-gradient(180deg, 
+        rgba(6, 75, 53, 0.95) 0%, 
+        rgba(5, 60, 42, 0.95) 50%,
+        rgba(4, 45, 31, 1) 100%) !important;
+    border: none !important;
+    color: #ffffff !important;
+    box-shadow: 
+        0 4px 12px rgba(6, 75, 53, 0.3),
+        0 2px 6px rgba(6, 75, 53, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.btn-outline-django:hover,
+a[href="/admin/"].btn:hover,
+a[href*="/admin/"].btn:hover,
+.btn-django:hover {
+    background: linear-gradient(180deg, 
+        rgba(8, 95, 67, 0.95) 0%, 
+        rgba(6, 75, 53, 0.95) 50%,
+        rgba(5, 60, 42, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(6, 75, 53, 0.35),
+        0 3px 8px rgba(6, 75, 53, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+}
+
+/* ===== BADGES NO CLICKABLES CON OPACIDAD SOLO EN FONDO - GLOBAL ===== */
+/* Todos los badges que NO son botones deben tener opacidad reducida SOLO en el fondo */
+/* El texto blanco mantiene opacidad completa (sin opacidad) - completamente visible */
+/* EXCEPCIÓN: Badges de Estado de Cuenta (Activo, Inactivo, Staff) mantienen opacidad completa */
+.badge:not(.btn):not(a):not(button):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
+span.badge:not(.btn):not(a):not(button):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
+.badge-non-clickable:not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info) {
+    cursor: default !important;
+    pointer-events: none !important;
+    user-select: none !important;
+    position: relative !important;
+    isolation: isolate !important; /* Crea un nuevo contexto de apilamiento */
+}
+
+/* Texto completamente opaco en una capa separada */
+.badge:not(.btn):not(a):not(button):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
+span.badge:not(.btn):not(a):not(button):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
+.badge-non-clickable:not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info) {
+    color: rgba(255, 255, 255, 1) !important; /* Blanco completamente opaco */
+    opacity: 1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 0 2px rgba(0, 0, 0, 0.3) !important; /* Sombra más fuerte para mejor legibilidad */
+    z-index: 10 !important; /* Texto en capa superior */
+    position: relative !important;
+}
+
+/* Forzar que todo el contenido de texto sea completamente opaco */
+.badge:not(.btn):not(a):not(button):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info) *,
+span.badge:not(.btn):not(a):not(button):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info) *,
+.badge-non-clickable:not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info) * {
+    color: rgba(255, 255, 255, 1) !important; /* Blanco completamente opaco */
+    opacity: 1 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 0 2px rgba(0, 0, 0, 0.3) !important;
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+
+/* Badges de Estado de Cuenta mantienen opacidad completa */
+.profile-badge-success,
+.profile-badge-danger,
+.profile-badge-info {
+    opacity: 1 !important;
+    cursor: default !important;
+    pointer-events: none !important;
+}
+
+/* Badges dentro de enlaces o botones mantienen opacidad completa */
+a .badge,
+button .badge,
+.btn .badge,
+.badge.btn,
+a.badge,
+button.badge {
+    opacity: 1 !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+/* Botones siempre con opacidad completa */
+.btn,
+a.btn,
+button.btn,
+input[type="button"].btn,
+input[type="submit"].btn {
+    opacity: 1 !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+/* Asegurar que Montserrat esté aplicado en TODO excepto iconos */
+*:not(i):not([class*="fa-"]):not([class^="fa-"]):not(.fa) {
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+}

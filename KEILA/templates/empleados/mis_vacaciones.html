@@ -1,0 +1,353 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mis Vacaciones{% endblock %}
+
+{% block content %}
+<div class="container-fluid dashboard">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+        <div>
+            <h1 class="dashboard-title">Mis Solicitudes de Vacaciones</h1>
+            <p class="dashboard-subtitle mb-0">Historial completo de tus solicitudes de vacaciones</p>
+        </div>
+        <div class="d-flex gap-2">
+            {% if perfil.es_admin %}
+                <a href="{% url 'empleados:admin_dashboard' %}" class="btn btn-outline-secondary">
+            {% elif perfil.es_rh %}
+                <a href="{% url 'empleados:rh_dashboard' %}" class="btn btn-outline-secondary">
+            {% elif perfil.es_jefe_area %}
+                <a href="{% url 'empleados:jefe_dashboard' %}" class="btn btn-outline-secondary">
+            {% elif perfil.es_sistemas %}
+                <a href="{% url 'empleados:sistemas_dashboard' %}" class="btn btn-outline-secondary">
+            {% else %}
+                <a href="{% url 'empleados:empleado_dashboard' %}" class="btn btn-outline-secondary">
+            {% endif %}
+                <i class="fas fa-arrow-left me-1"></i>Volver al Panel
+            </a>
+            {% if not perfil.es_sistemas and not perfil.es_rh %}
+            <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-primary" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">
+                <i class="fas fa-plus me-1"></i>Solicitar Vacaciones
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if solicitudes %}
+        <div class="card">
+            <div class="card-body" style="background: transparent !important; padding: 1.5rem !important;">
+                <div class="table-responsive" style="background: transparent !important; border: none !important; box-shadow: none !important; border-radius: 0 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th style="color: #ffffff !important;">Período</th>
+                                <th style="color: #ffffff !important;">Días</th>
+                                <th style="color: #ffffff !important;">Tipo</th>
+                                <th style="color: #ffffff !important;">Estado</th>
+                                <th style="color: #ffffff !important;">Fecha Solicitud</th>
+                                <th style="color: #ffffff !important;">Comentarios</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for solicitud in solicitudes %}
+                            <tr style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
+                                <td style="color: #ffffff !important;">
+                                    <i class="fas fa-calendar me-1"></i>
+                                    <strong>{{ solicitud.fecha_inicio|date:"d/m/Y" }}</strong><br>
+                                    <small style="color: rgba(255, 255, 255, 0.7) !important;">hasta {{ solicitud.fecha_fin|date:"d/m/Y" }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge vacaciones-badge-dias">{{ solicitud.dias_solicitados }} día{{ solicitud.dias_solicitados|pluralize }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge vacaciones-badge-tipo bg-{% if solicitud.tipo == 'NORMAL' %}success{% elif solicitud.tipo == 'EXTRAORDINARIA' %}warning{% else %}danger{% endif %}">
+                                        {% if solicitud.tipo == 'NORMAL' %}
+                                            <i class="fas fa-check-circle me-1"></i>Normal
+                                        {% elif solicitud.tipo == 'EXTRAORDINARIA' %}
+                                            <i class="fas fa-exclamation-triangle me-1"></i>Extraordinaria
+                                        {% else %}
+                                            {{ solicitud.get_tipo_display }}
+                                        {% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if solicitud.estado == 'PENDIENTE_JEFE' %}
+                                        <span class="badge vacaciones-badge-estado bg-warning">
+                                            <i class="fas fa-clock me-1"></i>Pendiente Jefe
+                                        </span>
+                                    {% elif solicitud.estado == 'PENDIENTE_RH' %}
+                                        <span class="badge vacaciones-badge-estado bg-info">
+                                            <i class="fas fa-clock me-1"></i>Pendiente RH
+                                        </span>
+                                    {% elif solicitud.estado == 'APROBADO_RH' %}
+                                        <span class="badge vacaciones-badge-estado bg-success">
+                                            <i class="fas fa-check-circle me-1"></i>Aprobada
+                                        </span>
+                                    {% elif solicitud.estado == 'RECHAZADO_JEFE' or solicitud.estado == 'RECHAZADO_RH' %}
+                                        <span class="badge vacaciones-badge-estado bg-danger">
+                                            <i class="fas fa-times me-1"></i>Rechazada
+                                        </span>
+                                    {% elif solicitud.estado == 'CANCELADO' %}
+                                        <span class="badge vacaciones-badge-estado bg-secondary">
+                                            <i class="fas fa-ban me-1"></i>Cancelada
+                                        </span>
+                                    {% else %}
+                                        <span class="badge vacaciones-badge-estado bg-secondary">{{ solicitud.get_estado_display }}</span>
+                                    {% endif %}
+                                </td>
+                                <td style="color: #ffffff !important;">
+                                    <i class="fas fa-clock me-1"></i>{{ solicitud.fecha_solicitud|date:"d/m/Y H:i" }}
+                                </td>
+                                <td style="color: #ffffff !important;">
+                                    {% if solicitud.comentarios_jefe %}
+                                        <small style="color: rgba(255, 255, 255, 0.8) !important;">
+                                            <strong>Jefe:</strong> {{ solicitud.comentarios_jefe|truncatechars:30 }}
+                                        </small>
+                                    {% endif %}
+                                    {% if solicitud.comentarios_rh %}
+                                        {% if solicitud.comentarios_jefe %}<br>{% endif %}
+                                        <small style="color: rgba(255, 255, 255, 0.8) !important;">
+                                            <strong>RH:</strong> {{ solicitud.comentarios_rh|truncatechars:30 }}
+                                        </small>
+                                    {% endif %}
+                                    {% if not solicitud.comentarios_jefe and not solicitud.comentarios_rh %}
+                                        <span style="color: rgba(255, 255, 255, 0.6) !important;">-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="card">
+            <div class="card-body text-center py-5" style="background: transparent !important;">
+                <i class="fas fa-calendar-plus fa-4x mb-3" style="color: rgba(255, 255, 255, 0.6) !important;"></i>
+                <h4 style="color: #ffffff !important;">No tienes solicitudes de vacaciones</h4>
+                <p style="color: rgba(255, 255, 255, 0.7) !important;">Haz clic en "Solicitar Vacaciones" para crear tu primera solicitud</p>
+                <a href="{% url 'empleados:solicitar_vacaciones' %}" class="btn btn-primary" style="text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">
+                    <i class="fas fa-plus me-1"></i>Solicitar Vacaciones
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+/* Título y subtítulo del dashboard - Texto blanco con sombra */
+.dashboard-title {
+    color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 
+                 0 4px 12px rgba(0, 0, 0, 0.3),
+                 0 0 20px rgba(0, 0, 0, 0.2) !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.5rem !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard-subtitle {
+    color: #ffffff !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), 
+                 0 3px 10px rgba(0, 0, 0, 0.3),
+                 0 0 15px rgba(0, 0, 0, 0.2) !important;
+    font-weight: 400 !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Asegurar que el card tenga el estilo glassmorphism del dashboard */
+.dashboard .card {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+/* El table-responsive debe ser completamente transparente */
+.dashboard .table-responsive {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+.dashboard .table {
+    margin-bottom: 0 !important;
+    background: transparent !important;
+}
+
+.dashboard .table thead th {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    padding: 1rem !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .table tbody tr {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    transition: all 0.3s ease !important;
+}
+
+.dashboard .table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    transform: translateX(3px) !important;
+}
+
+.dashboard .table tbody tr:last-child {
+    border-bottom: none !important;
+}
+
+.dashboard .table tbody td {
+    padding: 1rem !important;
+    color: #ffffff !important;
+    vertical-align: middle !important;
+    background: transparent !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .table tbody td strong {
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+}
+
+/* Asegurar que todos los textos sean blancos */
+.dashboard .table th,
+.dashboard .table td,
+.dashboard .table td strong,
+.dashboard .table td span:not(.badge) {
+    color: #ffffff !important;
+}
+
+/* Iconos blancos - Font Awesome correctamente configurado */
+.dashboard .table td i,
+.dashboard i.fas,
+.dashboard i.far,
+.dashboard i.fal,
+.dashboard i.fab,
+.dashboard .fa,
+.dashboard [class*="fa-"] {
+    color: #ffffff !important;
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Badges con estilo glassmorphism */
+.dashboard .vacaciones-badge-dias {
+    background: rgba(37, 99, 235, 0.3) !important;
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-weight: 500 !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .vacaciones-badge-tipo {
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-weight: 500 !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .vacaciones-badge-estado {
+    backdrop-filter: blur(10px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(150%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-weight: 500 !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    white-space: nowrap !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Botones con estilo del dashboard */
+.dashboard .btn,
+.dashboard .btn-primary,
+.dashboard .btn-outline-primary,
+.dashboard .btn-outline-secondary {
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 32px !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    overflow: hidden !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .btn-sm {
+    padding: 10px 24px !important;
+    font-size: 0.85rem !important;
+    border-radius: 12px !important;
+}
+
+.dashboard .btn-primary,
+.dashboard .btn-outline-primary {
+    background: linear-gradient(180deg, 
+        rgba(37, 99, 235, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 30, 100, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+.dashboard .btn-primary:hover,
+.dashboard .btn-outline-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(0, 56, 168, 0.95) 50%,
+        rgba(0, 56, 168, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+.dashboard .btn-outline-secondary {
+    background: linear-gradient(180deg, 
+        rgba(108, 117, 125, 0.95) 0%, 
+        rgba(73, 80, 87, 0.95) 50%,
+        rgba(52, 58, 64, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+.dashboard .btn-outline-secondary:hover {
+    background: linear-gradient(180deg, 
+        rgba(134, 142, 150, 0.95) 0%, 
+        rgba(108, 117, 125, 0.95) 50%,
+        rgba(73, 80, 87, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+</style>
+{% endblock %}

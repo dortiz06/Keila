@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ empleado.nombre_completo }} - Sistema de Recursos Humanos{% endblock %}
+
+{% block content %}
+<style>
+/* Cambiar fondo solo en la vista de detalle de empleado */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/dash/keila.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+</style>
+
+<div class="container-fluid dashboard">
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+        <div>
+            <h1 class="dashboard-title" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 0 5px 20px rgba(0, 0, 0, 0.85) !important;">
+                <i class="fas fa-user me-3"></i>{{ empleado.nombre_completo }}
+            </h1>
+            <p class="dashboard-subtitle mb-0" style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3) !important;">
+                {{ empleado.puesto }} - {{ empleado.departamento.nombre }}
+            </p>
+        </div>
+        <div class="d-flex gap-2 mt-2 mt-md-0">
+            <a href="{% url 'lista_empleados' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Volver
+            </a>
+            <a href="/admin/empleados/empleado/{{ empleado.id }}/change/" class="btn btn-outline-warning">
+                <i class="fas fa-edit me-1"></i>Editar
+            </a>
+        </div>
+    </div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Información personal -->
+        <div class="col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-header" style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important; padding: 1.5rem !important;">
+                    <h5 class="mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
+                        <i class="fas fa-user-circle me-2"></i>Información Personal
+                    </h5>
+                </div>
+                <div class="card-body text-center" style="background: transparent !important; padding: 2rem !important;">
+                    <div class="avatar mb-3">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto" 
+                             style="width: 120px; height: 120px; font-size: 2rem;">
+                            {{ empleado.nombre|first }}{{ empleado.apellido_paterno|first }}
+                        </div>
+                    </div>
+                    
+                    <h4 style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">{{ empleado.nombre_completo }}</h4>
+                    <p style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important;">{{ empleado.puesto }}</p>
+                    
+                    <div class="row text-center mb-3">
+                        <div class="col-6">
+                            <small style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif !important;">Número de Empleado</small>
+                            <div class="fw-bold" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">{{ empleado.numero_empleado }}</div>
+                        </div>
+                        <div class="col-6">
+                            <small style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif !important;">Antigüedad</small>
+                            <div class="fw-bold" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">{{ empleado.antiguedad_anos }} años</div>
+                        </div>
+                    </div>
+                    
+                    <hr style="border-color: rgba(255, 255, 255, 0.2) !important;">
+                    
+                    <div class="text-start">
+                        <p style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;"><strong>Fecha de Nacimiento:</strong><br>{{ empleado.fecha_nacimiento|date:"d/m/Y" }}</p>
+                        <p style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;"><strong>Género:</strong><br>{{ empleado.get_genero_display }}</p>
+                        <p style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;"><strong>Estado Civil:</strong><br>{{ empleado.get_estado_civil_display }}</p>
+                        {% if empleado.telefono %}
+                        <p style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;"><strong>Teléfono:</strong><br>{{ empleado.telefono }}</p>
+                        {% endif %}
+                        {% if empleado.email %}
+                        <p style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;"><strong>Email:</strong><br>{{ empleado.email }}</p>
+                        {% endif %}
+                        {% if empleado.direccion %}
+                        <p style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;"><strong>Dirección:</strong><br>{{ empleado.direccion }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información laboral y vacaciones -->
+        <div class="col-lg-8 mb-4">
+            <!-- Información laboral -->
+            <div class="card mb-4">
+                <div class="card-header" style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important; padding: 1.5rem !important;">
+                    <h5 class="mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
+                        <i class="fas fa-briefcase me-2"></i>Información Laboral
+                    </h5>
+                </div>
+                <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;"><strong>Departamento:</strong><br>{{ empleado.departamento.nombre }}</p>
+                            <p style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;"><strong>Puesto:</strong><br>{{ empleado.puesto }}</p>
+                            <p style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;"><strong>Fecha de Ingreso:</strong><br>{{ empleado.fecha_ingreso|date:"d/m/Y" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            {% if empleado.supervisor %}
+                            <p style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;"><strong>Supervisor:</strong><br>{{ empleado.supervisor.nombre_completo }}</p>
+                            {% endif %}
+                            <p style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;"><strong>Estado:</strong><br>
+                                {% if empleado.activo %}
+                                    <span class="badge bg-success">Activo</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Inactivo</span>
+                                {% endif %}
+                            </p>
+                            {% if perfil %}
+                                {% if perfil.es_rh or perfil.es_admin or perfil.es_sistemas or perfil.es_jefe_area %}
+                                <p style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; margin-top: 1rem !important;">
+                                    <strong style="color: #3b82f6 !important;">Días de Vacaciones Disponibles:</strong><br>
+                                    <span class="badge" style="background: linear-gradient(180deg, rgba(59, 130, 246, 0.9) 0%, rgba(37, 99, 235, 0.9) 50%, rgba(29, 78, 216, 1) 100%) !important; color: #ffffff !important; font-size: 1.1rem !important; padding: 0.5rem 1rem !important; font-weight: 700 !important; font-family: 'Montserrat', sans-serif !important;">
+                                        {{ empleado.dias_vacaciones_disponibles }} días
+                                    </span>
+                                </p>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información de vacaciones -->
+            <div class="card">
+                <div class="card-header" style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important; padding: 1.5rem !important;">
+                    <h5 class="mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
+                        <i class="fas fa-calendar-alt me-2"></i>Información de Vacaciones
+                    </h5>
+                </div>
+                <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
+                    <div class="row mb-4">
+                        <div class="col-md-4 text-center mb-3 mb-md-0">
+                            <div class="card" style="background: rgba(34, 197, 94, 0.2) !important; border: 1px solid rgba(34, 197, 94, 0.4) !important;">
+                                <div class="card-body" style="background: transparent !important; padding: 1.5rem !important;">
+                                    <h3 style="color: #22c55e !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important;">{{ empleado.dias_vacaciones_anuales }}</h3>
+                                    <p class="mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">Días Anuales</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center mb-3 mb-md-0">
+                            <div class="card" style="background: rgba(251, 191, 36, 0.2) !important; border: 1px solid rgba(251, 191, 36, 0.4) !important;">
+                                <div class="card-body" style="background: transparent !important; padding: 1.5rem !important;">
+                                    <h3 style="color: #fbbf24 !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important;">{{ empleado.dias_vacaciones_usados }}</h3>
+                                    <p class="mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">Días Usados</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="card" style="background: rgba(59, 130, 246, 0.2) !important; border: 1px solid rgba(59, 130, 246, 0.4) !important;">
+                                <div class="card-body" style="background: transparent !important; padding: 1.5rem !important;">
+                                    <h3 style="color: #3b82f6 !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important;">{{ empleado.dias_vacaciones_disponibles }}</h3>
+                                    <p class="mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">Días Disponibles</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Estadísticas de vacaciones -->
+                    <div class="row mb-4">
+                        <div class="col-md-4 text-center">
+                            <span class="badge bg-success fs-6">{{ vacaciones_aprobadas }} Aprobadas</span>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <span class="badge bg-warning fs-6">{{ vacaciones_pendientes }} Pendientes</span>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <span class="badge bg-danger fs-6">{{ vacaciones_rechazadas }} Rechazadas</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Historial de vacaciones -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center" style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important; padding: 1.5rem !important;">
+                    <h5 class="mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
+                        <i class="fas fa-history me-2"></i>Historial de Vacaciones
+                    </h5>
+                    <a href="/admin/empleados/vacacion/add/?empleado={{ empleado.id }}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-plus me-1"></i>Nueva Solicitud
+                    </a>
+                </div>
+                <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
+                    {% if vacaciones %}
+                        <div class="table-responsive" style="background: transparent !important;">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">Fecha de Solicitud</th>
+                                        <th style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">Período</th>
+                                        <th style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">Días</th>
+                                        <th style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">Estado</th>
+                                        <th style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">Motivo</th>
+                                        <th style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for vacacion in vacaciones %}
+                                    <tr style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
+                                        <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">{{ vacacion.fecha_solicitud|date:"d/m/Y H:i" }}</td>
+                                        <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">
+                                            {{ vacacion.fecha_inicio|date:"d/m/Y" }} - {{ vacacion.fecha_fin|date:"d/m/Y" }}
+                                        </td>
+                                        <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">
+                                            <span class="badge bg-primary">{{ vacacion.dias_solicitados }} días</span>
+                                        </td>
+                                        <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">
+                                            {% if vacacion.estado == 'P' %}
+                                                <span class="badge badge-pendiente">{{ vacacion.get_estado_display }}</span>
+                                            {% elif vacacion.estado == 'A' %}
+                                                <span class="badge badge-aprobada">{{ vacacion.get_estado_display }}</span>
+                                            {% elif vacacion.estado == 'R' %}
+                                                <span class="badge badge-rechazada">{{ vacacion.get_estado_display }}</span>
+                                            {% else %}
+                                                <span class="badge badge-cancelada">{{ vacacion.get_estado_display }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">
+                                            {% if vacacion.motivo %}
+                                                {{ vacacion.motivo|truncatechars:50 }}
+                                            {% else %}
+                                                <span style="color: rgba(255, 255, 255, 0.5) !important;">Sin motivo especificado</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="/admin/empleados/vacacion/{{ vacacion.id }}/change/" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-calendar-times fa-3x mb-3" style="color: rgba(255, 255, 255, 0.5) !important;"></i>
+                            <h5 style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important;">No hay solicitudes de vacaciones</h5>
+                            <p style="color: rgba(255, 255, 255, 0.6) !important; font-family: 'Montserrat', sans-serif !important;">Este empleado no ha realizado ninguna solicitud de vacaciones.</p>
+                            <a href="/admin/empleados/vacacion/add/?empleado={{ empleado.id }}" class="btn btn-outline-primary">
+                                <i class="fas fa-plus me-1"></i>Crear Primera Solicitud
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

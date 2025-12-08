@@ -1,0 +1,46 @@
+# ============================================
+# Archivo de servicio systemd para Gunicorn
+# ============================================
+# 
+# INSTRUCCIONES:
+# 1. Copia este archivo a: /etc/systemd/system/rh-system.service
+# 2. Reemplaza todas las rutas y usuario con tus valores reales
+# 3. Recarga systemd: sudo systemctl daemon-reload
+# 4. Inicia el servicio: sudo systemctl start rh-system
+# 5. Habilita al inicio: sudo systemctl enable rh-system
+# 6. Verifica: sudo systemctl status rh-system
+#
+# ============================================
+
+[Unit]
+Description=RH System Gunicorn daemon
+After=network.target
+
+[Service]
+# ⚠️ CAMBIAR: Reemplaza 'tu_usuario' con tu usuario del sistema
+User=tu_usuario
+Group=www-data
+
+# ⚠️ CAMBIAR: Reemplaza con la ruta completa a tu proyecto
+WorkingDirectory=/ruta/completa/a/tu/proyecto/SistemaRH
+
+# ⚠️ CAMBIAR: Ruta al entorno virtual
+Environment="PATH=/ruta/completa/a/tu/proyecto/SistemaRH/venv/bin"
+Environment="DJANGO_SETTINGS_MODULE=rh_project.settings_production"
+
+# ⚠️ CAMBIAR: Ruta al socket y al proyecto
+ExecStart=/ruta/completa/a/tu/proyecto/SistemaRH/venv/bin/gunicorn \
+    --workers 3 \
+    --bind unix:/ruta/completa/a/tu/proyecto/SistemaRH/rh-system.sock \
+    --timeout 120 \
+    --access-logfile /ruta/completa/a/tu/proyecto/SistemaRH/logs/gunicorn-access.log \
+    --error-logfile /ruta/completa/a/tu/proyecto/SistemaRH/logs/gunicorn-error.log \
+    rh_project.wsgi:application
+
+# Reiniciar automáticamente si falla
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+

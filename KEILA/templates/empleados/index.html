@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+ {% load static %}
+
+{% block title %}Sistema de Recursos Humanos{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="page-header">
+        <div class="container">
+            <h1><i class="fas fa-home me-3"></i>Bienvenido al Sistema de RH</h1>
+            <p>Gestiona tus recursos humanos de manera eficiente</p>
+        </div>
+    </div>
+
+    <div class="container">
+        {% if tiene_perfil %}
+            <!-- Usuario con perfil de empleado -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-user me-2"></i>
+                                Bienvenido, {{ empleado.nombre_completo }}
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Departamento:</strong> {{ empleado.departamento.nombre }}</p>
+                                    <p><strong>Puesto:</strong> {{ empleado.puesto }}</p>
+                                    <p><strong>Antigüedad:</strong> {{ empleado.antiguedad_anos }} años</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Días de vacaciones disponibles:</strong> {{ empleado.dias_vacaciones_disponibles }}</p>
+                                    <p><strong>Estado:</strong> 
+                                        {% if empleado.activo %}
+                                            <span class="badge bg-success">Activo</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Inactivo</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <!-- Usuario sin perfil de empleado -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body text-center py-5">
+                            <i class="fas fa-user-slash fa-3x text-muted mb-3"></i>
+                            <h5>Sin Perfil de Empleado</h5>
+                            <p class="text-muted">No tienes un perfil de empleado asociado a tu cuenta.</p>
+                            <p class="text-muted">Contacta al administrador para crear tu perfil.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Acciones disponibles -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-bolt me-2"></i>
+                            Acciones Disponibles
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="d-grid">
+                                    <a href="{% url 'perfil_usuario' %}" class="btn btn-outline-primary">
+                                        <i class="fas fa-user-circle me-2"></i>Mi Perfil
+                                    </a>
+                                </div>
+                            </div>
+                            {% if user.groups.filter.name == 'EMPLEADOS' %}
+                            <div class="col-md-4">
+                                <div class="d-grid">
+                                    <a href="{% url 'empleados:mis_vacaciones' %}" class="btn btn-outline-success">
+                                        <i class="fas fa-calendar-check me-2"></i>Mis Vacaciones
+                                    </a>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if user.groups.filter.name == 'JEFES' %}
+                            <div class="col-md-4">
+                                <div class="d-grid">
+                                    <a href="{% url 'panel_jefe' %}" class="btn btn-outline-warning">
+                                        <i class="fas fa-user-tie me-2"></i>Panel de Jefe
+                                    </a>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if user.groups.filter.name == 'RH' %}
+                            <div class="col-md-4">
+                                <div class="d-grid">
+                                    <a href="{% url 'gestion_usuarios' %}" class="btn btn-outline-info">
+                                        <i class="fas fa-users-cog me-2"></i>Gestionar Usuarios
+                                    </a>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

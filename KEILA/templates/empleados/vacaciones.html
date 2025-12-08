@@ -1,0 +1,278 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestión de Vacaciones - Sistema de Recursos Humanos{% endblock %}
+
+{% block content %}
+<!-- Header de la página -->
+<div class="page-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1><i class="fas fa-calendar-alt me-3"></i>Gestión de Vacaciones</h1>
+                <p>Administra y revisa todas las solicitudes de vacaciones</p>
+            </div>
+            <div class="col-lg-4 text-end">
+                <a href="/admin/empleados/vacacion/add/" class="btn btn-light">
+                    <i class="fas fa-plus me-1"></i>Nueva Solicitud
+                </a>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<div class="container">
+    <div class="row">
+        <!-- Filtros -->
+        <div class="col-lg-3 mb-4">
+            <div class="sidebar">
+                <h5><i class="fas fa-filter me-2"></i>Filtros</h5>
+                
+                <form method="get" class="mb-4">
+                    <div class="mb-3">
+                        <label for="busqueda" class="form-label">Buscar Empleado</label>
+                        <input type="text" class="form-control" id="busqueda" name="busqueda" 
+                               value="{{ busqueda_actual }}" placeholder="Nombre del empleado...">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="estado" class="form-label">Estado</label>
+                        <select class="form-select" id="estado" name="estado">
+                            <option value="">Todos los estados</option>
+                            <option value="P" {% if estado_actual == 'P' %}selected{% endif %}>Pendiente</option>
+                            <option value="A" {% if estado_actual == 'A' %}selected{% endif %}>Aprobada</option>
+                            <option value="R" {% if estado_actual == 'R' %}selected{% endif %}>Rechazada</option>
+                            <option value="C" {% if estado_actual == 'C' %}selected{% endif %}>Cancelada</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="departamento" class="form-label">Departamento</label>
+                        <select class="form-select" id="departamento" name="departamento">
+                            <option value="">Todos los departamentos</option>
+                            {% for dept in departamentos %}
+                            <option value="{{ dept.id }}" {% if departamento_actual == dept.id %}selected{% endif %}>
+                                {{ dept.nombre }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="orden" class="form-label">Ordenar por</label>
+                        <select class="form-select" id="orden" name="orden">
+                            <option value="-fecha_solicitud" {% if orden_actual == '-fecha_solicitud' %}selected{% endif %}>Fecha de Solicitud (Reciente)</option>
+                            <option value="fecha_solicitud" {% if orden_actual == 'fecha_solicitud' %}selected{% endif %}>Fecha de Solicitud (Antigua)</option>
+                            <option value="fecha_inicio" {% if orden_actual == 'fecha_inicio' %}selected{% endif %}>Fecha de Inicio</option>
+                            <option value="empleado__apellido_paterno" {% if orden_actual == 'empleado__apellido_paterno' %}selected{% endif %}>Empleado</option>
+                            <option value="estado" {% if orden_actual == 'estado' %}selected{% endif %}>Estado</option>
+                        </select>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="fas fa-search me-1"></i>Filtrar
+                        </button>
+                        <a href="{% url 'vacaciones' %}" class="btn btn-outline-light">
+                            <i class="fas fa-times me-1"></i>Limpiar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Lista de vacaciones -->
+        <div class="col-lg-9">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list me-2"></i>Solicitudes de Vacaciones ({{ vacaciones|length }})
+                    </h5>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-light btn-sm" onclick="toggleView('card')">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-light btn-sm" onclick="toggleView('table')">
+                            <i class="fas fa-table"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if vacaciones %}
+                        <!-- Vista de tabla -->
+                        <div id="table-view">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Empleado</th>
+                                            <th>Departamento</th>
+                                            <th>Período</th>
+                                            <th>Días</th>
+                                            <th>Estado</th>
+                                            <th>Fecha Solicitud</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for vacacion in vacaciones %}
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar me-3">
+                                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
+                                                             style="width: 40px; height: 40px;">
+                                                            {{ vacacion.empleado.nombre|first }}{{ vacacion.empleado.apellido_paterno|first }}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <strong>{{ vacacion.empleado.nombre_completo }}</strong>
+                                                        <br>
+                                                        <small class="text-muted">{{ vacacion.empleado.puesto }}</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>{{ vacacion.empleado.departamento.nombre }}</td>
+                                            <td>
+                                                <div>
+                                                    <strong>{{ vacacion.fecha_inicio|date:"d/m/Y" }}</strong>
+                                                    <br>
+                                                    <small class="text-muted">hasta {{ vacacion.fecha_fin|date:"d/m/Y" }}</small>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-primary">{{ vacacion.dias_solicitados }} días</span>
+                                            </td>
+                                            <td>
+                                                {% if vacacion.estado == 'P' %}
+                                                    <span class="badge badge-pendiente">{{ vacacion.get_estado_display }}</span>
+                                                {% elif vacacion.estado == 'A' %}
+                                                    <span class="badge badge-aprobada">{{ vacacion.get_estado_display }}</span>
+                                                {% elif vacacion.estado == 'R' %}
+                                                    <span class="badge badge-rechazada">{{ vacacion.get_estado_display }}</span>
+                                                {% else %}
+                                                    <span class="badge badge-cancelada">{{ vacacion.get_estado_display }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ vacacion.fecha_solicitud|date:"d/m/Y H:i" }}</td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href="/admin/empleados/vacacion/{{ vacacion.id }}/change/" class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a href="{% url 'detalle_empleado' vacacion.empleado.id %}" class="btn btn-sm btn-outline-info">
+                                                        <i class="fas fa-user"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Vista de tarjetas -->
+                        <div id="card-view" style="display: none;">
+                            <div class="row">
+                                {% for vacacion in vacaciones %}
+                                <div class="col-lg-6 col-md-6 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar me-3">
+                                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
+                                                             style="width: 50px; height: 50px;">
+                                                            {{ vacacion.empleado.nombre|first }}{{ vacacion.empleado.apellido_paterno|first }}
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <h6 class="mb-1">{{ vacacion.empleado.nombre_completo }}</h6>
+                                                        <small class="text-muted">{{ vacacion.empleado.puesto }}</small>
+                                                        <br>
+                                                        <small class="text-muted">{{ vacacion.empleado.departamento.nombre }}</small>
+                                                    </div>
+                                                </div>
+                                                {% if vacacion.estado == 'P' %}
+                                                    <span class="badge badge-pendiente">{{ vacacion.get_estado_display }}</span>
+                                                {% elif vacacion.estado == 'A' %}
+                                                    <span class="badge badge-aprobada">{{ vacacion.get_estado_display }}</span>
+                                                {% elif vacacion.estado == 'R' %}
+                                                    <span class="badge badge-rechazada">{{ vacacion.get_estado_display }}</span>
+                                                {% else %}
+                                                    <span class="badge badge-cancelada">{{ vacacion.get_estado_display }}</span>
+                                                {% endif %}
+                                            </div>
+                                            
+                                            <div class="row text-center mb-3">
+                                                <div class="col-6">
+                                                    <small class="text-muted">Fecha Inicio</small>
+                                                    <div class="fw-bold">{{ vacacion.fecha_inicio|date:"d/m/Y" }}</div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <small class="text-muted">Fecha Fin</small>
+                                                    <div class="fw-bold">{{ vacacion.fecha_fin|date:"d/m/Y" }}</div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="text-center mb-3">
+                                                <span class="badge bg-primary fs-6">{{ vacacion.dias_solicitados }} días</span>
+                                            </div>
+                                            
+                                            {% if vacacion.motivo %}
+                                            <p class="text-muted small mb-3">
+                                                <strong>Motivo:</strong> {{ vacacion.motivo|truncatechars:100 }}
+                                            </p>
+                                            {% endif %}
+                                            
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <small class="text-muted">
+                                                    <i class="fas fa-clock me-1"></i>{{ vacacion.fecha_solicitud|date:"d/m/Y H:i" }}
+                                                </small>
+                                                <div class="btn-group" role="group">
+                                                    <a href="/admin/empleados/vacacion/{{ vacacion.id }}/change/" class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a href="{% url 'detalle_empleado' vacacion.empleado.id %}" class="btn btn-sm btn-outline-info">
+                                                        <i class="fas fa-user"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
+                            <h4 class="text-muted">No se encontraron solicitudes</h4>
+                            <p class="text-muted">No hay solicitudes de vacaciones que coincidan con los filtros seleccionados.</p>
+                            <a href="{% url 'vacaciones' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-refresh me-1"></i>Ver Todas las Solicitudes
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleView(view) {
+    const tableView = document.getElementById('table-view');
+    const cardView = document.getElementById('card-view');
+    
+    if (view === 'table') {
+        tableView.style.display = 'block';
+        cardView.style.display = 'none';
+    } else {
+        tableView.style.display = 'none';
+        cardView.style.display = 'block';
+    }
+}
+</script>
+{% endblock %}

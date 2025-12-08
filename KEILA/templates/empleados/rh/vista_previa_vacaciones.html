@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitud de Vacaciones - {{ solicitud.empleado.nombre_completo }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            width: 850px;
+            margin: 40px auto;
+            border: 2px solid #000;
+            padding: 20px 40px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .field-line {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .field-line span {
+            margin-right: 8px;
+            white-space: nowrap;
+            font-size: 14px;
+        }
+
+        .line {
+            border-bottom: 1px solid #000;
+            flex-grow: 1;
+            height: 14px;
+        }
+
+        .short-line {
+            width: 140px;
+            border-bottom: 1px solid #000;
+            height: 14px;
+            display: inline-block;
+        }
+
+        .fecha-ingreso {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .date-box {
+            border: 1px solid #000;
+            padding: 4px 10px;
+            margin: 0 6px;
+            font-size: 13px;
+        }
+
+        .dias-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            gap: 40px;
+        }
+
+        .dias-table {
+            width: 48%;
+            border-collapse: collapse;
+            border: 1px solid #000;
+            font-size: 15px;
+        }
+
+        .dias-table td {
+            border: 1px solid #000;
+            padding: 8px 10px;
+            height: 12px;
+            text-align: left;
+            padding-left: 30px;
+        }
+        
+        .dias-table td:last-child {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .periodo-table {
+            width: 100%;
+            border: 1px solid #000;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .periodo-table td {
+            border: 1px solid #000;
+            text-align: center;
+            padding: 6px 4px;
+            height: 12px;
+        }
+
+        .periodo-table tr:first-child td {
+            font-weight: bold;
+        }
+
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+
+        .signature {
+            width: 30%;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .signature div {
+            margin-top: 40px;
+            border-top: 1px solid #000;
+            padding-top: 3px;
+        }
+
+        /* Estilos para el botón de impresión (solo visible en pantalla) */
+        @media screen {
+            .print-button {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #007bff;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 16px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                z-index: 1000;
+            }
+            .print-button:hover {
+                background: #0056b3;
+            }
+            .back-button {
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                background: #6c757d;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 16px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                z-index: 1000;
+                text-decoration: none;
+                display: inline-block;
+            }
+            .back-button:hover {
+                background: #5a6268;
+            }
+        }
+
+        @media print {
+            .print-button, .back-button {
+                display: none;
+            }
+            body {
+                margin: 0;
+                border: none;
+                padding: 20px 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="{% url 'empleados:rh_dashboard' %}" class="back-button">
+        ← Volver
+    </a>
+    
+    <button class="print-button" onclick="window.print()">
+        🖨️ Imprimir / Guardar PDF
+    </button>
+
+    <h1>SOLICITUD DE VACACIONES</h1>
+
+    <div class="section-title">RECURSOS HUMANOS</div>
+
+    <div class="header">
+        <div class="field-line">
+            <span>Nombre</span>
+            <div class="line">
+                <span style="margin-left: 5px;">{{ solicitud.empleado.nombre_completo }}</span>
+            </div>
+        </div>
+        <div>
+            <div class="field-line">
+                <span>Fecha</span>
+                <div class="short-line">
+                    <span style="margin-left: 5px;">{{ fecha_actual|date:"d/m/Y" }}</span>
+                </div>
+            </div>
+            <div class="field-line">
+                <span>Dpto</span>
+                <div class="short-line">
+                    <span style="margin-left: 5px;">{{ solicitud.empleado.departamento.nombre|default:"N/A" }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fecha-ingreso">
+        <span>Fecha de ingreso</span>
+        <div class="date-box">Día/Mes/Año<br>{{ solicitud.empleado.fecha_contratacion|date:"d/m/Y"|default:"N/A" }}</div>
+        <span>Vacaciones correspondientes al año</span>
+        <div class="short-line">
+            <span style="margin-left: 5px;">{{ ano_vacaciones }}</span>
+        </div>
+    </div>
+
+    <!-- Sección de días -->
+    <div class="dias-section">
+        <table class="dias-table">
+            <tr>
+                <td>Días a disfrutar</td>
+                <td>{{ solicitud.dias_solicitados }}</td>
+            </tr>
+        </table>
+
+        <table class="dias-table">
+            <tr>
+                <td>Días pendientes</td>
+                <td>{{ dias_pendientes }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section-title" style="text-align:center; margin-top:20px;">Periodo de vacaciones</div>
+
+    <table class="periodo-table">
+        <tr>
+            <td>Fecha de inicio</td>
+            <td>Fecha de término</td>
+            <td>Fecha de presentarse</td>
+        </tr>
+        <tr>
+            <td>Día/Mes/Año<br>{{ solicitud.fecha_inicio|date:"d/m/Y" }}</td>
+            <td>Día/Mes/Año<br>{{ solicitud.fecha_fin|date:"d/m/Y" }}</td>
+            <td>Día/Mes/Año<br>{{ fecha_presentarse|date:"d/m/Y" }}</td>
+        </tr>
+    </table>
+
+    <div class="signature-section">
+        <div class="signature">
+            Colaborador<br>Nombre y firma
+            <div>{{ solicitud.empleado.nombre_completo }}</div>
+        </div>
+        <div class="signature">
+            Jefe de área<br>Nombre y firma
+            <div>{{ solicitud.aprobado_por_jefe.nombre_completo|default:"" }}</div>
+        </div>
+        <div class="signature">
+            Recursos Humanos<br>Nombre y firma
+            <div>{{ solicitud.aprobado_por_rh.nombre_completo|default:"" }}</div>
+        </div>
+    </div>
+
+    <script>
+        // Mejorar la experiencia de impresión
+        function imprimirPDF() {
+            window.print();
+        }
+    </script>
+
+</body>
+</html>
+

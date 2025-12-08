@@ -1,0 +1,38 @@
+[Unit]
+Description=gunicorn daemon
+After=network.target
+
+[Service]
+User=admin-key
+Group=www-data
+UMask=0002
+WorkingDirectory=/home/admin-key/SistemaGK/Keila
+
+# ⚠️ IMPORTANTE: Verificar la ruta correcta del venv
+# Si el venv está en /home/admin-key/SistemaGK/venv:
+Environment="PATH=/home/admin-key/SistemaGK/venv/bin"
+# Si el venv está en /home/admin-key/SistemaGK/Keila/venv:
+# Environment="PATH=/home/admin-key/SistemaGK/Keila/venv/bin"
+
+Environment="DJANGO_SETTINGS_MODULE=rh_project.settings_production"
+
+# ⚠️ IMPORTANTE: Usar la misma ruta del venv que en Environment PATH
+ExecStart=/home/admin-key/SistemaGK/venv/bin/gunicorn \
+          --workers 3 \
+          --bind unix:/home/admin-key/SistemaGK/Keila/gunicorn.sock \
+          --timeout 120 \
+          --access-logfile /home/admin-key/SistemaGK/Keila/logs/gunicorn-access.log \
+          --error-logfile /home/admin-key/SistemaGK/Keila/logs/gunicorn-error.log \
+          --log-level debug \
+          --capture-output \
+          --enable-stdio-inheritance \
+          --preload \
+          rh_project.wsgi:application
+
+# Reiniciar automáticamente si falla
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+
