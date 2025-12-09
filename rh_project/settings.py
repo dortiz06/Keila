@@ -80,8 +80,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'rh_project.wsgi.application'
 
-"""
 # Database
+# Para desarrollo local, usar SQLite
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db_refactored.sqlite3',  # Usar la base de datos que tiene datos
+    }
+}
+
+# Para producción, descomentar y usar PostgreSQL:
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',

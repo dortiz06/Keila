@@ -1791,8 +1791,12 @@ def kardex_vacaciones(request):
     if not perfil or not (perfil.es_rh() or perfil.es_admin()):
         raise PermissionDenied
     
-    # Obtener todos los empleados activos
-    empleados = Perfil.objects.filter(activo=True).select_related(
+    # Obtener todos los empleados activos, excluyendo ADMIN, RH y SISTEMAS
+    empleados = Perfil.objects.filter(
+        activo=True
+    ).exclude(
+        tipo_perfil__in=['ADMIN', 'RH', 'SISTEMAS']
+    ).select_related(
         'usuario', 'departamento'
     ).order_by('usuario__last_name', 'usuario__first_name')
     
@@ -1827,13 +1831,17 @@ def kardex_vacaciones(request):
 
 @login_required
 def generar_excel_kardex(request):
-    """Generar Excel del kardex de vacaciones - Una hoja por empleado"""
+    """Generar Excel del kardex de vacaciones - Cada empleado con su propio cuadro en la misma hoja"""
     perfil = get_user_profile(request.user)
     if not perfil or not (perfil.es_rh() or perfil.es_admin()):
         raise PermissionDenied
     
-    # Obtener todos los empleados activos
-    empleados = Perfil.objects.filter(activo=True).select_related(
+    # Obtener todos los empleados activos, excluyendo ADMIN, RH y SISTEMAS
+    empleados = Perfil.objects.filter(
+        activo=True
+    ).exclude(
+        tipo_perfil__in=['ADMIN', 'RH', 'SISTEMAS']
+    ).select_related(
         'usuario', 'departamento'
     ).order_by('usuario__last_name', 'usuario__first_name')
     
@@ -1850,14 +1858,13 @@ def generar_excel_kardex(request):
     from openpyxl.utils import get_column_letter
     
     wb = Workbook()
-    # Eliminar la hoja por defecto
-    wb.remove(wb.active)
+    ws = wb.active
+    ws.title = "Kardex Vacaciones"
     
     # Estilos
-    header_fill = PatternFill(start_color="3B82F6", end_color="2563EB", fill_type="solid")
+    header_fill = PatternFill(start_color="F97316", end_color="EA580C", fill_type="solid")  # Naranja como en la imagen
     header_font = Font(bold=True, color="FFFFFF", size=11, name="Arial")
-    title_font = Font(bold=True, size=16, name="Arial")
-    label_font = Font(bold=True, size=11, name="Arial")
+    title_font = Font(bold=True, size=12, name="Arial")
     value_font = Font(size=11, name="Arial")
     border_style = Border(
         left=Side(style='thin'),
@@ -1868,90 +1875,57 @@ def generar_excel_kardex(request):
     center_alignment = Alignment(horizontal='center', vertical='center')
     left_alignment = Alignment(horizontal='left', vertical='center')
     
-    # Crear una hoja por cada empleado
-    for empleado in empleados:
-        # Limpiar nombre para el título de la hoja (máximo 31 caracteres)
-        nombre_hoja = empleado.nombre_completo[:31] if len(empleado.nombre_completo) <= 31 else empleado.nombre_completo[:28] + "..."
-        # Reemplazar caracteres no permitidos en nombres de hojas
-        nombre_hoja = nombre_hoja.replace('/', '-').replace('\\', '-').replace('?', '').replace('*', '').replace('[', '').replace(']', '')
-        
-        ws = wb.create_sheet(title=nombre_hoja)
+    # Título general del documento
+    row = 1
+    ws.merge_cells(f'A{row}:D{row}')
+    cell = ws[f'A{row}']
+    cell.value = f'Kárdex de vacaciones del empleado al {fecha_actual.strftime("%d/%m/%Y")}'
+    cell.font = Font(bold=True, size=14, name="Arial")
+    cell.alignment = center_alignment
+    ws.row_dimensions[row].height = 30
+    row += 1
+    
+    # Nota informativa
+    ws.merge_cells(f'A{row}:D{row}')
+    cell = ws[f'A{row}']
+    cell.value = '**Este reporte realiza cálculos tomando en cuenta si el empleado está finiquitado a la fecha de referencia'
+    cell.font = Font(size=9, italic=True, name="Arial")
+    cell.alignment = center_alignment
+    row += 2  # Espacio antes del primer empleado
+    
+    # Crear sección para cada empleado
+    for idx, empleado in enumerate(empleados):
+        # Espacio entre empleados (excepto el primero)
+        if idx > 0:
+            row += 2
         
         # Calcular datos de vacaciones
         dias_anuales = empleado.dias_vacaciones_anuales
         dias_usados = empleado.dias_vacaciones_usados
         dias_acumulados_ano_actual = round(empleado.calcular_dias_acumulados_hasta_hoy(), 2)
         dias_ano_anterior = empleado.dias_vacaciones_acumulados
-        total_disponible = round(empleado.calcular_total_disponible_proyectado(), 2)
+        total_saldo = dias_ano_anterior + dias_acumulados_ano_actual
         
-        # Título principal
-        ws.merge_cells('A1:D1')
-        cell = ws['A1']
-        cell.value = f'KARDEX DE VACACIONES - {empleado.nombre_completo.upper()}'
-        cell.font = title_font
-        cell.alignment = center_alignment
-        cell.fill = PatternFill(start_color="E0E7FF", end_color="C7D2FE", fill_type="solid")
-        ws.row_dimensions[1].height = 35
-        
-        # Fecha de generación
-        ws.merge_cells('A2:D2')
-        cell = ws['A2']
-        cell.value = f'Generado el: {fecha_actual.strftime("%d/%m/%Y")}'
-        cell.alignment = center_alignment
-        cell.font = Font(size=10, italic=True)
-        ws.row_dimensions[2].height = 20
-        
-        # Espacio
-        row = 4
-        
-        # Información del empleado
-        info_empleado = [
-            ('Número de Empleado:', empleado.numero_empleado),
-            ('Departamento:', empleado.departamento.nombre if empleado.departamento else "Sin departamento"),
-            ('Puesto:', empleado.puesto),
-            ('Antigüedad:', empleado.antiguedad_detallada),
-            ('Fecha de Contratación:', empleado.fecha_contratacion.strftime("%d/%m/%Y") if empleado.fecha_contratacion else "N/A"),
-        ]
-        
-        for label, value in info_empleado:
-            ws.cell(row=row, column=1).value = label
-            ws.cell(row=row, column=1).font = label_font
-            ws.cell(row=row, column=1).alignment = left_alignment
-            
-            ws.cell(row=row, column=2).value = value
-            ws.cell(row=row, column=2).font = value_font
-            ws.cell(row=row, column=2).alignment = left_alignment
-            row += 1
-        
-        row += 2  # Espacio
-        
-        # Tabla de vacaciones
-        # Encabezado de la tabla
+        # Título del empleado (número y nombre)
+        empleado_titulo = f'{empleado.numero_empleado}.{empleado.nombre_completo.upper()}'
         ws.merge_cells(f'A{row}:D{row}')
         cell = ws[f'A{row}']
-        cell.value = 'INFORMACIÓN DE VACACIONES'
-        cell.font = header_font
-        cell.fill = header_fill
-        cell.alignment = center_alignment
-        cell.border = border_style
-        ws.row_dimensions[row].height = 25
+        cell.value = empleado_titulo
+        cell.font = title_font
+        cell.alignment = left_alignment
+        ws.row_dimensions[row].height = 20
         row += 1
         
-        # Datos de vacaciones en formato tabla (similar a la imagen)
-        datos_vacaciones = [
-            ('SALDO 2025', dias_ano_anterior, ''),  # Días del año anterior
-            ('Proporción último año', dias_acumulados_ano_actual, ''),  # Acumulado año actual
-        ]
-        
-        # Encabezado de la tabla
+        # Encabezado de la tabla (naranja)
         headers_tabla = ['Concepto', 'Fecha registro', 'Con derecho', 'Saldo']
         for col_num, header in enumerate(headers_tabla, 1):
             cell = ws.cell(row=row, column=col_num)
             cell.value = header
             cell.font = header_font
-            cell.fill = PatternFill(start_color="F97316", end_color="EA580C", fill_type="solid")  # Naranja como en la imagen
+            cell.fill = header_fill
             cell.alignment = center_alignment
             cell.border = border_style
+        ws.row_dimensions[row].height = 20
         row += 1
         
         # Primera fila: SALDO 2025
@@ -1972,10 +1946,16 @@ def generar_excel_kardex(request):
         cell.alignment = center_alignment
         
         cell = ws.cell(row=row, column=4)
-        cell.value = f'{dias_ano_anterior:.3f}' if dias_ano_anterior > 0 else '0.000'
+        saldo_2025 = f'{dias_ano_anterior:.3f}' if dias_ano_anterior != 0 else '0.000'
+        cell.value = saldo_2025
         cell.font = Font(bold=True, size=11, name="Arial")
         cell.border = border_style
         cell.alignment = center_alignment
+        # Resaltar si es negativo (rojo) o positivo (verde)
+        if dias_ano_anterior < 0:
+            cell.fill = PatternFill(start_color="FEE2E2", end_color="FECACA", fill_type="solid")
+        elif dias_ano_anterior > 0:
+            cell.fill = PatternFill(start_color="D1FAE5", end_color="A7F3D0", fill_type="solid")
         row += 1
         
         # Segunda fila: Proporción último año
@@ -1991,53 +1971,29 @@ def generar_excel_kardex(request):
         cell.alignment = center_alignment
         
         cell = ws.cell(row=row, column=3)
-        cell.value = f'{dias_acumulados_ano_actual:.3f}' if dias_acumulados_ano_actual > 0 else '0.000'
+        con_derecho = f'{dias_acumulados_ano_actual:.3f}' if dias_acumulados_ano_actual != 0 else '0.000'
+        cell.value = con_derecho
         cell.font = Font(bold=True, size=11, name="Arial")
         cell.border = border_style
         cell.alignment = center_alignment
-        
-        # Calcular total (Saldo año anterior + Acumulado año actual)
-        total_saldo = dias_ano_anterior + dias_acumulados_ano_actual
         
         cell = ws.cell(row=row, column=4)
-        cell.value = f'{total_saldo:.3f}'
+        saldo_total = f'{total_saldo:.3f}'
+        cell.value = saldo_total
         cell.font = Font(bold=True, size=11, name="Arial")
         cell.border = border_style
         cell.alignment = center_alignment
-        # Resaltar el total
+        # Resaltar el total (verde si positivo)
         if total_saldo > 0:
-            cell.fill = PatternFill(start_color="FEF3C7", end_color="FDE68A", fill_type="solid")
-        row += 1
-        
-        # Agregar información adicional
-        row += 1
-        ws.cell(row=row, column=1).value = 'Días Anuales:'
-        ws.cell(row=row, column=1).font = label_font
-        ws.cell(row=row, column=2).value = dias_anuales
-        ws.cell(row=row, column=2).font = value_font
-        row += 1
-        
-        ws.cell(row=row, column=1).value = 'Días Usados:'
-        ws.cell(row=row, column=1).font = label_font
-        ws.cell(row=row, column=2).value = dias_usados
-        ws.cell(row=row, column=2).font = value_font
-        row += 1
-        
-        ws.cell(row=row, column=1).value = 'Total Disponible:'
-        ws.cell(row=row, column=1).font = Font(bold=True, size=12, name="Arial")
-        cell = ws.cell(row=row, column=2)
-        cell.value = f'{total_disponible:.3f}'
-        cell.font = Font(bold=True, size=12, name="Arial")
-        if total_disponible > 0:
             cell.fill = PatternFill(start_color="D1FAE5", end_color="A7F3D0", fill_type="solid")
-        else:
+        elif total_saldo < 0:
             cell.fill = PatternFill(start_color="FEE2E2", end_color="FECACA", fill_type="solid")
-        
-        # Ajustar ancho de columnas
-        ws.column_dimensions['A'].width = 30
-        ws.column_dimensions['B'].width = 18
-        ws.column_dimensions['C'].width = 18
-        ws.column_dimensions['D'].width = 15
+        row += 1
+    
+    # Ajustar ancho de columnas
+    column_widths = [30, 18, 18, 15]
+    for col_num, width in enumerate(column_widths, 1):
+        ws.column_dimensions[get_column_letter(col_num)].width = width
     
     # Guardar workbook
     wb.save(response)
@@ -2051,8 +2007,12 @@ def generar_pdf_kardex(request):
     if not perfil or not (perfil.es_rh() or perfil.es_admin()):
         raise PermissionDenied
     
-    # Obtener todos los empleados activos
-    empleados = Perfil.objects.filter(activo=True).select_related(
+    # Obtener todos los empleados activos, excluyendo ADMIN, RH y SISTEMAS
+    empleados = Perfil.objects.filter(
+        activo=True
+    ).exclude(
+        tipo_perfil__in=['ADMIN', 'RH', 'SISTEMAS']
+    ).select_related(
         'usuario', 'departamento'
     ).order_by('usuario__last_name', 'usuario__first_name')
     
