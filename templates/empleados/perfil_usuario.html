@@ -347,7 +347,7 @@ body {
                                     {% for asignacion in equipos_asignados %}
                                     <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
                                         <td style="color: #ffffff !important;">
-                                            <i class="fas {% categoria_icono asignacion.equipo.categoria.nombre %} me-1" style="color: rgba(59, 130, 246, 0.8) !important;"></i>
+                                            <i class="fas {% categoria_icono asignacion.equipo.categoria.nombre %} me-1" style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;"></i>
                                             <strong>{{ asignacion.equipo.categoria.nombre }}</strong>
                                         </td>
                                         <td style="color: rgba(255, 255, 255, 0.9) !important;">{{ asignacion.equipo.marca }} {{ asignacion.equipo.modelo }}</td>
