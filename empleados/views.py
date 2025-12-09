@@ -1792,13 +1792,24 @@ def kardex_vacaciones(request):
         raise PermissionDenied
     
     # Obtener todos los empleados activos, excluyendo ADMIN, RH y SISTEMAS
+    from django.db.models import Case, When, Value, IntegerField
+    
     empleados = Perfil.objects.filter(
         activo=True
     ).exclude(
         tipo_perfil__in=['ADMIN', 'RH', 'SISTEMAS']
     ).select_related(
         'usuario', 'departamento'
-    ).order_by('usuario__last_name', 'usuario__first_name')
+    ).annotate(
+        # Ordenar por departamento: Ventas primero, Conta segundo, sin departamento al final
+        orden_departamento=Case(
+            When(departamento__nombre__iexact='Ventas', then=Value(1)),
+            When(departamento__nombre__iexact='Conta', then=Value(2)),
+            When(departamento__isnull=True, then=Value(999)),
+            default=Value(3),
+            output_field=IntegerField()
+        )
+    ).order_by('orden_departamento', 'departamento__nombre', 'usuario__last_name', 'usuario__first_name')
     
     # Preparar datos de vacaciones para cada empleado
     empleados_data = []
@@ -1832,172 +1843,210 @@ def kardex_vacaciones(request):
 @login_required
 def generar_excel_kardex(request):
     """Generar Excel del kardex de vacaciones - Cada empleado con su propio cuadro en la misma hoja"""
-    perfil = get_user_profile(request.user)
-    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
-        raise PermissionDenied
-    
-    # Obtener todos los empleados activos, excluyendo ADMIN, RH y SISTEMAS
-    empleados = Perfil.objects.filter(
-        activo=True
-    ).exclude(
-        tipo_perfil__in=['ADMIN', 'RH', 'SISTEMAS']
-    ).select_related(
-        'usuario', 'departamento'
-    ).order_by('usuario__last_name', 'usuario__first_name')
-    
-    # Crear respuesta HTTP con Excel
-    response = HttpResponse(
-        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    )
-    fecha_actual = timezone.now().date()
-    response['Content-Disposition'] = f'attachment; filename="kardex_vacaciones_{fecha_actual.strftime("%Y%m%d")}.xlsx"'
-    
-    # Crear workbook
-    from openpyxl import Workbook
-    from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
-    from openpyxl.utils import get_column_letter
-    
-    wb = Workbook()
-    ws = wb.active
-    ws.title = "Kardex Vacaciones"
-    
-    # Estilos
-    header_fill = PatternFill(start_color="F97316", end_color="EA580C", fill_type="solid")  # Naranja como en la imagen
-    header_font = Font(bold=True, color="FFFFFF", size=11, name="Arial")
-    title_font = Font(bold=True, size=12, name="Arial")
-    value_font = Font(size=11, name="Arial")
-    border_style = Border(
-        left=Side(style='thin'),
-        right=Side(style='thin'),
-        top=Side(style='thin'),
-        bottom=Side(style='thin')
-    )
-    center_alignment = Alignment(horizontal='center', vertical='center')
-    left_alignment = Alignment(horizontal='left', vertical='center')
-    
-    # Título general del documento
-    row = 1
-    ws.merge_cells(f'A{row}:D{row}')
-    cell = ws[f'A{row}']
-    cell.value = f'Kárdex de vacaciones del empleado al {fecha_actual.strftime("%d/%m/%Y")}'
-    cell.font = Font(bold=True, size=14, name="Arial")
-    cell.alignment = center_alignment
-    ws.row_dimensions[row].height = 30
-    row += 1
-    
-    # Nota informativa
-    ws.merge_cells(f'A{row}:D{row}')
-    cell = ws[f'A{row}']
-    cell.value = '**Este reporte realiza cálculos tomando en cuenta si el empleado está finiquitado a la fecha de referencia'
-    cell.font = Font(size=9, italic=True, name="Arial")
-    cell.alignment = center_alignment
-    row += 2  # Espacio antes del primer empleado
-    
-    # Crear sección para cada empleado
-    for idx, empleado in enumerate(empleados):
-        # Espacio entre empleados (excepto el primero)
-        if idx > 0:
-            row += 2
+    try:
+        perfil = get_user_profile(request.user)
+        if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+            raise PermissionDenied
         
-        # Calcular datos de vacaciones
-        dias_anuales = empleado.dias_vacaciones_anuales
-        dias_usados = empleado.dias_vacaciones_usados
-        dias_acumulados_ano_actual = round(empleado.calcular_dias_acumulados_hasta_hoy(), 2)
-        dias_ano_anterior = empleado.dias_vacaciones_acumulados
-        total_saldo = dias_ano_anterior + dias_acumulados_ano_actual
+        # Verificar que openpyxl esté instalado
+        try:
+            from openpyxl import Workbook
+            from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+            from openpyxl.utils import get_column_letter
+        except ImportError as e:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f'Error importando openpyxl: {e}')
+            return HttpResponse(
+                'Error: openpyxl no está instalado. Por favor, instálelo con: pip install openpyxl',
+                status=500,
+                content_type='text/plain'
+            )
         
-        # Título del empleado (número y nombre)
-        empleado_titulo = f'{empleado.numero_empleado}.{empleado.nombre_completo.upper()}'
+        # Obtener todos los empleados activos, excluyendo ADMIN, RH y SISTEMAS
+        from django.db.models import Case, When, Value, IntegerField
+        
+        empleados = Perfil.objects.filter(
+            activo=True
+        ).exclude(
+            tipo_perfil__in=['ADMIN', 'RH', 'SISTEMAS']
+        ).select_related(
+            'usuario', 'departamento'
+        ).annotate(
+            # Ordenar por departamento: Ventas primero, Conta segundo, sin departamento al final
+            orden_departamento=Case(
+                When(departamento__nombre__iexact='Ventas', then=Value(1)),
+                When(departamento__nombre__iexact='Conta', then=Value(2)),
+                When(departamento__isnull=True, then=Value(999)),
+                default=Value(3),
+                output_field=IntegerField()
+            )
+        ).order_by('orden_departamento', 'departamento__nombre', 'usuario__last_name', 'usuario__first_name')
+        
+        # Crear respuesta HTTP con Excel
+        response = HttpResponse(
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        fecha_actual = timezone.now().date()
+        response['Content-Disposition'] = f'attachment; filename="kardex_vacaciones_{fecha_actual.strftime("%Y%m%d")}.xlsx"'
+        
+        # Crear workbook
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Kardex Vacaciones"
+        
+        # Estilos
+        header_fill = PatternFill(start_color="F97316", end_color="EA580C", fill_type="solid")  # Naranja como en la imagen
+        header_font = Font(bold=True, color="FFFFFF", size=11, name="Arial")
+        title_font = Font(bold=True, size=12, name="Arial")
+        value_font = Font(size=11, name="Arial")
+        border_style = Border(
+            left=Side(style='thin'),
+            right=Side(style='thin'),
+            top=Side(style='thin'),
+            bottom=Side(style='thin')
+        )
+        center_alignment = Alignment(horizontal='center', vertical='center')
+        left_alignment = Alignment(horizontal='left', vertical='center')
+        
+        # Título general del documento
+        row = 1
         ws.merge_cells(f'A{row}:D{row}')
         cell = ws[f'A{row}']
-        cell.value = empleado_titulo
-        cell.font = title_font
-        cell.alignment = left_alignment
-        ws.row_dimensions[row].height = 20
+        cell.value = f'Kárdex de vacaciones del empleado al {fecha_actual.strftime("%d/%m/%Y")}'
+        cell.font = Font(bold=True, size=14, name="Arial")
+        cell.alignment = center_alignment
+        ws.row_dimensions[row].height = 30
         row += 1
         
-        # Encabezado de la tabla (naranja)
-        headers_tabla = ['Concepto', 'Fecha registro', 'Con derecho', 'Saldo']
-        for col_num, header in enumerate(headers_tabla, 1):
-            cell = ws.cell(row=row, column=col_num)
-            cell.value = header
-            cell.font = header_font
-            cell.fill = header_fill
-            cell.alignment = center_alignment
+        # Nota informativa
+        ws.merge_cells(f'A{row}:D{row}')
+        cell = ws[f'A{row}']
+        cell.value = '**Este reporte realiza cálculos tomando en cuenta si el empleado está finiquitado a la fecha de referencia'
+        cell.font = Font(size=9, italic=True, name="Arial")
+        cell.alignment = center_alignment
+        row += 2  # Espacio antes del primer empleado
+        
+        # Crear sección para cada empleado
+        for idx, empleado in enumerate(empleados):
+            # Espacio entre empleados (excepto el primero)
+            if idx > 0:
+                row += 2
+            
+            # Calcular datos de vacaciones
+            dias_anuales = empleado.dias_vacaciones_anuales
+            dias_usados = empleado.dias_vacaciones_usados
+            dias_acumulados_ano_actual = round(empleado.calcular_dias_acumulados_hasta_hoy(), 2)
+            dias_ano_anterior = empleado.dias_vacaciones_acumulados
+            total_saldo = dias_ano_anterior + dias_acumulados_ano_actual
+            
+            # Título del empleado (número, nombre y área)
+            area_nombre = empleado.departamento.nombre if empleado.departamento else "Sin área asignada"
+            empleado_titulo = f'{empleado.numero_empleado}.{empleado.nombre_completo.upper()} - {area_nombre}'
+            ws.merge_cells(f'A{row}:D{row}')
+            cell = ws[f'A{row}']
+            cell.value = empleado_titulo
+            cell.font = title_font
+            cell.alignment = left_alignment
+            ws.row_dimensions[row].height = 20
+            row += 1
+            
+            # Encabezado de la tabla (naranja)
+            headers_tabla = ['Concepto', 'Fecha registro', 'Con derecho', 'Saldo']
+            for col_num, header in enumerate(headers_tabla, 1):
+                cell = ws.cell(row=row, column=col_num)
+                cell.value = header
+                cell.font = header_font
+                cell.fill = header_fill
+                cell.alignment = center_alignment
+                cell.border = border_style
+            ws.row_dimensions[row].height = 20
+            row += 1
+            
+            # Primera fila: SALDO 2025
+            cell = ws.cell(row=row, column=1)
+            cell.value = 'SALDO 2025'
+            cell.font = Font(bold=True, size=11, name="Arial")
             cell.border = border_style
-        ws.row_dimensions[row].height = 20
-        row += 1
+            cell.alignment = left_alignment
+            
+            cell = ws.cell(row=row, column=2)
+            cell.value = ''  # Fecha registro vacía
+            cell.border = border_style
+            cell.alignment = center_alignment
+            
+            cell = ws.cell(row=row, column=3)
+            cell.value = ''  # Con derecho vacío
+            cell.border = border_style
+            cell.alignment = center_alignment
+            
+            cell = ws.cell(row=row, column=4)
+            saldo_2025 = f'{dias_ano_anterior:.3f}' if dias_ano_anterior != 0 else '0.000'
+            cell.value = saldo_2025
+            cell.font = Font(bold=True, size=11, name="Arial")
+            cell.border = border_style
+            cell.alignment = center_alignment
+            # Resaltar si es negativo (rojo) o positivo (verde)
+            if dias_ano_anterior < 0:
+                cell.fill = PatternFill(start_color="FEE2E2", end_color="FECACA", fill_type="solid")
+            elif dias_ano_anterior > 0:
+                cell.fill = PatternFill(start_color="D1FAE5", end_color="A7F3D0", fill_type="solid")
+            row += 1
+            
+            # Segunda fila: Proporción último año
+            cell = ws.cell(row=row, column=1)
+            cell.value = 'Proporción último año'
+            cell.font = Font(bold=True, size=11, name="Arial")
+            cell.border = border_style
+            cell.alignment = left_alignment
+            
+            cell = ws.cell(row=row, column=2)
+            cell.value = ''  # Fecha registro vacía
+            cell.border = border_style
+            cell.alignment = center_alignment
+            
+            cell = ws.cell(row=row, column=3)
+            con_derecho = f'{dias_acumulados_ano_actual:.3f}' if dias_acumulados_ano_actual != 0 else '0.000'
+            cell.value = con_derecho
+            cell.font = Font(bold=True, size=11, name="Arial")
+            cell.border = border_style
+            cell.alignment = center_alignment
+            
+            cell = ws.cell(row=row, column=4)
+            saldo_total = f'{total_saldo:.3f}'
+            cell.value = saldo_total
+            cell.font = Font(bold=True, size=11, name="Arial")
+            cell.border = border_style
+            cell.alignment = center_alignment
+            # Resaltar el total (verde si positivo)
+            if total_saldo > 0:
+                cell.fill = PatternFill(start_color="D1FAE5", end_color="A7F3D0", fill_type="solid")
+            elif total_saldo < 0:
+                cell.fill = PatternFill(start_color="FEE2E2", end_color="FECACA", fill_type="solid")
+            row += 1
         
-        # Primera fila: SALDO 2025
-        cell = ws.cell(row=row, column=1)
-        cell.value = 'SALDO 2025'
-        cell.font = Font(bold=True, size=11, name="Arial")
-        cell.border = border_style
-        cell.alignment = left_alignment
+        # Ajustar ancho de columnas
+        column_widths = [30, 18, 18, 15]
+        for col_num, width in enumerate(column_widths, 1):
+            ws.column_dimensions[get_column_letter(col_num)].width = width
         
-        cell = ws.cell(row=row, column=2)
-        cell.value = ''  # Fecha registro vacía
-        cell.border = border_style
-        cell.alignment = center_alignment
-        
-        cell = ws.cell(row=row, column=3)
-        cell.value = ''  # Con derecho vacío
-        cell.border = border_style
-        cell.alignment = center_alignment
-        
-        cell = ws.cell(row=row, column=4)
-        saldo_2025 = f'{dias_ano_anterior:.3f}' if dias_ano_anterior != 0 else '0.000'
-        cell.value = saldo_2025
-        cell.font = Font(bold=True, size=11, name="Arial")
-        cell.border = border_style
-        cell.alignment = center_alignment
-        # Resaltar si es negativo (rojo) o positivo (verde)
-        if dias_ano_anterior < 0:
-            cell.fill = PatternFill(start_color="FEE2E2", end_color="FECACA", fill_type="solid")
-        elif dias_ano_anterior > 0:
-            cell.fill = PatternFill(start_color="D1FAE5", end_color="A7F3D0", fill_type="solid")
-        row += 1
-        
-        # Segunda fila: Proporción último año
-        cell = ws.cell(row=row, column=1)
-        cell.value = 'Proporción último año'
-        cell.font = Font(bold=True, size=11, name="Arial")
-        cell.border = border_style
-        cell.alignment = left_alignment
-        
-        cell = ws.cell(row=row, column=2)
-        cell.value = ''  # Fecha registro vacía
-        cell.border = border_style
-        cell.alignment = center_alignment
-        
-        cell = ws.cell(row=row, column=3)
-        con_derecho = f'{dias_acumulados_ano_actual:.3f}' if dias_acumulados_ano_actual != 0 else '0.000'
-        cell.value = con_derecho
-        cell.font = Font(bold=True, size=11, name="Arial")
-        cell.border = border_style
-        cell.alignment = center_alignment
-        
-        cell = ws.cell(row=row, column=4)
-        saldo_total = f'{total_saldo:.3f}'
-        cell.value = saldo_total
-        cell.font = Font(bold=True, size=11, name="Arial")
-        cell.border = border_style
-        cell.alignment = center_alignment
-        # Resaltar el total (verde si positivo)
-        if total_saldo > 0:
-            cell.fill = PatternFill(start_color="D1FAE5", end_color="A7F3D0", fill_type="solid")
-        elif total_saldo < 0:
-            cell.fill = PatternFill(start_color="FEE2E2", end_color="FECACA", fill_type="solid")
-        row += 1
+        # Guardar workbook
+        wb.save(response)
+        return response
     
-    # Ajustar ancho de columnas
-    column_widths = [30, 18, 18, 15]
-    for col_num, width in enumerate(column_widths, 1):
-        ws.column_dimensions[get_column_letter(col_num)].width = width
-    
-    # Guardar workbook
-    wb.save(response)
-    return response
+    except Exception as e:
+        import logging
+        import traceback
+        logger = logging.getLogger(__name__)
+        logger.error(f'Error generando Excel kardex: {str(e)}')
+        logger.error(traceback.format_exc())
+        
+        # En producción, devolver un error más amigable
+        return HttpResponse(
+            f'Error al generar el archivo Excel. Por favor, contacte al administrador. Error: {str(e)}',
+            status=500,
+            content_type='text/plain'
+        )
 
 
 @login_required
@@ -2008,13 +2057,24 @@ def generar_pdf_kardex(request):
         raise PermissionDenied
     
     # Obtener todos los empleados activos, excluyendo ADMIN, RH y SISTEMAS
+    from django.db.models import Case, When, Value, IntegerField
+    
     empleados = Perfil.objects.filter(
         activo=True
     ).exclude(
         tipo_perfil__in=['ADMIN', 'RH', 'SISTEMAS']
     ).select_related(
         'usuario', 'departamento'
-    ).order_by('usuario__last_name', 'usuario__first_name')
+    ).annotate(
+        # Ordenar por departamento: Ventas primero, Conta segundo, sin departamento al final
+        orden_departamento=Case(
+            When(departamento__nombre__iexact='Ventas', then=Value(1)),
+            When(departamento__nombre__iexact='Conta', then=Value(2)),
+            When(departamento__isnull=True, then=Value(999)),
+            default=Value(3),
+            output_field=IntegerField()
+        )
+    ).order_by('orden_departamento', 'departamento__nombre', 'usuario__last_name', 'usuario__first_name')
     
     # Crear respuesta HTTP con PDF
     response = HttpResponse(content_type='application/pdf')
