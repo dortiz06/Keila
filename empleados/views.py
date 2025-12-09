@@ -1782,6 +1782,444 @@ def devolver_equipo(request, asignacion_id):
     return render(request, 'empleados/sistemas/devolver_equipo.html', context)
 
 
+# === KARDEX DE VACACIONES ===
+
+@login_required
+def kardex_vacaciones(request):
+    """Kardex de vacaciones - Lista de todos los empleados con sus vacaciones acumuladas"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+        raise PermissionDenied
+    
+    # Obtener todos los empleados activos, excluyendo ADMIN, RH y SISTEMAS
+    from django.db.models import Case, When, Value, IntegerField
+    
+    empleados = Perfil.objects.filter(
+        activo=True
+    ).exclude(
+        tipo_perfil__in=['ADMIN', 'RH', 'SISTEMAS']
+    ).select_related(
+        'usuario', 'departamento'
+    ).annotate(
+        # Ordenar por departamento: Ventas primero, Conta segundo, sin departamento al final
+        orden_departamento=Case(
+            When(departamento__nombre__iexact='Ventas', then=Value(1)),
+            When(departamento__nombre__iexact='Conta', then=Value(2)),
+            When(departamento__isnull=True, then=Value(999)),
+            default=Value(3),
+            output_field=IntegerField()
+        )
+    ).order_by('orden_departamento', 'departamento__nombre', 'usuario__last_name', 'usuario__first_name')
+    
+    # Preparar datos de vacaciones para cada empleado
+    empleados_data = []
+    for empleado in empleados:
+        # Vacaciones del año actual
+        dias_anuales = empleado.dias_vacaciones_anuales
+        dias_usados = empleado.dias_vacaciones_usados
+        dias_acumulados_ano_actual = empleado.calcular_dias_acumulados_hasta_hoy()
+        dias_ano_anterior = empleado.dias_vacaciones_acumulados
+        
+        # Calcular total disponible
+        total_disponible = empleado.calcular_total_disponible_proyectado()
+        
+        empleados_data.append({
+            'empleado': empleado,
+            'dias_anuales': dias_anuales,
+            'dias_usados': dias_usados,
+            'dias_acumulados_ano_actual': round(dias_acumulados_ano_actual, 2),
+            'total_disponible': round(total_disponible, 2),
+            'antiguedad': empleado.antiguedad_detallada,
+        })
+    
+    context = {
+        'perfil': perfil,
+        'empleados_data': empleados_data,
+        'total_empleados': len(empleados_data),
+    }
+    return render(request, 'empleados/rh/kardex_vacaciones.html', context)
+
+
+@login_required
+def generar_excel_kardex(request):
+    """Generar Excel del kardex de vacaciones - Cada empleado con su propio cuadro en la misma hoja"""
+    try:
+        perfil = get_user_profile(request.user)
+        if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+            raise PermissionDenied
+        
+        # Verificar que openpyxl esté instalado
+        try:
+            from openpyxl import Workbook
+            from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+            from openpyxl.utils import get_column_letter
+        except ImportError as e:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f'Error importando openpyxl: {e}')
+            return HttpResponse(
+                'Error: openpyxl no está instalado. Por favor, instálelo con: pip install openpyxl',
+                status=500,
+                content_type='text/plain'
+            )
+        
+        # Obtener todos los empleados activos, excluyendo ADMIN, RH y SISTEMAS
+        from django.db.models import Case, When, Value, IntegerField
+        
+        empleados = Perfil.objects.filter(
+            activo=True
+        ).exclude(
+            tipo_perfil__in=['ADMIN', 'RH', 'SISTEMAS']
+        ).select_related(
+            'usuario', 'departamento'
+        ).annotate(
+            # Ordenar por departamento: Ventas primero, Conta segundo, sin departamento al final
+            orden_departamento=Case(
+                When(departamento__nombre__iexact='Ventas', then=Value(1)),
+                When(departamento__nombre__iexact='Conta', then=Value(2)),
+                When(departamento__isnull=True, then=Value(999)),
+                default=Value(3),
+                output_field=IntegerField()
+            )
+        ).order_by('orden_departamento', 'departamento__nombre', 'usuario__last_name', 'usuario__first_name')
+        
+        # Crear respuesta HTTP con Excel
+        response = HttpResponse(
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        fecha_actual = timezone.now().date()
+        response['Content-Disposition'] = f'attachment; filename="kardex_vacaciones_{fecha_actual.strftime("%Y%m%d")}.xlsx"'
+        
+        # Crear workbook
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Kardex Vacaciones"
+        
+        # Estilos
+        header_fill = PatternFill(start_color="F97316", end_color="EA580C", fill_type="solid")  # Naranja como en la imagen
+        header_font = Font(bold=True, color="FFFFFF", size=11, name="Arial")
+        title_font = Font(bold=True, size=12, name="Arial")
+        value_font = Font(size=11, name="Arial")
+        border_style = Border(
+            left=Side(style='thin'),
+            right=Side(style='thin'),
+            top=Side(style='thin'),
+            bottom=Side(style='thin')
+        )
+        center_alignment = Alignment(horizontal='center', vertical='center')
+        left_alignment = Alignment(horizontal='left', vertical='center')
+        
+        # Título general del documento
+        row = 1
+        ws.merge_cells(f'A{row}:D{row}')
+        cell = ws[f'A{row}']
+        cell.value = f'Kárdex de vacaciones del empleado al {fecha_actual.strftime("%d/%m/%Y")}'
+        cell.font = Font(bold=True, size=14, name="Arial")
+        cell.alignment = center_alignment
+        ws.row_dimensions[row].height = 30
+        row += 1
+        
+        # Nota informativa
+        ws.merge_cells(f'A{row}:D{row}')
+        cell = ws[f'A{row}']
+        cell.value = '**Este reporte realiza cálculos tomando en cuenta si el empleado está finiquitado a la fecha de referencia'
+        cell.font = Font(size=9, italic=True, name="Arial")
+        cell.alignment = center_alignment
+        row += 2  # Espacio antes del primer empleado
+        
+        # Crear sección para cada empleado
+        for idx, empleado in enumerate(empleados):
+            # Espacio entre empleados (excepto el primero)
+            if idx > 0:
+                row += 2
+            
+            # Calcular datos de vacaciones
+            dias_anuales = empleado.dias_vacaciones_anuales
+            dias_usados = empleado.dias_vacaciones_usados
+            dias_acumulados_ano_actual = round(empleado.calcular_dias_acumulados_hasta_hoy(), 2)
+            dias_ano_anterior = empleado.dias_vacaciones_acumulados
+            total_saldo = dias_ano_anterior + dias_acumulados_ano_actual
+            
+            # Verificar si ha cumplido un año completo (usar la propiedad del modelo)
+            ha_cumplido_ano = empleado.antiguedad_anos >= 1
+            
+            # Calcular antigüedad exacta con años, meses y días (sin depender de dateutil)
+            from datetime import date, timedelta
+            from calendar import monthrange
+            
+            fecha_actual = date.today()
+            fecha_contratacion = empleado.fecha_contratacion
+            
+            if fecha_contratacion:
+                years = empleado.antiguedad_anos
+                
+                # Calcular la fecha del último aniversario
+                if fecha_actual.month < fecha_contratacion.month or (fecha_actual.month == fecha_contratacion.month and fecha_actual.day < fecha_contratacion.day):
+                    ultimo_aniversario = date(fecha_actual.year - 1, fecha_contratacion.month, fecha_contratacion.day)
+                else:
+                    ultimo_aniversario = date(fecha_actual.year, fecha_contratacion.month, fecha_contratacion.day)
+                
+                # Calcular meses y días desde el último aniversario
+                months = 0
+                fecha_temp = ultimo_aniversario
+                
+                # Calcular meses completos
+                while fecha_temp < fecha_actual:
+                    # Obtener días del mes actual
+                    dias_en_mes = monthrange(fecha_temp.year, fecha_temp.month)[1]
+                    fecha_siguiente_mes = fecha_temp + timedelta(days=dias_en_mes)
+                    
+                    if fecha_siguiente_mes <= fecha_actual:
+                        months += 1
+                        fecha_temp = fecha_siguiente_mes
+                    else:
+                        break
+                
+                # Calcular días restantes
+                if fecha_temp < fecha_actual:
+                    days = (fecha_actual - fecha_temp).days
+                else:
+                    days = 0
+                
+                # Formatear antigüedad con años, meses y días
+                partes = []
+                if years > 0:
+                    partes.append(f'{years} año{"s" if years != 1 else ""}')
+                if months > 0:
+                    partes.append(f'{months} mes{"es" if months != 1 else ""}')
+                if days > 0:
+                    partes.append(f'{days} día{"s" if days != 1 else ""}')
+                
+                if partes:
+                    if len(partes) == 1:
+                        antiguedad = partes[0]
+                    elif len(partes) == 2:
+                        antiguedad = f'{partes[0]} y {partes[1]}'
+                    else:
+                        antiguedad = f'{partes[0]}, {partes[1]} y {partes[2]}'
+                else:
+                    antiguedad = '0 días'
+            else:
+                antiguedad = 'Sin fecha de contratación'
+            
+            # Título del empleado (número, nombre, área y antigüedad)
+            area_nombre = empleado.departamento.nombre if empleado.departamento else "Sin área asignada"
+            empleado_titulo = f'{empleado.numero_empleado}.{empleado.nombre_completo.upper()} - {area_nombre} - Antigüedad: {antiguedad}'
+            ws.merge_cells(f'A{row}:D{row}')
+            cell = ws[f'A{row}']
+            cell.value = empleado_titulo
+            cell.font = title_font
+            cell.alignment = left_alignment
+            ws.row_dimensions[row].height = 20
+            row += 1
+            
+            # Encabezado de la tabla (azul como en la imagen)
+            header_fill_blue = PatternFill(start_color="3B82F6", end_color="2563EB", fill_type="solid")
+            headers_tabla = ['Días Anuales', 'Días Usados', 'Acumulado Año Actual', 'Total Disponible']
+            for col_num, header in enumerate(headers_tabla, 1):
+                cell = ws.cell(row=row, column=col_num)
+                cell.value = header
+                cell.font = header_font
+                cell.fill = header_fill_blue
+                cell.alignment = center_alignment
+                cell.border = border_style
+            ws.row_dimensions[row].height = 25
+            row += 1
+            
+            # Calcular total disponible
+            total_disponible = round(empleado.calcular_total_disponible_proyectado(), 2)
+            
+            # Fila de datos
+            # Columna 1: Días Anuales (azul) - Mostrar 0 si no ha cumplido un año
+            dias_anuales_display = 0 if not ha_cumplido_ano else dias_anuales
+            cell = ws.cell(row=row, column=1)
+            cell.value = f'{dias_anuales_display} días'
+            cell.font = Font(bold=True, size=11, name="Arial")
+            cell.border = border_style
+            cell.alignment = center_alignment
+            cell.fill = PatternFill(start_color="DBEAFE", end_color="BFDBFE", fill_type="solid")  # Azul claro
+            
+            # Columna 2: Días Usados (naranja)
+            cell = ws.cell(row=row, column=2)
+            cell.value = f'{dias_usados} días'
+            cell.font = Font(bold=True, size=11, name="Arial")
+            cell.border = border_style
+            cell.alignment = center_alignment
+            cell.fill = PatternFill(start_color="FED7AA", end_color="FDBA74", fill_type="solid")  # Naranja claro
+            
+            # Columna 3: Acumulado Año Actual (naranja)
+            cell = ws.cell(row=row, column=3)
+            acumulado_str = f'{dias_acumulados_ano_actual:.2f} días' if dias_acumulados_ano_actual != 0 else '0.00 días'
+            cell.value = acumulado_str
+            cell.font = Font(bold=True, size=11, name="Arial")
+            cell.border = border_style
+            cell.alignment = center_alignment
+            cell.fill = PatternFill(start_color="FED7AA", end_color="FDBA74", fill_type="solid")  # Naranja claro
+            
+            # Columna 4: Total Disponible (verde)
+            cell = ws.cell(row=row, column=4)
+            total_str = f'{total_disponible:.2f} días'
+            cell.value = total_str
+            cell.font = Font(bold=True, size=11, name="Arial")
+            cell.border = border_style
+            cell.alignment = center_alignment
+            # Verde claro para positivo
+            if total_disponible > 0:
+                cell.fill = PatternFill(start_color="D1FAE5", end_color="A7F3D0", fill_type="solid")
+            else:
+                cell.fill = PatternFill(start_color="FEE2E2", end_color="FECACA", fill_type="solid")  # Rojo si negativo
+            row += 1
+        
+        # Ajustar ancho de columnas
+        column_widths = [20, 18, 25, 20]
+        for col_num, width in enumerate(column_widths, 1):
+            ws.column_dimensions[get_column_letter(col_num)].width = width
+        
+        # Guardar workbook
+        wb.save(response)
+        return response
+    
+    except Exception as e:
+        import logging
+        import traceback
+        logger = logging.getLogger(__name__)
+        logger.error(f'Error generando Excel kardex: {str(e)}')
+        logger.error(traceback.format_exc())
+        
+        # En producción, devolver un error más amigable
+        return HttpResponse(
+            f'Error al generar el archivo Excel. Por favor, contacte al administrador. Error: {str(e)}',
+            status=500,
+            content_type='text/plain'
+        )
+
+
+@login_required
+def generar_pdf_kardex(request):
+    """Generar PDF del kardex de vacaciones"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+        raise PermissionDenied
+    
+    # Obtener todos los empleados activos, excluyendo ADMIN, RH y SISTEMAS
+    from django.db.models import Case, When, Value, IntegerField
+    
+    empleados = Perfil.objects.filter(
+        activo=True
+    ).exclude(
+        tipo_perfil__in=['ADMIN', 'RH', 'SISTEMAS']
+    ).select_related(
+        'usuario', 'departamento'
+    ).annotate(
+        # Ordenar por departamento: Ventas primero, Conta segundo, sin departamento al final
+        orden_departamento=Case(
+            When(departamento__nombre__iexact='Ventas', then=Value(1)),
+            When(departamento__nombre__iexact='Conta', then=Value(2)),
+            When(departamento__isnull=True, then=Value(999)),
+            default=Value(3),
+            output_field=IntegerField()
+        )
+    ).order_by('orden_departamento', 'departamento__nombre', 'usuario__last_name', 'usuario__first_name')
+    
+    # Crear respuesta HTTP con PDF
+    response = HttpResponse(content_type='application/pdf')
+    fecha_actual = timezone.now().date()
+    
+    if request.GET.get('imprimir'):
+        response['Content-Disposition'] = f'inline; filename="kardex_vacaciones_{fecha_actual.strftime("%Y%m%d")}.pdf"'
+    else:
+        response['Content-Disposition'] = f'attachment; filename="kardex_vacaciones_{fecha_actual.strftime("%Y%m%d")}.pdf"'
+    
+    # Crear documento PDF
+    doc = SimpleDocTemplate(response, pagesize=A4, 
+                            rightMargin=2*cm, leftMargin=2*cm,
+                            topMargin=2*cm, bottomMargin=2*cm)
+    
+    elements = []
+    styles = getSampleStyleSheet()
+    
+    # Estilos personalizados
+    title_style = ParagraphStyle(
+        'CustomTitle',
+        parent=styles['Heading1'],
+        fontSize=18,
+        textColor=colors.HexColor('#1e40af'),
+        spaceAfter=20,
+        alignment=TA_CENTER,
+        fontName='Helvetica-Bold'
+    )
+    
+    header_style = ParagraphStyle(
+        'CustomHeader',
+        parent=styles['Normal'],
+        fontSize=10,
+        textColor=colors.white,
+        fontName='Helvetica-Bold',
+        alignment=TA_CENTER
+    )
+    
+    # Título
+    elements.append(Paragraph('<b>KARDEX DE VACACIONES</b>', title_style))
+    elements.append(Paragraph(f'<i>Generado el: {fecha_actual.strftime("%d/%m/%Y")}</i>', styles['Normal']))
+    elements.append(Spacer(1, 0.5*cm))
+    
+    # Preparar datos para la tabla
+    data = [['Empleado', 'Depto', 'Antigüedad', 'Días Anuales', 'Días Usados', 'Acum. Año Actual', 'Total Disponible']]
+    
+    for empleado in empleados:
+        dias_anuales = empleado.dias_vacaciones_anuales
+        dias_usados = empleado.dias_vacaciones_usados
+        dias_acumulados_ano_actual = round(empleado.calcular_dias_acumulados_hasta_hoy(), 2)
+        total_disponible = round(empleado.calcular_total_disponible_proyectado(), 2)
+        
+        depto = empleado.departamento.nombre if empleado.departamento else "Sin depto"
+        depto = depto[:15] if len(depto) > 15 else depto
+        
+        data.append([
+            empleado.nombre_completo[:25],
+            depto,
+            empleado.antiguedad_detallada[:12],
+            str(dias_anuales),
+            str(dias_usados),
+            str(dias_acumulados_ano_actual),
+            str(total_disponible),
+        ])
+    
+    # Crear tabla
+    table = Table(data, colWidths=[4*cm, 2.5*cm, 2*cm, 2*cm, 2*cm, 2.5*cm, 2.5*cm])
+    
+    # Estilo de la tabla
+    table_style = TableStyle([
+        # Encabezado
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#3b82f6')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 9),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('TOPPADDING', (0, 0), (-1, 0), 12),
+        
+        # Bordes
+        ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        
+        # Filas alternadas
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f8f9fa')]),
+        
+        # Alineación de datos
+        ('ALIGN', (0, 1), (1, -1), 'LEFT'),
+        ('ALIGN', (2, 1), (-1, -1), 'CENTER'),
+        ('FONTSIZE', (0, 1), (-1, -1), 8),
+    ])
+    
+    table.setStyle(table_style)
+    elements.append(table)
+    
+    # Construir PDF
+    doc.build(elements)
+    return response
+
+
 # === REPORTE DE VACACIONES ===
 
 @login_required
