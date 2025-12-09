@@ -1940,9 +1940,71 @@ def generar_excel_kardex(request):
             dias_ano_anterior = empleado.dias_vacaciones_acumulados
             total_saldo = dias_ano_anterior + dias_acumulados_ano_actual
             
-            # Título del empleado (número, nombre y área)
+            # Verificar si ha cumplido un año completo (usar la propiedad del modelo)
+            ha_cumplido_ano = empleado.antiguedad_anos >= 1
+            
+            # Calcular antigüedad exacta con años, meses y días (sin depender de dateutil)
+            from datetime import date, timedelta
+            from calendar import monthrange
+            
+            fecha_actual = date.today()
+            fecha_contratacion = empleado.fecha_contratacion
+            
+            if fecha_contratacion:
+                years = empleado.antiguedad_anos
+                
+                # Calcular la fecha del último aniversario
+                if fecha_actual.month < fecha_contratacion.month or (fecha_actual.month == fecha_contratacion.month and fecha_actual.day < fecha_contratacion.day):
+                    ultimo_aniversario = date(fecha_actual.year - 1, fecha_contratacion.month, fecha_contratacion.day)
+                else:
+                    ultimo_aniversario = date(fecha_actual.year, fecha_contratacion.month, fecha_contratacion.day)
+                
+                # Calcular meses y días desde el último aniversario
+                months = 0
+                fecha_temp = ultimo_aniversario
+                
+                # Calcular meses completos
+                while fecha_temp < fecha_actual:
+                    # Obtener días del mes actual
+                    dias_en_mes = monthrange(fecha_temp.year, fecha_temp.month)[1]
+                    fecha_siguiente_mes = fecha_temp + timedelta(days=dias_en_mes)
+                    
+                    if fecha_siguiente_mes <= fecha_actual:
+                        months += 1
+                        fecha_temp = fecha_siguiente_mes
+                    else:
+                        break
+                
+                # Calcular días restantes
+                if fecha_temp < fecha_actual:
+                    days = (fecha_actual - fecha_temp).days
+                else:
+                    days = 0
+                
+                # Formatear antigüedad con años, meses y días
+                partes = []
+                if years > 0:
+                    partes.append(f'{years} año{"s" if years != 1 else ""}')
+                if months > 0:
+                    partes.append(f'{months} mes{"es" if months != 1 else ""}')
+                if days > 0:
+                    partes.append(f'{days} día{"s" if days != 1 else ""}')
+                
+                if partes:
+                    if len(partes) == 1:
+                        antiguedad = partes[0]
+                    elif len(partes) == 2:
+                        antiguedad = f'{partes[0]} y {partes[1]}'
+                    else:
+                        antiguedad = f'{partes[0]}, {partes[1]} y {partes[2]}'
+                else:
+                    antiguedad = '0 días'
+            else:
+                antiguedad = 'Sin fecha de contratación'
+            
+            # Título del empleado (número, nombre, área y antigüedad)
             area_nombre = empleado.departamento.nombre if empleado.departamento else "Sin área asignada"
-            empleado_titulo = f'{empleado.numero_empleado}.{empleado.nombre_completo.upper()} - {area_nombre}'
+            empleado_titulo = f'{empleado.numero_empleado}.{empleado.nombre_completo.upper()} - {area_nombre} - Antigüedad: {antiguedad}'
             ws.merge_cells(f'A{row}:D{row}')
             cell = ws[f'A{row}']
             cell.value = empleado_titulo
@@ -1951,82 +2013,65 @@ def generar_excel_kardex(request):
             ws.row_dimensions[row].height = 20
             row += 1
             
-            # Encabezado de la tabla (naranja)
-            headers_tabla = ['Concepto', 'Fecha registro', 'Con derecho', 'Saldo']
+            # Encabezado de la tabla (azul como en la imagen)
+            header_fill_blue = PatternFill(start_color="3B82F6", end_color="2563EB", fill_type="solid")
+            headers_tabla = ['Días Anuales', 'Días Usados', 'Acumulado Año Actual', 'Total Disponible']
             for col_num, header in enumerate(headers_tabla, 1):
                 cell = ws.cell(row=row, column=col_num)
                 cell.value = header
                 cell.font = header_font
-                cell.fill = header_fill
+                cell.fill = header_fill_blue
                 cell.alignment = center_alignment
                 cell.border = border_style
-            ws.row_dimensions[row].height = 20
+            ws.row_dimensions[row].height = 25
             row += 1
             
-            # Primera fila: SALDO 2025
+            # Calcular total disponible
+            total_disponible = round(empleado.calcular_total_disponible_proyectado(), 2)
+            
+            # Fila de datos
+            # Columna 1: Días Anuales (azul) - Mostrar 0 si no ha cumplido un año
+            dias_anuales_display = 0 if not ha_cumplido_ano else dias_anuales
             cell = ws.cell(row=row, column=1)
-            cell.value = 'SALDO 2025'
+            cell.value = f'{dias_anuales_display} días'
             cell.font = Font(bold=True, size=11, name="Arial")
             cell.border = border_style
-            cell.alignment = left_alignment
+            cell.alignment = center_alignment
+            cell.fill = PatternFill(start_color="DBEAFE", end_color="BFDBFE", fill_type="solid")  # Azul claro
             
+            # Columna 2: Días Usados (naranja)
             cell = ws.cell(row=row, column=2)
-            cell.value = ''  # Fecha registro vacía
+            cell.value = f'{dias_usados} días'
+            cell.font = Font(bold=True, size=11, name="Arial")
             cell.border = border_style
             cell.alignment = center_alignment
+            cell.fill = PatternFill(start_color="FED7AA", end_color="FDBA74", fill_type="solid")  # Naranja claro
             
+            # Columna 3: Acumulado Año Actual (naranja)
             cell = ws.cell(row=row, column=3)
-            cell.value = ''  # Con derecho vacío
+            acumulado_str = f'{dias_acumulados_ano_actual:.2f} días' if dias_acumulados_ano_actual != 0 else '0.00 días'
+            cell.value = acumulado_str
+            cell.font = Font(bold=True, size=11, name="Arial")
             cell.border = border_style
             cell.alignment = center_alignment
+            cell.fill = PatternFill(start_color="FED7AA", end_color="FDBA74", fill_type="solid")  # Naranja claro
             
+            # Columna 4: Total Disponible (verde)
             cell = ws.cell(row=row, column=4)
-            saldo_2025 = f'{dias_ano_anterior:.3f}' if dias_ano_anterior != 0 else '0.000'
-            cell.value = saldo_2025
+            total_str = f'{total_disponible:.2f} días'
+            cell.value = total_str
             cell.font = Font(bold=True, size=11, name="Arial")
             cell.border = border_style
             cell.alignment = center_alignment
-            # Resaltar si es negativo (rojo) o positivo (verde)
-            if dias_ano_anterior < 0:
-                cell.fill = PatternFill(start_color="FEE2E2", end_color="FECACA", fill_type="solid")
-            elif dias_ano_anterior > 0:
+            # Verde claro para positivo
+            if total_disponible > 0:
                 cell.fill = PatternFill(start_color="D1FAE5", end_color="A7F3D0", fill_type="solid")
-            row += 1
-            
-            # Segunda fila: Proporción último año
-            cell = ws.cell(row=row, column=1)
-            cell.value = 'Proporción último año'
-            cell.font = Font(bold=True, size=11, name="Arial")
-            cell.border = border_style
-            cell.alignment = left_alignment
-            
-            cell = ws.cell(row=row, column=2)
-            cell.value = ''  # Fecha registro vacía
-            cell.border = border_style
-            cell.alignment = center_alignment
-            
-            cell = ws.cell(row=row, column=3)
-            con_derecho = f'{dias_acumulados_ano_actual:.3f}' if dias_acumulados_ano_actual != 0 else '0.000'
-            cell.value = con_derecho
-            cell.font = Font(bold=True, size=11, name="Arial")
-            cell.border = border_style
-            cell.alignment = center_alignment
-            
-            cell = ws.cell(row=row, column=4)
-            saldo_total = f'{total_saldo:.3f}'
-            cell.value = saldo_total
-            cell.font = Font(bold=True, size=11, name="Arial")
-            cell.border = border_style
-            cell.alignment = center_alignment
-            # Resaltar el total (verde si positivo)
-            if total_saldo > 0:
-                cell.fill = PatternFill(start_color="D1FAE5", end_color="A7F3D0", fill_type="solid")
-            elif total_saldo < 0:
-                cell.fill = PatternFill(start_color="FEE2E2", end_color="FECACA", fill_type="solid")
+            else:
+                cell.fill = PatternFill(start_color="FEE2E2", end_color="FECACA", fill_type="solid")  # Rojo si negativo
             row += 1
         
         # Ajustar ancho de columnas
-        column_widths = [30, 18, 18, 15]
+        column_widths = [20, 18, 25, 20]
         for col_num, width in enumerate(column_widths, 1):
             ws.column_dimensions[get_column_letter(col_num)].width = width
         
