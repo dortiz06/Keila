@@ -1,4 +1,4 @@
-	"""
+"""
 Configuración de producción para el Sistema de Recursos Humanos
 """
 
@@ -8,35 +8,22 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-import os
 
 # Configuración de seguridad para producción
 DEBUG = False
-<<<<<<< HEAD
 
 ALLOWED_HOSTS = [
     "sistemagk.gruaskeila.com.mx",
     "www.sistemagk.gruaskeila.com.mx",
     "localhost",
-    "127.0.0.1",
+    "127.0.0.1"
 ]
-
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://sistemagk.gruaskeila.com.mx',
-    'https://www.sistemagk.gruaskeila.com.mx',
+    "https://sistemagk.gruaskeila.com.mx",
+    "https://www.sistemagk.gruaskeila.com.mx",
 ]
 
-
-=======
-ALLOWED_HOSTS = [
-    'localhost', 
-    '127.0.0.1', 
-    'tu-dominio.com',
-    'sistemagk.gruaskeila.com.mx',
-    'www.sistemagk.gruaskeila.com.mx',
-]
->>>>>>> origin/ALEX
 
 # Base de datos de producción (PostgreSQL recomendado)
 DATABASES = {
@@ -51,10 +38,9 @@ DATABASES = {
 }
 
 # Configuración de archivos estáticos
-<<<<<<< HEAD
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-
+STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_URL = '/static/'
 
 """
