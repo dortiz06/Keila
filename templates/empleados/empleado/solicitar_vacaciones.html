@@ -61,7 +61,7 @@
                                 {% if perfil.antiguedad_anos >= 1 %}
                                     <span class="text-success" style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ perfil.antiguedad_anos }} año{{ perfil.antiguedad_anos|pluralize }}</span>
                                 {% else %}
-                                    <span class="text-warning">{{ perfil.antiguedad_anos }} año{{ perfil.antiguedad_anos|pluralize }}</span>
+                                    <span class="text-warning" style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ perfil.antiguedad_anos }} año{{ perfil.antiguedad_anos|pluralize }}</span>
                                 {% endif %}
                             </p>
                             <p><strong>Días Anuales:</strong> <span style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 600 !important;">{{ perfil.dias_vacaciones_anuales }}</span></p>
@@ -70,7 +70,7 @@
                                 {% if perfil.dias_vacaciones_disponibles > 0 %}
                                     <span class="text-success" style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ perfil.dias_vacaciones_disponibles }}</span>
                                 {% else %}
-                                    <span class="text-danger">{{ perfil.dias_vacaciones_disponibles }}</span>
+                                    <span class="text-danger" style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ perfil.dias_vacaciones_disponibles }}</span>
                                 {% endif %}
                             </p>
                         </div>
@@ -106,7 +106,7 @@
                                             </label>
                                             {{ form.fecha_inicio }}
                                             {% if form.fecha_inicio.errors %}
-                                                <div class="text-danger">
+                                                <div class="text-danger" style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">
                                                     {% for error in form.fecha_inicio.errors %}
                                                         <small>{{ error }}</small>
                                                     {% endfor %}
@@ -121,7 +121,7 @@
                                             </label>
                                             {{ form.fecha_fin }}
                                             {% if form.fecha_fin.errors %}
-                                                <div class="text-danger">
+                                                <div class="text-danger" style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">
                                                     {% for error in form.fecha_fin.errors %}
                                                         <small>{{ error }}</small>
                                                     {% endfor %}
@@ -886,8 +886,18 @@ document.addEventListener('DOMContentLoaded', function() {
 .dashboard .card-body p > *:not(strong),
 .dashboard .card-body p span:not(strong),
 .dashboard .card-body p .text-success,
+.dashboard .card-body p .text-warning {
+    color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
 .dashboard .card-body p .text-warning,
 .dashboard .card-body p .text-info,
+.dashboard .card-body p .text-danger {
+    color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
 .dashboard .card-body p .text-danger,
 .dashboard .card-body p .text-primary,
 .dashboard .card-body p .text-muted {
@@ -970,6 +980,11 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 /* Mensajes de error */
+.dashboard .text-danger {
+    color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
 .dashboard .text-danger {
     color: #ff6b6b !important; /* Rojo más suave pero visible */
 }
