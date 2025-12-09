@@ -29,7 +29,7 @@ class PerfilAdmin(admin.ModelAdmin):
     
     readonly_fields = [
         'antiguedad_display', 'puede_vacaciones', 'dias_vacaciones_info',
-        'fecha_creacion', 'fecha_actualizacion'
+        'total_disponible_display', 'fecha_creacion', 'fecha_actualizacion'
     ]
     
     fieldsets = (
@@ -51,10 +51,17 @@ class PerfilAdmin(admin.ModelAdmin):
                 'dias_vacaciones_acumulados',
                 'dias_vacaciones_extraordinarios',
                 'ultimo_reset_vacaciones',
-                'dias_vacaciones_info'
+                'dias_vacaciones_info',
+                'total_disponible_display'
             ),
-            'description': 'Los días anuales se calculan automáticamente según antigüedad. Puedes ajustar manualmente para pruebas.',
-            'classes': ('collapse',)
+            'description': '''
+                <strong>Gestión Manual de Vacaciones:</strong><br>
+                • <strong>Días Anuales:</strong> Se calculan automáticamente según antigüedad, pero puedes modificarlos manualmente.<br>
+                • <strong>Días Usados:</strong> Días de vacaciones que el empleado ya ha utilizado este año.<br>
+                • <strong>Días Acumulados (Año Anterior):</strong> <span style="color: #d32f2f; font-weight: bold;">IMPORTANTE:</span> Aquí puedes agregar manualmente los días de vacaciones que el empleado tiene acumulados de años anteriores que no ha usado. Este campo es completamente editable.<br>
+                • <strong>Total Disponible:</strong> Se calcula automáticamente (Año anterior + Acumulado año actual - Usados).
+            ''',
+            'classes': ('wide',)
         }),
         ('Información de Contacto', {
             'fields': ('telefono',),
@@ -99,6 +106,7 @@ class PerfilAdmin(admin.ModelAdmin):
         disponibles = obj.dias_vacaciones_disponibles
         usados = obj.dias_vacaciones_usados
         total = obj.dias_vacaciones_anuales
+        acumulados = obj.dias_vacaciones_acumulados
         
         if disponibles > 0:
             color = 'green'
@@ -108,10 +116,48 @@ class PerfilAdmin(admin.ModelAdmin):
             color = 'red'
             
         return format_html(
-            '<span style="color: {};">{} disponibles / {} usados / {} total</span>',
-            color, disponibles, usados, total
+            '<div style="padding: 10px; background: rgba(0,0,0,0.05); border-radius: 5px; margin: 5px 0;">'
+            '<strong>Resumen:</strong><br>'
+            '<span style="color: {};">{} disponibles</span> / {} usados / {} anuales / {} acumulados año anterior'
+            '</div>',
+            color, round(disponibles, 2), usados, total, acumulados
         )
-    dias_vacaciones_info.short_description = 'Estado Vacaciones'
+    dias_vacaciones_info.short_description = 'Resumen de Vacaciones'
+    
+    def total_disponible_display(self, obj):
+        """Muestra el total disponible calculado con decimales"""
+        total = obj.calcular_total_disponible_proyectado()
+        acumulados_ano_actual = obj.calcular_dias_acumulados_hasta_hoy()
+        dias_ano_anterior = obj.dias_vacaciones_acumulados
+        dias_usados = obj.dias_vacaciones_usados
+        
+        if total > 0:
+            color = '#22c55e'
+            icon = '✓'
+        elif total == 0:
+            color = '#f59e0b'
+            icon = '⚠'
+        else:
+            color = '#ef4444'
+            icon = '✗'
+            
+        return format_html(
+            '<div style="padding: 12px; background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(22, 163, 74, 0.15)); '
+            'border: 2px solid {}; border-radius: 8px; margin: 10px 0;">'
+            '<div style="font-size: 1.5em; font-weight: bold; color: {}; margin-bottom: 8px;">'
+            '{} {} días disponibles</div>'
+            '<div style="font-size: 0.9em; color: #666; line-height: 1.6;">'
+            '<strong>Desglose:</strong><br>'
+            '• Días año anterior: <strong>{}</strong> días<br>'
+            '• Acumulado año actual: <strong>{}</strong> días<br>'
+            '• Días usados: <strong>{}</strong> días<br>'
+            '• <strong>Total disponible: {} días</strong>'
+            '</div>'
+            '</div>',
+            color, color, icon, round(total, 2),
+            dias_ano_anterior, round(acumulados_ano_actual, 2), dias_usados, round(total, 2)
+        )
+    total_disponible_display.short_description = 'Total Disponible (Calculado)'
     
     def activo_status(self, obj):
         """Muestra el estado activo con colores"""
