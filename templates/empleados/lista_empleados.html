@@ -171,7 +171,7 @@ body {
                                 </td>
                                 <td style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
                                     {% if empleado.activo %}
-                                        <span class="badge" style="background: rgba(34, 197, 94, 0.3) !important; color: #22C55E !important; border: 1px solid rgba(34, 197, 94, 0.5) !important; padding: 0.25rem 0.75rem !important; border-radius: 12px !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">Activo</span>
+                                        <span class="badge" style="background: rgba(34, 197, 94, 0.3) !important; color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; border: 1px solid rgba(34, 197, 94, 0.5) !important; padding: 0.25rem 0.75rem !important; border-radius: 12px !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">Activo</span>
                                     {% else %}
                                         <span class="badge" style="background: rgba(239, 68, 68, 0.3) !important; color: #EF4444 !important; border: 1px solid rgba(239, 68, 68, 0.5) !important; padding: 0.25rem 0.75rem !important; border-radius: 12px !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">Inactivo</span>
                                     {% endif %}
@@ -182,15 +182,15 @@ body {
                                     {% if empleado.tipo_perfil == 'EMPLEADO' or empleado.tipo_perfil == 'JEFE_AREA' %}
                                     <div style="font-size: 0.85rem !important;">
                                         <div class="mb-1">
-                                            <i class="fas fa-calendar-check me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: #22C55E !important;"></i>
+                                            <i class="fas fa-calendar-check me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;"></i>
                                             <strong style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ empleado.dias_vacaciones_disponibles }}</strong> disponibles
                                         </div>
                                         <div class="mb-1">
-                                            <i class="fas fa-calendar-minus me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: #F59E0B !important;"></i>
-                                            <span style="color: #F59E0B !important;">{{ empleado.dias_vacaciones_usados }}</span> usados
+                                            <i class="fas fa-calendar-minus me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;"></i>
+                                            <span style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ empleado.dias_vacaciones_usados }}</span> usados
                                         </div>
                                         <div>
-                                            <i class="fas fa-calendar-alt me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: #3B82F6 !important;"></i>
+                                            <i class="fas fa-calendar-alt me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;"></i>
                                             <span style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ empleado.dias_vacaciones_anuales }}</span> anuales
                                         </div>
                                     </div>
@@ -287,7 +287,7 @@ body {
                                 </div>
                                 <div>
                                     {% if empleado.activo %}
-                                        <span class="badge" style="background: rgba(34, 197, 94, 0.3) !important; color: #22C55E !important; border: 1px solid rgba(34, 197, 94, 0.5) !important; padding: 0.25rem 0.75rem !important; border-radius: 12px !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">Activo</span>
+                                        <span class="badge" style="background: rgba(34, 197, 94, 0.3) !important; color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; border: 1px solid rgba(34, 197, 94, 0.5) !important; padding: 0.25rem 0.75rem !important; border-radius: 12px !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">Activo</span>
                                     {% else %}
                                         <span class="badge" style="background: rgba(239, 68, 68, 0.3) !important; color: #EF4444 !important; border: 1px solid rgba(239, 68, 68, 0.5) !important; padding: 0.25rem 0.75rem !important; border-radius: 12px !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">Inactivo</span>
                                     {% endif %}
@@ -301,15 +301,15 @@ body {
                                 {% if empleado.tipo_perfil == 'EMPLEADO' or empleado.tipo_perfil == 'JEFE_AREA' %}
                                 <div style="font-size: 0.85rem !important;">
                                     <div class="mb-1">
-                                        <i class="fas fa-calendar-check me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: #22C55E !important;"></i>
+                                        <i class="fas fa-calendar-check me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;"></i>
                                         <strong style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ empleado.dias_vacaciones_disponibles }}</strong> disponibles
                                     </div>
                                     <div class="mb-1">
-                                        <i class="fas fa-calendar-minus me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: #F59E0B !important;"></i>
-                                        <span style="color: #F59E0B !important;">{{ empleado.dias_vacaciones_usados }}</span> usados
+                                        <i class="fas fa-calendar-minus me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;"></i>
+                                        <span style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ empleado.dias_vacaciones_usados }}</span> usados
                                     </div>
                                     <div>
-                                        <i class="fas fa-calendar-alt me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: #3B82F6 !important;"></i>
+                                        <i class="fas fa-calendar-alt me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important; color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;"></i>
                                         <span style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ empleado.dias_vacaciones_anuales }}</span> anuales
                                     </div>
                                 </div>

@@ -28,7 +28,7 @@ body {
     <!-- Mensajes de Django -->
     {% if messages %}
         {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="background: rgba(34, 197, 94, 0.2) !important; border: 1px solid rgba(34, 197, 94, 0.5) !important; color: #22c55e !important; border-radius: 12px !important; padding: 1rem 1.5rem !important; margin-bottom: 1.5rem !important; font-family: 'Montserrat', sans-serif !important;">
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="background: rgba(34, 197, 94, 0.2) !important; border: 1px solid rgba(34, 197, 94, 0.5) !important; color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; border-radius: 12px !important; padding: 1rem 1.5rem !important; margin-bottom: 1.5rem !important; font-family: 'Montserrat', sans-serif !important;">
                 <i class="fas fa-check-circle me-2"></i>{{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="filter: brightness(0) invert(1);"></button>
             </div>
@@ -259,7 +259,8 @@ body {
     background: linear-gradient(135deg, 
         rgba(59, 130, 246, 0.3) 0%, 
         rgba(37, 99, 235, 0.25) 100%) !important;
-    color: #3b82f6 !important;
+    color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
     border: 1px solid rgba(59, 130, 246, 0.5) !important;
     font-family: 'Montserrat', sans-serif !important;
     padding: 0.5rem 0.75rem !important;
@@ -299,7 +300,8 @@ body {
     background: linear-gradient(135deg, 
         rgba(59, 130, 246, 0.3) 0%, 
         rgba(37, 99, 235, 0.25) 100%) !important;
-    color: #3b82f6 !important;
+    color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
     border: 1px solid rgba(59, 130, 246, 0.5) !important;
     font-family: 'Montserrat', sans-serif !important;
     padding: 0.5rem 0.75rem !important;
@@ -312,7 +314,8 @@ body {
     background: linear-gradient(135deg, 
         rgba(34, 197, 94, 0.3) 0%, 
         rgba(22, 163, 74, 0.25) 100%) !important;
-    color: #22c55e !important;
+    color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
     border: 1px solid rgba(34, 197, 94, 0.5) !important;
     font-family: 'Montserrat', sans-serif !important;
     padding: 0.5rem 0.75rem !important;

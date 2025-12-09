@@ -77,13 +77,13 @@
                 <div class="card-body d-flex flex-column justify-content-center">
                     <i class="fas fa-calendar-check fa-2x mb-2" style="color: #ffffff !important; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;"></i>
                     <h5 class="card-title small" style="color: #ffffff !important; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;">Días Disponibles</h5>
-                    <h3 style="color: #ffffff !important; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important; font-weight: 700 !important;">{{ stats.dias_disponibles }}</h3>
-                    <small style="color: #ffffff !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;">
-                        de {{ perfil.dias_vacaciones_anuales }} anuales 
+                    <h3 style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 700 !important;">{{ stats.dias_disponibles }}</h3>
+                    <small style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">
+                        de <span style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 600 !important;">{{ perfil.dias_vacaciones_anuales }}</span> anuales 
                         {% if perfil.dias_vacaciones_acumulados > 0 %}
-                            + {{ perfil.dias_vacaciones_acumulados }} acumulados
+                            + <span style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 600 !important;">{{ perfil.dias_vacaciones_acumulados }}</span> acumulados
                         {% endif %}
-                        ({{ perfil.antiguedad_anos }} año{{ perfil.antiguedad_anos|pluralize }})
+                        (<span style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 600 !important;">{{ perfil.antiguedad_anos }}</span> año{{ perfil.antiguedad_anos|pluralize }})
                     </small>
                 </div>
             </div>
@@ -93,7 +93,7 @@
                 <div class="card-body d-flex flex-column justify-content-center">
                     <i class="fas fa-calendar-times fa-2x mb-2" style="color: #ffffff !important; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;"></i>
                     <h5 class="card-title small" style="color: #ffffff !important; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;">Días Usados</h5>
-                    <h3 style="color: #ffffff !important; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important; font-weight: 700 !important;">{{ stats.dias_usados }}</h3>
+                    <h3 style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 700 !important;">{{ stats.dias_usados }}</h3>
                     <small style="color: #ffffff !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;">este año</small>
                 </div>
             </div>
@@ -103,7 +103,7 @@
                 <div class="card-body d-flex flex-column justify-content-center">
                     <i class="fas fa-clock fa-2x mb-2" style="color: #ffffff !important; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;"></i>
                     <h5 class="card-title small" style="color: #ffffff !important; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;">Pendientes</h5>
-                    <h3 style="color: #ffffff !important; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important; font-weight: 700 !important;">{{ stats.solicitudes_pendientes }}</h3> 
+                    <h3 style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 700 !important;">{{ stats.solicitudes_pendientes }}</h3> 
                     <small style="color: #ffffff !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;">solicitudes</small>
                 </div>
             </div>
@@ -113,7 +113,7 @@
                 <div class="card-body d-flex flex-column justify-content-center">
                     <i class="fas fa-laptop fa-2x mb-2" style="color: #ffffff !important; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;"></i>
                     <h5 class="card-title small" style="color: #ffffff !important; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;">Equipos</h5>
-                    <h3 style="color: #ffffff !important; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important; font-weight: 700 !important;">{{ stats.equipos_asignados }}</h3>
+                    <h3 style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 700 !important;">{{ stats.equipos_asignados }}</h3>
                     <a href="{% url 'empleados:mis_equipos' %}" class="btn btn-sm btn-outline-primary mt-1">Ver</a>
                 </div>
             </div>
@@ -123,7 +123,7 @@
                 <div class="card-body d-flex flex-column justify-content-center">
                     <i class="fas fa-ticket-alt fa-2x mb-2" style="color: #ffffff !important; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;"></i>
                     <h5 class="card-title small" style="color: #ffffff !important; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;">Tickets</h5>
-                    <h3 style="color: #ffffff !important; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important; font-weight: 700 !important;">{{ stats.tickets_pendientes }}</h3>
+                    <h3 style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 700 !important;">{{ stats.tickets_pendientes }}</h3>
                     <a href="{% url 'empleados:mis_tickets' %}" class="btn btn-sm btn-outline-danger mt-1">Ver</a>
                 </div>
             </div>
@@ -313,10 +313,10 @@
     font-weight: 400 !important;
 }
 
-/* Números en blanco con sombra muy leve */
+/* Números en blanco con sombra oscura */
 .dashboard .card.text-center h3 {
     color: #ffffff !important;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4) !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
     font-weight: 700 !important;
 }
 

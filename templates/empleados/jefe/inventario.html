@@ -106,7 +106,7 @@ body {
                                     {% if equipo.estado == 'DISPONIBLE' %}
                                         <div class="d-flex align-items-center">
                                             <div>
-                                                <div style="color: #22c55e !important; font-weight: 500 !important;">
+                                                <div style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 500 !important;">
                                                     <i class="fas fa-check-circle me-2" style="font-size: 1.1rem !important;"></i>Disponible
                                                 </div>
                                                 <small style="color: rgba(255, 255, 255, 0.6) !important; font-size: 0.75rem !important; margin-top: 4px !important; display: block !important;">
@@ -118,7 +118,7 @@ body {
                                         <div class="d-flex align-items-center">
                                             <div>
                                                 <div style="font-weight: 600 !important; color: #ffffff !important;">
-                                                    <i class="fas fa-user-check me-2" style="font-size: 1.1rem !important; color: #3b82f6 !important;"></i>{{ equipo.empleado_asignado.nombre_completo }}
+                                                    <i class="fas fa-user-check me-2" style="font-size: 1.1rem !important; color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;"></i>{{ equipo.empleado_asignado.nombre_completo }}
                                                 </div>
                                                 {% if equipo.empleado_asignado.departamento %}
                                                 <small style="color: rgba(255, 255, 255, 0.7) !important; font-size: 0.75rem !important; margin-top: 2px !important; display: block !important;">
@@ -268,7 +268,8 @@ body {
     background: linear-gradient(135deg, 
         rgba(59, 130, 246, 0.3) 0%, 
         rgba(37, 99, 235, 0.25) 100%) !important;
-    color: #3b82f6 !important;
+    color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
     border: 1px solid rgba(59, 130, 246, 0.5) !important;
     font-family: 'Montserrat', sans-serif !important;
     padding: 0.5rem 0.75rem !important;
@@ -281,7 +282,8 @@ body {
     background: linear-gradient(135deg, 
         rgba(34, 197, 94, 0.3) 0%, 
         rgba(22, 163, 74, 0.25) 100%) !important;
-    color: #22c55e !important;
+    color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
     border: 1px solid rgba(34, 197, 94, 0.5) !important;
     font-family: 'Montserrat', sans-serif !important;
     padding: 0.5rem 0.75rem !important;
