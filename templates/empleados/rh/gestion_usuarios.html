@@ -128,7 +128,7 @@ body {
                                     <td style="color: rgba(255, 255, 255, 0.9) !important;">{{ usuario.puesto|default:"-" }}</td>
                                     <td>
                                         {% if usuario.antiguedad_anos >= 1 %}
-                                            <span style="color: #22C55E !important; font-weight: 500 !important;">{{ usuario.antiguedad_anos }} año{{ usuario.antiguedad_anos|pluralize }}</span>
+                                            <span style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 500 !important;">{{ usuario.antiguedad_anos }} año{{ usuario.antiguedad_anos|pluralize }}</span>
                                         {% else %}
                                             <span style="color: #FBBF24 !important; font-weight: 500 !important;">{{ usuario.antiguedad_anos }} año{{ usuario.antiguedad_anos|pluralize }}</span>
                                         {% endif %}

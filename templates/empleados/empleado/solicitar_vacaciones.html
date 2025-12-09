@@ -59,7 +59,7 @@
                         <div class="card-body">
                             <p><strong>Antigüedad:</strong> 
                                 {% if perfil.antiguedad_anos >= 1 %}
-                                    <span class="text-success">{{ perfil.antiguedad_anos }} año{{ perfil.antiguedad_anos|pluralize }}</span>
+                                    <span class="text-success" style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ perfil.antiguedad_anos }} año{{ perfil.antiguedad_anos|pluralize }}</span>
                                 {% else %}
                                     <span class="text-warning">{{ perfil.antiguedad_anos }} año{{ perfil.antiguedad_anos|pluralize }}</span>
                                 {% endif %}
@@ -68,7 +68,7 @@
                             <p><strong>Días Usados:</strong> {{ perfil.dias_vacaciones_usados }}</p>
                             <p><strong>Días Disponibles:</strong> 
                                 {% if perfil.dias_vacaciones_disponibles > 0 %}
-                                    <span class="text-success">{{ perfil.dias_vacaciones_disponibles }}</span>
+                                    <span class="text-success" style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ perfil.dias_vacaciones_disponibles }}</span>
                                 {% else %}
                                     <span class="text-danger">{{ perfil.dias_vacaciones_disponibles }}</span>
                                 {% endif %}
@@ -1448,7 +1448,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .modal-confirmacion-header i {
     font-size: 3.5rem;
-    color: #22C55E !important; /* Verde esmeralda del programa */
+    color: #ffffff !important; /* Cambiado a blanco con sombra oscura */
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
     margin-bottom: 1rem;
     display: block;
     text-shadow: 0 2px 8px rgba(34, 197, 94, 0.5) !important; /* Sombra sutil para el icono */
