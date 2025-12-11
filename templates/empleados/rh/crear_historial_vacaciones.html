@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Crear Registro de Historial - {{ empleado.nombre_completo }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endblock %}
+
+{% block content %}
+<style>
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/dash/kga02.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+</style>
+
+<div class="container-fluid dashboard">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="dashboard-title">
+                    <i class="fas fa-plus me-2"></i>Crear Registro de Historial
+                </h1>
+                <p class="text-white mb-0">{{ empleado.numero_empleado }}. {{ empleado.nombre_completo }}</p>
+            </div>
+            <div>
+                <a href="{% url 'empleados:historial_vacaciones_empleado' empleado.id %}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-1"></i>Volver
+                </a>
+            </div>
+        </div>
+
+        <div class="card" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);">
+            <div class="card-body">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="concepto" class="form-label text-white">Concepto *</label>
+                            <input type="text" class="form-control" id="concepto" name="concepto" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="tipo_movimiento" class="form-label text-white">Tipo de Movimiento *</label>
+                            <select class="form-select" id="tipo_movimiento" name="tipo_movimiento" required>
+                                {% for value, label in tipos_movimiento %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                            <small class="text-white-50 mt-1 d-block">
+                                <strong>Para extraordinarias del año 0:</strong> Selecciona "Vac. tomadas antes del registro del empleado"
+                            </small>
+                        </div>
+                    </div>
+                    
+                    {% if empleado.antiguedad_anos < 1 %}
+                    <div class="alert alert-warning mb-3" style="background: rgba(251, 191, 36, 0.2); border: 1px solid rgba(251, 191, 36, 0.4); color: #ffffff;">
+                        <strong><i class="fas fa-info-circle me-2"></i>Empleado con Menos de 1 Año (Año 0)</strong>
+                        <p class="mb-0 mt-2" style="font-size: 0.9rem;">
+                            Las vacaciones extraordinarias tomadas antes del primer aniversario se restarán automáticamente 
+                            de las vacaciones del año 1. Asegúrate de usar el tipo "Vac. tomadas antes del registro del empleado" 
+                            y poner "EXTRAORDINARIA" o "extraordinaria" en el concepto.
+                        </p>
+                    </div>
+                    {% endif %}
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="fecha_registro" class="form-label text-white">Fecha registro *</label>
+                            <input type="date" class="form-control" id="fecha_registro" name="fecha_registro" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="fecha_inicial" class="form-label text-white">Fecha inicial</label>
+                            <input type="date" class="form-control" id="fecha_inicial" name="fecha_inicial">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="fecha_final" class="form-label text-white">Fecha final</label>
+                            <input type="date" class="form-control" id="fecha_final" name="fecha_final">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="tomadas" class="form-label text-white">Tomadas (días)</label>
+                            <input type="number" class="form-control" id="tomadas" name="tomadas" 
+                                   step="0.001" value="0" min="0">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="con_derecho" class="form-label text-white">Con derecho (días)</label>
+                            <input type="number" class="form-control" id="con_derecho" name="con_derecho" 
+                                   step="0.001" value="0" min="0">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label for="observaciones" class="form-label text-white">Observaciones</label>
+                            <textarea class="form-control" id="observaciones" name="observaciones" rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{% url 'empleados:historial_vacaciones_empleado' empleado.id %}" class="btn btn-outline-secondary">
+                            Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-1"></i>Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

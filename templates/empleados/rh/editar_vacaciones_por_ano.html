@@ -1,0 +1,413 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar Vacaciones {{ año }} - {{ empleado.nombre_completo }}{% endblock %}
+
+{% block content %}
+<style>
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/dash/A7C.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+
+.form-container {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border-radius: 20px !important;
+    padding: 2rem !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3) !important;
+    margin-bottom: 2rem !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.info-card {
+    background: rgba(59, 130, 246, 0.2) !important;
+    border: 1px solid rgba(59, 130, 246, 0.4) !important;
+    border-radius: 10px !important;
+    padding: 1rem !important;
+    margin-bottom: 1rem !important;
+}
+
+.form-label {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.form-control, .form-select {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: #000000 !important;
+}
+
+.form-control:focus, .form-select:focus {
+    background: rgba(255, 255, 255, 1) !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25) !important;
+}
+</style>
+
+<div class="container-fluid dashboard">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="dashboard-title">
+                    <i class="fas fa-edit me-2"></i>Editar Vacaciones del Año {{ año }}
+                </h1>
+                <p class="text-white mb-0">{{ empleado.numero_empleado }}. {{ empleado.nombre_completo }}</p>
+            </div>
+            <div>
+                <a href="{% url 'empleados:historial_vacaciones_empleado' empleado.id %}?año={{ año }}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-1"></i>Volver al Historial
+                </a>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <!-- Filtro por Período -->
+            <div class="info-card mb-4">
+                <h6 class="text-white mb-3">
+                    <i class="fas fa-filter me-2"></i>Filtrar por Período
+                </h6>
+                <form method="get" action="{% url 'empleados:editar_vacaciones_por_ano' empleado.id año %}">
+                    <div class="row align-items-end">
+                        <div class="col-md-4">
+                            <label for="mes" class="form-label text-white mb-2">Mes</label>
+                            <select name="mes" id="mes" class="form-select" onchange="this.form.submit()">
+                                <option value="">Todos los meses</option>
+                                {% for mes_num in meses_disponibles %}
+                                    <option value="{{ mes_num }}" {% if mes_filtro == mes_num %}selected{% endif %}>
+                                        {% if mes_num == 1 %}Enero
+                                        {% elif mes_num == 2 %}Febrero
+                                        {% elif mes_num == 3 %}Marzo
+                                        {% elif mes_num == 4 %}Abril
+                                        {% elif mes_num == 5 %}Mayo
+                                        {% elif mes_num == 6 %}Junio
+                                        {% elif mes_num == 7 %}Julio
+                                        {% elif mes_num == 8 %}Agosto
+                                        {% elif mes_num == 9 %}Septiembre
+                                        {% elif mes_num == 10 %}Octubre
+                                        {% elif mes_num == 11 %}Noviembre
+                                        {% elif mes_num == 12 %}Diciembre
+                                        {% endif %}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="año_filtro" class="form-label text-white mb-2">Año</label>
+                            <select name="año_filtro" id="año_filtro" class="form-select" onchange="this.form.submit()">
+                                {% for año_disponible in años_disponibles %}
+                                    <option value="{{ año_disponible }}" {% if año_filtro == año_disponible %}selected{% endif %}>
+                                        {{ año_disponible }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-search me-1"></i>Buscar
+                            </button>
+                        </div>
+                    </div>
+                    {% if mes_filtro and año_filtro %}
+                        <div class="mt-3">
+                            <p class="text-white mb-0">
+                                <strong>Período seleccionado:</strong> 
+                                <span class="badge bg-info">{{ nombre_mes_filtro }} {{ año_filtro }}</span>
+                            </p>
+                        </div>
+                    {% endif %}
+                </form>
+            </div>
+
+            <!-- Sección Especial para Año 0 (Extraordinarias antes del primer aniversario) -->
+            {% if tiene_ano_0 and fecha_ingreso %}
+            <div class="alert alert-warning mb-4" style="background: rgba(251, 191, 36, 0.2); border: 1px solid rgba(251, 191, 36, 0.4); color: #ffffff;">
+                <h6 class="mb-3">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Empleado con Menos de 1 Año (Año 0)
+                </h6>
+                <p class="mb-2">
+                    <strong>Fecha de Ingreso:</strong> {{ fecha_ingreso|date:"d/m/Y" }}<br>
+                    <strong>Primer Aniversario:</strong> 
+                    {% with aniversario=fecha_ingreso|date:"Y"|add:"1" %}
+                        {{ fecha_ingreso|date:"d/m" }}/{{ aniversario }}
+                    {% endwith %}
+                </p>
+                <p class="mb-2" style="font-size: 0.9rem;">
+                    Las <strong>vacaciones extraordinarias</strong> tomadas antes del primer aniversario se restarán de las vacaciones del año 1.
+                </p>
+                <p class="mb-0">
+                    <strong>Para registrar extraordinarias del año 0:</strong><br>
+                    <a href="{% url 'empleados:crear_historial_vacaciones' empleado.id %}" class="btn btn-sm btn-warning mt-2">
+                        <i class="fas fa-plus me-1"></i>Agregar Registro de Extraordinarias (Año 0)
+                    </a>
+                </p>
+                <div class="mt-3">
+                    <small class="text-white-50">
+                        <strong>Instrucciones:</strong> Al crear el registro, usa:<br>
+                        - <strong>Concepto:</strong> "Vacaciones extraordinarias año 0" o "Vac. tomadas antes del registro del empleado"<br>
+                        - <strong>Tipo:</strong> "Vac. tomadas antes del registro del empleado"<br>
+                        - <strong>Fecha:</strong> La fecha en que se tomaron (antes del primer aniversario)<br>
+                        - <strong>Tomadas:</strong> Los días extraordinarios tomados
+                    </small>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Información Actual -->
+            <div class="info-card mb-4">
+                <h6 class="text-white mb-3">
+                    <i class="fas fa-info-circle me-2"></i>Resumen {% if mes_filtro and año_filtro %}del Período{% else %}del Año {{ año }}{% endif %}
+                </h6>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p class="text-white mb-1">
+                            <strong>Vacaciones Normales Tomadas:</strong><br>
+                            <span class="badge bg-primary" style="font-size: 1rem; padding: 0.5rem 1rem;">
+                                {% if mes_filtro and año_filtro %}
+                                    {{ total_normales_periodo|floatformat:3 }} días (período)
+                                {% else %}
+                                    {{ total_normales_actual|floatformat:3 }} días (año completo)
+                                {% endif %}
+                            </span>
+                        </p>
+                        {% if mes_filtro and año_filtro %}
+                            <small class="text-white-50">Total año: {{ total_normales_actual|floatformat:3 }} días</small>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <p class="text-white mb-1">
+                            <strong>Vacaciones Extraordinarias Tomadas:</strong><br>
+                            <span class="badge bg-warning text-dark" style="font-size: 1rem; padding: 0.5rem 1rem;">
+                                {% if mes_filtro and año_filtro %}
+                                    {{ total_extraordinarias_periodo|floatformat:3 }} días (período)
+                                {% else %}
+                                    {{ total_extraordinarias_actual|floatformat:3 }} días (año completo)
+                                {% endif %}
+                            </span>
+                        </p>
+                        {% if mes_filtro and año_filtro %}
+                            <small class="text-white-50">Total año: {{ total_extraordinarias_actual|floatformat:3 }} días</small>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <p class="text-white mb-1">
+                            <strong>Total de Registros:</strong><br>
+                            <span class="badge bg-info" style="font-size: 1rem; padding: 0.5rem 1rem;">
+                                {% if mes_filtro and año_filtro %}
+                                    {{ registros_ano.count }} registros (período)
+                                {% else %}
+                                    {{ registros_ano.count }} registros (año completo)
+                                {% endif %}
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulario de Edición -->
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="dias_normales" class="form-label">
+                                <i class="fas fa-calendar-check me-2"></i>Vacaciones Normales ({{ año }})
+                            </label>
+                            <input type="number" 
+                                   class="form-control" 
+                                   id="dias_normales" 
+                                   name="dias_normales" 
+                                   value="{{ total_normales_actual|floatformat:3 }}" 
+                                   step="0.001" 
+                                   min="0"
+                                   required>
+                            <small class="text-white-50 mt-1 d-block">
+                                Total de días de vacaciones normales tomadas en el año {{ año }}.
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="dias_extraordinarias" class="form-label">
+                                <i class="fas fa-star me-2"></i>Vacaciones Extraordinarias ({{ año }})
+                            </label>
+                            <input type="number" 
+                                   class="form-control" 
+                                   id="dias_extraordinarias" 
+                                   name="dias_extraordinarias" 
+                                   value="{{ total_extraordinarias_actual|floatformat:3 }}" 
+                                   step="0.001" 
+                                   min="0"
+                                   required>
+                            <small class="text-white-50 mt-1 d-block">
+                                Total de días de vacaciones extraordinarias tomadas en el año {{ año }}.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="observaciones" class="form-label">
+                        <i class="fas fa-comment-alt me-2"></i>Observaciones (Opcional)
+                    </label>
+                    <textarea class="form-control" 
+                              id="observaciones" 
+                              name="observaciones" 
+                              rows="3"
+                              placeholder="Notas sobre los cambios realizados..."></textarea>
+                </div>
+
+                <!-- Cálculo según LFT 2023 -->
+                {% if historial_lft %}
+                <div class="mt-4">
+                    <div class="alert alert-info" style="background: rgba(34, 197, 94, 0.2); border: 1px solid rgba(34, 197, 94, 0.4); color: #ffffff;">
+                        <h6 class="mb-3">
+                            <i class="fas fa-calculator me-2"></i>Cálculo según LFT 2023 (Ley Federal del Trabajo)
+                        </h6>
+                        <p class="mb-2">
+                            <strong>Saldo Final Calculado:</strong> 
+                            <span class="badge bg-success" style="font-size: 1rem; padding: 0.5rem 1rem;">
+                                {{ saldo_final_lft|floatformat:2 }} días
+                            </span>
+                        </p>
+                        <p class="mb-0" style="font-size: 0.9rem;">
+                            Este cálculo incluye: días otorgados por aniversarios, vacaciones normales y extraordinarias tomadas, 
+                            y prorrateo acumulado hasta la fecha actual según la LFT 2023.
+                        </p>
+                    </div>
+                    
+                    <details class="mt-3">
+                        <summary class="text-white" style="cursor: pointer; font-weight: 600; font-size: 1rem;">
+                            <i class="fas fa-history me-2"></i>Ver Historial Completo Calculado (LFT)
+                        </summary>
+                        <div class="table-responsive mt-3">
+                            <table class="table table-dark table-sm" style="background: rgba(0, 0, 0, 0.3);">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Concepto</th>
+                                        <th style="text-align: right;">Días Otorgados</th>
+                                        <th style="text-align: right;">Tomadas</th>
+                                        <th style="text-align: right;">Extraordinarios Arrastrados</th>
+                                        <th style="text-align: right;">Saldo Resultante</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in historial_lft %}
+                                    <tr>
+                                        <td>{{ item.fecha|date:"d/m/Y" }}</td>
+                                        <td>{{ item.concepto }}</td>
+                                        <td style="text-align: right;">
+                                            {% if item.dias_otorgados %}
+                                                {{ item.dias_otorgados|floatformat:2 }}
+                                            {% elif item.dias_acumulados %}
+                                                {{ item.dias_acumulados|floatformat:2 }}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                        <td style="text-align: right;">
+                                            {% if item.tomadas %}
+                                                {{ item.tomadas|floatformat:2 }}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                        <td style="text-align: right;">
+                                            {% if item.extraordinarios_arrastrados %}
+                                                {{ item.extraordinarios_arrastrados|floatformat:2 }}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                        <td style="text-align: right; font-weight: 600;" class="{% if item.saldo_resultante >= 0 %}text-success{% else %}text-danger{% endif %}">
+                                            {{ item.saldo_resultante|floatformat:2 }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                </div>
+                {% endif %}
+
+                <!-- Registros del Año -->
+                <div class="mt-4">
+                    <h6 class="text-white mb-3">
+                        <i class="fas fa-list me-2"></i>Registros {% if mes_filtro and año_filtro %}del Período ({{ nombre_mes_filtro }} {{ año_filtro }}){% else %}del Año {{ año }}{% endif %}
+                    </h6>
+                    {% if registros_ano %}
+                    <div class="table-responsive">
+                        <table class="table table-dark table-sm" style="background: rgba(0, 0, 0, 0.3);">
+                            <thead>
+                                <tr>
+                                    <th>Concepto</th>
+                                    <th>Fecha Registro</th>
+                                    <th>Fecha Inicial</th>
+                                    <th>Fecha Final</th>
+                                    <th style="text-align: right;">Tomadas</th>
+                                    <th style="text-align: right;">Con Derecho</th>
+                                    <th style="text-align: right;">Saldo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for registro in registros_ano %}
+                                <tr>
+                                    <td>{{ registro.concepto }}</td>
+                                    <td>{{ registro.fecha_registro|date:"d/m/Y" }}</td>
+                                    <td>{% if registro.fecha_inicial %}{{ registro.fecha_inicial|date:"d/m/Y" }}{% else %}-{% endif %}</td>
+                                    <td>{% if registro.fecha_final %}{{ registro.fecha_final|date:"d/m/Y" }}{% else %}-{% endif %}</td>
+                                    <td style="text-align: right;">{{ registro.tomadas|floatformat:3 }}</td>
+                                    <td style="text-align: right;">{{ registro.con_derecho|floatformat:3 }}</td>
+                                    <td style="text-align: right; font-weight: 600;" class="{% if registro.saldo >= 0 %}text-success{% else %}text-danger{% endif %}">
+                                        {{ registro.saldo|floatformat:3 }}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info" style="background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: #ffffff;">
+                        <i class="fas fa-info-circle me-2"></i>
+                        {% if mes_filtro and año_filtro %}
+                            No hay registros de vacaciones para el período seleccionado ({{ nombre_mes_filtro }} {{ año_filtro }}).
+                        {% else %}
+                            No hay registros de vacaciones para el año {{ año }}.
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="alert alert-warning mt-4" style="background: rgba(251, 191, 36, 0.2); border: 1px solid rgba(251, 191, 36, 0.4); color: #ffffff;">
+                    <strong><i class="fas fa-exclamation-triangle me-2"></i>Importante:</strong>
+                    <ul class="mb-0 mt-2" style="font-size: 0.9rem;">
+                        <li>Al modificar estos valores, se crearán registros de ajuste automático en el historial.</li>
+                        <li>Los saldos se recalcularán automáticamente después de guardar.</li>
+                        <li>Los cambios afectarán el cálculo de vacaciones disponibles del empleado.</li>
+                    </ul>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a href="{% url 'empleados:historial_vacaciones_empleado' empleado.id %}?año={{ año }}" class="btn btn-secondary">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save me-1"></i>Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -130,6 +130,9 @@
                         <a href="{% url 'empleados:reporte_vacaciones_mes' %}" class="btn btn-sm btn-info" style="font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; padding: 0.65rem 1.5rem !important;">
                             <i class="fas fa-chart-bar me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Reporte del Mes
                         </a>
+                        <a href="{% url 'empleados:historial_vacaciones_lista' %}" class="btn btn-sm btn-warning" style="font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; padding: 0.65rem 1.5rem !important;">
+                            <i class="fas fa-history me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Historial de Vacaciones
+                        </a>
                     </div>
                     {% else %}
                         <div class="text-center py-5">
@@ -138,6 +141,17 @@
                             </div>
                             <h5 style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; margin-bottom: 0.5rem !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;">No hay solicitudes de vacaciones pendientes para RH</h5>
                             <p style="color: rgba(255, 255, 255, 0.75) !important; font-family: 'Montserrat', sans-serif !important; margin-bottom: 0 !important;">Todas las solicitudes han sido revisadas.</p>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 mt-4 justify-content-center">
+                            <a href="{% url 'empleados:solicitudes_rh' %}" class="btn btn-sm btn-outline-primary" style="font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; padding: 0.65rem 1.5rem !important;">
+                                <i class="fas fa-list me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Ver todas las solicitudes
+                            </a>
+                            <a href="{% url 'empleados:reporte_vacaciones_mes' %}" class="btn btn-sm btn-info" style="font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; padding: 0.65rem 1.5rem !important;">
+                                <i class="fas fa-chart-bar me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Reporte del Mes
+                            </a>
+                            <a href="{% url 'empleados:historial_vacaciones_lista' %}" class="btn btn-sm btn-warning" style="font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; padding: 0.65rem 1.5rem !important;">
+                                <i class="fas fa-history me-2" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>Historial de Vacaciones
+                            </a>
                         </div>
                     {% endif %}
                 </div>

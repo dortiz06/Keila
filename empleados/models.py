@@ -35,7 +35,9 @@ class Perfil(models.Model):
     dias_vacaciones_anuales = models.PositiveIntegerField(default=20, verbose_name="Días de Vacaciones Anuales")
     dias_vacaciones_usados = models.PositiveIntegerField(default=0, verbose_name="Días de Vacaciones Usados")
     dias_vacaciones_extraordinarios = models.PositiveIntegerField(default=0, verbose_name="Días de Vacaciones Extraordinarios Usados")
+    dias_vacaciones_extraordinarios_ano_anterior = models.PositiveIntegerField(default=0, verbose_name="Días Extraordinarios del Año Anterior (para restar del año actual)")
     dias_vacaciones_acumulados = models.PositiveIntegerField(default=0, verbose_name="Días de Vacaciones Acumulados del Año Anterior")
+    saldo_vacaciones = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Saldo de Vacaciones (Años Anteriores - Gastado)", help_text="Saldo resultante de años anteriores (acumulado - gastado). Puede ser negativo o positivo.")
     ultimo_reset_vacaciones = models.DateField(null=True, blank=True, verbose_name="Último Reset de Vacaciones")
     
     # Auditoría
@@ -108,20 +110,237 @@ class Perfil(models.Model):
             return 18
         elif anos == 5:
             return 20
-        elif 6 <= anos <= 10:
-            return 22
-        elif 11 <= anos <= 15:
-            return 24
-        elif 16 <= anos <= 20:
-            return 26
-        elif 21 <= anos <= 25:
-            return 28
-        elif 26 <= anos <= 30:
-            return 30
-        elif anos >= 31:
-            return 32
         else:
-            return 12  # default
+            # A partir del año 6 aumentan 2 días cada 5 años (LFT 2023)
+            # 6–10 → 22, 11–15 → 24, 16–20 → 26, 21–25 → 28, etc.
+            bloques = (anos - 6) // 5
+            return 22 + (bloques * 2)
+    
+    def calcular_antiguedad_actual(self, fecha_evento=None):
+        """
+        Años completos trabajados hasta la fecha del movimiento.
+        Si no se proporciona fecha_evento, usa la fecha actual.
+        """
+        if not self.fecha_contratacion:
+            return 0
+        
+        if fecha_evento is None:
+            fecha_evento = date.today()
+        
+        return (
+            fecha_evento.year - self.fecha_contratacion.year
+            - ((fecha_evento.month, fecha_evento.day) < 
+               (self.fecha_contratacion.month, self.fecha_contratacion.day))
+        )
+    
+    def dias_trabajados_en_anio(self, fecha_evento=None):
+        """
+        Días desde el último aniversario laboral hasta la fecha indicada.
+        Si no se proporciona fecha_evento, usa la fecha actual.
+        """
+        if not self.fecha_contratacion:
+            return 0
+        
+        if fecha_evento is None:
+            fecha_evento = date.today()
+        
+        # Calcular el último aniversario laboral
+        ultimo_aniv = self.fecha_contratacion.replace(year=fecha_evento.year)
+        if fecha_evento < ultimo_aniv:
+            ultimo_aniv = ultimo_aniv.replace(year=fecha_evento.year - 1)
+        
+        return (fecha_evento - ultimo_aniv).days + 1
+    
+    def calcular_vacaciones_lft(self, fecha_corte=None):
+        """
+        Calcula el historial de vacaciones según la LFT 2023.
+        Retorna un DataFrame con el historial y el saldo final.
+        Similar al código Python proporcionado.
+        """
+        from decimal import Decimal
+        
+        if fecha_corte is None:
+            fecha_corte = date.today()
+        
+        # Obtener todos los registros del historial ordenados por fecha
+        registros = self.historial_vacaciones.all().order_by('fecha_registro', 'fecha_creacion')
+        
+        saldo = Decimal('0.0')
+        historial = []
+        ultimo_anio = -1
+        extraordinarios_acumulados = Decimal('0.0')
+        
+        for registro in registros:
+            fecha = registro.fecha_registro
+            concepto = registro.concepto.lower()
+            tomadas = Decimal(str(registro.tomadas))
+            con_derecho = Decimal(str(registro.con_derecho))
+            
+            # Calcular antigüedad en la fecha del movimiento
+            anio_actual = self.calcular_antiguedad_actual(fecha)
+            
+            # Si cambia al siguiente año laboral → otorgar días
+            # anio_actual = 0 significa antes del primer aniversario
+            # anio_actual = 1 significa que cumplió 1 año, etc.
+            if anio_actual != ultimo_anio:
+                if anio_actual == 1:
+                    # Cambió del año 0 al año 1: otorgar días del año 1 menos extraordinarias del año 0
+                    dias_oficiales = 12
+                    # Restar extraordinarios acumulados del año 0 (permitir saldo negativo)
+                    dias_netos = Decimal(str(dias_oficiales)) - extraordinarios_acumulados
+                    saldo += dias_netos
+                    
+                    historial.append({
+                        'fecha': fecha,
+                        'concepto': f'Inicio Año {anio_actual}',
+                        'dias_otorgados': float(dias_netos),
+                        'extraordinarios_arrastrados': float(extraordinarios_acumulados),
+                        'saldo_resultante': float(saldo),
+                        'tipo': 'ANIVERSARIO'
+                    })
+                    
+                    extraordinarios_acumulados = Decimal('0.0')
+                    ultimo_anio = anio_actual
+                elif anio_actual > 1:
+                    # Cambió a un año mayor: otorgar días según LFT
+                    if anio_actual == 2:
+                        dias_oficiales = 14
+                    elif anio_actual == 3:
+                        dias_oficiales = 16
+                    elif anio_actual == 4:
+                        dias_oficiales = 18
+                    elif anio_actual == 5:
+                        dias_oficiales = 20
+                    else:
+                        bloques = (anio_actual - 6) // 5
+                        dias_oficiales = 22 + (bloques * 2)
+                    
+                    # Restar extraordinarios pendientes del año anterior (permitir saldo negativo)
+                    dias_netos = Decimal(str(dias_oficiales)) - extraordinarios_acumulados
+                    saldo += dias_netos
+                    
+                    historial.append({
+                        'fecha': fecha,
+                        'concepto': f'Inicio Año {anio_actual}',
+                        'dias_otorgados': float(dias_netos),
+                        'extraordinarios_arrastrados': float(extraordinarios_acumulados),
+                        'saldo_resultante': float(saldo),
+                        'tipo': 'ANIVERSARIO'
+                    })
+                    
+                    extraordinarios_acumulados = Decimal('0.0')
+                    ultimo_anio = anio_actual
+                elif anio_actual == 0:
+                    # Está en el año 0, solo actualizar el último año
+                    ultimo_anio = 0
+            
+            # Procesar movimientos de vacaciones tomadas (después de procesar cambio de año)
+            # Solo procesar si hay tomadas > 0 y no es un registro de aniversario que ya se procesó arriba
+            if tomadas > 0:
+                # Verificar si es vacaciones normales o extraordinarias
+                es_extraordinaria = (
+                    'extraordinaria' in concepto or 
+                    'emergencia' in concepto or 
+                    registro.tipo_movimiento == 'VACACIONES_ANTES_REGISTRO'
+                )
+                
+                if es_extraordinaria:
+                    # Vacaciones extraordinarias
+                    saldo -= tomadas
+                    extraordinarios_acumulados += tomadas
+                    historial.append({
+                        'fecha': fecha,
+                        'concepto': registro.concepto,
+                        'tomadas': float(tomadas),
+                        'saldo_resultante': float(saldo),
+                        'tipo': 'EXTRAORDINARIA'
+                    })
+                elif 'vacaciones' in concepto or registro.tipo_movimiento == 'VACACIONES_TOMADAS':
+                    # Vacaciones normales
+                    saldo -= tomadas
+                    historial.append({
+                        'fecha': fecha,
+                        'concepto': registro.concepto,
+                        'tomadas': float(tomadas),
+                        'saldo_resultante': float(saldo),
+                        'tipo': 'NORMAL'
+                    })
+                elif registro.tipo_movimiento == 'AJUSTE_MANUAL':
+                    # Ajustes manuales: si tomadas es negativo, resta; si es positivo, suma
+                    saldo += tomadas  # tomadas puede ser negativo para ajustes
+                    historial.append({
+                        'fecha': fecha,
+                        'concepto': registro.concepto,
+                        'tomadas': float(tomadas),
+                        'saldo_resultante': float(saldo),
+                        'tipo': 'AJUSTE'
+                    })
+            
+            # Procesar días con derecho (aniversarios, ajustes, etc.)
+            # Solo si no es un aniversario que ya se procesó arriba cuando cambió el año
+            if con_derecho > 0:
+                # Si es un aniversario que ya se procesó arriba, no procesarlo de nuevo
+                es_aniversario_procesado = (
+                    anio_actual != ultimo_anio and 
+                    anio_actual >= 1 and 
+                    ('aniversario' in concepto or registro.tipo_movimiento == 'ANIVERSARIO_LABORAL')
+                )
+                
+                if not es_aniversario_procesado:
+                    saldo += con_derecho
+                    historial.append({
+                        'fecha': fecha,
+                        'concepto': registro.concepto,
+                        'dias_otorgados': float(con_derecho),
+                        'saldo_resultante': float(saldo),
+                        'tipo': 'CON_DERECHO'
+                    })
+        
+        # Cálculo de prorrateo (hasta hoy)
+        if ultimo_anio >= 1:
+            # Calcular días correspondientes al año actual (el año que está cumpliendo)
+            if ultimo_anio == 1:
+                dias_corresponde_ano_actual = 12
+            elif ultimo_anio == 2:
+                dias_corresponde_ano_actual = 14
+            elif ultimo_anio == 3:
+                dias_corresponde_ano_actual = 16
+            elif ultimo_anio == 4:
+                dias_corresponde_ano_actual = 18
+            elif ultimo_anio == 5:
+                dias_corresponde_ano_actual = 20
+            else:
+                bloques = (ultimo_anio - 6) // 5
+                dias_corresponde_ano_actual = 22 + (bloques * 2)
+            
+            dias_trab = self.dias_trabajados_en_anio(fecha_corte)
+            prorrateo = Decimal(str(dias_corresponde_ano_actual)) * Decimal(str(dias_trab)) / Decimal('365')
+            saldo_final = saldo + prorrateo
+            
+            historial.append({
+                'fecha': fecha_corte,
+                'concepto': f'Prorrateo acumulado (año {ultimo_anio}, {dias_trab} días trabajados)',
+                'dias_acumulados': float(prorrateo),
+                'saldo_resultante': float(saldo_final),
+                'tipo': 'PRORRATEO'
+            })
+        elif ultimo_anio == 0:
+            # Empleado con menos de 1 año, calcular prorrateo del primer año
+            dias_trab = self.dias_trabajados_en_anio(fecha_corte)
+            prorrateo = Decimal('12') * Decimal(str(dias_trab)) / Decimal('365')
+            saldo_final = saldo + prorrateo
+            
+            historial.append({
+                'fecha': fecha_corte,
+                'concepto': f'Prorrateo acumulado (año 0, {dias_trab} días trabajados)',
+                'dias_acumulados': float(prorrateo),
+                'saldo_resultante': float(saldo_final),
+                'tipo': 'PRORRATEO'
+            })
+        else:
+            saldo_final = saldo
+        
+        return historial, float(saldo_final)
 
 
     @property
@@ -133,7 +352,9 @@ class Perfil(models.Model):
             self.save(update_fields=['dias_vacaciones_anuales'])
         
         # Incluir días acumulados del año anterior
-        return (self.dias_vacaciones_anuales + self.dias_vacaciones_acumulados) - self.dias_vacaciones_usados
+        # Restar días usados normales Y días extraordinarios usados
+        total_disponible = (self.dias_vacaciones_anuales + self.dias_vacaciones_acumulados) - self.dias_vacaciones_usados - self.dias_vacaciones_extraordinarios
+        return max(0, total_disponible)  # No permitir valores negativos
     
     @property
     def dias_vacaciones_extraordinarios_disponibles(self):
@@ -286,31 +507,28 @@ class Perfil(models.Model):
         return round(dias_acumulados, 4)
     
     def calcular_total_disponible_proyectado(self):
-        """Calcula total de días disponibles: año anterior completado + acumulado este año - usados (con decimales)"""
+        """
+        Calcula total de días disponibles día con día.
+        Fórmula: Saldo (años anteriores) + Días acumulados (hasta hoy)
+        El prorrateo se calcula dinámicamente según la fecha actual.
+        """
+        from datetime import date
+        from decimal import Decimal
         
         if not self.fecha_contratacion:
-            return 0
+            return Decimal('0')
         
-        # Para empleados con menos de 1 año
-        if self.antiguedad_anos < 1:
-            return round(self.dias_vacaciones_segun_antiguedad - self.dias_vacaciones_usados, 4)
+        # Saldo de años anteriores (puede ser negativo o positivo)
+        saldo = Decimal(str(self.saldo_vacaciones))
         
-        # Para empleados con 1+ años:
-        # Días del año laboral anterior completado (ej: año 1 = 12 días si está en año 2)
-        ano_laboral_anterior = self.antiguedad_anos
-        dias_ano_anterior_completado = self.calcular_dias_segun_ano_laboral(ano_laboral_anterior)
+        # Días acumulados hasta hoy en el año actual (proporcional, se actualiza día con día)
+        dias_acumulados_hasta_hoy = Decimal(str(self.calcular_dias_acumulados_hasta_hoy()))
         
-        # Días acumulados hasta hoy en el año laboral actual (ej: año 2 = 3.51 días de 14)
-        dias_acumulados_ano_actual = self.calcular_dias_acumulados_hasta_hoy()
+        # Total = Saldo (años anteriores) + Días acumulados (hasta hoy)
+        # Este cálculo se actualiza automáticamente día con día
+        total = saldo + dias_acumulados_hasta_hoy
         
-        # Días ya usados
-        dias_usados = self.dias_vacaciones_usados
-        
-        # Total = Año anterior completo + Acumulado año actual - Usados
-        # Ejemplo: 12 (año 1) + 3.5342 (acumulado año 2) - 8 (usados) = 7.5342 días
-        total = dias_ano_anterior_completado + dias_acumulados_ano_actual - dias_usados
-        
-        return round(total, 4)
+        return round(total, 4)  # Permitir valores negativos
     
     @property
     def mostrar_seccion_ano_anterior(self):
@@ -320,14 +538,20 @@ class Perfil(models.Model):
     
     @property
     def dias_ano_anterior_completado(self):
-        """Retorna los días del año laboral anterior completado"""
+        """Retorna los días del año laboral anterior completado, restando las extraordinarias del año anterior"""
         if self.antiguedad_anos < 1:
             return 0
         
         # Año laboral anterior = antiguedad actual
         # Ejemplo: si tiene 1 año, el año anterior fue el año 1 = 12 días
         ano_laboral_anterior = self.antiguedad_anos
-        return self.calcular_dias_segun_ano_laboral(ano_laboral_anterior)
+        dias_ano_anterior = self.calcular_dias_segun_ano_laboral(ano_laboral_anterior)
+        
+        # Restar las vacaciones extraordinarias que se tomaron en el año anterior
+        # Estas se restan de las vacaciones que le corresponden este año
+        dias_netos = dias_ano_anterior - self.dias_vacaciones_extraordinarios_ano_anterior
+        
+        return max(0, dias_netos)  # No permitir valores negativos
     
     @property
     def dias_al_finalizar_ano_actual(self):
@@ -367,6 +591,9 @@ class Perfil(models.Model):
         if self.ultimo_reset_vacaciones and self.ultimo_reset_vacaciones.year == date.today().year:
             return False
         
+        # Guardar las extraordinarias del año anterior antes de resetear
+        extraordinarias_ano_anterior = self.dias_vacaciones_extraordinarios
+        
         # Calcular días no usados del año anterior
         dias_no_usados = max(0, self.dias_vacaciones_anuales - self.dias_vacaciones_usados)
         
@@ -374,12 +601,22 @@ class Perfil(models.Model):
         dias_a_acumular = dias_no_usados
         
         # Actualizar días anuales según nueva antigüedad ANTES de resetear
-        nuevos_dias_anuales = int(self.dias_vacaciones_segun_antiguedad)
+        nuevos_dias_anuales_base = int(self.dias_vacaciones_segun_antiguedad)
+        
+        # Restar las vacaciones extraordinarias del año anterior de los nuevos días anuales
+        # Las extraordinarias se restan de las vacaciones que le corresponden este año
+        nuevos_dias_anuales = max(0, nuevos_dias_anuales_base - extraordinarias_ano_anterior)
         
         # Resetear contadores del año
         self.dias_vacaciones_usados = 0
         self.ultimo_reset_vacaciones = date.today()
         self.dias_vacaciones_anuales = nuevos_dias_anuales
+        
+        # Guardar las extraordinarias del año anterior para referencia
+        self.dias_vacaciones_extraordinarios_ano_anterior = extraordinarias_ano_anterior
+        
+        # Resetear el contador de extraordinarias del año actual
+        self.dias_vacaciones_extraordinarios = 0
         
         # Acumular días no usados del año anterior
         if dias_a_acumular > 0:
@@ -389,7 +626,9 @@ class Perfil(models.Model):
             'dias_vacaciones_acumulados', 
             'dias_vacaciones_usados', 
             'ultimo_reset_vacaciones',
-            'dias_vacaciones_anuales'
+            'dias_vacaciones_anuales',
+            'dias_vacaciones_extraordinarios',
+            'dias_vacaciones_extraordinarios_ano_anterior'
         ])
         
         return True
@@ -603,8 +842,14 @@ class SolicitudVacaciones(models.Model):
         self.comentarios_rh = comentario
         self.fecha_aprobacion_rh = timezone.now()
         
-        # Actualizar días usados del empleado
+        # Actualizar días usados del empleado según el tipo de vacación
+        if self.tipo == 'EXTRAORDINARIA' or self.tipo == 'EMERGENCIA':
+            # Las vacaciones extraordinarias se restan de las vacaciones del año
+            self.empleado.dias_vacaciones_extraordinarios += self.dias_solicitados
+        else:
+            # Vacaciones normales
         self.empleado.dias_vacaciones_usados += self.dias_solicitados
+        
         self.empleado.save()
         
         self.save()
@@ -623,6 +868,79 @@ class SolicitudVacaciones(models.Model):
         self.fecha_aprobacion_rh = timezone.now()
         self.save()
         return True
+
+
+class HistorialVacaciones(models.Model):
+    """Historial de vacaciones tomadas en años anteriores - editable por RH y Admin"""
+    TIPOS_MOVIMIENTO = [
+        ('VACACIONES_TOMADAS', 'Vacaciones tomadas'),
+        ('VACACIONES_ANTES_REGISTRO', 'Vac. tomadas antes del registro del empleado'),
+        ('ANIVERSARIO_LABORAL', 'Aniversario laboral al finalizar I'),
+        ('AJUSTE_MANUAL', 'Ajuste manual'),
+        ('OTRO', 'Otro'),
+    ]
+    
+    empleado = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='historial_vacaciones', 
+                                verbose_name="Empleado")
+    concepto = models.CharField(max_length=200, verbose_name="Concepto")
+    tipo_movimiento = models.CharField(max_length=50, choices=TIPOS_MOVIMIENTO, default='VACACIONES_TOMADAS', 
+                                      verbose_name="Tipo de Movimiento")
+    fecha_registro = models.DateField(verbose_name="Fecha registro")
+    fecha_inicial = models.DateField(null=True, blank=True, verbose_name="Fecha inicial")
+    fecha_final = models.DateField(null=True, blank=True, verbose_name="Fecha final")
+    tomadas = models.DecimalField(max_digits=10, decimal_places=3, default=0, verbose_name="Tomadas")
+    con_derecho = models.DecimalField(max_digits=10, decimal_places=3, default=0, verbose_name="Con derecho")
+    saldo = models.DecimalField(max_digits=10, decimal_places=3, default=0, verbose_name="Saldo")
+    observaciones = models.TextField(blank=True, verbose_name="Observaciones")
+    
+    # Auditoría
+    creado_por = models.ForeignKey(Perfil, on_delete=models.SET_NULL, null=True, blank=True,
+                                  related_name='historial_vacaciones_creadas', verbose_name="Creado por")
+    fecha_creacion = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Creación")
+    fecha_actualizacion = models.DateTimeField(auto_now=True, verbose_name="Fecha de Actualización")
+    
+    class Meta:
+        verbose_name = "Historial de Vacaciones"
+        verbose_name_plural = "Historial de Vacaciones"
+        ordering = ['empleado', 'fecha_registro', '-fecha_creacion']
+    
+    def __str__(self):
+        return f"{self.empleado.nombre_completo} - {self.concepto} ({self.fecha_registro})"
+    
+    def save(self, *args, **kwargs):
+        # Guardar primero para tener el pk
+        super().save(*args, **kwargs)
+        
+        # Recalcular todos los saldos desde el principio para asegurar consistencia
+        # Esto es importante porque el orden cronológico puede afectar el cálculo
+        self._recalcular_todos_los_saldos()
+    
+    def _recalcular_todos_los_saldos(self):
+        """Recalcula el saldo de TODOS los registros del empleado desde el principio"""
+        # Obtener todos los registros ordenados por fecha_registro y fecha_creacion
+        registros = HistorialVacaciones.objects.filter(
+            empleado=self.empleado
+        ).order_by('fecha_registro', 'fecha_creacion')
+        
+        # Calcular saldo acumulativo desde el principio
+        saldo_actual = 0
+        registros_a_actualizar = []
+        
+        for registro in registros:
+            # Calcular: saldo anterior + con derecho - tomadas
+            saldo_actual = saldo_actual + registro.con_derecho - registro.tomadas
+            registros_a_actualizar.append((registro.pk, saldo_actual))
+        
+        # Actualizar todos los registros con sus saldos calculados
+        for pk, saldo in registros_a_actualizar:
+            HistorialVacaciones.objects.filter(pk=pk).update(saldo=saldo)
+        
+        # Actualizar el saldo del registro actual también
+        if self.pk:
+            saldo_final = next((saldo for pk_reg, saldo in registros_a_actualizar if pk_reg == self.pk), 0)
+            self.saldo = saldo_final
+            # Guardar el saldo actualizado
+            HistorialVacaciones.objects.filter(pk=self.pk).update(saldo=saldo_final)
 
 
 class ConfiguracionSistema(models.Model):

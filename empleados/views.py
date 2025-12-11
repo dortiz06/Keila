@@ -9,12 +9,12 @@ from django.core.exceptions import PermissionDenied
 from django.utils import timezone
 from django.urls import reverse
 from django import forms
-from .models import Perfil, Departamento, SolicitudVacaciones, ConfiguracionSistema, Ticket, Equipo, AsignacionEquipo
+from .models import Perfil, Departamento, SolicitudVacaciones, ConfiguracionSistema, Ticket, Equipo, AsignacionEquipo, HistorialVacaciones
 from .forms import (
     UsuarioConPerfilForm, SolicitudVacacionesForm, 
     AprobacionJefeForm, AprobacionAdminForm, AprobacionRHForm, EditarPerfilForm, ConfigurarDepartamentoForm
 )
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 from reportlab.lib.pagesizes import letter, A4
 from reportlab.lib import colors
 from reportlab.lib.units import cm
@@ -1816,17 +1816,16 @@ def kardex_vacaciones(request):
     for empleado in empleados:
         # Vacaciones del año actual
         dias_anuales = empleado.dias_vacaciones_anuales
-        dias_usados = empleado.dias_vacaciones_usados
+        saldo = float(empleado.saldo_vacaciones)  # Saldo de años anteriores (puede ser negativo)
         dias_acumulados_ano_actual = empleado.calcular_dias_acumulados_hasta_hoy()
-        dias_ano_anterior = empleado.dias_vacaciones_acumulados
         
-        # Calcular total disponible
+        # Calcular total disponible: Saldo + Días acumulados año actual
         total_disponible = empleado.calcular_total_disponible_proyectado()
         
         empleados_data.append({
             'empleado': empleado,
             'dias_anuales': dias_anuales,
-            'dias_usados': dias_usados,
+            'saldo': round(saldo, 2),
             'dias_acumulados_ano_actual': round(dias_acumulados_ano_actual, 2),
             'total_disponible': round(total_disponible, 2),
             'antiguedad': empleado.antiguedad_detallada,
@@ -1935,15 +1934,15 @@ def generar_excel_kardex(request):
             
             # Calcular datos de vacaciones
             dias_anuales = empleado.dias_vacaciones_anuales
-            dias_usados = empleado.dias_vacaciones_usados
+            saldo = float(empleado.saldo_vacaciones)  # Saldo de años anteriores
             dias_acumulados_ano_actual = round(empleado.calcular_dias_acumulados_hasta_hoy(), 2)
-            dias_ano_anterior = empleado.dias_vacaciones_acumulados
-            total_saldo = dias_ano_anterior + dias_acumulados_ano_actual
+            total_disponible = round(empleado.calcular_total_disponible_proyectado(), 2)
             
             # Verificar si ha cumplido un año completo (usar la propiedad del modelo)
             ha_cumplido_ano = empleado.antiguedad_anos >= 1
             
-            # Calcular antigüedad exacta con años, meses y días (sin depender de dateutil)
+            # Calcular antigüedad exacta con años, meses y días trabajados
+            # Contando desde la fecha de contratación (inclusive) hasta hoy (inclusive)
             from datetime import date, timedelta
             from calendar import monthrange
             
@@ -1953,41 +1952,71 @@ def generar_excel_kardex(request):
             if fecha_contratacion:
                 years = empleado.antiguedad_anos
                 
+                # Si tiene menos de 1 año, calcular desde fecha_contratacion
+                # Si tiene 1+ años, calcular desde el último aniversario
+                if years < 1:
+                    fecha_inicio = fecha_contratacion
+                else:
                 # Calcular la fecha del último aniversario
                 if fecha_actual.month < fecha_contratacion.month or (fecha_actual.month == fecha_contratacion.month and fecha_actual.day < fecha_contratacion.day):
-                    ultimo_aniversario = date(fecha_actual.year - 1, fecha_contratacion.month, fecha_contratacion.day)
+                        fecha_inicio = date(fecha_actual.year - 1, fecha_contratacion.month, fecha_contratacion.day)
                 else:
-                    ultimo_aniversario = date(fecha_actual.year, fecha_contratacion.month, fecha_contratacion.day)
+                        fecha_inicio = date(fecha_actual.year, fecha_contratacion.month, fecha_contratacion.day)
                 
-                # Calcular meses y días desde el último aniversario
+                # Calcular meses calendario trabajados y días
+                # Contar meses calendario en los que trabajó (septiembre, octubre, noviembre, etc.)
+                # Si trabajó en septiembre (parcial), octubre (completo) y noviembre (completo) = 3 meses
                 months = 0
-                fecha_temp = ultimo_aniversario
+                days = 0
                 
-                # Calcular meses completos
-                while fecha_temp < fecha_actual:
-                    # Obtener días del mes actual
-                    dias_en_mes = monthrange(fecha_temp.year, fecha_temp.month)[1]
-                    fecha_siguiente_mes = fecha_temp + timedelta(days=dias_en_mes)
-                    
-                    if fecha_siguiente_mes <= fecha_actual:
-                        months += 1
-                        fecha_temp = fecha_siguiente_mes
-                    else:
-                        break
-                
-                # Calcular días restantes
-                if fecha_temp < fecha_actual:
-                    days = (fecha_actual - fecha_temp).days
+                # Si estamos en el mismo mes y año
+                if fecha_inicio.year == fecha_actual.year and fecha_inicio.month == fecha_actual.month:
+                    # Contar días desde fecha_inicio hasta fecha_actual (ambos inclusive)
+                    days = (fecha_actual - fecha_inicio).days + 1
                 else:
-                    days = 0
+                    # El mes inicial siempre cuenta como 1 mes si tiene días trabajados
+                    dias_en_mes_inicial = monthrange(fecha_inicio.year, fecha_inicio.month)[1]
+                    dias_mes_inicial = dias_en_mes_inicial - fecha_inicio.day + 1  # +1 porque fecha_inicio es inclusive
+                    if dias_mes_inicial > 0:
+                        months += 1  # El mes inicial cuenta como 1 mes
+                    
+                    # Contar meses calendario completos trabajados (meses enteros entre el mes inicial y el actual)
+                    # Avanzar al primer día del siguiente mes
+                    if fecha_inicio.month == 12:
+                        fecha_temp = date(fecha_inicio.year + 1, 1, 1)
+                    else:
+                        fecha_temp = date(fecha_inicio.year, fecha_inicio.month + 1, 1)
+                    
+                    # Contar cada mes calendario completo trabajado
+                    while fecha_temp.year < fecha_actual.year or (fecha_temp.year == fecha_actual.year and fecha_temp.month < fecha_actual.month):
+                        months += 1
+                        
+                        # Avanzar al siguiente mes
+                        if fecha_temp.month == 12:
+                            fecha_temp = date(fecha_temp.year + 1, 1, 1)
+                    else:
+                            fecha_temp = date(fecha_temp.year, fecha_temp.month + 1, 1)
+                
+                    # Contar días del mes actual (desde el día 1 hasta fecha_actual, inclusive)
+                    # El mes actual NO se cuenta como mes completo, solo se muestran sus días
+                    if fecha_temp.year == fecha_actual.year and fecha_temp.month == fecha_actual.month:
+                        days = fecha_actual.day  # Días del 1 al día actual (inclusive)
+                else:
+                        # Si no hay mes actual (no debería pasar), mantener días del mes inicial
+                        days = dias_mes_inicial
                 
                 # Formatear antigüedad con años, meses y días
                 partes = []
                 if years > 0:
                     partes.append(f'{years} año{"s" if years != 1 else ""}')
+                
+                # Mostrar meses completos
                 if months > 0:
                     partes.append(f'{months} mes{"es" if months != 1 else ""}')
-                if days > 0:
+                
+                # Mostrar días trabajados solo si NO hay meses (empleado muy nuevo)
+                # Si hay meses, no mostrar días adicionales del mes actual
+                if days > 0 and months == 0:
                     partes.append(f'{days} día{"s" if days != 1 else ""}')
                 
                 if partes:
@@ -2039,10 +2068,11 @@ def generar_excel_kardex(request):
             cell.alignment = center_alignment
             cell.fill = PatternFill(start_color="DBEAFE", end_color="BFDBFE", fill_type="solid")  # Azul claro
             
-            # Columna 2: Días Usados (naranja)
+            # Columna 2: Saldo (naranja) - puede ser negativo o positivo
             cell = ws.cell(row=row, column=2)
-            cell.value = f'{dias_usados} días'
-            cell.font = Font(bold=True, size=11, name="Arial")
+            saldo_str = f'{saldo:.2f} días' if saldo != 0 else '0.00 días'
+            cell.value = saldo_str
+            cell.font = Font(bold=True, size=11, name="Arial", color="DC2626" if saldo < 0 else "059669")
             cell.border = border_style
             cell.alignment = center_alignment
             cell.fill = PatternFill(start_color="FED7AA", end_color="FDBA74", fill_type="solid")  # Naranja claro
@@ -2164,11 +2194,11 @@ def generar_pdf_kardex(request):
     elements.append(Spacer(1, 0.5*cm))
     
     # Preparar datos para la tabla
-    data = [['Empleado', 'Depto', 'Antigüedad', 'Días Anuales', 'Días Usados', 'Acum. Año Actual', 'Total Disponible']]
+    data = [['Empleado', 'Depto', 'Antigüedad', 'Días Anuales', 'Saldo', 'Acum. Año Actual', 'Total Disponible']]
     
     for empleado in empleados:
         dias_anuales = empleado.dias_vacaciones_anuales
-        dias_usados = empleado.dias_vacaciones_usados
+        saldo = float(empleado.saldo_vacaciones)  # Saldo de años anteriores
         dias_acumulados_ano_actual = round(empleado.calcular_dias_acumulados_hasta_hoy(), 2)
         total_disponible = round(empleado.calcular_total_disponible_proyectado(), 2)
         
@@ -2180,7 +2210,7 @@ def generar_pdf_kardex(request):
             depto,
             empleado.antiguedad_detallada[:12],
             str(dias_anuales),
-            str(dias_usados),
+            f'{saldo:.2f}',
             str(dias_acumulados_ano_actual),
             str(total_disponible),
         ])
@@ -2893,6 +2923,556 @@ def generar_excel_reporte_vacaciones_csv(request):
         ])
     
     return response
+
+
+# === GESTIÓN DE HISTORIAL DE VACACIONES (RH Y ADMIN) ===
+
+@login_required
+def historial_vacaciones_lista(request):
+    """Lista de empleados para ver su historial de vacaciones"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+        raise PermissionDenied
+    
+    empleados = Perfil.objects.filter(activo=True).order_by('usuario__last_name', 'usuario__first_name')
+    
+    # Buscar si hay un parámetro de búsqueda
+    query = request.GET.get('q', '')
+    if query:
+        empleados = empleados.filter(
+            Q(usuario__first_name__icontains=query) |
+            Q(usuario__last_name__icontains=query) |
+            Q(numero_empleado__icontains=query)
+        )
+    
+    context = {
+        'empleados': empleados,
+        'perfil': perfil,
+        'query': query,
+    }
+    return render(request, 'empleados/rh/historial_vacaciones_lista.html', context)
+
+
+@login_required
+def historial_vacaciones_empleado(request, empleado_id):
+    """Ver historial de vacaciones de un empleado específico, agrupado por años"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+        raise PermissionDenied
+    
+    empleado = get_object_or_404(Perfil, pk=empleado_id)
+    from datetime import date
+    from collections import defaultdict
+    
+    # Obtener todo el historial ordenado
+    historial_completo = HistorialVacaciones.objects.filter(empleado=empleado).order_by('fecha_registro', 'fecha_creacion')
+    
+    # Obtener año seleccionado (si existe)
+    año_seleccionado = request.GET.get('año', None)
+    if año_seleccionado:
+        try:
+            año_seleccionado = int(año_seleccionado)
+            historial = historial_completo.filter(fecha_registro__year=año_seleccionado)
+        except (ValueError, TypeError):
+            año_seleccionado = None
+            historial = historial_completo
+    else:
+        historial = historial_completo
+    
+    # Agrupar historial por años
+    historial_por_ano = defaultdict(list)
+    años_disponibles = set()
+    
+    for registro in historial_completo:
+        año = registro.fecha_registro.year
+        años_disponibles.add(año)
+        historial_por_ano[año].append(registro)
+    
+    # Calcular totales por año (vacaciones normales y extraordinarias)
+    from decimal import Decimal
+    resumen_por_ano = {}
+    for año, registros in historial_por_ano.items():
+        total_normales = Decimal('0')
+        total_extraordinarias = Decimal('0')
+        
+        for r in registros:
+            # Incluir ajustes manuales
+            if r.tipo_movimiento == 'AJUSTE_MANUAL':
+                if 'normales' in r.concepto.lower():
+                    total_normales += r.tomadas
+                elif 'extraordinarias' in r.concepto.lower():
+                    total_extraordinarias += r.tomadas
+            # Vacaciones normales: tipo VACACIONES_TOMADAS que no sean extraordinarias
+            elif r.tipo_movimiento == 'VACACIONES_TOMADAS' and 'EXTRAORDINARIA' not in r.concepto.upper():
+                total_normales += r.tomadas
+            # Vacaciones extraordinarias
+            elif ('EXTRAORDINARIA' in r.concepto.upper() or 
+                  r.tipo_movimiento == 'VACACIONES_ANTES_REGISTRO' or
+                  'EMERGENCIA' in r.concepto.upper()):
+                total_extraordinarias += r.tomadas
+        
+        total_con_derecho = sum(r.con_derecho for r in registros)
+        
+        # Obtener el último saldo del año
+        ultimo_registro = max(registros, key=lambda r: (r.fecha_registro, r.fecha_creacion))
+        saldo_final_ano = ultimo_registro.saldo
+        
+        resumen_por_ano[año] = {
+            'total_normales': total_normales,
+            'total_extraordinarias': total_extraordinarias,
+            'total_con_derecho': total_con_derecho,
+            'saldo_final': saldo_final_ano,
+            'cantidad_registros': len(registros)
+        }
+    
+    # Obtener solicitudes de vacaciones extraordinarias aprobadas este año
+    solicitudes_extraordinarias_ano = SolicitudVacaciones.objects.filter(
+        empleado=empleado,
+        tipo__in=['EXTRAORDINARIA', 'EMERGENCIA'],
+        estado='APROBADO_RH',
+        fecha_aprobacion_rh__year=date.today().year
+    ).order_by('-fecha_aprobacion_rh')
+    
+    total_extraordinarias_ano = sum(s.dias_solicitados for s in solicitudes_extraordinarias_ano)
+    
+    context = {
+        'empleado': empleado,
+        'historial': historial,
+        'historial_completo': historial_completo,
+        'historial_por_ano': dict(sorted(historial_por_ano.items())),
+        'resumen_por_ano': dict(sorted(resumen_por_ano.items())),
+        'años_disponibles': sorted(años_disponibles, reverse=True),
+        'año_seleccionado': año_seleccionado,
+        'perfil': perfil,
+        'solicitudes_extraordinarias_ano': solicitudes_extraordinarias_ano,
+        'total_extraordinarias_ano': total_extraordinarias_ano,
+    }
+    return render(request, 'empleados/rh/historial_vacaciones_empleado.html', context)
+
+
+@login_required
+def crear_historial_vacaciones(request, empleado_id):
+    """Crear un nuevo registro en el historial de vacaciones"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+        raise PermissionDenied
+    
+    empleado = get_object_or_404(Perfil, pk=empleado_id)
+    
+    if request.method == 'POST':
+        concepto = request.POST.get('concepto', '')
+        tipo_movimiento = request.POST.get('tipo_movimiento', 'VACACIONES_TOMADAS')
+        fecha_registro = request.POST.get('fecha_registro', '')
+        fecha_inicial = request.POST.get('fecha_inicial', '') or None
+        fecha_final = request.POST.get('fecha_final', '') or None
+        tomadas = request.POST.get('tomadas', '0') or '0'
+        con_derecho = request.POST.get('con_derecho', '0') or '0'
+        observaciones = request.POST.get('observaciones', '')
+        
+        try:
+            from decimal import Decimal
+            historial = HistorialVacaciones.objects.create(
+                empleado=empleado,
+                concepto=concepto,
+                tipo_movimiento=tipo_movimiento,
+                fecha_registro=datetime.strptime(fecha_registro, '%Y-%m-%d').date() if fecha_registro else date.today(),
+                fecha_inicial=datetime.strptime(fecha_inicial, '%Y-%m-%d').date() if fecha_inicial else None,
+                fecha_final=datetime.strptime(fecha_final, '%Y-%m-%d').date() if fecha_final else None,
+                tomadas=Decimal(tomadas),
+                con_derecho=Decimal(con_derecho),
+                observaciones=observaciones,
+                creado_por=perfil,
+            )
+            messages.success(request, 'Registro de historial creado exitosamente.')
+            return redirect('empleados:historial_vacaciones_empleado', empleado_id=empleado_id)
+        except Exception as e:
+            messages.error(request, f'Error al crear el registro: {str(e)}')
+    
+    context = {
+        'empleado': empleado,
+        'perfil': perfil,
+        'tipos_movimiento': HistorialVacaciones.TIPOS_MOVIMIENTO,
+    }
+    return render(request, 'empleados/rh/crear_historial_vacaciones.html', context)
+
+
+@login_required
+def editar_historial_vacaciones(request, historial_id):
+    """Editar un registro del historial de vacaciones"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+        raise PermissionDenied
+    
+    historial = get_object_or_404(HistorialVacaciones, pk=historial_id)
+    
+    if request.method == 'POST':
+        historial.concepto = request.POST.get('concepto', '')
+        historial.tipo_movimiento = request.POST.get('tipo_movimiento', 'VACACIONES_TOMADAS')
+        fecha_registro = request.POST.get('fecha_registro', '')
+        fecha_inicial = request.POST.get('fecha_inicial', '') or None
+        fecha_final = request.POST.get('fecha_final', '') or None
+        tomadas = request.POST.get('tomadas', '0') or '0'
+        con_derecho = request.POST.get('con_derecho', '0') or '0'
+        historial.observaciones = request.POST.get('observaciones', '')
+        
+        try:
+            from decimal import Decimal
+            if fecha_registro:
+                historial.fecha_registro = datetime.strptime(fecha_registro, '%Y-%m-%d').date()
+            if fecha_inicial:
+                historial.fecha_inicial = datetime.strptime(fecha_inicial, '%Y-%m-%d').date()
+            else:
+                historial.fecha_inicial = None
+            if fecha_final:
+                historial.fecha_final = datetime.strptime(fecha_final, '%Y-%m-%d').date()
+            else:
+                historial.fecha_final = None
+            historial.tomadas = Decimal(tomadas)
+            historial.con_derecho = Decimal(con_derecho)
+            historial.save()
+            messages.success(request, 'Registro de historial actualizado exitosamente.')
+            return redirect('empleados:historial_vacaciones_empleado', empleado_id=historial.empleado.id)
+        except Exception as e:
+            messages.error(request, f'Error al actualizar el registro: {str(e)}')
+    
+    context = {
+        'historial': historial,
+        'perfil': perfil,
+        'tipos_movimiento': HistorialVacaciones.TIPOS_MOVIMIENTO,
+    }
+    return render(request, 'empleados/rh/editar_historial_vacaciones.html', context)
+
+
+@login_required
+def eliminar_historial_vacaciones(request, historial_id):
+    """Eliminar un registro del historial de vacaciones"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+        raise PermissionDenied
+    
+    historial = get_object_or_404(HistorialVacaciones, pk=historial_id)
+    empleado_id = historial.empleado.id
+    
+    if request.method == 'POST':
+        historial.delete()
+        messages.success(request, 'Registro de historial eliminado exitosamente.')
+        return redirect('empleados:historial_vacaciones_empleado', empleado_id=empleado_id)
+    
+    context = {
+        'historial': historial,
+        'perfil': perfil,
+    }
+    return render(request, 'empleados/rh/eliminar_historial_vacaciones.html', context)
+
+
+# === EDICIÓN DE VACACIONES DE EMPLEADOS (RH Y ADMIN) ===
+
+@login_required
+def editar_vacaciones_empleado(request, empleado_id):
+    """Editar vacaciones de un empleado específico"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+        raise PermissionDenied
+    
+    empleado = get_object_or_404(Perfil, pk=empleado_id)
+    
+    if request.method == 'POST':
+        try:
+            # Obtener valores del formulario
+            dias_usados = int(request.POST.get('dias_vacaciones_usados', 0) or 0)
+            dias_extraordinarios = int(request.POST.get('dias_vacaciones_extraordinarios', 0) or 0)
+            dias_acumulados = int(request.POST.get('dias_vacaciones_acumulados', 0) or 0)
+            dias_extraordinarios_ano_anterior = int(request.POST.get('dias_vacaciones_extraordinarios_ano_anterior', 0) or 0)
+            dias_anuales = int(request.POST.get('dias_vacaciones_anuales', 0) or 0)
+            
+            # Actualizar campos
+            empleado.dias_vacaciones_usados = max(0, dias_usados)
+            empleado.dias_vacaciones_extraordinarios = max(0, dias_extraordinarios)
+            empleado.dias_vacaciones_acumulados = max(0, dias_acumulados)
+            empleado.dias_vacaciones_extraordinarios_ano_anterior = max(0, dias_extraordinarios_ano_anterior)
+            
+            # Si se especificaron días anuales, actualizarlos
+            if dias_anuales > 0:
+                empleado.dias_vacaciones_anuales = dias_anuales
+            
+            empleado.save(update_fields=[
+                'dias_vacaciones_usados',
+                'dias_vacaciones_extraordinarios',
+                'dias_vacaciones_acumulados',
+                'dias_vacaciones_extraordinarios_ano_anterior',
+                'dias_vacaciones_anuales'
+            ])
+            
+            messages.success(request, f'Vacaciones de {empleado.nombre_completo} actualizadas exitosamente.')
+            return redirect('empleados:editar_vacaciones_empleado', empleado_id=empleado_id)
+        except Exception as e:
+            messages.error(request, f'Error al actualizar las vacaciones: {str(e)}')
+    
+    # Calcular información para mostrar
+    antiguedad_anos = empleado.antiguedad_anos
+    dias_anuales_calculados = empleado.dias_vacaciones_segun_antiguedad
+    dias_disponibles = empleado.dias_vacaciones_disponibles
+    total_disponible_proyectado = empleado.calcular_total_disponible_proyectado()
+    
+    # Obtener solicitudes de vacaciones extraordinarias aprobadas este año
+    from datetime import date
+    solicitudes_extraordinarias_ano = SolicitudVacaciones.objects.filter(
+        empleado=empleado,
+        tipo__in=['EXTRAORDINARIA', 'EMERGENCIA'],
+        estado='APROBADO_RH',
+        fecha_aprobacion_rh__year=date.today().year
+    ).order_by('-fecha_aprobacion_rh')
+    
+    total_extraordinarias_ano = sum(s.dias_solicitados for s in solicitudes_extraordinarias_ano)
+    
+    # Calcular historial según LFT 2023
+    historial_lft, saldo_final_lft = empleado.calcular_vacaciones_lft()
+    
+    # Verificar si el empleado tiene menos de 1 año (año 0)
+    fecha_ingreso = empleado.fecha_contratacion
+    tiene_ano_0 = False
+    aniversario_ano = None
+    if fecha_ingreso:
+        años_completos = empleado.calcular_antiguedad_actual(date.today())
+        tiene_ano_0 = años_completos == 0
+        aniversario_ano = fecha_ingreso.year + 1
+    
+    context = {
+        'empleado': empleado,
+        'perfil': perfil,
+        'antiguedad_anos': antiguedad_anos,
+        'dias_anuales_calculados': dias_anuales_calculados,
+        'dias_disponibles': dias_disponibles,
+        'total_disponible_proyectado': total_disponible_proyectado,
+        'solicitudes_extraordinarias_ano': solicitudes_extraordinarias_ano,
+        'total_extraordinarias_ano': total_extraordinarias_ano,
+        'historial_lft': historial_lft,
+        'saldo_final_lft': saldo_final_lft,
+        'tiene_ano_0': tiene_ano_0,
+        'fecha_ingreso': fecha_ingreso,
+        'aniversario_ano': aniversario_ano,
+    }
+    return render(request, 'empleados/rh/editar_vacaciones_empleado.html', context)
+
+
+@login_required
+def editar_vacaciones_por_ano(request, empleado_id, año):
+    """Editar vacaciones normales y extraordinarias de un año específico"""
+    perfil = get_user_profile(request.user)
+    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+        raise PermissionDenied
+    
+    empleado = get_object_or_404(Perfil, pk=empleado_id)
+    
+    try:
+        año = int(año)
+    except (ValueError, TypeError):
+        messages.error(request, 'Año inválido.')
+        return redirect('empleados:historial_vacaciones_empleado', empleado_id=empleado_id)
+    
+    from datetime import date
+    from collections import defaultdict
+    from decimal import Decimal
+    
+    # Obtener parámetros de filtro por período (mes y año)
+    mes_filtro = request.GET.get('mes', None)
+    año_filtro = request.GET.get('año_filtro', año)
+    
+    try:
+        if mes_filtro:
+            mes_filtro = int(mes_filtro)
+        if año_filtro:
+            año_filtro = int(año_filtro)
+    except (ValueError, TypeError):
+        mes_filtro = None
+        año_filtro = año
+    
+    # Obtener todos los registros del año seleccionado
+    registros_ano_completo = HistorialVacaciones.objects.filter(
+        empleado=empleado,
+        fecha_registro__year=año
+    ).order_by('fecha_registro', 'fecha_creacion')
+    
+    # Filtrar por período si se especificó
+    if mes_filtro and año_filtro:
+        registros_ano = registros_ano_completo.filter(
+            fecha_registro__year=año_filtro,
+            fecha_registro__month=mes_filtro
+        )
+    else:
+        registros_ano = registros_ano_completo
+    
+    # Calcular totales actuales del año completo (incluyendo ajustes manuales)
+    total_normales_actual = Decimal('0')
+    total_extraordinarias_actual = Decimal('0')
+    
+    for r in registros_ano_completo:
+        # Excluir ajustes manuales del cálculo base (se sumarán después si es necesario)
+        if r.tipo_movimiento == 'AJUSTE_MANUAL':
+            if 'normales' in r.concepto.lower():
+                # Los ajustes de normales ya están incluidos en el total si son positivos
+                # Si son negativos, restan del total
+                total_normales_actual += r.tomadas
+            elif 'extraordinarias' in r.concepto.lower():
+                total_extraordinarias_actual += r.tomadas
+        elif r.tipo_movimiento == 'VACACIONES_TOMADAS' and 'EXTRAORDINARIA' not in r.concepto.upper():
+            total_normales_actual += r.tomadas
+        elif ('EXTRAORDINARIA' in r.concepto.upper() or 
+              r.tipo_movimiento == 'VACACIONES_ANTES_REGISTRO' or
+              'EMERGENCIA' in r.concepto.upper()):
+            total_extraordinarias_actual += r.tomadas
+    
+    # Calcular totales del período filtrado (si hay filtro)
+    total_normales_periodo = Decimal('0')
+    total_extraordinarias_periodo = Decimal('0')
+    
+    if mes_filtro and año_filtro:
+        for r in registros_ano:
+            if r.tipo_movimiento == 'AJUSTE_MANUAL':
+                if 'normales' in r.concepto.lower():
+                    total_normales_periodo += r.tomadas
+                elif 'extraordinarias' in r.concepto.lower():
+                    total_extraordinarias_periodo += r.tomadas
+            elif r.tipo_movimiento == 'VACACIONES_TOMADAS' and 'EXTRAORDINARIA' not in r.concepto.upper():
+                total_normales_periodo += r.tomadas
+            elif ('EXTRAORDINARIA' in r.concepto.upper() or 
+                  r.tipo_movimiento == 'VACACIONES_ANTES_REGISTRO' or
+                  'EMERGENCIA' in r.concepto.upper()):
+                total_extraordinarias_periodo += r.tomadas
+    
+    if request.method == 'POST':
+        try:
+            dias_normales = Decimal(request.POST.get('dias_normales', '0') or '0')
+            dias_extraordinarias = Decimal(request.POST.get('dias_extraordinarias', '0') or '0')
+            observaciones = request.POST.get('observaciones', '').strip()
+            
+            # Calcular diferencias
+            diferencia_normales = dias_normales - total_normales_actual
+            diferencia_extraordinarias = dias_extraordinarias - total_extraordinarias_actual
+            
+            # Si hay diferencia, crear o actualizar registros de ajuste
+            if diferencia_normales != 0 or diferencia_extraordinarias != 0:
+                # Si hay diferencia en normales, crear un registro de ajuste
+                if diferencia_normales != 0:
+                    # Buscar si hay un registro de ajuste para este año
+                    ajuste_normales = HistorialVacaciones.objects.filter(
+                        empleado=empleado,
+                        fecha_registro__year=año,
+                        concepto__icontains=f'Ajuste vacaciones normales {año}',
+                        tipo_movimiento='AJUSTE_MANUAL'
+                    ).first()
+                    
+                    if ajuste_normales:
+                        # Actualizar registro existente
+                        ajuste_normales.tomadas = diferencia_normales
+                        ajuste_normales.observaciones = observaciones or f'Ajuste manual de vacaciones normales para el año {año}. Diferencia: {diferencia_normales:+.3f} días'
+                        ajuste_normales.save()
+                    else:
+                        # Crear nuevo registro de ajuste
+                        # Si la diferencia es positiva, significa que se agregaron días (tomadas aumentan)
+                        # Si la diferencia es negativa, significa que se quitaron días (tomadas disminuyen)
+                        fecha_ajuste = date(año, 12, 31)  # Fecha al final del año
+                        HistorialVacaciones.objects.create(
+                            empleado=empleado,
+                            concepto=f'Ajuste vacaciones normales {año}',
+                            tipo_movimiento='AJUSTE_MANUAL',
+                            fecha_registro=fecha_ajuste,
+                            tomadas=diferencia_normales,  # Puede ser positivo o negativo
+                            con_derecho=Decimal('0'),
+                            observaciones=observaciones or f'Ajuste manual de vacaciones normales para el año {año}. Total ajustado: {dias_normales} días (diferencia: {diferencia_normales:+.3f} días)',
+                            creado_por=perfil
+                        )
+                
+                # Si hay diferencia en extraordinarias, crear un registro de ajuste
+                if diferencia_extraordinarias != 0:
+                    ajuste_extraordinarias = HistorialVacaciones.objects.filter(
+                        empleado=empleado,
+                        fecha_registro__year=año,
+                        concepto__icontains=f'Ajuste vacaciones extraordinarias {año}',
+                        tipo_movimiento='AJUSTE_MANUAL'
+                    ).first()
+                    
+                    if ajuste_extraordinarias:
+                        # Actualizar registro existente
+                        ajuste_extraordinarias.tomadas = diferencia_extraordinarias
+                        ajuste_extraordinarias.observaciones = observaciones or f'Ajuste manual de vacaciones extraordinarias para el año {año}. Diferencia: {diferencia_extraordinarias:+.3f} días'
+                        ajuste_extraordinarias.save()
+                    else:
+                        # Crear nuevo registro de ajuste
+                        fecha_ajuste = date(año, 12, 31)  # Fecha al final del año
+                        HistorialVacaciones.objects.create(
+                            empleado=empleado,
+                            concepto=f'Ajuste vacaciones extraordinarias {año}',
+                            tipo_movimiento='AJUSTE_MANUAL',
+                            fecha_registro=fecha_ajuste,
+                            tomadas=diferencia_extraordinarias,  # Puede ser positivo o negativo
+                            con_derecho=Decimal('0'),
+                            observaciones=observaciones or f'Ajuste manual de vacaciones extraordinarias para el año {año}. Total ajustado: {dias_extraordinarias} días (diferencia: {diferencia_extraordinarias:+.3f} días)',
+                            creado_por=perfil
+                        )
+                
+                messages.success(request, f'Vacaciones del año {año} actualizadas exitosamente.')
+            else:
+                messages.info(request, 'No se realizaron cambios.')
+            
+            return redirect('empleados:historial_vacaciones_empleado', empleado_id=empleado_id)
+            
+        except Exception as e:
+            messages.error(request, f'Error al actualizar las vacaciones: {str(e)}')
+    
+    # Obtener años disponibles para el selector
+    años_disponibles = HistorialVacaciones.objects.filter(
+        empleado=empleado
+    ).values_list('fecha_registro__year', flat=True).distinct().order_by('-fecha_registro__year')
+    
+    # Verificar si el empleado tiene menos de 1 año (año 0)
+    from datetime import date
+    fecha_ingreso = empleado.fecha_contratacion
+    tiene_ano_0 = False
+    if fecha_ingreso:
+        años_completos = empleado.calcular_antiguedad_actual(date.today())
+        tiene_ano_0 = años_completos == 0
+    
+    # Obtener meses disponibles para el año seleccionado
+    meses_disponibles = HistorialVacaciones.objects.filter(
+        empleado=empleado,
+        fecha_registro__year=año
+    ).values_list('fecha_registro__month', flat=True).distinct().order_by('fecha_registro__month')
+    
+    # Nombres de meses en español
+    nombres_meses = {
+        1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril', 5: 'Mayo', 6: 'Junio',
+        7: 'Julio', 8: 'Agosto', 9: 'Septiembre', 10: 'Octubre', 11: 'Noviembre', 12: 'Diciembre'
+    }
+    
+    # Obtener nombre del mes filtrado si existe
+    nombre_mes_filtro = nombres_meses.get(mes_filtro, '') if mes_filtro else ''
+    
+    # Calcular historial según LFT 2023
+    historial_lft, saldo_final_lft = empleado.calcular_vacaciones_lft()
+    
+    context = {
+        'empleado': empleado,
+        'año': año,
+        'perfil': perfil,
+        'registros_ano': registros_ano,
+        'registros_ano_completo': registros_ano_completo,
+        'total_normales_actual': total_normales_actual,
+        'total_extraordinarias_actual': total_extraordinarias_actual,
+        'total_normales_periodo': total_normales_periodo,
+        'total_extraordinarias_periodo': total_extraordinarias_periodo,
+        'años_disponibles': años_disponibles,
+        'meses_disponibles': meses_disponibles,
+        'nombres_meses': nombres_meses,
+        'mes_filtro': mes_filtro,
+        'año_filtro': año_filtro,
+        'nombre_mes_filtro': nombre_mes_filtro,
+        'historial_lft': historial_lft,
+        'saldo_final_lft': saldo_final_lft,
+        'tiene_ano_0': tiene_ano_0,
+        'fecha_ingreso': fecha_ingreso,
+    }
+    return render(request, 'empleados/rh/editar_vacaciones_por_ano.html', context)
 
 
 # === VISTAS DE ERROR ===

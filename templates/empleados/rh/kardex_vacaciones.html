@@ -269,7 +269,7 @@ body {
                             <th>Departamento</th>
                             <th>Antigüedad</th>
                             <th>Días Anuales</th>
-                            <th>Días Usados</th>
+                            <th>Saldo</th>
                             <th>Acumulado Año Actual</th>
                             <th style="border-radius: 0 12px 0 0;">Total Disponible</th>
                         </tr>
@@ -293,9 +293,10 @@ body {
                                 </span>
                             </td>
                             <td>
-                                <span class="badge-vacaciones badge-acumulado">
-                                    {{ data.dias_usados }} días
+                                <span class="badge-vacaciones" style="color: {% if data.saldo < 0 %}#ef4444{% else %}#10b981{% endif %}; font-weight: 600;">
+                                    {{ data.saldo }} días
                                 </span>
+                                
                             </td>
                             <td>
                                 <span class="badge-vacaciones badge-acumulado">
@@ -303,7 +304,7 @@ body {
                                 </span>
                             </td>
                             <td>
-                                <span class="badge-vacaciones badge-total">
+                                <span class="badge-vacaciones badge-total" style="color: {% if data.total_disponible < 0 %}#ef4444{% else %}#10b981{% endif %};">
                                     {{ data.total_disponible }} días
                                 </span>
                             </td>
