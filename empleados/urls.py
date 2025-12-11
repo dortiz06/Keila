@@ -75,6 +75,10 @@ urlpatterns = [
     
     # === PERFIL DE USUARIO ===
     path('perfil/', auth_views.perfil_usuario, name='perfil_usuario'),
+    
+    # === MANUAL DE USUARIO ===
+    path('manual/agregar-equipo/', views.manual_agregar_equipo, name='manual_agregar_equipo'),
+    path('manual/errores-soporte/', views.manual_errores, name='manual_errores'),
 ]
 
 # URLs de error

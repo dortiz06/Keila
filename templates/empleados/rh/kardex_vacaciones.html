@@ -5,321 +5,553 @@
 
 {% block content %}
 <style>
-/* Fondo similar al dashboard */
+/* Fondo similar al inventario */
 body {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('{% static "images/dash/A7C.jpg" %}') !important;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.65)), url('{% static "images/dash/mionca.jpg" %}') !important;
     background-size: cover !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
     background-attachment: fixed !important;
 }
+</style>
 
-.kardex-container {
-    background: rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
+<div class="container-fluid dashboard">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="dashboard-title" style="color: #ffffff !important; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 0 3px 12px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 0, 0, 0.5) !important;">
+                <i class="fas fa-file-alt me-2"></i>Kardex de Vacaciones
+            </h1>
+            <div>
+                <a href="{% url 'empleados:generar_excel_kardex' %}" class="btn btn-outline-success">
+                    <i class="fas fa-file-excel me-1"></i>Descargar Excel
+                </a>
+                <a href="{% url 'empleados:generar_pdf_kardex' %}" class="btn btn-outline-danger">
+                    <i class="fas fa-file-pdf me-1"></i>Descargar PDF
+                </a>
+                <a href="{% url 'empleados:reporte_vacaciones_mes' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-chart-bar me-1"></i>Reporte Vacaciones
+                </a>
+                <a href="{% url 'empleados:rh_dashboard' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>Volver
+                </a>
+            </div>
+        </div>
+
+        <!-- Tabla de empleados -->
+        <div class="card" style="overflow: hidden !important; border-radius: 20px !important;">
+            <div class="card-body" style="background: transparent !important; padding: 0 !important; overflow: hidden !important; border-radius: 20px !important;">
+                {% if empleados_data %}
+                    <div class="table-responsive" style="background: transparent !important; overflow-x: auto !important; overflow-y: hidden !important; border-radius: 0 !important;">
+                        <table class="table table-hover" style="width: 100% !important;">
+                            <thead>
+                                <tr>
+                                    <th style="color: #ffffff !important;"><i class="fas fa-user me-1"></i>Empleado</th>
+                                    <th style="color: #ffffff !important;"><i class="fas fa-building me-1"></i>Departamento</th>
+                                    <th style="color: #ffffff !important;"><i class="fas fa-clock me-1"></i>Antigüedad</th>
+                                    <th style="color: #ffffff !important;"><i class="fas fa-calendar-alt me-1"></i>Días Anuales</th>
+                                    <th style="color: #ffffff !important;"><i class="fas fa-calendar-minus me-1"></i>Días Usados</th>
+                                    <th style="color: #ffffff !important;"><i class="fas fa-calendar-check me-1"></i>Acumulado Año Actual</th>
+                                    <th style="color: #ffffff !important;"><i class="fas fa-calendar-plus me-1"></i>Total Disponible</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for data in empleados_data %}
+                                <tr style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
+                                    <td style="color: #ffffff !important;">
+                                        <div class="d-flex align-items-center">
+                                            <div class="kardex-avatar">
+                                                {{ data.empleado.nombre_completo|first|upper }}
+                                            </div>
+                                            <div class="ms-2">
+                                                <strong>{{ data.empleado.nombre_completo }}</strong>
+                                                <br>
+                                                <small>{{ data.empleado.puesto|default:"Sin puesto" }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="color: #ffffff !important;">{{ data.empleado.departamento.nombre|default:"Sin departamento" }}</td>
+                                    <td>
+                                        <span class="badge-vacaciones badge-antiguedad">{{ data.antiguedad }}</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge-vacaciones badge-anual">
+                                            {{ data.dias_anuales }} días
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge-vacaciones badge-usados">
+                                            {{ data.dias_usados }} días
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge-vacaciones badge-acumulado">
+                                            {{ data.dias_acumulados_ano_actual }} días
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge-vacaciones badge-total">
+                                            {{ data.total_disponible }} días
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="7" class="text-center py-4">
+                                        <p style="color: rgba(255, 255, 255, 0.8) !important;">No hay empleados registrados</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-users fa-3x mb-3" style="color: rgba(255, 255, 255, 0.5) !important;"></i>
+                        <h5 style="color: #ffffff !important;">No se encontraron empleados</h5>
+                        <p style="color: rgba(255, 255, 255, 0.8) !important;">No hay empleados registrados en el sistema.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Aplicar estilos del dashboard a la vista de kardex - Igual que inventario */
+.dashboard .card {
+    background: rgba(60, 60, 60, 0.4) !important;
+    backdrop-filter: blur(25px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
     border-radius: 20px !important;
-    padding: 2rem !important;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3) !important;
-    margin-bottom: 2rem !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 
+                0 4px 16px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    overflow: hidden !important;
+    position: relative !important;
 }
 
-.kardex-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+.dashboard .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 20px;
+    pointer-events: none;
+    z-index: 1;
 }
 
-.kardex-title {
-    font-size: 2rem !important;
-    font-weight: 700 !important;
-    color: #ffffff !important;
-    font-family: 'Montserrat', sans-serif !important;
-    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 0 5px 20px rgba(0, 0, 0, 0.85) !important;
-}
-
-.kardex-header p {
-    color: rgba(255, 255, 255, 0.9) !important;
-    font-weight: 500 !important;
-    font-family: 'Montserrat', sans-serif !important;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
-}
-
-.kardex-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
+.dashboard .card-body {
     background: transparent !important;
+    overflow: hidden !important;
+    border-radius: 20px !important;
+    position: relative !important;
+    z-index: 2 !important;
 }
 
-.kardex-table thead {
-    background: linear-gradient(135deg, 
-        rgba(59, 130, 246, 0.9) 0%, 
-        rgba(37, 99, 235, 0.95) 50%,
-        rgba(29, 78, 216, 1) 100%) !important;
-    color: white !important;
-    border-radius: 20px 20px 0 0 !important;
+.dashboard .card-body > * {
+    position: relative !important;
+    z-index: 3 !important;
+}
+
+.dashboard .table-responsive {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+    padding: 1.5rem !important;
+}
+
+.dashboard .table {
+    background: transparent !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    width: 100% !important;
+    margin-bottom: 0 !important;
+    border-radius: 0 !important;
     overflow: hidden !important;
 }
 
-.kardex-table th {
-    padding: 1rem !important;
-    text-align: left !important;
-    font-weight: 600 !important;
-    font-size: 0.9rem !important;
-    font-family: 'Montserrat', sans-serif !important;
-    color: #ffffff !important;
+.dashboard .table thead {
+    background: transparent !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+}
+
+.dashboard .table thead th {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     border: none !important;
-}
-
-.kardex-table thead tr th:first-child {
-    border-radius: 20px 0 0 0 !important;
-}
-
-.kardex-table thead tr th:last-child {
-    border-radius: 0 20px 0 0 !important;
-}
-
-.kardex-table td {
-    padding: 1rem !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-    font-size: 0.9rem !important;
-    background: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
     color: #ffffff !important;
+    font-weight: 600 !important;
+    padding: 14px 12px !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+    border-radius: 0 !important;
+    letter-spacing: 0.3px !important;
+    font-family: 'Montserrat', sans-serif !important;
 }
 
-.kardex-table tbody tr {
+.dashboard .table thead th:not(:first-child) {
+    border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
+    padding-left: 12px !important;
+}
+
+.dashboard .table tbody {
     background: transparent !important;
-    transition: background-color 0.2s ease !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
 }
 
-.kardex-table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.1) !important;
+.dashboard .table tbody tr {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border-radius: 0 !important;
 }
 
+/* Patrón zebra striping sutil - alternar opacidad de filas */
+.dashboard .table tbody tr:nth-child(odd) {
+    background: rgba(255, 255, 255, 0.03) !important;
+}
+
+.dashboard .table tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.06) !important;
+}
+
+.dashboard .table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.12) !important;
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+    transform: translateY(-1px) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.dashboard .table tbody tr:last-child {
+    border-bottom: none !important;
+}
+
+.dashboard .table tbody tr:first-child td {
+    padding-top: 16px !important;
+}
+
+.dashboard .table tbody tr:last-child td {
+    padding-bottom: 16px !important;
+}
+
+.dashboard .table tbody td {
+    background: transparent !important;
+    border: none !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
+    padding: 14px 12px !important;
+    color: #ffffff !important;
+    vertical-align: middle !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7), 
+                 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+    border-radius: 0 !important;
+    font-weight: 400 !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .table tbody td:first-child,
+.dashboard .table thead th:first-child {
+    border-left: none !important;
+    padding-left: 16px !important;
+}
+
+.dashboard .table tbody td:last-child,
+.dashboard .table thead th:last-child {
+    padding-right: 16px !important;
+}
+
+.dashboard .table tbody td strong {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 
+                 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .table tbody td small {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Avatar para kardex */
+.kardex-avatar {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(37, 99, 235, 0.9)) !important;
+    color: #ffffff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    border: 2px solid rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3) !important;
+}
+
+.dashboard-title {
+    color: #ffffff !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 
+                 0 3px 12px rgba(0, 0, 0, 0.6),
+                 0 0 20px rgba(0, 0, 0, 0.5) !important;
+    font-weight: 700 !important;
+    margin-bottom: 0 !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Badges de vacaciones - Estilo glassmorphism como la imagen */
 .badge-vacaciones {
-    padding: 0.5rem 0.9rem !important;
-    border-radius: 10px !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 50px !important;
     font-weight: 600 !important;
     font-size: 0.85rem !important;
     font-family: 'Montserrat', sans-serif !important;
     display: inline-block !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+    white-space: nowrap !important;
+    transition: all 0.2s ease !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(12px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.25),
+        0 2px 6px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1) !important;
+    position: relative !important;
+    overflow: hidden !important;
 }
 
+/* Highlight sutil en la parte superior */
+.badge-vacaciones::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 50% !important;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), transparent) !important;
+    pointer-events: none !important;
+    border-radius: 50px 50px 0 0 !important;
+}
+
+/* Antigüedad - Gris azulado con glassmorphism */
+.badge-antiguedad {
+    background: rgba(107, 114, 128, 0.5) !important;
+}
+
+/* Días Anuales - Morado con glassmorphism */
 .badge-anual {
-    background: linear-gradient(135deg, 
-        rgba(59, 130, 246, 0.3) 0%, 
-        rgba(37, 99, 235, 0.4) 100%) !important;
-    color: #ffffff !important;
-    border-color: rgba(59, 130, 246, 0.5) !important;
+    background: rgba(157, 120, 190, 0.5) !important;
 }
 
+/* Días Usados - Naranja/Marrón con glassmorphism */
+.badge-usados {
+    background: rgba(217, 119, 6, 0.5) !important;
+}
+
+/* Acumulado Año Actual - Naranja/Marrón con glassmorphism (mismo que Días Usados) */
 .badge-acumulado {
-    background: linear-gradient(135deg, 
-        rgba(251, 191, 36, 0.3) 0%, 
-        rgba(245, 158, 11, 0.4) 100%) !important;
-    color: #ffffff !important;
-    border-color: rgba(251, 191, 36, 0.5) !important;
+    background: rgba(217, 119, 6, 0.5) !important;
 }
 
-.badge-anterior {
-    background: linear-gradient(135deg, 
-        rgba(168, 85, 247, 0.3) 0%, 
-        rgba(147, 51, 234, 0.4) 100%) !important;
-    color: #ffffff !important;
-    border-color: rgba(168, 85, 247, 0.5) !important;
-}
-
+/* Total Disponible - Verde con glassmorphism */
 .badge-total {
-    background: linear-gradient(135deg, 
-        rgba(34, 197, 94, 0.4) 0%, 
-        rgba(22, 163, 74, 0.5) 100%) !important;
-    color: #ffffff !important;
-    font-size: 1rem !important;
+    background: rgba(34, 197, 94, 0.5) !important;
+    font-size: 0.9rem !important;
     font-weight: 700 !important;
-    border-color: rgba(34, 197, 94, 0.6) !important;
-    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3) !important;
 }
 
-.btn-reporte-vacaciones {
+/* Efecto hover con glassmorphism */
+.badge-vacaciones:hover {
+    border-color: rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.3),
+        0 3px 8px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* ===== ESTILOS DE BOTONES DEL DASHBOARD ===== */
+.dashboard .btn-outline-primary {
     background: linear-gradient(180deg, 
-        rgba(74, 222, 128, 0.95) 0%, 
-        rgba(34, 197, 94, 0.95) 50%,
-        rgba(22, 163, 74, 1) 100%) !important;
-    color: white !important;
-    border: none !important;
-    padding: 0.75rem 1.5rem !important;
-    border-radius: 14px !important;
-    font-weight: 600 !important;
-    text-decoration: none !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 0.5rem !important;
-    transition: all 0.3s ease !important;
-    font-family: 'Montserrat', sans-serif !important;
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
     box-shadow: 
         0 4px 12px rgba(0, 0, 0, 0.3),
         0 2px 6px rgba(0, 0, 0, 0.2),
         inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    font-family: 'Montserrat', sans-serif !important;
 }
 
-.btn-reporte-vacaciones:hover,
-.btn-descargar-excel:hover,
-.btn-descargar-pdf:hover {
+.dashboard .btn-outline-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
     transform: translateY(-2px) !important;
     box-shadow: 
         0 6px 16px rgba(0, 0, 0, 0.35),
         0 3px 8px rgba(0, 0, 0, 0.25),
         inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
-    color: white !important;
 }
 
-.btn-descargar-excel:hover {
+.dashboard .btn-outline-success {
+    background: linear-gradient(180deg, 
+        rgba(34, 197, 94, 0.95) 0%, 
+        rgba(22, 163, 74, 0.95) 50%,
+        rgba(15, 118, 50, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .btn-outline-success:hover {
     background: linear-gradient(180deg, 
         rgba(74, 222, 128, 0.95) 0%, 
         rgba(34, 197, 94, 0.95) 50%,
         rgba(22, 163, 74, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
 }
 
-.btn-descargar-pdf:hover {
+.dashboard .btn-outline-danger {
     background: linear-gradient(180deg, 
         rgba(248, 113, 113, 0.95) 0%, 
         rgba(239, 68, 68, 0.95) 50%,
         rgba(220, 38, 38, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    font-family: 'Montserrat', sans-serif !important;
 }
 
-.btn-reporte-vacaciones:hover {
+.dashboard .btn-outline-danger:hover {
     background: linear-gradient(180deg, 
-        rgba(134, 239, 172, 0.95) 0%, 
-        rgba(74, 222, 128, 0.95) 50%,
-        rgba(34, 197, 94, 1) 100%) !important;
+        rgba(252, 165, 165, 0.95) 0%, 
+        rgba(248, 113, 113, 0.95) 50%,
+        rgba(239, 68, 68, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
 }
 
-.empleado-nombre {
+.dashboard .btn-outline-secondary {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
     font-weight: 600 !important;
     color: #ffffff !important;
-    font-family: 'Montserrat', sans-serif !important;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
-}
-
-.empleado-depto {
-    font-size: 0.85rem !important;
-    color: rgba(255, 255, 255, 0.8) !important;
-    margin-top: 0.25rem !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
     font-family: 'Montserrat', sans-serif !important;
 }
 
-.antiguedad-badge {
-    background: linear-gradient(135deg, 
-        rgba(156, 163, 175, 0.3) 0%, 
-        rgba(107, 114, 128, 0.4) 100%) !important;
-    color: #ffffff !important;
-    padding: 0.4rem 0.7rem !important;
-    border-radius: 8px !important;
-    font-size: 0.8rem !important;
-    font-weight: 600 !important;
-    font-family: 'Montserrat', sans-serif !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+.dashboard .btn-outline-secondary:hover {
+    background: linear-gradient(180deg, 
+        rgba(209, 213, 219, 0.95) 0%, 
+        rgba(156, 163, 175, 0.95) 50%,
+        rgba(107, 114, 128, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
 }
 
-.kardex-table tbody td {
-    font-family: 'Montserrat', sans-serif !important;
+/* Asegurar que los iconos Font Awesome usen su fuente correcta */
+.dashboard i,
+.dashboard .fa,
+.dashboard [class*="fa-"] {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Asegurar que el contenedor principal tenga padding lateral y límite de ancho */
+.dashboard > .container,
+.container-fluid.dashboard > .container {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    max-width: 1320px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    overflow-x: visible !important;
+}
+
+@media (min-width: 992px) and (max-width: 1399px) {
+    .dashboard > .container,
+    .container-fluid.dashboard > .container {
+        max-width: 1140px !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .dashboard > .container,
+    .container-fluid.dashboard > .container {
+        max-width: 100% !important;
+    }
+}
+
+/* Asegurar que las cards no se solapen */
+.dashboard .card {
+    margin-bottom: 1.5rem !important;
+    position: relative !important;
+    z-index: 1 !important;
 }
 </style>
-
-<div class="container-fluid">
-    <div class="container">
-        <div class="kardex-container">
-            <div class="kardex-header">
-                <div>
-                    <h1 class="kardex-title">
-                        <i class="fas fa-file-alt me-2"></i>Kardex de Vacaciones
-                    </h1>
-                    <p class="text-muted mb-0">Total de empleados: {{ total_empleados }}</p>
-                </div>
-                <div style="display: flex; gap: 1rem; align-items: center;">
-                    <a href="{% url 'empleados:generar_excel_kardex' %}" class="btn-descargar-excel" style="background: linear-gradient(180deg, rgba(34, 197, 94, 0.95) 0%, rgba(22, 163, 74, 0.95) 50%, rgba(15, 118, 50, 1) 100%) !important; color: white !important; border: none !important; padding: 0.75rem 1.5rem !important; border-radius: 14px !important; font-weight: 600 !important; text-decoration: none !important; display: inline-flex !important; align-items: center !important; gap: 0.5rem !important; transition: all 0.3s ease !important; font-family: 'Montserrat', sans-serif !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.3) !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">
-                        <i class="fas fa-file-excel"></i>
-                        Descargar Excel
-                    </a>
-                    <a href="{% url 'empleados:generar_pdf_kardex' %}" class="btn-descargar-pdf" style="background: linear-gradient(180deg, rgba(239, 68, 68, 0.95) 0%, rgba(220, 38, 38, 0.95) 50%, rgba(185, 28, 28, 1) 100%) !important; color: white !important; border: none !important; padding: 0.75rem 1.5rem !important; border-radius: 14px !important; font-weight: 600 !important; text-decoration: none !important; display: inline-flex !important; align-items: center !important; gap: 0.5rem !important; transition: all 0.3s ease !important; font-family: 'Montserrat', sans-serif !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.3) !important; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;">
-                        <i class="fas fa-file-pdf"></i>
-                        Descargar PDF
-                    </a>
-                    <a href="{% url 'empleados:reporte_vacaciones_mes' %}" class="btn-reporte-vacaciones">
-                        <i class="fas fa-chart-bar"></i>
-                        Reporte Vacaciones
-                    </a>
-                </div>
-            </div>
-
-            <div class="table-responsive">
-                <table class="kardex-table">
-                    <thead>
-                        <tr>
-                            <th style="border-radius: 12px 0 0 0;">Empleado</th>
-                            <th>Departamento</th>
-                            <th>Antigüedad</th>
-                            <th>Días Anuales</th>
-                            <th>Días Usados</th>
-                            <th>Acumulado Año Actual</th>
-                            <th style="border-radius: 0 12px 0 0;">Total Disponible</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for data in empleados_data %}
-                        <tr>
-                            <td>
-                                <div class="empleado-nombre">{{ data.empleado.nombre_completo }}</div>
-                                <div class="empleado-depto">{{ data.empleado.puesto|default:"Sin puesto" }}</div>
-                            </td>
-                            <td>
-                                {{ data.empleado.departamento.nombre|default:"Sin departamento" }}
-                            </td>
-                            <td>
-                                <span class="antiguedad-badge">{{ data.antiguedad }}</span>
-                            </td>
-                            <td>
-                                <span class="badge-vacaciones badge-anual">
-                                    {{ data.dias_anuales }} días
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge-vacaciones badge-acumulado">
-                                    {{ data.dias_usados }} días
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge-vacaciones badge-acumulado">
-                                    {{ data.dias_acumulados_ano_actual }} días
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge-vacaciones badge-total">
-                                    {{ data.total_disponible }} días
-                                </span>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="7" class="text-center py-4">
-                                <p style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important;">No hay empleados registrados</p>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}
-

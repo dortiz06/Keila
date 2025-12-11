@@ -2898,6 +2898,31 @@ def generar_excel_reporte_vacaciones_csv(request):
 # === VISTAS DE ERROR ===
 
 
+@login_required
+def manual_agregar_equipo(request):
+    """Vista para mostrar el manual de usuario sobre cómo agregar equipos"""
+    perfil = get_user_profile(request.user)
+    
+    # Verificar que el usuario tenga permisos de sistemas o admin
+    if not perfil or not (perfil.es_sistemas() or perfil.es_admin()):
+        messages.error(request, 'No tienes permiso para acceder a esta sección del manual.')
+        return redirect('empleados:dashboard')
+    
+    return render(request, 'empleados/manual/agregar_equipo.html', {
+        'perfil': perfil
+    })
+
+
+@login_required
+def manual_errores(request):
+    """Vista para mostrar el manual de errores comunes y contacto de soporte"""
+    perfil = get_user_profile(request.user)
+    
+    return render(request, 'empleados/manual/errores_soporte.html', {
+        'perfil': perfil
+    })
+
+
 def error_403(request, exception=None):
     return render(request, 'empleados/errors/403.html', status=403)
 
