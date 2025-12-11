@@ -268,7 +268,7 @@ body {
                             <th style="border-radius: 12px 0 0 0;">Empleado</th>
                             <th>Departamento</th>
                             <th>Antigüedad</th>
-                            <th>Días Anuales</th>
+                            <th>Con Derecho</th>
                             <th>Saldo</th>
                             <th>Acumulado Año Actual</th>
                             <th style="border-radius: 0 12px 0 0;">Total Disponible</th>
@@ -296,7 +296,6 @@ body {
                                 <span class="badge-vacaciones" style="color: {% if data.saldo < 0 %}#ef4444{% else %}#10b981{% endif %}; font-weight: 600;">
                                     {{ data.saldo }} días
                                 </span>
-                                
                             </td>
                             <td>
                                 <span class="badge-vacaciones badge-acumulado">

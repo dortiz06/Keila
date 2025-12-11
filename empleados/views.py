@@ -1883,10 +1883,12 @@ def generar_excel_kardex(request):
         ).order_by('orden_departamento', 'departamento__nombre', 'usuario__last_name', 'usuario__first_name')
         
         # Crear respuesta HTTP con Excel
+        from datetime import date as date_module
+        fecha_actual = date_module.today()
+        
         response = HttpResponse(
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
-        fecha_actual = timezone.now().date()
         response['Content-Disposition'] = f'attachment; filename="kardex_vacaciones_{fecha_actual.strftime("%Y%m%d")}.xlsx"'
         
         # Crear workbook
@@ -1957,10 +1959,10 @@ def generar_excel_kardex(request):
                 if years < 1:
                     fecha_inicio = fecha_contratacion
                 else:
-                # Calcular la fecha del último aniversario
-                if fecha_actual.month < fecha_contratacion.month or (fecha_actual.month == fecha_contratacion.month and fecha_actual.day < fecha_contratacion.day):
+                    # Calcular la fecha del último aniversario
+                    if fecha_actual.month < fecha_contratacion.month or (fecha_actual.month == fecha_contratacion.month and fecha_actual.day < fecha_contratacion.day):
                         fecha_inicio = date(fecha_actual.year - 1, fecha_contratacion.month, fecha_contratacion.day)
-                else:
+                    else:
                         fecha_inicio = date(fecha_actual.year, fecha_contratacion.month, fecha_contratacion.day)
                 
                 # Calcular meses calendario trabajados y días
@@ -2001,7 +2003,7 @@ def generar_excel_kardex(request):
                     # El mes actual NO se cuenta como mes completo, solo se muestran sus días
                     if fecha_temp.year == fecha_actual.year and fecha_temp.month == fecha_actual.month:
                         days = fecha_actual.day  # Días del 1 al día actual (inclusive)
-                else:
+                    else:
                         # Si no hay mes actual (no debería pasar), mantener días del mes inicial
                         days = dias_mes_inicial
                 
@@ -2044,7 +2046,7 @@ def generar_excel_kardex(request):
             
             # Encabezado de la tabla (azul como en la imagen)
             header_fill_blue = PatternFill(start_color="3B82F6", end_color="2563EB", fill_type="solid")
-            headers_tabla = ['Días Anuales', 'Días Usados', 'Acumulado Año Actual', 'Total Disponible']
+            headers_tabla = ['Con Derecho', 'Saldo', 'Acumulado Año Actual', 'Total Disponible']
             for col_num, header in enumerate(headers_tabla, 1):
                 cell = ws.cell(row=row, column=col_num)
                 cell.value = header
@@ -2055,11 +2057,8 @@ def generar_excel_kardex(request):
             ws.row_dimensions[row].height = 25
             row += 1
             
-            # Calcular total disponible
-            total_disponible = round(empleado.calcular_total_disponible_proyectado(), 2)
-            
-            # Fila de datos
-            # Columna 1: Días Anuales (azul) - Mostrar 0 si no ha cumplido un año
+            # Fila de datos (total_disponible ya fue calculado arriba)
+            # Columna 1: Con Derecho (azul) - Mostrar 0 si no ha cumplido un año
             dias_anuales_display = 0 if not ha_cumplido_ano else dias_anuales
             cell = ws.cell(row=row, column=1)
             cell.value = f'{dias_anuales_display} días'
@@ -2106,7 +2105,20 @@ def generar_excel_kardex(request):
             ws.column_dimensions[get_column_letter(col_num)].width = width
         
         # Guardar workbook
-        wb.save(response)
+        try:
+            wb.save(response)
+        except Exception as save_error:
+            import logging
+            import traceback
+            logger = logging.getLogger(__name__)
+            logger.error(f'Error guardando Excel: {str(save_error)}')
+            logger.error(traceback.format_exc())
+            return HttpResponse(
+                f'Error al guardar el archivo Excel: {str(save_error)}',
+                status=500,
+                content_type='text/plain'
+            )
+        
         return response
     
     except Exception as e:
@@ -2194,7 +2206,7 @@ def generar_pdf_kardex(request):
     elements.append(Spacer(1, 0.5*cm))
     
     # Preparar datos para la tabla
-    data = [['Empleado', 'Depto', 'Antigüedad', 'Días Anuales', 'Saldo', 'Acum. Año Actual', 'Total Disponible']]
+    data = [['Empleado', 'Depto', 'Antigüedad', 'Con Derecho', 'Saldo', 'Acum. Año Actual', 'Total Disponible']]
     
     for empleado in empleados:
         dias_anuales = empleado.dias_vacaciones_anuales
@@ -2988,9 +3000,39 @@ def historial_vacaciones_empleado(request, empleado_id):
         años_disponibles.add(año)
         historial_por_ano[año].append(registro)
     
-    # Calcular totales por año (vacaciones normales y extraordinarias)
+    # Calcular totales por año (vacaciones normales y extraordinarias) y historial del saldo
     from decimal import Decimal
     resumen_por_ano = {}
+    historial_saldo = []  # Historial de cambios en el saldo
+    
+    # Calcular saldo acumulado a lo largo del tiempo
+    saldo_actual = Decimal('0')
+    for registro in historial_completo:
+        saldo_antes = saldo_actual
+        
+        # Sumar días con derecho
+        if registro.con_derecho > 0:
+            saldo_actual += Decimal(str(registro.con_derecho))
+        
+        # Restar días tomados
+        if registro.tomadas > 0:
+            saldo_actual -= Decimal(str(registro.tomadas))
+        
+        # Registrar cambios significativos en el saldo (aniversarios, vacaciones tomadas, ajustes)
+        if ('Aniversario laboral' in registro.concepto or 
+            abs(registro.con_derecho) > 0 or 
+            abs(registro.tomadas) > 0 or
+            registro.tipo_movimiento == 'AJUSTE_MANUAL'):
+            historial_saldo.append({
+                'fecha': registro.fecha_registro,
+                'concepto': registro.concepto,
+                'con_derecho': float(registro.con_derecho),
+                'tomadas': float(registro.tomadas),
+                'saldo_antes': float(saldo_antes),
+                'saldo_despues': float(saldo_actual),
+                'observaciones': registro.observaciones
+            })
+    
     for año, registros in historial_por_ano.items():
         total_normales = Decimal('0')
         total_extraordinarias = Decimal('0')
@@ -3046,6 +3088,8 @@ def historial_vacaciones_empleado(request, empleado_id):
         'perfil': perfil,
         'solicitudes_extraordinarias_ano': solicitudes_extraordinarias_ano,
         'total_extraordinarias_ano': total_extraordinarias_ano,
+        'historial_saldo': historial_saldo,  # Historial de cambios en el saldo
+        'saldo_actual': float(empleado.saldo_vacaciones),
     }
     return render(request, 'empleados/rh/historial_vacaciones_empleado.html', context)
 
