@@ -1957,10 +1957,10 @@ def generar_excel_kardex(request):
                 if years < 1:
                     fecha_inicio = fecha_contratacion
                 else:
-                # Calcular la fecha del último aniversario
-                if fecha_actual.month < fecha_contratacion.month or (fecha_actual.month == fecha_contratacion.month and fecha_actual.day < fecha_contratacion.day):
+                    # Calcular la fecha del último aniversario
+                    if fecha_actual.month < fecha_contratacion.month or (fecha_actual.month == fecha_contratacion.month and fecha_actual.day < fecha_contratacion.day):
                         fecha_inicio = date(fecha_actual.year - 1, fecha_contratacion.month, fecha_contratacion.day)
-                else:
+                    else:
                         fecha_inicio = date(fecha_actual.year, fecha_contratacion.month, fecha_contratacion.day)
                 
                 # Calcular meses calendario trabajados y días
@@ -1994,14 +1994,14 @@ def generar_excel_kardex(request):
                         # Avanzar al siguiente mes
                         if fecha_temp.month == 12:
                             fecha_temp = date(fecha_temp.year + 1, 1, 1)
-                    else:
+                        else:
                             fecha_temp = date(fecha_temp.year, fecha_temp.month + 1, 1)
-                
+                    
                     # Contar días del mes actual (desde el día 1 hasta fecha_actual, inclusive)
                     # El mes actual NO se cuenta como mes completo, solo se muestran sus días
                     if fecha_temp.year == fecha_actual.year and fecha_temp.month == fecha_actual.month:
                         days = fecha_actual.day  # Días del 1 al día actual (inclusive)
-                else:
+                    else:
                         # Si no hay mes actual (no debería pasar), mantener días del mes inicial
                         days = dias_mes_inicial
                 

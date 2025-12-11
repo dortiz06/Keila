@@ -848,7 +848,7 @@ class SolicitudVacaciones(models.Model):
             self.empleado.dias_vacaciones_extraordinarios += self.dias_solicitados
         else:
             # Vacaciones normales
-        self.empleado.dias_vacaciones_usados += self.dias_solicitados
+            self.empleado.dias_vacaciones_usados += self.dias_solicitados
         
         self.empleado.save()
         

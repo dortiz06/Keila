@@ -79,8 +79,8 @@ body {
                                         </span>
                                     </td>
                                     <td>
-                                        <span class="badge-vacaciones badge-saldo" style="color: {% if data.saldo < 0 %}#ef4444{% else %}#10b981{% endif %} !important;">
-                                            {{ data.saldo }} días
+                                        <span class="badge-vacaciones badge-saldo" style="color: {% if data.saldo|default:0 < 0 %}#ef4444{% else %}#10b981{% endif %} !important;">
+                                            {{ data.saldo|default:0 }} días
                                         </span>
                                     </td>
                                     <td>
@@ -89,8 +89,8 @@ body {
                                         </span>
                                     </td>
                                     <td>
-                                        <span class="badge-vacaciones badge-total" style="color: {% if data.total_disponible < 0 %}#ef4444{% else %}#10b981{% endif %} !important;">
-                                            {{ data.total_disponible }} días
+                                        <span class="badge-vacaciones badge-total" style="color: {% if data.total_disponible|default:0 < 0 %}#ef4444{% else %}#10b981{% endif %} !important;">
+                                            {{ data.total_disponible|default:0 }} días
                                         </span>
                                     </td>
                                 </tr>
