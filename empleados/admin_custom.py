@@ -50,6 +50,7 @@ class PerfilAdmin(admin.ModelAdmin):
                 'dias_vacaciones_usados', 
                 'dias_vacaciones_acumulados',
                 'dias_vacaciones_extraordinarios',
+                'saldo_vacaciones',
                 'ultimo_reset_vacaciones',
                 'dias_vacaciones_info',
                 'total_disponible_display'
@@ -58,8 +59,9 @@ class PerfilAdmin(admin.ModelAdmin):
                 <strong>Gestión Manual de Vacaciones:</strong><br>
                 • <strong>Días Anuales:</strong> Se calculan automáticamente según antigüedad, pero puedes modificarlos manualmente.<br>
                 • <strong>Días Usados:</strong> Días de vacaciones que el empleado ya ha utilizado este año.<br>
-                • <strong>Días Acumulados (Año Anterior):</strong> <span style="color: #d32f2f; font-weight: bold;">IMPORTANTE:</span> Aquí puedes agregar manualmente los días de vacaciones que el empleado tiene acumulados de años anteriores que no ha usado. Este campo es completamente editable.<br>
-                • <strong>Total Disponible:</strong> Se calcula automáticamente (Año anterior + Acumulado año actual - Usados).
+                • <strong>Días Acumulados (Año Anterior):</strong> Días de vacaciones acumulados del año anterior.<br>
+                • <strong>Saldo de Vacaciones:</strong> <span style="color: #d32f2f; font-weight: bold;">IMPORTANTE:</span> Saldo resultante de años anteriores (acumulado - gastado). Puede ser negativo o positivo. Este campo es editable solo desde el administrador de Django.<br>
+                • <strong>Total Disponible:</strong> Se calcula automáticamente (Saldo + Acumulado año actual).
             ''',
             'classes': ('wide',)
         }),

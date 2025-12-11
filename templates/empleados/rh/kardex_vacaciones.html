@@ -49,7 +49,7 @@ body {
                                     <th style="color: #ffffff !important;"><i class="fas fa-building me-1"></i>Departamento</th>
                                     <th style="color: #ffffff !important;"><i class="fas fa-clock me-1"></i>Antigüedad</th>
                                     <th style="color: #ffffff !important;"><i class="fas fa-calendar-alt me-1"></i>Días Anuales</th>
-                                    <th style="color: #ffffff !important;"><i class="fas fa-calendar-minus me-1"></i>Días Usados</th>
+                                    <th style="color: #ffffff !important;"><i class="fas fa-wallet me-1"></i>Saldo</th>
                                     <th style="color: #ffffff !important;"><i class="fas fa-calendar-check me-1"></i>Acumulado Año Actual</th>
                                     <th style="color: #ffffff !important;"><i class="fas fa-calendar-plus me-1"></i>Total Disponible</th>
                                 </tr>
@@ -79,8 +79,8 @@ body {
                                         </span>
                                     </td>
                                     <td>
-                                        <span class="badge-vacaciones badge-usados">
-                                            {{ data.dias_usados }} días
+                                        <span class="badge-vacaciones badge-saldo" style="color: {% if data.saldo < 0 %}#ef4444{% else %}#10b981{% endif %} !important;">
+                                            {{ data.saldo }} días
                                         </span>
                                     </td>
                                     <td>
@@ -89,7 +89,7 @@ body {
                                         </span>
                                     </td>
                                     <td>
-                                        <span class="badge-vacaciones badge-total">
+                                        <span class="badge-vacaciones badge-total" style="color: {% if data.total_disponible < 0 %}#ef4444{% else %}#10b981{% endif %} !important;">
                                             {{ data.total_disponible }} días
                                         </span>
                                     </td>
@@ -356,12 +356,12 @@ body {
     background: rgba(157, 120, 190, 0.5) !important;
 }
 
-/* Días Usados - Naranja/Marrón con glassmorphism */
-.badge-usados {
-    background: rgba(217, 119, 6, 0.5) !important;
+/* Saldo - Gris con glassmorphism (el color se define inline según positivo/negativo) */
+.badge-saldo {
+    background: rgba(107, 114, 128, 0.5) !important;
 }
 
-/* Acumulado Año Actual - Naranja/Marrón con glassmorphism (mismo que Días Usados) */
+/* Acumulado Año Actual - Naranja/Marrón con glassmorphism */
 .badge-acumulado {
     background: rgba(217, 119, 6, 0.5) !important;
 }

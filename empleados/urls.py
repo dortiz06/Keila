@@ -41,6 +41,17 @@ urlpatterns = [
     path('vacaciones/reporte-mes/pdf/', views.generar_pdf_reporte_vacaciones, name='generar_pdf_reporte_vacaciones'),
     path('vacaciones/reporte-mes/excel/', views.generar_excel_reporte_vacaciones, name='generar_excel_reporte_vacaciones'),
     
+    # === HISTORIAL DE VACACIONES (RH Y ADMIN) ===
+    path('vacaciones/historial/', views.historial_vacaciones_lista, name='historial_vacaciones_lista'),
+    path('vacaciones/historial/<int:empleado_id>/', views.historial_vacaciones_empleado, name='historial_vacaciones_empleado'),
+    path('vacaciones/historial/<int:empleado_id>/crear/', views.crear_historial_vacaciones, name='crear_historial_vacaciones'),
+    path('vacaciones/historial/editar/<int:historial_id>/', views.editar_historial_vacaciones, name='editar_historial_vacaciones'),
+    path('vacaciones/historial/eliminar/<int:historial_id>/', views.eliminar_historial_vacaciones, name='eliminar_historial_vacaciones'),
+    
+    # === EDICIÓN DE VACACIONES (RH Y ADMIN) ===
+    path('vacaciones/editar/<int:empleado_id>/', views.editar_vacaciones_empleado, name='editar_vacaciones_empleado'),
+    path('vacaciones/historial/<int:empleado_id>/editar-ano/<int:año>/', views.editar_vacaciones_por_ano, name='editar_vacaciones_por_ano'),
+    
     # === GESTIÓN DE DEPARTAMENTOS ===
     path('departamentos/', views.gestion_departamentos, name='gestion_departamentos'),
     path('departamentos/crear/', views.crear_departamento, name='crear_departamento'),
