@@ -3000,38 +3000,9 @@ def historial_vacaciones_empleado(request, empleado_id):
         años_disponibles.add(año)
         historial_por_ano[año].append(registro)
     
-    # Calcular totales por año (vacaciones normales y extraordinarias) y historial del saldo
+    # Calcular totales por año (vacaciones normales y extraordinarias)
     from decimal import Decimal
     resumen_por_ano = {}
-    historial_saldo = []  # Historial de cambios en el saldo
-    
-    # Calcular saldo acumulado a lo largo del tiempo
-    saldo_actual = Decimal('0')
-    for registro in historial_completo:
-        saldo_antes = saldo_actual
-        
-        # Sumar días con derecho
-        if registro.con_derecho > 0:
-            saldo_actual += Decimal(str(registro.con_derecho))
-        
-        # Restar días tomados
-        if registro.tomadas > 0:
-            saldo_actual -= Decimal(str(registro.tomadas))
-        
-        # Registrar cambios significativos en el saldo (aniversarios, vacaciones tomadas, ajustes)
-        if ('Aniversario laboral' in registro.concepto or 
-            abs(registro.con_derecho) > 0 or 
-            abs(registro.tomadas) > 0 or
-            registro.tipo_movimiento == 'AJUSTE_MANUAL'):
-            historial_saldo.append({
-                'fecha': registro.fecha_registro,
-                'concepto': registro.concepto,
-                'con_derecho': float(registro.con_derecho),
-                'tomadas': float(registro.tomadas),
-                'saldo_antes': float(saldo_antes),
-                'saldo_despues': float(saldo_actual),
-                'observaciones': registro.observaciones
-            })
     
     for año, registros in historial_por_ano.items():
         total_normales = Decimal('0')
@@ -3088,8 +3059,6 @@ def historial_vacaciones_empleado(request, empleado_id):
         'perfil': perfil,
         'solicitudes_extraordinarias_ano': solicitudes_extraordinarias_ano,
         'total_extraordinarias_ano': total_extraordinarias_ano,
-        'historial_saldo': historial_saldo,  # Historial de cambios en el saldo
-        'saldo_actual': float(empleado.saldo_vacaciones),
     }
     return render(request, 'empleados/rh/historial_vacaciones_empleado.html', context)
 
