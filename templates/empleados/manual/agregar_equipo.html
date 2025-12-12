@@ -1,0 +1,482 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manual de Usuario - Agregar Equipo al Inventario{% endblock %}
+
+{% block content %}
+<style>
+/* Fondo con imagen para el manual */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.65)), url('{% static "images/dash/hardw.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+
+.manual-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.manual-card {
+    background: rgba(60, 60, 60, 0.4) !important;
+    backdrop-filter: blur(25px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 
+                0 4px 16px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    overflow: hidden !important;
+    margin-bottom: 2rem;
+}
+
+.manual-header {
+    background: linear-gradient(135deg, rgba(0, 56, 168, 0.9), rgba(30, 58, 138, 0.9));
+    padding: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.manual-header h1 {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 2rem;
+    margin: 0;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.manual-header p {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 1.1rem;
+    margin: 0.5rem 0 0 0;
+}
+
+.manual-body {
+    padding: 2rem;
+    color: #ffffff !important;
+}
+
+.manual-section {
+    margin-bottom: 2.5rem;
+}
+
+.manual-section h2 {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.manual-section h3 {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 1.25rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.manual-section p {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+}
+
+.manual-step {
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 4px solid rgba(59, 130, 246, 0.8);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+}
+
+.manual-step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(37, 99, 235, 0.9));
+    color: #ffffff;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-right: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.manual-step h4 {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem;
+    margin: 0 0 0.75rem 0;
+    display: flex;
+    align-items: center;
+}
+
+.manual-step ul {
+    margin: 0.75rem 0;
+    padding-left: 1.5rem;
+}
+
+.manual-step li {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.manual-note {
+    background: rgba(245, 158, 11, 0.2);
+    border-left: 4px solid rgba(245, 158, 11, 0.8);
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border-radius: 8px;
+}
+
+.manual-note p {
+    color: rgba(255, 255, 255, 0.95) !important;
+    margin: 0;
+    font-weight: 500;
+}
+
+.manual-tip {
+    background: rgba(34, 197, 94, 0.2);
+    border-left: 4px solid rgba(34, 197, 94, 0.8);
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border-radius: 8px;
+}
+
+.manual-tip p {
+    color: rgba(255, 255, 255, 0.95) !important;
+    margin: 0;
+    font-weight: 500;
+}
+
+.manual-warning {
+    background: rgba(220, 38, 38, 0.2);
+    border-left: 4px solid rgba(220, 38, 38, 0.8);
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border-radius: 8px;
+}
+
+.manual-warning p {
+    color: rgba(255, 255, 255, 0.95) !important;
+    margin: 0;
+    font-weight: 500;
+}
+
+.manual-footer {
+    padding: 1.5rem 2rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.btn-manual {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 12px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.btn-manual:hover {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+}
+
+.btn-manual-secondary {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+}
+
+.btn-manual-secondary:hover {
+    background: linear-gradient(180deg, 
+        rgba(209, 213, 219, 0.95) 0%, 
+        rgba(156, 163, 175, 0.95) 50%,
+        rgba(107, 114, 128, 1) 100%) !important;
+}
+
+@media (max-width: 768px) {
+    .manual-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .manual-body {
+        padding: 1.5rem;
+    }
+    
+    .manual-step {
+        padding: 1rem;
+    }
+    
+    .manual-footer {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+</style>
+
+<div class="container-fluid">
+    <div class="manual-container">
+        <div class="manual-card">
+            <div class="manual-header">
+                <h1><i class="fas fa-book me-2"></i>Manual de Usuario - Sistema GK</h1>
+                <p>Guía para agregar un nuevo equipo al inventario</p>
+            </div>
+            
+            <div class="manual-body">
+                <!-- Introducción -->
+                <div class="manual-section">
+                    <h2><i class="fas fa-info-circle"></i>Introducción</h2>
+                    <p>
+                        Esta guía te ayudará a agregar un nuevo equipo al inventario del Sistema GK. 
+                        Esta funcionalidad está disponible únicamente para usuarios con permisos de 
+                        <strong>Sistemas</strong> o <strong>Administrador</strong>.
+                    </p>
+                    <p>
+                        El proceso es sencillo y te permitirá registrar toda la información necesaria 
+                        del equipo, incluyendo la opción de asignarlo inmediatamente a un empleado.
+                    </p>
+                </div>
+
+                <!-- Requisitos previos -->
+                <div class="manual-section">
+                    <h2><i class="fas fa-check-circle"></i>Requisitos Previos</h2>
+                    <ul style="color: rgba(255, 255, 255, 0.9); font-family: 'Montserrat', sans-serif; line-height: 1.8;">
+                        <li>Tener permisos de <strong>Sistemas</strong> o <strong>Administrador</strong></li>
+                        <li>Estar autenticado en el sistema</li>
+                        <li>Tener la información del equipo a registrar (marca, modelo, número de serie, etc.)</li>
+                    </ul>
+                </div>
+
+                <!-- Paso a paso -->
+                <div class="manual-section">
+                    <h2><i class="fas fa-list-ol"></i>Proceso Paso a Paso</h2>
+                    
+                    <!-- Paso 1 -->
+                    <div class="manual-step">
+                        <h4>
+                            <span class="manual-step-number">1</span>
+                            Acceder a la sección de Inventario
+                        </h4>
+                        <p>
+                            Desde tu dashboard de Sistemas, navega a la sección de <strong>Inventario de Equipos</strong>. 
+                            Puedes acceder a través del menú principal o directamente desde el dashboard.
+                        </p>
+                        <p>
+                            Una vez en la página de inventario, verás un botón en la esquina superior derecha que dice 
+                            <strong>"Agregar Equipo"</strong> con un icono de más (+).
+                        </p>
+                    </div>
+
+                    <!-- Paso 2 -->
+                    <div class="manual-step">
+                        <h4>
+                            <span class="manual-step-number">2</span>
+                            Completar la Información Básica del Equipo
+                        </h4>
+                        <p>
+                            En el formulario de agregar equipo, deberás completar los siguientes campos obligatorios:
+                        </p>
+                        <ul>
+                            <li><strong>Categoría:</strong> Selecciona el tipo de equipo (Laptop, Celular, Monitor, etc.)</li>
+                            <li><strong>Marca:</strong> Ingresa la marca del equipo (ej: HP, Apple, Dell)</li>
+                            <li><strong>Modelo:</strong> Especifica el modelo exacto del equipo</li>
+                            <li><strong>Número de Serie:</strong> Ingresa el número de serie único del equipo</li>
+                            <li><strong>Código de Inventario:</strong> Asigna un código único para identificar el equipo en el inventario</li>
+                            <li><strong>Estado:</strong> Selecciona el estado inicial del equipo (Disponible, Asignado, En Reparación, Dado de Baja)</li>
+                            <li><strong>Fecha de Adquisición:</strong> Selecciona la fecha en que se adquirió el equipo</li>
+                        </ul>
+                        <div class="manual-note">
+                            <p>
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                <strong>Nota:</strong> Todos los campos marcados con un asterisco (*) son obligatorios.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Paso 3 -->
+                    <div class="manual-step">
+                        <h4>
+                            <span class="manual-step-number">3</span>
+                            Asignación de Equipo (Opcional)
+                        </h4>
+                        <p>
+                            Si deseas asignar el equipo a un empleado inmediatamente después de agregarlo, 
+                            puedes hacerlo en esta sección:
+                        </p>
+                        <ul>
+                            <li><strong>Asignar a Empleado:</strong> Selecciona el empleado de la lista desplegable</li>
+                            <li><strong>Condición al Entregar:</strong> Describe el estado del equipo al momento de la asignación (ej: "Nuevo", "Usado - Buen estado")</li>
+                        </ul>
+                        <div class="manual-tip">
+                            <p>
+                                <i class="fas fa-lightbulb me-2"></i>
+                                <strong>Tip:</strong> Si no asignas el equipo ahora, podrás hacerlo más tarde desde la página de inventario. 
+                                El equipo quedará con estado "Disponible" hasta que sea asignado.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Paso 4 -->
+                    <div class="manual-step">
+                        <h4>
+                            <span class="manual-step-number">4</span>
+                            Observaciones Adicionales
+                        </h4>
+                        <p>
+                            En el campo de <strong>Observaciones</strong> puedes agregar cualquier información adicional 
+                            relevante sobre el equipo, como:
+                        </p>
+                        <ul>
+                            <li>Características especiales</li>
+                            <li>Notas sobre el estado físico</li>
+                            <li>Información sobre garantía</li>
+                            <li>Cualquier otro detalle importante</li>
+                        </ul>
+                        <p>
+                            Este campo es opcional pero recomendado para mantener un registro completo del equipo.
+                        </p>
+                    </div>
+
+                    <!-- Paso 5 -->
+                    <div class="manual-step">
+                        <h4>
+                            <span class="manual-step-number">5</span>
+                            Guardar el Equipo
+                        </h4>
+                        <p>
+                            Una vez que hayas completado todos los campos obligatorios, haz clic en el botón 
+                            <strong>"Agregar Equipo"</strong> para guardar la información.
+                        </p>
+                        <p>
+                            El sistema validará la información y, si todo es correcto, mostrará un mensaje de 
+                            confirmación indicando que el equipo ha sido agregado exitosamente.
+                        </p>
+                        <div class="manual-warning">
+                            <p>
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <strong>Importante:</strong> Asegúrate de que el número de serie y el código de inventario 
+                                sean únicos. El sistema no permitirá duplicados.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información adicional -->
+                <div class="manual-section">
+                    <h2><i class="fas fa-question-circle"></i>Información Adicional</h2>
+                    
+                    <h3><i class="fas fa-calendar-alt"></i>Selector de Fecha</h3>
+                    <p>
+                        El campo de fecha de adquisición utiliza un calendario interactivo. Puedes:
+                    </p>
+                    <ul>
+                        <li>Hacer clic en el campo para abrir el calendario</li>
+                        <li>Navegar entre meses y años usando las flechas</li>
+                        <li>Seleccionar el día haciendo clic directamente en el calendario</li>
+                        <li>No se permiten fechas futuras</li>
+                    </ul>
+
+                    <h3><i class="fas fa-tag"></i>Estados del Equipo</h3>
+                    <p>Los estados disponibles son:</p>
+                    <ul>
+                        <li><strong>Disponible:</strong> El equipo está disponible para asignar</li>
+                        <li><strong>Asignado:</strong> El equipo está asignado a un empleado</li>
+                        <li><strong>En Reparación:</strong> El equipo está siendo reparado o en mantenimiento</li>
+                        <li><strong>Dado de Baja:</strong> El equipo ya no está en uso</li>
+                    </ul>
+
+                    <h3><i class="fas fa-undo"></i>Cancelar el Proceso</h3>
+                    <p>
+                        Si cambias de opinión o necesitas cancelar el proceso, puedes hacer clic en el botón 
+                        <strong>"Cancelar"</strong>. Esto limpiará el formulario y te regresará al inventario.
+                    </p>
+                </div>
+
+                <!-- Solución de problemas -->
+                <div class="manual-section">
+                    <h2><i class="fas fa-tools"></i>Solución de Problemas Comunes</h2>
+                    
+                    <h3><i class="fas fa-exclamation-triangle"></i>Error: "Este número de serie ya existe"</h3>
+                    <p>
+                        Si recibes este error, significa que ya existe un equipo registrado con ese número de serie. 
+                        Verifica que estés ingresando el número correcto o consulta el inventario para verificar 
+                        si el equipo ya está registrado.
+                    </p>
+
+                    <h3><i class="fas fa-exclamation-triangle"></i>Error: "Este código de inventario ya existe"</h3>
+                    <p>
+                        Similar al anterior, este error indica que el código de inventario que intentas usar ya está 
+                        en uso. Elige un código diferente y único.
+                    </p>
+
+                    <h3><i class="fas fa-exclamation-triangle"></i>No puedo ver el botón "Agregar Equipo"</h3>
+                    <p>
+                        Si no ves el botón, verifica que tu cuenta tenga permisos de Sistemas o Administrador. 
+                        Si crees que deberías tener acceso, contacta al área de Sistemas.
+                    </p>
+                </div>
+            </div>
+
+            <div class="manual-footer">
+                <div>
+                    <a href="{% url 'empleados:inventario_equipos' %}" class="btn btn-manual">
+                        <i class="fas fa-arrow-left me-2"></i>Volver al Inventario
+                    </a>
+                </div>
+                <div>
+                    <a href="{% url 'empleados:manual_errores' %}" class="btn btn-manual btn-manual-secondary">
+                        Siguiente: Errores y Soporte <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

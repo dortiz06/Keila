@@ -1,0 +1,543 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Manual de Usuario - Errores Comunes y Soporte{% endblock %}
+
+{% block content %}
+<style>
+/* Fondo con imagen para el manual */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.65)), url('{% static "images/dash/hardw.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+
+.manual-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.manual-card {
+    background: rgba(60, 60, 60, 0.4) !important;
+    backdrop-filter: blur(25px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 
+                0 4px 16px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    overflow: hidden !important;
+    margin-bottom: 2rem;
+}
+
+.manual-header {
+    background: linear-gradient(135deg, rgba(0, 56, 168, 0.9), rgba(30, 58, 138, 0.9));
+    padding: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.manual-header h1 {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 2rem;
+    margin: 0;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.manual-header p {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 1.1rem;
+    margin: 0.5rem 0 0 0;
+}
+
+.manual-body {
+    padding: 2rem;
+    color: #ffffff !important;
+}
+
+.manual-section {
+    margin-bottom: 2.5rem;
+}
+
+.manual-section h2 {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.manual-section h3 {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 1.25rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.manual-section p {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+}
+
+.error-item {
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 4px solid rgba(220, 38, 38, 0.8);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+}
+
+.error-item h4 {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem;
+    margin: 0 0 0.75rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.error-item ul {
+    margin: 0.75rem 0;
+    padding-left: 1.5rem;
+}
+
+.error-item li {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-family: 'Montserrat', sans-serif !important;
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.contact-card {
+    background: rgba(59, 130, 246, 0.2);
+    border: 2px solid rgba(59, 130, 246, 0.5);
+    border-radius: 15px;
+    padding: 2rem;
+    margin: 2rem 0;
+}
+
+.contact-card h3 {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 600 !important;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.contact-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.contact-info:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(5px);
+}
+
+.contact-info i {
+    font-size: 1.5rem;
+    color: rgba(59, 130, 246, 1);
+    min-width: 30px;
+}
+
+.contact-info a {
+    color: #ffffff !important;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif !important;
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+.contact-info a:hover {
+    text-decoration: underline;
+    color: rgba(59, 130, 246, 1) !important;
+}
+
+.manual-note {
+    background: rgba(245, 158, 11, 0.2);
+    border-left: 4px solid rgba(245, 158, 11, 0.8);
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border-radius: 8px;
+}
+
+.manual-note p {
+    color: rgba(255, 255, 255, 0.95) !important;
+    margin: 0;
+    font-weight: 500;
+}
+
+.manual-tip {
+    background: rgba(34, 197, 94, 0.2);
+    border-left: 4px solid rgba(34, 197, 94, 0.8);
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border-radius: 8px;
+}
+
+.manual-tip p {
+    color: rgba(255, 255, 255, 0.95) !important;
+    margin: 0;
+    font-weight: 500;
+}
+
+.manual-warning {
+    background: rgba(220, 38, 38, 0.2);
+    border-left: 4px solid rgba(220, 38, 38, 0.8);
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border-radius: 8px;
+}
+
+.manual-warning p {
+    color: rgba(255, 255, 255, 0.95) !important;
+    margin: 0;
+    font-weight: 500;
+}
+
+.manual-footer {
+    padding: 1.5rem 2rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.btn-manual {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 12px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.btn-manual:hover {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+}
+
+.btn-manual-secondary {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+}
+
+.btn-manual-secondary:hover {
+    background: linear-gradient(180deg, 
+        rgba(209, 213, 219, 0.95) 0%, 
+        rgba(156, 163, 175, 0.95) 50%,
+        rgba(107, 114, 128, 1) 100%) !important;
+}
+
+@media (max-width: 768px) {
+    .manual-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .manual-body {
+        padding: 1.5rem;
+    }
+    
+    .error-item {
+        padding: 1rem;
+    }
+    
+    .contact-card {
+        padding: 1.5rem;
+    }
+    
+    .manual-footer {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+</style>
+
+<div class="container-fluid">
+    <div class="manual-container">
+        <div class="manual-card">
+            <div class="manual-header">
+                <h1><i class="fas fa-book me-2"></i>Manual de Usuario - Sistema GK</h1>
+                <p>Errores comunes y contacto de soporte</p>
+            </div>
+            
+            <div class="manual-body">
+                <!-- Introducción -->
+                <div class="manual-section">
+                    <h2><i class="fas fa-info-circle"></i>Introducción</h2>
+                    <p>
+                        Esta sección del manual te ayudará a resolver los problemas más comunes que puedes 
+                        encontrar al usar el Sistema GK. Si después de seguir estas soluciones el problema 
+                        persiste, encontrarás información de contacto para obtener ayuda adicional.
+                    </p>
+                </div>
+
+                <!-- Errores comunes -->
+                <div class="manual-section">
+                    <h2><i class="fas fa-exclamation-triangle"></i>Errores Comunes y Soluciones</h2>
+                    
+                    <!-- Error 1 -->
+                    <div class="error-item">
+                        <h4><i class="fas fa-user-times"></i>No puedo iniciar sesión</h4>
+                        <p><strong>Posibles causas y soluciones:</strong></p>
+                        <ul>
+                            <li><strong>Usuario o contraseña incorrectos:</strong> Verifica que estés escribiendo correctamente tu usuario y contraseña. Recuerda que ambos campos distinguen entre mayúsculas y minúsculas.</li>
+                            <li><strong>Cuenta desactivada:</strong> Si tu cuenta ha sido desactivada, contacta al área de Sistemas para reactivarla.</li>
+                            <li><strong>Problemas de conexión:</strong> Verifica tu conexión a internet y que puedas acceder al sitio web del sistema.</li>
+                        </ul>
+                        <div class="manual-note">
+                            <p>
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Nota:</strong> El sistema no cuenta con función de "Olvidé mi contraseña". 
+                                Si no recuerdas tu contraseña, deberás contactar al área de Sistemas.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Error 2 -->
+                    <div class="error-item">
+                        <h4><i class="fas fa-lock"></i>No tengo acceso a una funcionalidad</h4>
+                        <p><strong>Posibles causas y soluciones:</strong></p>
+                        <ul>
+                            <li><strong>Permisos insuficientes:</strong> Algunas funcionalidades están restringidas según tu rol en el sistema. Verifica que tu perfil tenga los permisos necesarios.</li>
+                            <li><strong>Perfil no configurado correctamente:</strong> Si crees que deberías tener acceso, contacta al área de Recursos Humanos para verificar tu perfil.</li>
+                            <li><strong>Navegación incorrecta:</strong> Asegúrate de estar en la sección correcta del sistema según tu rol.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Error 3 -->
+                    <div class="error-item">
+                        <h4><i class="fas fa-calendar-times"></i>No puedo solicitar vacaciones</h4>
+                        <p><strong>Posibles causas y soluciones:</strong></p>
+                        <ul>
+                            <li><strong>Días disponibles agotados:</strong> Verifica en tu perfil cuántos días de vacaciones tienes disponibles. Si no tienes días disponibles, no podrás crear una solicitud.</li>
+                            <li><strong>Fecha inválida:</strong> Asegúrate de seleccionar fechas válidas y que no estén en el pasado.</li>
+                            <li><strong>Rango de fechas incorrecto:</strong> Verifica que la fecha de inicio sea anterior a la fecha de fin.</li>
+                            <li><strong>Días insuficientes:</strong> El sistema calcula automáticamente los días solicitados. Asegúrate de tener suficientes días disponibles.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Error 4 -->
+                    <div class="error-item">
+                        <h4><i class="fas fa-file-alt"></i>Error al guardar información</h4>
+                        <p><strong>Posibles causas y soluciones:</strong></p>
+                        <ul>
+                            <li><strong>Campos obligatorios vacíos:</strong> Revisa que todos los campos marcados con asterisco (*) estén completos.</li>
+                            <li><strong>Formato de datos incorrecto:</strong> Verifica que los datos ingresados tengan el formato correcto (fechas, números, etc.).</li>
+                            <li><strong>Datos duplicados:</strong> Algunos campos requieren valores únicos (como números de serie, códigos de inventario). Verifica que no estés intentando usar un valor que ya existe.</li>
+                            <li><strong>Problema de conexión:</strong> Si el problema persiste, puede ser un problema temporal de conexión. Intenta nuevamente en unos momentos.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Error 5 -->
+                    <div class="error-item">
+                        <h4><i class="fas fa-desktop"></i>La página no carga o se ve mal</h4>
+                        <p><strong>Posibles causas y soluciones:</strong></p>
+                        <ul>
+                            <li><strong>Problema de caché del navegador:</strong> Intenta limpiar la caché de tu navegador o usar el modo incógnito.</li>
+                            <li><strong>Navegador desactualizado:</strong> Asegúrate de estar usando una versión actualizada de tu navegador (Chrome, Firefox, Edge, Safari).</li>
+                            <li><strong>Extensiones del navegador:</strong> Algunas extensiones pueden interferir con el funcionamiento del sitio. Intenta desactivarlas temporalmente.</li>
+                            <li><strong>JavaScript deshabilitado:</strong> El sistema requiere JavaScript para funcionar correctamente. Asegúrate de tenerlo habilitado.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Error 6 -->
+                    <div class="error-item">
+                        <h4><i class="fas fa-download"></i>No puedo descargar reportes o PDFs</h4>
+                        <p><strong>Posibles causas y soluciones:</strong></p>
+                        <ul>
+                            <li><strong>Bloqueador de ventanas emergentes:</strong> Algunos navegadores bloquean las descargas. Verifica la configuración de tu navegador y permite ventanas emergentes para este sitio.</li>
+                            <li><strong>Permisos de descarga:</strong> Asegúrate de que tu navegador tenga permisos para descargar archivos.</li>
+                            <li><strong>Espacio en disco:</strong> Verifica que tengas suficiente espacio en tu dispositivo para guardar el archivo.</li>
+                            <li><strong>Problema temporal:</strong> Si el problema persiste, intenta nuevamente después de unos minutos.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Error 7 -->
+                    <div class="error-item">
+                        <h4><i class="fas fa-search"></i>No encuentro información o funcionalidad</h4>
+                        <p><strong>Posibles causas y soluciones:</strong></p>
+                        <ul>
+                            <li><strong>Navegación incorrecta:</strong> Revisa el menú principal y asegúrate de estar en la sección correcta según tu rol.</li>
+                            <li><strong>Filtros aplicados:</strong> Si estás en una lista o tabla, verifica que no tengas filtros aplicados que oculten la información que buscas.</li>
+                            <li><strong>Permisos insuficientes:</strong> Algunas funcionalidades pueden no estar disponibles para tu perfil. Verifica tus permisos.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Consejos generales -->
+                <div class="manual-section">
+                    <h2><i class="fas fa-lightbulb"></i>Consejos Generales</h2>
+                    
+                    <div class="manual-tip">
+                        <p>
+                            <i class="fas fa-check-circle me-2"></i>
+                            <strong>Mantén tu navegador actualizado:</strong> Usar la versión más reciente de tu navegador 
+                            ayuda a evitar problemas de compatibilidad y mejora la seguridad.
+                        </p>
+                    </div>
+
+                    <div class="manual-tip">
+                        <p>
+                            <i class="fas fa-check-circle me-2"></i>
+                            <strong>Guarda tu trabajo frecuentemente:</strong> Si estás completando formularios largos, 
+                            guarda la información periódicamente para evitar perder datos.
+                        </p>
+                    </div>
+
+                    <div class="manual-tip">
+                        <p>
+                            <i class="fas fa-check-circle me-2"></i>
+                            <strong>Verifica la información antes de enviar:</strong> Revisa todos los campos antes de 
+                            guardar para evitar errores que requieran correcciones posteriores.
+                        </p>
+                    </div>
+
+                    <div class="manual-warning">
+                        <p>
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Importante:</strong> Si experimentas problemas persistentes que no se resuelven con 
+                            estas soluciones, no intentes solucionarlos por tu cuenta. Contacta al área de Sistemas 
+                            para obtener ayuda profesional.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Contacto y soporte -->
+                <div class="manual-section">
+                    <h2><i class="fas fa-headset"></i>Contacto y Soporte</h2>
+                    
+                    <p>
+                        Si después de revisar esta guía sigues teniendo problemas, o si necesitas ayuda con alguna 
+                        funcionalidad del sistema, puedes contactar al área de Sistemas a través de los siguientes medios:
+                    </p>
+
+                    <div class="contact-card">
+                        <h3><i class="fas fa-envelope"></i>Correo Electrónico</h3>
+                        <div class="contact-info">
+                            <i class="fas fa-at"></i>
+                            <a href="mailto:sistemas@grupokeila.com">sistemas@grupokeila.com</a>
+                        </div>
+                        <p style="margin-top: 1rem; color: rgba(255, 255, 255, 0.8);">
+                            Envía un correo detallando el problema que estás experimentando. Incluye capturas de pantalla 
+                            si es posible, y describe los pasos que seguiste antes de que ocurriera el error.
+                        </p>
+                    </div>
+
+                    <div class="contact-card">
+                        <h3><i class="fas fa-phone"></i>Wave (Comunicación Interna)</h3>
+                        <div class="contact-info">
+                            <i class="fas fa-comments"></i>
+                            <span>Contacta al área de Sistemas a través de Wave</span>
+                        </div>
+                        <p style="margin-top: 1rem; color: rgba(255, 255, 255, 0.8);">
+                            Puedes comunicarte con el área de Sistemas mediante la plataforma Wave de la empresa. 
+                            Busca al personal del área de Sistemas en el directorio de contactos.
+                        </p>
+                        <div class="manual-note">
+                            <p>
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Nota:</strong> La extensión de Wave puede cambiar según la asignación del personal. 
+                                Consulta el directorio interno de la empresa para obtener la información de contacto actualizada.
+                            </p>
+                        </div>
+                    </div>
+
+                    <h3><i class="fas fa-clipboard-list"></i>Información a Incluir al Solicitar Soporte</h3>
+                    <p>Para agilizar la resolución de tu problema, incluye la siguiente información:</p>
+                    <ul>
+                        <li>Descripción detallada del problema</li>
+                        <li>Pasos para reproducir el error</li>
+                        <li>Capturas de pantalla (si aplica)</li>
+                        <li>Mensajes de error exactos que aparecen</li>
+                        <li>Navegador y versión que estás usando</li>
+                        <li>Tu usuario en el sistema</li>
+                        <li>Fecha y hora aproximada en que ocurrió el problema</li>
+                    </ul>
+                </div>
+
+                <!-- Cierre -->
+                <div class="manual-section">
+                    <h2><i class="fas fa-check-circle"></i>Conclusión</h2>
+                    <p>
+                        Esperamos que esta guía te haya sido útil. El Sistema GK está diseñado para facilitar 
+                        la gestión de recursos humanos y equipos en Grupo Keila. Si tienes sugerencias para mejorar 
+                        el sistema o esta documentación, no dudes en compartirlas con el área de Sistemas.
+                    </p>
+                    <div class="manual-tip">
+                        <p>
+                            <i class="fas fa-heart me-2"></i>
+                            <strong>Gracias por usar el Sistema GK.</strong> Estamos comprometidos en brindarte 
+                            la mejor experiencia posible.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="manual-footer">
+                <div>
+                    <a href="{% url 'empleados:manual_agregar_equipo' %}" class="btn btn-manual btn-manual-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Anterior: Agregar Equipo
+                    </a>
+                </div>
+                <div>
+                    <a href="{% url 'empleados:dashboard' %}" class="btn btn-manual">
+                        <i class="fas fa-home me-2"></i>Volver al Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
