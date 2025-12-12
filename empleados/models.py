@@ -618,9 +618,25 @@ class Perfil(models.Model):
         # Resetear el contador de extraordinarias del año actual
         self.dias_vacaciones_extraordinarios = 0
         
-        # Acumular días no usados del año anterior
+        # Calcular el saldo: días no usados del año anterior - días usados (puede ser negativo)
+        # El saldo es: días con derecho del año anterior - días usados (normales + extraordinarios)
+        dias_con_derecho_ano_anterior = self.dias_vacaciones_anuales
+        dias_gastados_ano_anterior = self.dias_vacaciones_usados + self.dias_vacaciones_extraordinarios
+        saldo_ano_anterior = dias_con_derecho_ano_anterior - dias_gastados_ano_anterior
+        
+        # Sumar el saldo del año anterior al saldo total (acumulativo)
+        self.saldo_vacaciones += saldo_ano_anterior
+        
+        # Sumar los días con derecho del nuevo año al saldo
+        # Los días con derecho que le corresponden por cumplir el año se suman automáticamente al saldo
+        nuevos_dias_con_derecho = nuevos_dias_anuales
+        self.saldo_vacaciones += nuevos_dias_con_derecho
+        
+        # Acumular días no usados del año anterior (para compatibilidad)
         if dias_a_acumular > 0:
             self.dias_vacaciones_acumulados = dias_a_acumular
+        
+        # Nota: El registro en historial se hará después de guardar para evitar import circular
         
         self.save(update_fields=[
             'dias_vacaciones_acumulados', 
@@ -628,8 +644,27 @@ class Perfil(models.Model):
             'ultimo_reset_vacaciones',
             'dias_vacaciones_anuales',
             'dias_vacaciones_extraordinarios',
-            'dias_vacaciones_extraordinarios_ano_anterior'
+            'dias_vacaciones_extraordinarios_ano_anterior',
+            'saldo_vacaciones'
         ])
+        
+        # Registrar en el historial el cambio de saldo por aniversario (después de guardar)
+        try:
+            from decimal import Decimal
+            # Importar aquí para evitar import circular
+            from empleados.models import HistorialVacaciones
+            HistorialVacaciones.objects.create(
+                empleado=self,
+                concepto=f'Aniversario laboral - Año {self.antiguedad_anos} completado',
+                tipo_movimiento='DIAS_CON_DERECHO',
+                fecha_registro=date.today(),
+                con_derecho=Decimal(str(dias_con_derecho_ano_anterior + nuevos_dias_con_derecho)),
+                tomadas=Decimal(str(dias_gastados_ano_anterior)),
+                observaciones=f'Saldo del año anterior: {saldo_ano_anterior:.2f} días. Días con derecho nuevo año: {nuevos_dias_con_derecho:.2f} días. Nuevo saldo acumulado: {self.saldo_vacaciones:.2f} días.'
+            )
+        except Exception:
+            # Si falla el registro en historial, no es crítico
+            pass
         
         return True
 

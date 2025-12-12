@@ -1883,10 +1883,12 @@ def generar_excel_kardex(request):
         ).order_by('orden_departamento', 'departamento__nombre', 'usuario__last_name', 'usuario__first_name')
         
         # Crear respuesta HTTP con Excel
+        from datetime import date as date_module
+        fecha_actual = date_module.today()
+        
         response = HttpResponse(
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
-        fecha_actual = timezone.now().date()
         response['Content-Disposition'] = f'attachment; filename="kardex_vacaciones_{fecha_actual.strftime("%Y%m%d")}.xlsx"'
         
         # Crear workbook
@@ -2044,7 +2046,7 @@ def generar_excel_kardex(request):
             
             # Encabezado de la tabla (azul como en la imagen)
             header_fill_blue = PatternFill(start_color="3B82F6", end_color="2563EB", fill_type="solid")
-            headers_tabla = ['Días Anuales', 'Días Usados', 'Acumulado Año Actual', 'Total Disponible']
+            headers_tabla = ['Con Derecho', 'Saldo', 'Acumulado Año Actual', 'Total Disponible']
             for col_num, header in enumerate(headers_tabla, 1):
                 cell = ws.cell(row=row, column=col_num)
                 cell.value = header
@@ -2055,11 +2057,8 @@ def generar_excel_kardex(request):
             ws.row_dimensions[row].height = 25
             row += 1
             
-            # Calcular total disponible
-            total_disponible = round(empleado.calcular_total_disponible_proyectado(), 2)
-            
-            # Fila de datos
-            # Columna 1: Días Anuales (azul) - Mostrar 0 si no ha cumplido un año
+            # Fila de datos (total_disponible ya fue calculado arriba)
+            # Columna 1: Con Derecho (azul) - Mostrar 0 si no ha cumplido un año
             dias_anuales_display = 0 if not ha_cumplido_ano else dias_anuales
             cell = ws.cell(row=row, column=1)
             cell.value = f'{dias_anuales_display} días'
@@ -2106,7 +2105,20 @@ def generar_excel_kardex(request):
             ws.column_dimensions[get_column_letter(col_num)].width = width
         
         # Guardar workbook
-        wb.save(response)
+        try:
+            wb.save(response)
+        except Exception as save_error:
+            import logging
+            import traceback
+            logger = logging.getLogger(__name__)
+            logger.error(f'Error guardando Excel: {str(save_error)}')
+            logger.error(traceback.format_exc())
+            return HttpResponse(
+                f'Error al guardar el archivo Excel: {str(save_error)}',
+                status=500,
+                content_type='text/plain'
+            )
+        
         return response
     
     except Exception as e:
@@ -2194,7 +2206,7 @@ def generar_pdf_kardex(request):
     elements.append(Spacer(1, 0.5*cm))
     
     # Preparar datos para la tabla
-    data = [['Empleado', 'Depto', 'Antigüedad', 'Días Anuales', 'Saldo', 'Acum. Año Actual', 'Total Disponible']]
+    data = [['Empleado', 'Depto', 'Antigüedad', 'Con Derecho', 'Saldo', 'Acum. Año Actual', 'Total Disponible']]
     
     for empleado in empleados:
         dias_anuales = empleado.dias_vacaciones_anuales
@@ -2991,6 +3003,7 @@ def historial_vacaciones_empleado(request, empleado_id):
     # Calcular totales por año (vacaciones normales y extraordinarias)
     from decimal import Decimal
     resumen_por_ano = {}
+    
     for año, registros in historial_por_ano.items():
         total_normales = Decimal('0')
         total_extraordinarias = Decimal('0')
