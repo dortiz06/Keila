@@ -63,15 +63,55 @@ body {
                     <table class="table table-hover" style="width: 100% !important;">
                         <thead>
                             <tr>
-                                <th style="color: #ffffff !important;"><i class="fas fa-hashtag me-1"></i>Código</th>
-                                <th style="color: #ffffff !important;"><i class="fas fa-tag me-1"></i>Categoría</th>
-                                <th style="color: #ffffff !important;"><i class="fas fa-industry me-1"></i>Marca</th>
-                                <th style="color: #ffffff !important;"><i class="fas fa-laptop me-1"></i>Modelo</th>
-                                <th style="color: #ffffff !important;"><i class="fas fa-barcode me-1"></i>Número de Serie</th>
-                                <th style="color: #ffffff !important; width: 180px !important;"><i class="fas fa-info-circle me-1"></i>Estado</th>
-                                <th style="color: #ffffff !important; width: 280px !important;"><i class="fas fa-user me-1"></i>Asignación / Disponibilidad</th>
+                                <th style="color: #ffffff !important;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-hashtag" style="font-size: 1.2rem;"></i>
+                                        <span>Código</span>
+                                    </div>
+                                </th>
+                                <th style="color: #ffffff !important;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-tag" style="font-size: 1.2rem;"></i>
+                                        <span>Categoría</span>
+                                    </div>
+                                </th>
+                                <th style="color: #ffffff !important;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-industry" style="font-size: 1.2rem;"></i>
+                                        <span>Marca</span>
+                                    </div>
+                                </th>
+                                <th style="color: #ffffff !important;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-laptop" style="font-size: 1.2rem;"></i>
+                                        <span>Modelo</span>
+                                    </div>
+                                </th>
+                                <th style="color: #ffffff !important;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-barcode" style="font-size: 1.2rem;"></i>
+                                        <span>Número de Serie</span>
+                                    </div>
+                                </th>
+                                <th style="color: #ffffff !important; width: 180px !important;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-info-circle" style="font-size: 1.2rem;"></i>
+                                        <span>Estado</span>
+                                    </div>
+                                </th>
+                                <th style="color: #ffffff !important; width: 280px !important;" class="text-left-content">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-user" style="font-size: 1.2rem;"></i>
+                                        <span>Asignación / Disponibilidad</span>
+                                    </div>
+                                </th>
                                 {% if perfil.es_sistemas or perfil.es_admin or perfil.es_rh %}
-                                <th style="color: #ffffff !important;"><i class="fas fa-cog me-1"></i>Acciones</th>
+                                <th style="color: #ffffff !important;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-cog" style="font-size: 1.2rem;"></i>
+                                        <span>Acciones</span>
+                                    </div>
+                                </th>
                                 {% endif %}
                             </tr>
                         </thead>
@@ -105,14 +145,14 @@ body {
                                         </span>
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td style="text-align: left !important;">
                                     {% if equipo.estado == 'DISPONIBLE' %}
                                         <div class="d-flex align-items-center">
                                             <div>
-                                                <div style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 500 !important;">
-                                                    <i class="fas fa-check-circle me-2" style="font-size: 1.1rem !important;"></i>Disponible
+                                                <div style="color: #ffffff !important; font-weight: 500 !important;">
+                                                    <i class="fas fa-check-circle me-2" style="font-size: 1.1rem !important; color: #ffffff !important;"></i>Disponible
                                                 </div>
-                                                <small style="color: rgba(255, 255, 255, 0.6) !important; font-size: 0.75rem !important; margin-top: 4px !important; display: block !important;">
+                                                <small style="color: #ffffff !important; font-size: 0.75rem !important; margin-top: 4px !important; display: block !important;">
                                                     Desde: {{ equipo.fecha_disponibilidad|date:"d/m/Y" }}
                                                 </small>
                                             </div>
@@ -121,15 +161,15 @@ body {
                                         <div class="d-flex align-items-center">
                                             <div>
                                                 <div style="font-weight: 600 !important; color: #ffffff !important;">
-                                                    <i class="fas fa-user-check me-2" style="font-size: 1.1rem !important; color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;"></i>{{ equipo.empleado_asignado.nombre_completo }}
+                                                    <i class="fas fa-user-check me-2" style="font-size: 1.1rem !important; color: #ffffff !important;"></i>{{ equipo.empleado_asignado.nombre_completo }}
                                                 </div>
                                                 {% if equipo.empleado_asignado.departamento %}
-                                                <small style="color: rgba(255, 255, 255, 0.7) !important; font-size: 0.75rem !important; margin-top: 2px !important; display: block !important;">
-                                                    <i class="fas fa-building me-1"></i>{{ equipo.empleado_asignado.departamento.nombre }}
+                                                <small style="color: #ffffff !important; font-size: 0.75rem !important; margin-top: 2px !important; display: block !important;">
+                                                    <i class="fas fa-building me-1" style="color: #ffffff !important;"></i>{{ equipo.empleado_asignado.departamento.nombre }}
                                                 </small>
                                                 {% endif %}
                                                 {% if equipo.asignacion_actual %}
-                                                <small style="color: rgba(255, 255, 255, 0.6) !important; font-size: 0.75rem !important; margin-top: 2px !important; display: block !important;">
+                                                <small style="color: #ffffff !important; font-size: 0.75rem !important; margin-top: 2px !important; display: block !important;">
                                                     Desde: {{ equipo.asignacion_actual.fecha_asignacion|date:"d/m/Y" }}
                                                 </small>
                                                 {% endif %}
@@ -138,28 +178,28 @@ body {
                                     {% elif equipo.estado == 'EN_REPARACION' %}
                                         <div class="d-flex align-items-center">
                                             <div>
-                                                <div style="color: #f59e0b !important; font-weight: 500 !important;">
-                                                    <i class="fas fa-tools me-2" style="font-size: 1.1rem !important;"></i>En Mantenimiento
+                                                <div style="color: #ffffff !important; font-weight: 500 !important;">
+                                                    <i class="fas fa-tools me-2" style="font-size: 1.1rem !important; color: #ffffff !important;"></i>En Mantenimiento
                                                 </div>
                                                 {% if equipo.empleado_asignado %}
-                                                    <small style="color: rgba(255, 255, 255, 0.7) !important; font-size: 0.75rem !important; margin-top: 2px !important; display: block !important;">
-                                                        <i class="fas fa-user me-1"></i>{{ equipo.empleado_asignado.nombre_completo }}
+                                                    <small style="color: #ffffff !important; font-size: 0.75rem !important; margin-top: 2px !important; display: block !important;">
+                                                        <i class="fas fa-user me-1" style="color: #ffffff !important;"></i>{{ equipo.empleado_asignado.nombre_completo }}
                                                     </small>
                                                     {% if equipo.empleado_asignado.departamento %}
-                                                    <small style="color: rgba(255, 255, 255, 0.7) !important; font-size: 0.75rem !important; margin-top: 2px !important; display: block !important;">
-                                                        <i class="fas fa-building me-1"></i>{{ equipo.empleado_asignado.departamento.nombre }}
+                                                    <small style="color: #ffffff !important; font-size: 0.75rem !important; margin-top: 2px !important; display: block !important;">
+                                                        <i class="fas fa-building me-1" style="color: #ffffff !important;"></i>{{ equipo.empleado_asignado.departamento.nombre }}
                                                     </small>
                                                     {% endif %}
                                                     {% if equipo.asignacion_actual %}
-                                                    <small style="color: rgba(255, 255, 255, 0.6) !important; font-size: 0.75rem !important; margin-top: 2px !important; display: block !important;">
+                                                    <small style="color: #ffffff !important; font-size: 0.75rem !important; margin-top: 2px !important; display: block !important;">
                                                         Desde: {{ equipo.asignacion_actual.fecha_asignacion|date:"d/m/Y" }}
                                                     </small>
                                                     {% endif %}
                                                 {% else %}
-                                                    <small style="color: rgba(255, 255, 255, 0.7) !important; font-size: 0.75rem !important; margin-top: 2px !important; display: block !important;">
-                                                        <i class="fas fa-wrench me-1"></i>Área de Mantenimiento
+                                                    <small style="color: #ffffff !important; font-size: 0.75rem !important; margin-top: 2px !important; display: block !important;">
+                                                        <i class="fas fa-wrench me-1" style="color: #ffffff !important;"></i>Área de Mantenimiento
                                                     </small>
-                                                    <small style="color: rgba(255, 255, 255, 0.6) !important; font-size: 0.75rem !important; margin-top: 2px !important; display: block !important;">
+                                                    <small style="color: #ffffff !important; font-size: 0.75rem !important; margin-top: 2px !important; display: block !important;">
                                                         Desde: {{ equipo.fecha_actualizacion|date:"d/m/Y" }}
                                                     </small>
                                                 {% endif %}
@@ -167,8 +207,8 @@ body {
                                         </div>
                                     {% elif equipo.estado == 'DADO_DE_BAJA' %}
                                         <div class="d-flex align-items-center">
-                                            <div style="color: #ef4444 !important; font-weight: 500 !important;">
-                                                <i class="fas fa-ban me-2" style="font-size: 1.1rem !important;"></i>Dado de Baja
+                                            <div style="color: #ffffff !important; font-weight: 500 !important;">
+                                                <i class="fas fa-ban me-2" style="font-size: 1.1rem !important; color: #ffffff !important;"></i>Dado de Baja
                                             </div>
                                         </div>
                                     {% else %}
@@ -303,60 +343,7 @@ body {
     border-bottom-right-radius: 0 !important;
 }
 
-/* Badges de Estado - Mismo estilo que el dashboard */
-.badge-estado-pendiente {
-    background: linear-gradient(135deg, 
-        rgba(245, 158, 11, 0.3) 0%, 
-        rgba(217, 119, 6, 0.25) 100%) !important;
-    color: #f59e0b !important;
-    border: 1px solid rgba(245, 158, 11, 0.5) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-}
-
-.badge-estado-proceso {
-    background: linear-gradient(135deg, 
-        rgba(59, 130, 246, 0.3) 0%, 
-        rgba(37, 99, 235, 0.25) 100%) !important;
-    color: #ffffff !important;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
-    border: 1px solid rgba(59, 130, 246, 0.5) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-}
-
-.badge-estado-resuelto {
-    background: linear-gradient(135deg, 
-        rgba(34, 197, 94, 0.3) 0%, 
-        rgba(22, 163, 74, 0.25) 100%) !important;
-    color: #ffffff !important;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
-    border: 1px solid rgba(34, 197, 94, 0.5) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-}
-
-.badge-estado-cancelado {
-    background: linear-gradient(135deg, 
-        rgba(239, 68, 68, 0.3) 0%, 
-        rgba(220, 38, 38, 0.25) 100%) !important;
-    color: #ef4444 !important;
-    border: 1px solid rgba(239, 68, 68, 0.5) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-}
+/* Badges de Estado - Estilo kardex (los estilos globales en base.html ya los aplican) */
 
 .dashboard .table thead {
     background: transparent !important;
@@ -392,22 +379,28 @@ body {
 .dashboard .table tbody tr {
     background: transparent !important;
     border: none !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     border-radius: 0 !important;
 }
 
-/* Patrón zebra striping sutil - alternar opacidad de filas */
+/* Patrón zebra striping - alternar colores de fondo para mejor separación visual */
 .dashboard .table tbody tr:nth-child(odd) {
-    background: rgba(255, 255, 255, 0.03) !important;
+    background: rgba(255, 255, 255, 0.04) !important;
 }
 
 .dashboard .table tbody tr:nth-child(even) {
-    background: rgba(255, 255, 255, 0.06) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
 }
 
 .dashboard .table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.12) !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .table tbody tr:last-child {
+    border-bottom: none !important;
+}
     backdrop-filter: blur(5px) !important;
     -webkit-backdrop-filter: blur(5px) !important;
     transform: translateY(-1px) !important;

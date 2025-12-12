@@ -398,13 +398,13 @@ body {
                                     </div>
                                     <span class="profile-quick-access-text">Inicio</span>
                                 </a>
-                                <a href="{% url 'empleados:gestionar_tickets' %}" class="profile-quick-access-btn profile-quick-access-warning">
+                                <a href="{% url 'empleados:gestionar_tickets' %}" class="profile-quick-access-btn profile-quick-access-purple">
                                     <div class="profile-quick-access-icon">
                                         <i class="fas fa-ticket-alt"></i>
                                     </div>
                                     <span class="profile-quick-access-text">Gestionar Tickets</span>
                                 </a>
-                                <a href="{% url 'empleados:inventario_equipos' %}" class="profile-quick-access-btn profile-quick-access-primary">
+                                <a href="{% url 'empleados:inventario_equipos' %}" class="profile-quick-access-btn profile-quick-access-warning">
                                     <div class="profile-quick-access-icon">
                                         <i class="fas fa-boxes"></i>
                                     </div>
@@ -452,23 +452,23 @@ body {
                                         </div>
                                         <span class="profile-quick-access-text">Crear Usuario</span>
                                     </a>
-                                    <a href="{% url 'empleados:gestionar_tickets' %}" class="profile-quick-access-btn profile-quick-access-warning">
+                                    <a href="{% url 'empleados:kardex_vacaciones' %}" class="profile-quick-access-btn profile-quick-access-success">
+                                        <div class="profile-quick-access-icon">
+                                            <i class="fas fa-file-alt"></i>
+                                        </div>
+                                        <span class="profile-quick-access-text">Vacaciones</span>
+                                    </a>
+                                    <a href="{% url 'empleados:gestionar_tickets' %}" class="profile-quick-access-btn profile-quick-access-purple">
                                         <div class="profile-quick-access-icon">
                                             <i class="fas fa-ticket-alt"></i>
                                         </div>
-                                        <span class="profile-quick-access-text">Tickets IT</span>
+                                        <span class="profile-quick-access-text">Tickets TI</span>
                                     </a>
-                                    <a href="{% url 'empleados:inventario_equipos' %}" class="profile-quick-access-btn profile-quick-access-success">
+                                    <a href="{% url 'empleados:inventario_equipos' %}" class="profile-quick-access-btn profile-quick-access-warning">
                                         <div class="profile-quick-access-icon">
                                             <i class="fas fa-laptop"></i>
                                         </div>
                                         <span class="profile-quick-access-text">Inventario</span>
-                                    </a>
-                                    <a href="/admin/" class="profile-quick-access-btn profile-quick-access-django">
-                                        <div class="profile-quick-access-icon">
-                                            <i class="fas fa-database"></i>
-                                        </div>
-                                        <span class="profile-quick-access-text">Admin Django</span>
                                     </a>
                                     <a href="{% url 'empleados:gestion_departamentos' %}" class="profile-quick-access-btn profile-quick-access-secondary">
                                         <div class="profile-quick-access-icon">
@@ -476,11 +476,11 @@ body {
                                         </div>
                                         <span class="profile-quick-access-text">Departamentos</span>
                                     </a>
-                                    <a href="{% url 'empleados:reporte_vacaciones_mes' %}" class="profile-quick-access-btn profile-quick-access-warning">
+                                    <a href="/admin/" class="profile-quick-access-btn profile-quick-access-django">
                                         <div class="profile-quick-access-icon">
-                                            <i class="fas fa-chart-bar"></i>
+                                            <i class="fas fa-database"></i>
                                         </div>
-                                        <span class="profile-quick-access-text">Reporte de Vacaciones</span>
+                                        <span class="profile-quick-access-text">Admin Django</span>
                                     </a>
                                 {% else %}
                                     <!-- Accesos para otros perfiles (no admin) -->

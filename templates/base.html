@@ -173,14 +173,138 @@
             color: white;
             border: none;
             font-weight: 600;
+            text-align: center !important;
+        }
+
+        /* Primera y última columna con justificación a la izquierda */
+        .table thead th:first-child,
+        .table thead th:last-child {
+            text-align: left !important;
+        }
+
+        /* Iconos arriba del texto en encabezados - formato vertical */
+        .table thead th i {
+            display: block !important;
+            font-size: 1.2rem !important;
+            margin-bottom: 0.5rem !important;
+            margin-right: 0 !important;
+        }
+
+        /* Si el encabezado tiene un div con flex, aplicar formato vertical */
+        .table thead th > div {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+        }
+
+        /* Iconos siempre centrados arriba, incluso en primera y última columna */
+        .table thead th:first-child > div,
+        .table thead th:last-child > div {
+            align-items: center !important;
+        }
+
+        /* Celdas del cuerpo centradas por defecto */
+        .table tbody td {
+            text-align: center !important;
+            vertical-align: middle !important;
+        }
+
+        /* Primera y última columna con justificación a la izquierda */
+        .table tbody td:first-child,
+        .table tbody td:last-child {
+            text-align: left !important;
+        }
+
+        /* Columnas con contenido extenso (nombres, empleados, información detallada) - alineación a la izquierda */
+        /* Usar clases específicas o estilos inline para columnas con información extensa */
+        .table tbody td.text-left-content,
+        .table tbody td.align-left,
+        /* Columnas que típicamente contienen nombres o información extensa */
+        .table thead th.text-left-content + *,
+        /* Si una columna tiene múltiples elementos (br, small, divs anidados), alinear a la izquierda */
+        .table tbody td:has(br + small),
+        .table tbody td:has(div > div > small) {
+            text-align: left !important;
+        }
+
+        /* Para encabezados con clase text-left-content, el contenido también debe estar a la izquierda */
+        .table thead th.text-left-content {
+            text-align: left !important;
+        }
+
+        .table thead th.text-left-content > div {
+            align-items: flex-start !important;
+        }
+
+        /* Pero mantener el icono centrado arriba */
+        .table thead th.text-left-content > div > i {
+            align-self: center !important;
+        }
+
+        /* Badges centrados dentro de celdas */
+        .table tbody td .badge,
+        .table tbody td span.badge,
+        .table tbody td .badge-vacaciones {
+            margin: 0 auto !important;
+            display: inline-block !important;
+        }
+
+        /* Badges en primera y última columna alineados a la izquierda */
+        .table tbody td:first-child .badge,
+        .table tbody td:first-child span.badge,
+        .table tbody td:first-child .badge-vacaciones,
+        .table tbody td:last-child .badge,
+        .table tbody td:last-child span.badge,
+        .table tbody td:last-child .badge-vacaciones {
+            margin: 0 !important;
         }
 
         .table tbody tr {
             transition: background-color 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+        }
+
+        /* Zebra striping - Alternar colores de fondo para mejor separación visual */
+        .table tbody tr:nth-child(odd) {
+            background-color: rgba(255, 255, 255, 0.03) !important;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.06) !important;
         }
 
         .table tbody tr:hover {
-            background-color: rgba(59, 130, 246, 0.08);
+            background-color: rgba(59, 130, 246, 0.12) !important;
+            border-bottom-color: rgba(255, 255, 255, 0.25) !important;
+        }
+
+        .table tbody tr:last-child {
+            border-bottom: none !important;
+        }
+
+        /* Estilos específicos para tablas con diseño dashboard/glassmorphism */
+        .dashboard .table tbody tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        /* Zebra striping para tablas dashboard - Alternar colores de fondo */
+        .dashboard .table tbody tr:nth-child(odd) {
+            background: rgba(255, 255, 255, 0.03) !important;
+        }
+
+        .dashboard .table tbody tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.06) !important;
+        }
+
+        .dashboard .table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.12) !important;
+            border-bottom-color: rgba(255, 255, 255, 0.25) !important;
+        }
+
+        .dashboard .table tbody tr:last-child {
+            border-bottom: none !important;
         }
 
         .badge {
@@ -572,23 +696,161 @@
         
         /* ===== ESTILOS GLOBALES: BADGES NO CLICKABLES CON OPACIDAD ===== */
         /* Todos los badges que NO son botones deben tener opacidad para diferenciarse */
-        /* EXCEPCIÓN: Badges de Estado de Cuenta (Activo, Inactivo, Staff) mantienen opacidad completa */
-        .badge:not(.btn):not(a):not(button):not(.badge-clickable):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
-        span.badge:not(.btn):not(a):not(button):not(.badge-clickable):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info),
-        .badge-non-clickable:not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info) {
+        /* EXCEPCIÓN: Badges de Estado de Cuenta, Badges de Estado de Equipos, TODOS los badges comunes (urgente, alta, media, baja, pendiente, proceso, resuelto, cancelado), badges de perfil y badges de gestión mantienen opacidad completa */
+        .badge:not(.btn):not(a):not(button):not(.badge-clickable):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info):not(.badge-estado-pendiente):not(.badge-estado-proceso):not(.badge-estado-resuelto):not(.badge-estado-cancelado):not(.badge-prioridad-urgente):not(.badge-prioridad-alta):not(.badge-prioridad-media):not(.badge-prioridad-baja):not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado):not(.badge-perfil-sistemas):not(.badge-perfil-admin):not(.badge-perfil-rh):not(.badge-perfil-jefe):not(.badge-perfil-empleado):not(.badge-jefe):not(.badge-empleados):not(.badge-activo):not(.badge-inactivo):not(.badge-sin-asignar),
+        span.badge:not(.btn):not(a):not(button):not(.badge-clickable):not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info):not(.badge-estado-pendiente):not(.badge-estado-proceso):not(.badge-estado-resuelto):not(.badge-estado-cancelado):not(.badge-prioridad-urgente):not(.badge-prioridad-alta):not(.badge-prioridad-media):not(.badge-prioridad-baja):not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado):not(.badge-perfil-sistemas):not(.badge-perfil-admin):not(.badge-perfil-rh):not(.badge-perfil-jefe):not(.badge-perfil-empleado):not(.badge-jefe):not(.badge-empleados):not(.badge-activo):not(.badge-inactivo):not(.badge-sin-asignar),
+        .badge-non-clickable:not(.profile-badge-success):not(.profile-badge-danger):not(.profile-badge-info):not(.badge-estado-pendiente):not(.badge-estado-proceso):not(.badge-estado-resuelto):not(.badge-estado-cancelado):not(.badge-prioridad-urgente):not(.badge-prioridad-alta):not(.badge-prioridad-media):not(.badge-prioridad-baja):not(.badge-urgente):not(.badge-alta):not(.badge-media):not(.badge-baja):not(.badge-pendiente):not(.badge-proceso):not(.badge-resuelto):not(.badge-cancelado):not(.badge-perfil-sistemas):not(.badge-perfil-admin):not(.badge-perfil-rh):not(.badge-perfil-jefe):not(.badge-perfil-empleado):not(.badge-jefe):not(.badge-empleados):not(.badge-activo):not(.badge-inactivo):not(.badge-sin-asignar) {
             opacity: 0.7 !important;
             cursor: default !important;
             pointer-events: none !important;
             user-select: none !important;
         }
         
-        /* Badges de Estado de Cuenta mantienen opacidad completa */
+        /* TODOS los badges comunes mantienen opacidad completa */
         .profile-badge-success,
         .profile-badge-danger,
-        .profile-badge-info {
+        .profile-badge-info,
+        .badge-estado-pendiente,
+        .badge-estado-proceso,
+        .badge-estado-resuelto,
+        .badge-estado-cancelado,
+        .badge-prioridad-urgente,
+        .badge-prioridad-alta,
+        .badge-prioridad-media,
+        .badge-prioridad-baja,
+        .badge-urgente,
+        .badge-alta,
+        .badge-media,
+        .badge-baja,
+        .badge-pendiente,
+        .badge-proceso,
+        .badge-resuelto,
+        .badge-cancelado,
+        .badge-perfil-sistemas,
+        .badge-perfil-admin,
+        .badge-perfil-rh,
+        .badge-perfil-jefe,
+        .badge-perfil-empleado,
+        .badge-jefe,
+        .badge-empleados,
+        .badge-activo,
+        .badge-inactivo,
+        .badge-sin-asignar {
             opacity: 1 !important;
             cursor: default !important;
             pointer-events: none !important;
+        }
+        
+        /* Badges comunes - Texto blanco brillante */
+        .badge-prioridad-urgente,
+        .badge-prioridad-alta,
+        .badge-prioridad-media,
+        .badge-prioridad-baja,
+        .badge-urgente,
+        .badge-alta,
+        .badge-media,
+        .badge-baja,
+        .badge-pendiente,
+        .badge-proceso,
+        .badge-resuelto,
+        .badge-cancelado,
+        .badge-perfil-sistemas,
+        .badge-perfil-admin,
+        .badge-perfil-rh,
+        .badge-perfil-jefe,
+        .badge-perfil-empleado,
+        .badge-jefe,
+        .badge-empleados,
+        .badge-activo,
+        .badge-inactivo,
+        .badge-sin-asignar {
+            color: #ffffff !important;
+        }
+        
+        /* Forzar texto blanco brillante en todos los badges de perfil y gestión */
+        .badge-perfil-sistemas,
+        .badge-perfil-admin,
+        .badge-perfil-rh,
+        .badge-perfil-jefe,
+        .badge-perfil-empleado,
+        .badge-jefe,
+        .badge-empleados,
+        .badge-activo,
+        .badge-inactivo,
+        .badge-sin-asignar,
+        span.badge-perfil-sistemas,
+        span.badge-perfil-admin,
+        span.badge-perfil-rh,
+        span.badge-perfil-jefe,
+        span.badge-perfil-empleado,
+        span.badge-jefe,
+        span.badge-empleados,
+        span.badge-activo,
+        span.badge-inactivo,
+        span.badge-sin-asignar,
+        .badge-perfil-sistemas *,
+        .badge-perfil-admin *,
+        .badge-perfil-rh *,
+        .badge-perfil-jefe *,
+        .badge-perfil-empleado *,
+        .badge-jefe *,
+        .badge-empleados *,
+        .badge-activo *,
+        .badge-inactivo *,
+        .badge-sin-asignar * {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+        
+        /* Asegurar que los badges de perfil mantengan sus colores distintivos - MÁXIMA ESPECIFICIDAD */
+        .dashboard .badge-perfil-admin,
+        .dashboard span.badge-perfil-admin,
+        .badge.badge-perfil-admin,
+        span.badge-perfil-admin {
+            background: linear-gradient(180deg, 
+                rgba(239, 68, 68, 0.7) 0%, 
+                rgba(220, 38, 38, 0.65) 50%,
+                rgba(185, 28, 28, 0.75) 100%) !important;
+        }
+        
+        .dashboard .badge-perfil-rh,
+        .dashboard span.badge-perfil-rh,
+        .badge.badge-perfil-rh,
+        span.badge-perfil-rh {
+            background: linear-gradient(180deg, 
+                rgba(34, 197, 94, 0.7) 0%, 
+                rgba(22, 163, 74, 0.65) 50%,
+                rgba(20, 83, 45, 0.75) 100%) !important;
+        }
+        
+        .dashboard .badge-perfil-jefe,
+        .dashboard span.badge-perfil-jefe,
+        .badge.badge-perfil-jefe,
+        span.badge-perfil-jefe {
+            background: linear-gradient(180deg, 
+                rgba(59, 130, 246, 0.7) 0%, 
+                rgba(37, 99, 235, 0.65) 50%,
+                rgba(29, 78, 216, 0.75) 100%) !important;
+        }
+        
+        .dashboard .badge-perfil-sistemas,
+        .dashboard span.badge-perfil-sistemas,
+        .badge.badge-perfil-sistemas,
+        span.badge-perfil-sistemas {
+            background: linear-gradient(180deg, 
+                rgba(168, 85, 247, 0.7) 0%, 
+                rgba(147, 51, 234, 0.65) 50%,
+                rgba(126, 34, 206, 0.75) 100%) !important;
+        }
+        
+        .dashboard .badge-perfil-empleado,
+        .dashboard span.badge-perfil-empleado,
+        .badge.badge-perfil-empleado,
+        span.badge-perfil-empleado {
+            background: linear-gradient(180deg, 
+                rgba(156, 163, 175, 0.7) 0%, 
+                rgba(107, 114, 128, 0.65) 50%,
+                rgba(75, 85, 99, 0.75) 100%) !important;
         }
         
         /* ===== CAMBIO GLOBAL: NÚMEROS Y LETRAS VERDE/AZUL/AMARILLO/ROJO A BLANCO CON SOMBRA OSCURA ===== */
@@ -655,7 +917,8 @@
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
         }
         
-        /* Aplicar también a iconos con colores verde/azul/amarillo/rojo */
+        /* ===== ICONOS GENERALES - Sin sombra o sombra mínima (fuera del dashboard) ===== */
+        /* Aplicar sin sombra o sombra mínima a TODOS los iconos por defecto */
         i[style*="color: #22C55E"],
         i[style*="color: #16A34A"],
         i[style*="color: #3B82F6"],
@@ -675,7 +938,7 @@
         .fa-check-circle[style*="color: #3B82F6"],
         .fa-exclamation-triangle[style*="color: #EF4444"],
         .fa-calendar-alt[style*="color: #F59E0B"],
-        /* Iconos de categorías de equipos - Aplicar a todos los iconos de equipos */
+        /* Iconos de categorías de equipos */
         i[class*="fa-laptop"],
         i[class*="fa-desktop"],
         i[class*="fa-mobile"],
@@ -696,12 +959,104 @@
         i[class*="fa-plug"],
         i[class*="fa-battery-full"],
         i[class*="fa-bolt"],
-        /* Iconos en tablas de equipos */
-        .dashboard .table td i[class*="fa-"],
+        /* TODOS los iconos en tablas, botones, títulos, etc. */
         .table td i[class*="fa-"],
-        .dashboard i[class*="fa-"]:not([style*="color: #"]):not([style*="color:#"]) {
+        .table thead th i[class*="fa-"],
+        .btn i[class*="fa-"],
+        .gestion-table i[class*="fa-"],
+        h1 i[class*="fa-"],
+        h2 i[class*="fa-"],
+        h3 i[class*="fa-"],
+        h4 i[class*="fa-"],
+        h5 i[class*="fa-"],
+        h6 i[class*="fa-"],
+        .dashboard-title i[class*="fa-"],
+        .gestion-section-title i[class*="fa-"],
+        i[class*="fa-"]:not([style*="color: #"]):not([style*="color:#"]) {
             color: #ffffff !important;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+            text-shadow: none !important;
+        }
+
+        /* ===== ICONOS EN DASHBOARD - Sombra muy leve (solo en dashboards reales) ===== */
+        /* Iconos con colores verde/azul/amarillo/rojo - Solo en dashboard */
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[style*="color: #22C55E"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[style*="color: #16A34A"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[style*="color: #3B82F6"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[style*="color: #0038A8"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[style*="color: #FBBF24"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[style*="color: #F59E0B"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[style*="color: #EF4444"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[style*="color: #DC2626"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[style*="color: rgba(59, 130, 246"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[style*="color:rgba(59, 130, 246"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) .text-success i,
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) .text-primary i,
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) .text-info i,
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) .text-warning i,
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) .text-danger i,
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) .fa-check-circle[style*="color: #22C55E"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) .fa-check-circle[style*="color: #3B82F6"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) .fa-exclamation-triangle[style*="color: #EF4444"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) .fa-calendar-alt[style*="color: #F59E0B"],
+        /* Iconos de categorías de equipos - Solo en dashboard */
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-laptop"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-desktop"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-mobile"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-tablet"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-keyboard"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-mouse"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-print"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-server"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-hdd"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-camera"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-headphones"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-microphone"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-video"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-tag"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-router"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-network-wired"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-projector"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-plug"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-battery-full"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-bolt"],
+        /* Iconos en tablas de dashboard */
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) .table td i[class*="fa-"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-"]:not([style*="color: #"]):not([style*="color:#"]) {
+            color: #ffffff !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        /* ===== FORZAR SIN SOMBRA EN TODOS LOS ICONOS FUERA DEL DASHBOARD ===== */
+        /* Sobrescribir cualquier sombra en iconos que NO están en dashboard real */
+        /* Prioridad máxima para sobrescribir estilos inline */
+        /* Selector universal para TODOS los iconos fuera del dashboard */
+        i[class*="fa-"]:not(.dashboard:not(.gestion-table):not(.gestion-tickets-card) i),
+        .gestion-table i[class*="fa-"],
+        .gestion-tickets-card i[class*="fa-"],
+        .table:not(.dashboard:not(.gestion-table) .table) i[class*="fa-"],
+        .btn:not(.dashboard:not(.gestion-table) .btn) i[class*="fa-"],
+        .action-btn:not(.dashboard:not(.gestion-table) .action-btn) i[class*="fa-"],
+        h1:not(.dashboard:not(.gestion-table) h1) i[class*="fa-"],
+        h2:not(.dashboard:not(.gestion-table) h2) i[class*="fa-"],
+        h3:not(.dashboard:not(.gestion-table) h3) i[class*="fa-"],
+        h4:not(.dashboard:not(.gestion-table) h4) i[class*="fa-"],
+        h5:not(.dashboard:not(.gestion-table) h5) i[class*="fa-"],
+        h6:not(.dashboard:not(.gestion-table) h6) i[class*="fa-"],
+        .dashboard-title:not(.dashboard:not(.gestion-table) .dashboard-title) i[class*="fa-"],
+        .gestion-section-title i[class*="fa-"] {
+            text-shadow: none !important;
+        }
+        
+        /* Sobrescribir específicamente estilos inline con sombras - Eliminar sombras */
+        i[style*="text-shadow: 0 2px 8px"]:not(.dashboard:not(.gestion-table):not(.gestion-tickets-card) i),
+        i[style*="text-shadow:0 2px 8px"]:not(.dashboard:not(.gestion-table):not(.gestion-tickets-card) i),
+        i[style*="text-shadow: 0 4px 12px"]:not(.dashboard:not(.gestion-table):not(.gestion-tickets-card) i),
+        i[style*="text-shadow:0 4px 12px"]:not(.dashboard:not(.gestion-table):not(.gestion-tickets-card) i),
+        i[style*="text-shadow: 0 3px 10px"]:not(.dashboard:not(.gestion-table):not(.gestion-tickets-card) i),
+        i[style*="text-shadow:0 3px 10px"]:not(.dashboard:not(.gestion-table):not(.gestion-tickets-card) i),
+        i[style*="text-shadow: 0 1px 2px"]:not(.dashboard:not(.gestion-table):not(.gestion-tickets-card) i),
+        i[style*="text-shadow:0 1px 2px"]:not(.dashboard:not(.gestion-table):not(.gestion-tickets-card) i) {
+            text-shadow: none !important;
         }
         
         /* Badges dentro de enlaces o botones mantienen opacidad completa */
@@ -828,6 +1183,276 @@
                 0 3px 8px rgba(6, 75, 53, 0.25),
                 inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
             color: #ffffff !important;
+        }
+        
+        /* ===== SOBRESCRIBIR ESTILOS INLINE CON SOMBRAS - PRIORIDAD MÁXIMA ===== */
+        /* Este estilo debe estar al final para tener máxima prioridad */
+        /* Eliminar sombras de TODOS los iconos con estilos inline (excepto dashboards reales) */
+        i.fas[style*="text-shadow"]:not(.dashboard:not(.gestion-table):not(.gestion-tickets-card) i),
+        i.far[style*="text-shadow"]:not(.dashboard:not(.gestion-table):not(.gestion-tickets-card) i),
+        i.fal[style*="text-shadow"]:not(.dashboard:not(.gestion-table):not(.gestion-tickets-card) i),
+        i.fab[style*="text-shadow"]:not(.dashboard:not(.gestion-table):not(.gestion-tickets-card) i),
+        i[class*="fa-"][style*="text-shadow"]:not(.dashboard:not(.gestion-table):not(.gestion-tickets-card) i) {
+            text-shadow: none !important;
+        }
+        
+        /* Excepción: Mantener sombra muy leve solo en dashboard real (no en gestion-table) */
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) i[class*="fa-"][style*="text-shadow"],
+        .dashboard:not(.gestion-table):not(.gestion-tickets-card) .table i[class*="fa-"][style*="text-shadow"] {
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+        }
+        
+        /* Forzar sin sombra en gestion-table y gestion-tickets-card incluso si está en dashboard */
+        .gestion-table i[class*="fa-"][style*="text-shadow"],
+        .gestion-table td i[class*="fa-"][style*="text-shadow"],
+        .gestion-table thead th i[class*="fa-"][style*="text-shadow"],
+        .gestion-table .action-btn i[style*="text-shadow"],
+        .gestion-table .btn i[style*="text-shadow"],
+        .gestion-tickets-card i[class*="fa-"][style*="text-shadow"] {
+            text-shadow: none !important;
+        }
+        
+        /* ===== BADGES DE TICKETS - ESTILO EXACTO DEL KARDEX ===== */
+        /* Aplicar diseño exacto del kardex a badges de prioridad y estado de tickets */
+        .badge-prioridad-urgente,
+        .badge-prioridad-alta,
+        .badge-prioridad-media,
+        .badge-prioridad-baja,
+        .badge-estado-pendiente,
+        .badge-estado-proceso,
+        .badge-estado-resuelto,
+        .badge-estado-cancelado {
+            padding: 0.5rem 1rem !important;
+            border-radius: 50px !important;
+            font-weight: 600 !important;
+            font-size: 0.85rem !important;
+            font-family: 'Montserrat', sans-serif !important;
+            display: inline-block !important;
+            color: #ffffff !important;
+            white-space: nowrap !important;
+            transition: all 0.2s ease !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            backdrop-filter: blur(12px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.25),
+                0 2px 6px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1) !important;
+            position: relative !important;
+            overflow: hidden !important;
+            margin: 0 auto !important;
+            opacity: 1 !important;
+        }
+        
+        /* Highlight sutil en la parte superior - Igual que kardex */
+        .badge-prioridad-urgente::before,
+        .badge-prioridad-alta::before,
+        .badge-prioridad-media::before,
+        .badge-prioridad-baja::before,
+        .badge-estado-pendiente::before,
+        .badge-estado-proceso::before,
+        .badge-estado-resuelto::before,
+        .badge-estado-cancelado::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            height: 50% !important;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), transparent) !important;
+            pointer-events: none !important;
+            border-radius: 50px 50px 0 0 !important;
+        }
+        
+        /* Colores específicos para badges de prioridad - Más brillantes y saturados como estado */
+        .badge-prioridad-urgente {
+            background: rgba(239, 68, 68, 0.5) !important;
+        }
+        
+        .badge-prioridad-alta {
+            background: rgba(245, 158, 11, 0.5) !important;
+        }
+        
+        .badge-prioridad-media {
+            background: rgba(59, 130, 246, 0.5) !important;
+        }
+        
+        .badge-prioridad-baja {
+            background: rgba(96, 165, 250, 0.5) !important;
+        }
+        
+        /* Colores específicos para badges de estado - Opacidad 0.5 como kardex */
+        .badge-estado-pendiente {
+            background: rgba(245, 158, 11, 0.5) !important;
+        }
+        
+        .badge-estado-proceso {
+            background: rgba(59, 130, 246, 0.5) !important;
+        }
+        
+        .badge-estado-resuelto {
+            background: rgba(34, 197, 94, 0.5) !important;
+        }
+        
+        .badge-estado-cancelado {
+            background: rgba(239, 68, 68, 0.5) !important;
+        }
+        
+        /* Forzar texto blanco brillante en badges de prioridad - Mayor especificidad */
+        .badge.badge-prioridad-urgente,
+        span.badge.badge-prioridad-urgente,
+        .badge.badge-prioridad-alta,
+        span.badge.badge-prioridad-alta,
+        .badge.badge-prioridad-media,
+        span.badge.badge-prioridad-media,
+        .badge.badge-prioridad-baja,
+        span.badge.badge-prioridad-baja {
+            color: #ffffff !important;
+            opacity: 1 !important;
+        }
+        
+        /* Efecto hover con glassmorphism - Igual que kardex */
+        .badge-prioridad-urgente:hover,
+        .badge-prioridad-alta:hover,
+        .badge-prioridad-media:hover,
+        .badge-prioridad-baja:hover,
+        .badge-estado-pendiente:hover,
+        .badge-estado-proceso:hover,
+        .badge-estado-resuelto:hover,
+        .badge-estado-cancelado:hover {
+            border-color: rgba(255, 255, 255, 0.25) !important;
+            box-shadow: 
+                0 6px 16px rgba(0, 0, 0, 0.3),
+                0 3px 8px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1) !important;
+            transform: translateY(-1px) !important;
+        }
+        
+        /* ===== APLICAR ESTILO KARDEX A TODOS LOS BADGES DEL SISTEMA ===== */
+        /* Badges comunes (urgente, alta, media, baja, pendiente, proceso, resuelto, cancelado) */
+        .badge-urgente:not(.btn):not(a):not(button),
+        .badge-alta:not(.btn):not(a):not(button),
+        .badge-media:not(.btn):not(a):not(button),
+        .badge-baja:not(.btn):not(a):not(button),
+        .badge-pendiente:not(.btn):not(a):not(button),
+        .badge-proceso:not(.btn):not(a):not(button),
+        .badge-resuelto:not(.btn):not(a):not(button),
+        .badge-cancelado:not(.btn):not(a):not(button) {
+            padding: 0.5rem 1rem !important;
+            border-radius: 50px !important;
+            font-weight: 600 !important;
+            font-size: 0.85rem !important;
+            font-family: 'Montserrat', sans-serif !important;
+            display: inline-block !important;
+            color: #ffffff !important;
+            white-space: nowrap !important;
+            transition: all 0.2s ease !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            backdrop-filter: blur(12px) saturate(180%) !important;
+            -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.25),
+                0 2px 6px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1) !important;
+            position: relative !important;
+            overflow: hidden !important;
+            margin: 0 auto !important;
+            opacity: 1 !important;
+        }
+        
+        /* Highlight sutil en la parte superior - Para todos los badges */
+        .badge-urgente::before,
+        .badge-alta::before,
+        .badge-media::before,
+        .badge-baja::before,
+        .badge-pendiente::before,
+        .badge-proceso::before,
+        .badge-resuelto::before,
+        .badge-cancelado::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            height: 50% !important;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), transparent) !important;
+            pointer-events: none !important;
+            border-radius: 50px 50px 0 0 !important;
+        }
+        
+        /* Colores brillantes para badges comunes - Opacidad 0.5 como kardex */
+        .badge-urgente:not(.btn):not(a):not(button) {
+            background: rgba(239, 68, 68, 0.5) !important;
+        }
+        
+        .badge-alta:not(.btn):not(a):not(button) {
+            background: rgba(245, 158, 11, 0.5) !important;
+        }
+        
+        .badge-media:not(.btn):not(a):not(button) {
+            background: rgba(59, 130, 246, 0.5) !important;
+        }
+        
+        .badge-baja:not(.btn):not(a):not(button) {
+            background: rgba(96, 165, 250, 0.5) !important;
+        }
+        
+        .badge-pendiente:not(.btn):not(a):not(button) {
+            background: rgba(245, 158, 11, 0.5) !important;
+        }
+        
+        .badge-proceso:not(.btn):not(a):not(button) {
+            background: rgba(59, 130, 246, 0.5) !important;
+        }
+        
+        .badge-resuelto:not(.btn):not(a):not(button) {
+            background: rgba(34, 197, 94, 0.5) !important;
+        }
+        
+        .badge-cancelado:not(.btn):not(a):not(button) {
+            background: rgba(239, 68, 68, 0.5) !important;
+        }
+        
+        /* Efecto hover para todos los badges */
+        .badge-urgente:hover,
+        .badge-alta:hover,
+        .badge-media:hover,
+        .badge-baja:hover,
+        .badge-pendiente:hover,
+        .badge-proceso:hover,
+        .badge-resuelto:hover,
+        .badge-cancelado:hover {
+            border-color: rgba(255, 255, 255, 0.25) !important;
+            box-shadow: 
+                0 6px 16px rgba(0, 0, 0, 0.3),
+                0 3px 8px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1) !important;
+            transform: translateY(-1px) !important;
+        }
+        
+        /* Forzar texto blanco y opacidad completa en todos los badges comunes */
+        .badge-urgente,
+        .badge-urgente *,
+        .badge-alta,
+        .badge-alta *,
+        .badge-media,
+        .badge-media *,
+        .badge-baja,
+        .badge-baja *,
+        .badge-pendiente,
+        .badge-pendiente *,
+        .badge-proceso,
+        .badge-proceso *,
+        .badge-resuelto,
+        .badge-resuelto *,
+        .badge-cancelado,
+        .badge-cancelado * {
+            color: #ffffff !important;
+            opacity: 1 !important;
         }
     </style>
     {% block extra_css %}{% endblock %}
@@ -980,5 +1605,53 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     {% block extra_js %}{% endblock %}
+    
+    <script>
+        // Eliminar sombras de TODOS los iconos fuera del dashboard
+        // Solo dashboards reales mantienen sombra muy leve
+        document.addEventListener('DOMContentLoaded', function() {
+            // Buscar todos los iconos
+            const allIcons = document.querySelectorAll('i[class*="fa-"]');
+            
+            allIcons.forEach(function(icon) {
+                // Verificar si el icono está en un dashboard real (no en gestion-table o gestion-tickets-card)
+                const dashboardContainer = icon.closest('.dashboard');
+                const isInGestionTable = icon.closest('.gestion-table');
+                const isInGestionTicketsCard = icon.closest('.gestion-tickets-card');
+                const isInRealDashboard = dashboardContainer && !isInGestionTable && !isInGestionTicketsCard;
+                
+                // Si tiene estilo inline con text-shadow
+                if (icon.hasAttribute('style') && icon.getAttribute('style').includes('text-shadow')) {
+                    if (isInRealDashboard) {
+                        // Dashboard real: aplicar sombra muy leve
+                        let currentStyle = icon.getAttribute('style');
+                        currentStyle = currentStyle.replace(
+                            /text-shadow:\s*[^;]+/gi,
+                            'text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15)'
+                        );
+                        icon.setAttribute('style', currentStyle);
+                    } else {
+                        // Fuera del dashboard: eliminar sombra
+                        let currentStyle = icon.getAttribute('style');
+                        currentStyle = currentStyle.replace(
+                            /text-shadow:\s*[^;]+/gi,
+                            ''
+                        );
+                        // Limpiar dobles puntos y comas
+                        currentStyle = currentStyle.replace(/;\s*;/g, ';').replace(/^\s*;\s*/, '').replace(/\s*;\s*$/, '');
+                        icon.setAttribute('style', currentStyle);
+                    }
+                } else if (!isInRealDashboard) {
+                    // Si no tiene text-shadow y NO está en dashboard real, asegurar que no tenga sombra
+                    let currentStyle = icon.getAttribute('style') || '';
+                    if (currentStyle.includes('text-shadow')) {
+                        currentStyle = currentStyle.replace(/text-shadow:\s*[^;]+/gi, '');
+                        currentStyle = currentStyle.replace(/;\s*;/g, ';').replace(/^\s*;\s*/, '').replace(/\s*;\s*$/, '');
+                        icon.setAttribute('style', currentStyle);
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>

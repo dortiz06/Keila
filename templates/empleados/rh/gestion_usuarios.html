@@ -283,14 +283,28 @@ body {
     background: transparent !important;
 }
 
-.gestion-table-row {
+/* Patrón zebra striping para gestion-table */
+.gestion-table tbody tr:nth-child(odd) {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.gestion-table tbody tr:nth-child(even) {
     background: rgba(255, 255, 255, 0.08) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.gestion-table-row {
     transition: all 0.2s ease !important;
+}
+
+.gestion-table tbody tr:last-child {
+    border-bottom: none !important;
 }
 
 .gestion-table-row:hover {
     background: rgba(255, 255, 255, 0.15) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.3) !important;
 }
 
 .gestion-table tbody td {

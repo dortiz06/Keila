@@ -345,16 +345,26 @@ body {
 }
 
 /* Patrón zebra striping sutil - alternar opacidad de filas */
+.dashboard .table tbody tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
 .dashboard .table tbody tr:nth-child(odd) {
-    background: rgba(255, 255, 255, 0.03) !important;
+    background: rgba(255, 255, 255, 0.04) !important;
 }
 
 .dashboard .table tbody tr:nth-child(even) {
-    background: rgba(255, 255, 255, 0.06) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
 }
 
 .dashboard .table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.12) !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .table tbody tr:last-child {
+    border-bottom: none !important;
+}
     backdrop-filter: blur(5px) !important;
     -webkit-backdrop-filter: blur(5px) !important;
     transform: translateY(-1px) !important;

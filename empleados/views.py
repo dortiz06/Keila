@@ -1791,6 +1791,9 @@ def kardex_vacaciones(request):
     if not perfil or not (perfil.es_rh() or perfil.es_admin()):
         raise PermissionDenied
     
+    # Obtener parámetro de ordenamiento (por defecto: alfabetico)
+    orden = request.GET.get('orden', 'alfabetico')
+    
     # Obtener todos los empleados activos, excluyendo ADMIN, RH y SISTEMAS
     from django.db.models import Case, When, Value, IntegerField
     
@@ -1800,16 +1803,26 @@ def kardex_vacaciones(request):
         tipo_perfil__in=['ADMIN', 'RH', 'SISTEMAS']
     ).select_related(
         'usuario', 'departamento'
-    ).annotate(
-        # Ordenar por departamento: Ventas primero, Conta segundo, sin departamento al final
-        orden_departamento=Case(
-            When(departamento__nombre__iexact='Ventas', then=Value(1)),
-            When(departamento__nombre__iexact='Conta', then=Value(2)),
-            When(departamento__isnull=True, then=Value(999)),
-            default=Value(3),
-            output_field=IntegerField()
-        )
-    ).order_by('orden_departamento', 'departamento__nombre', 'usuario__last_name', 'usuario__first_name')
+    )
+    
+    # Aplicar ordenamiento según el parámetro
+    if orden == 'area':
+        # Ordenar por área/departamento, luego alfabéticamente
+        empleados = empleados.annotate(
+            orden_departamento=Case(
+                When(departamento__nombre__iexact='Ventas', then=Value(1)),
+                When(departamento__nombre__iexact='Conta', then=Value(2)),
+                When(departamento__isnull=True, then=Value(999)),
+                default=Value(3),
+                output_field=IntegerField()
+            )
+        ).order_by('orden_departamento', 'departamento__nombre', 'usuario__first_name', 'usuario__last_name')
+    elif orden == 'antiguedad':
+        # Ordenar por antigüedad (más antiguos primero), luego alfabéticamente
+        empleados = empleados.order_by('fecha_contratacion', 'usuario__first_name', 'usuario__last_name')
+    else:  # alfabetico (por defecto)
+        # Ordenar alfabéticamente por nombre primero, luego apellido
+        empleados = empleados.order_by('usuario__first_name', 'usuario__last_name')
     
     # Preparar datos de vacaciones para cada empleado
     empleados_data = []
@@ -1835,6 +1848,7 @@ def kardex_vacaciones(request):
         'perfil': perfil,
         'empleados_data': empleados_data,
         'total_empleados': len(empleados_data),
+        'orden_actual': orden,
     }
     return render(request, 'empleados/rh/kardex_vacaciones.html', context)
 

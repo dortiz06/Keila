@@ -17,7 +17,7 @@ body {
 <div class="container-fluid dashboard">
     <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="dashboard-title" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important;">
+        <h1 class="dashboard-title" style="color: #ffffff !important; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 0 3px 12px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 0, 0, 0.5) !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important;">
             <i class="fas fa-check-circle me-2"></i>Resolver Ticket: {{ ticket.codigo }}
         </h1>
         <a href="{% url 'empleados:gestionar_tickets' %}" class="btn btn-outline-primary">
@@ -36,8 +36,8 @@ body {
     {% endif %}
 
     <!-- Información del Ticket -->
-    <div class="card mb-4">
-        <div class="card-body" style="background: transparent !important; padding: 1.5rem !important;">
+    <div class="card mb-4" style="overflow: hidden !important; border-radius: 20px !important;">
+        <div class="card-body" style="background: transparent !important; padding: 1.5rem !important; overflow: hidden !important; border-radius: 20px !important;">
             <h5 class="gestion-section-title mb-3" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
                 <i class="fas fa-info-circle me-2"></i>Información del Ticket
             </h5>
@@ -92,8 +92,8 @@ body {
     </div>
 
     <!-- Formulario de Resolución -->
-    <div class="card">
-        <div class="card-body" style="background: transparent !important; padding: 2rem !important;">
+    <div class="card" style="overflow: hidden !important; border-radius: 20px !important;">
+        <div class="card-body" style="background: transparent !important; padding: 2rem !important; overflow: hidden !important; border-radius: 20px !important;">
             <h5 class="gestion-section-title mb-4" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">
                 <i class="fas fa-edit me-2"></i>Actualizar Estado y Solución
             </h5>
@@ -158,13 +158,16 @@ body {
 <style>
 /* ===== ESTILOS GLOBALES DEL DASHBOARD ===== */
 .dashboard .card {
-    background: rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(20px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    background: rgba(60, 60, 60, 0.4) !important;
+    backdrop-filter: blur(25px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
     border: 1px solid rgba(255, 255, 255, 0.25) !important;
     border-radius: 20px !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
-                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 
+                0 4px 16px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    overflow: hidden !important;
+    position: relative !important;
 }
 
 .dashboard .card-body {
@@ -228,114 +231,7 @@ body {
     color: rgba(255, 255, 255, 0.5) !important;
 }
 
-/* Badges de Prioridad */
-.badge-prioridad-urgente {
-    background: linear-gradient(135deg, 
-        rgba(239, 68, 68, 0.3) 0%, 
-        rgba(220, 38, 38, 0.25) 100%) !important;
-    color: #ef4444 !important;
-    border: 1px solid rgba(239, 68, 68, 0.5) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-}
-
-.badge-prioridad-alta {
-    background: linear-gradient(135deg, 
-        rgba(245, 158, 11, 0.3) 0%, 
-        rgba(217, 119, 6, 0.25) 100%) !important;
-    color: #f59e0b !important;
-    border: 1px solid rgba(245, 158, 11, 0.5) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-}
-
-.badge-prioridad-media {
-    background: linear-gradient(135deg, 
-        rgba(59, 130, 246, 0.3) 0%, 
-        rgba(37, 99, 235, 0.25) 100%) !important;
-    color: #ffffff !important;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
-    border: 1px solid rgba(59, 130, 246, 0.5) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-}
-
-.badge-prioridad-baja {
-    background: linear-gradient(135deg, 
-        rgba(107, 114, 128, 0.3) 0%, 
-        rgba(75, 85, 99, 0.25) 100%) !important;
-    color: #9ca3af !important;
-    border: 1px solid rgba(107, 114, 128, 0.5) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-}
-
-/* Badges de Estado */
-.badge-estado-pendiente {
-    background: linear-gradient(135deg, 
-        rgba(245, 158, 11, 0.3) 0%, 
-        rgba(217, 119, 6, 0.25) 100%) !important;
-    color: #f59e0b !important;
-    border: 1px solid rgba(245, 158, 11, 0.5) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-}
-
-.badge-estado-proceso {
-    background: linear-gradient(135deg, 
-        rgba(59, 130, 246, 0.3) 0%, 
-        rgba(37, 99, 235, 0.25) 100%) !important;
-    color: #ffffff !important;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
-    border: 1px solid rgba(59, 130, 246, 0.5) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-}
-
-.badge-estado-resuelto {
-    background: linear-gradient(135deg, 
-        rgba(34, 197, 94, 0.3) 0%, 
-        rgba(22, 163, 74, 0.25) 100%) !important;
-    color: #ffffff !important;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
-    border: 1px solid rgba(34, 197, 94, 0.5) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-}
-
-.badge-estado-cancelado {
-    background: linear-gradient(135deg, 
-        rgba(239, 68, 68, 0.3) 0%, 
-        rgba(220, 38, 38, 0.25) 100%) !important;
-    color: #ef4444 !important;
-    border: 1px solid rgba(239, 68, 68, 0.5) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-}
+/* Badges de Prioridad y Estado - Estilo kardex (los estilos globales en base.html ya los aplican) */
 
 /* ===== DISEÑO MODERNO DE BOTONES ===== */
 .dashboard .btn-outline-primary {
