@@ -1,0 +1,378 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load perfil_tags %}
+
+{% block title %}Agregar Nuevo Equipo{% endblock %}
+
+{% block extra_css %}
+<!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endblock %}
+
+{% block content %}
+<style>
+/* Cambiar fondo solo en la vista de agregar equipo - Más oscuro para mejor legibilidad */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.65)), url('{% static "images/dash/hardw.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+</style>
+<div class="container-fluid dashboard">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="dashboard-title" style="color: #ffffff !important; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 0 3px 12px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 0, 0, 0.5) !important;"><i class="fas fa-plus-circle me-2"></i>Agregar Nuevo Equipo</h1>
+            <a href="{% url 'empleados:inventario_equipos' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Volver al Inventario
+            </a>
+        </div>
+
+        <div class="card" style="overflow: hidden !important; border-radius: 20px !important;">
+        <div class="card-body" style="background: transparent !important; padding: 2rem !important; overflow: hidden !important; border-radius: 20px !important;">
+            <form method="post" id="equipoForm">
+                {% csrf_token %}
+                
+                <!-- Información Básica -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="mb-3" style="color: #ffffff !important; font-weight: 600 !important;">
+                            <i class="fas fa-info-circle me-2"></i>Información Básica del Equipo
+                        </h5>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.categoria.id_for_label }}" class="form-label categoria-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            <i class="fas fa-tag me-2"></i>{{ form.categoria.label }} <span class="text-danger">*</span>
+                        </label>
+                        {{ form.categoria }}
+                        {% if form.categoria.errors %}
+                            <div class="text-danger mt-1">{{ form.categoria.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.marca.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.marca.label }} <span class="text-danger">*</span>
+                        </label>
+                        {{ form.marca }}
+                        {% if form.marca.errors %}
+                            <div class="text-danger mt-1">{{ form.marca.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.modelo.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.modelo.label }} <span class="text-danger">*</span>
+                        </label>
+                        {{ form.modelo }}
+                        {% if form.modelo.errors %}
+                            <div class="text-danger mt-1">{{ form.modelo.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.numero_serie.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.numero_serie.label }} <span class="text-danger">*</span>
+                        </label>
+                        {{ form.numero_serie }}
+                        {% if form.numero_serie.errors %}
+                            <div class="text-danger mt-1">{{ form.numero_serie.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.codigo_inventario.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.codigo_inventario.label }} <span class="text-danger">*</span>
+                        </label>
+                        {{ form.codigo_inventario }}
+                        {% if form.codigo_inventario.errors %}
+                            <div class="text-danger mt-1">{{ form.codigo_inventario.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.estado.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.estado.label }} <span class="text-danger">*</span>
+                        </label>
+                        {{ form.estado }}
+                        {% if form.estado.errors %}
+                            <div class="text-danger mt-1">{{ form.estado.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.fecha_adquisicion.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.fecha_adquisicion.label }} <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" 
+                               name="{{ form.fecha_adquisicion.name }}" 
+                               id="{{ form.fecha_adquisicion.id_for_label }}" 
+                               value="{% if form.fecha_adquisicion.value %}{{ form.fecha_adquisicion.value|date:'d/m/Y' }}{% endif %}" 
+                               class="form-control datepicker-fecha-adquisicion"
+                               placeholder="DD/MM/YYYY"
+                               style="background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 10px; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;">
+                        {% if form.fecha_adquisicion.errors %}
+                            <div class="text-danger mt-1">{{ form.fecha_adquisicion.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Asignación (Opcional) -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h5 class="mb-3" style="color: #ffffff !important; font-weight: 600 !important;">
+                            <i class="fas fa-user-check me-2"></i>Asignación de Equipo (Opcional)
+                        </h5>
+                        <p class="text-muted mb-3" style="color: rgba(255, 255, 255, 0.7) !important;">
+                            Puede asignar el equipo a un empleado al momento de crearlo, o hacerlo más tarde desde el inventario.
+                        </p>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.asignar_a_empleado.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.asignar_a_empleado.label }}
+                        </label>
+                        {{ form.asignar_a_empleado }}
+                        {% if form.asignar_a_empleado.help_text %}
+                            <small class="form-text" style="color: rgba(255, 255, 255, 0.6) !important;">
+                                {{ form.asignar_a_empleado.help_text }}
+                            </small>
+                        {% endif %}
+                        {% if form.asignar_a_empleado.errors %}
+                            <div class="text-danger mt-1">{{ form.asignar_a_empleado.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.condicion_entrega.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.condicion_entrega.label }}
+                        </label>
+                        {{ form.condicion_entrega }}
+                        {% if form.condicion_entrega.help_text %}
+                            <small class="form-text" style="color: rgba(255, 255, 255, 0.6) !important;">
+                                {{ form.condicion_entrega.help_text }}
+                            </small>
+                        {% endif %}
+                        {% if form.condicion_entrega.errors %}
+                            <div class="text-danger mt-1">{{ form.condicion_entrega.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Observaciones -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <label for="{{ form.observaciones.id_for_label }}" class="form-label" style="color: #ffffff !important; font-weight: 500 !important;">
+                            {{ form.observaciones.label }}
+                        </label>
+                        {{ form.observaciones }}
+                        {% if form.observaciones.errors %}
+                            <div class="text-danger mt-1">{{ form.observaciones.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-outline-success">
+                                <i class="fas fa-save me-1"></i>Agregar Equipo
+                            </button>
+                            <button type="button" id="btnCancelar" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-1"></i>Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmación de equipo agregado -->
+<div id="modalConfirmacionEquipo" class="modal-confirmacion" style="display: none !important; position: fixed !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; z-index: 99999 !important; background: rgba(0, 0, 0, 0.6) !important; backdrop-filter: blur(5px) !important; align-items: center !important; justify-content: center !important;">
+    <div class="modal-confirmacion-content" style="background: rgba(255, 255, 255, 0.15) !important; backdrop-filter: blur(20px) saturate(180%) !important; -webkit-backdrop-filter: blur(20px) saturate(180%) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; border-radius: 24px !important; padding: 2rem !important; max-width: 500px !important; width: 90% !important; margin: 0 auto !important; position: relative !important;">
+        <div class="modal-confirmacion-header" style="text-align: center !important; margin-bottom: 1.5rem !important;">
+            <i class="fas fa-check-circle" style="font-size: 4rem !important; color: #22c55e !important; margin-bottom: 1rem !important;"></i>
+            <h3 style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; margin: 0 !important;">Equipo Agregado</h3>
+        </div>
+        <div class="modal-confirmacion-body" style="text-align: center !important; margin-bottom: 1.5rem !important;">
+            <p style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-size: 1.1rem !important; margin: 0 !important;">El equipo ha sido agregado exitosamente al inventario.</p>
+        </div>
+        <div class="modal-confirmacion-footer" style="text-align: center !important;">
+            <button type="button" class="btn btn-primary" id="btnCerrarModalEquipo" style="background: linear-gradient(180deg, rgba(59, 130, 246, 0.95) 0%, rgba(37, 99, 235, 0.95) 50%, rgba(29, 78, 216, 1) 100%) !important; border: none !important; border-radius: 14px !important; padding: 14px 32px !important; font-weight: 600 !important; color: #ffffff !important;">
+                <i class="fas fa-check me-1"></i>Aceptar
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Aplicar estilos del dashboard a la vista de agregar equipo - Mejor contraste */
+.dashboard .card {
+    background: rgba(60, 60, 60, 0.4) !important;
+    backdrop-filter: blur(25px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 
+                0 4px 16px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    overflow: hidden !important;
+    position: relative !important;
+}
+
+.dashboard .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 20px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.dashboard .card-body {
+    background: transparent !important;
+    overflow: hidden !important;
+    border-radius: 20px !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+.dashboard .card-body > * {
+    position: relative !important;
+    z-index: 3 !important;
+}
+
+.dashboard-title {
+    color: #ffffff !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 
+                 0 3px 12px rgba(0, 0, 0, 0.6),
+                 0 0 20px rgba(0, 0, 0, 0.5) !important;
+    font-weight: 700 !important;
+    margin-bottom: 0 !important;
+}
+
+/* Botones de acción con el mismo diseño que los accesos rápidos del dashboard */
+.dashboard .btn-outline-success,
+.dashboard .btn-outline-secondary,
+.dashboard .btn-primary {
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 12px 24px !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    font-family: 'Montserrat', sans-serif !important;
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Verde para "Agregar Equipo" */
+.dashboard .btn-outline-success {
+    background: linear-gradient(180deg,
+        rgba(34, 197, 94, 0.95) 0%,
+        rgba(22, 163, 74, 0.95) 50%,
+        rgba(20, 83, 45, 1) 100%) !important;
+}
+
+.dashboard .btn-outline-success:hover {
+    background: linear-gradient(180deg,
+        rgba(74, 222, 128, 0.95) 0%,
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow:
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Gris para "Volver al Inventario" y "Cancelar" */
+.dashboard .btn-outline-secondary {
+    background: linear-gradient(180deg,
+        rgba(156, 163, 175, 0.95) 0%,
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+}
+
+.dashboard .btn-outline-secondary:hover {
+    background: linear-gradient(180deg,
+        rgba(209, 213, 219, 0.95) 0%,
+        rgba(156, 163, 175, 0.95) 50%,
+        rgba(107, 114, 128, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow:
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Azul para el botón "Aceptar" del modal */
+.dashboard .btn-primary {
+    background: linear-gradient(180deg,
+        rgba(59, 130, 246, 0.95) 0%,
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+}
+
+.dashboard .btn-primary:hover {
+    background: linear-gradient(180deg,
+        rgba(96, 165, 250, 0.95) 0%,
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow:
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+</style>
+
+{% block extra_js %}
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Inicializar flatpickr para la fecha de adquisición
+    flatpickr('.datepicker-fecha-adquisicion', {
+        dateFormat: 'd/m/Y',
+        allowInput: true,
+        locale: 'es'
+    });
+
+    // Lógica simple para el modal de confirmación
+    const form = document.getElementById('equipoForm');
+    const modal = document.getElementById('modalConfirmacionEquipo');
+    const btnCancelar = document.getElementById('btnCancelar');
+    const btnCerrarModal = document.getElementById('btnCerrarModalEquipo');
+
+    if (btnCancelar) {
+        btnCancelar.addEventListener('click', function () {
+            window.location.href = "{% url 'empleados:inventario_equipos' %}";
+        });
+    }
+
+    if (btnCerrarModal) {
+        btnCerrarModal.addEventListener('click', function () {
+            modal.style.display = 'none';
+            window.location.href = "{% url 'empleados:inventario_equipos' %}";
+        });
+    }
+});
+</script>
+{% endblock %}
+
+{% endblock %}
+
