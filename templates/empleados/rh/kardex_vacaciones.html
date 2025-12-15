@@ -79,9 +79,20 @@ body {
                                         </span>
                                     </td>
                                     <td>
-                                        <span class="badge-vacaciones badge-saldo" style="color: {% if data.saldo|default:0 < 0 %}#ef4444{% else %}#10b981{% endif %} !important;">
-                                            {{ data.saldo|default:0 }} días
-                                        </span>
+                                        <div class="d-flex align-items-center">
+                                            <span class="badge-vacaciones badge-saldo" style="color: {% if data.saldo|default:0 < 0 %}#ef4444{% else %}#10b981{% endif %} !important;">
+                                                {{ data.saldo|default:0 }} días
+                                            </span>
+                                            {% if data.deducciones %}
+                                            <button type="button" class="btn btn-sm btn-link text-white ms-2 p-0" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#modalDeducciones{{ forloop.counter }}"
+                                                    title="Ver historial de deducciones"
+                                                    style="font-size: 0.75rem; text-decoration: none;">
+                                                <i class="fas fa-info-circle"></i>
+                                            </button>
+                                            {% endif %}
+                                        </div>
                                     </td>
                                     <td>
                                         <span class="badge-vacaciones badge-acumulado">
@@ -115,6 +126,76 @@ body {
         </div>
     </div>
 </div>
+
+<!-- Modales para mostrar historial de deducciones -->
+{% for data in empleados_data %}
+{% if data.deducciones %}
+<div class="modal fade" id="modalDeducciones{{ forloop.counter }}" tabindex="-1" aria-labelledby="modalDeduccionesLabel{{ forloop.counter }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="background: rgba(40, 40, 40, 0.95) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important;">
+            <div class="modal-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;">
+                <h5 class="modal-title" id="modalDeduccionesLabel{{ forloop.counter }}" style="color: #ffffff !important;">
+                    <i class="fas fa-history me-2"></i>Historial de Deducciones - {{ data.empleado.nombre_completo }}
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="color: #ffffff !important;">
+                <p class="mb-3">
+                    <strong>Saldo actual:</strong> 
+                    <span style="color: {% if data.saldo < 0 %}#ef4444{% else %}#10b981{% endif %} !important;">
+                        {{ data.saldo }} días
+                    </span>
+                </p>
+                {% if data.deducciones %}
+                <div class="table-responsive">
+                    <table class="table table-sm" style="color: #ffffff !important;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;">
+                                <th style="color: #ffffff !important;">Fecha</th>
+                                <th style="color: #ffffff !important;">Concepto</th>
+                                <th style="color: #ffffff !important; text-align: right;">Días Restados</th>
+                                <th style="color: #ffffff !important; text-align: right;">Saldo Después</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for deduccion in data.deducciones %}
+                            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
+                                <td>{{ deduccion.fecha|date:"d/m/Y" }}</td>
+                                <td>{{ deduccion.concepto }}</td>
+                                <td style="text-align: right; color: #ef4444 !important;">
+                                    <strong>-{{ deduccion.dias }} días</strong>
+                                </td>
+                                <td style="text-align: right;">
+                                    {% if deduccion.saldo_despues is not None %}
+                                        <span style="color: {% if deduccion.saldo_despues < 0 %}#ef4444{% else %}#10b981{% endif %} !important;">
+                                            {{ deduccion.saldo_despues }} días
+                                        </span>
+                                    {% else %}
+                                        <span style="color: rgba(255, 255, 255, 0.5) !important;">N/A</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-center" style="color: rgba(255, 255, 255, 0.7) !important;">
+                    No hay registros de deducciones para este empleado.
+                </p>
+                {% endif %}
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid rgba(255, 255, 255, 0.2) !important;">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <a href="{% url 'empleados:historial_vacaciones_empleado' data.empleado.id %}" class="btn btn-primary">
+                    <i class="fas fa-eye me-1"></i>Ver Historial Completo
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
 
 <style>
 /* Aplicar estilos del dashboard a la vista de kardex - Igual que inventario */
