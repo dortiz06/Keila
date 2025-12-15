@@ -17,7 +17,7 @@ body {
 <div class="container-fluid dashboard">
     <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="dashboard-title" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important;">
+        <h1 class="dashboard-title" style="color: #ffffff !important; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 0 3px 12px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 0, 0, 0.5) !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important;">
             <i class="fas fa-ticket-alt me-2"></i>Gestionar Tickets
         </h1>
         {% if perfil.es_admin %}
@@ -72,13 +72,48 @@ body {
                     <table class="table table-hover gestion-table">
                         <thead>
                             <tr>
-                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Código</th>
-                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Solicitante</th>
-                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Tipo</th>
-                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Prioridad</th>
-                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Estado</th>
-                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Fecha Creación</th>
-                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">Acciones</th>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-hashtag" style="font-size: 1.2rem;"></i>
+                                        <span>Código</span>
+                                    </div>
+                                </th>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;" class="text-left-content">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-user" style="font-size: 1.2rem;"></i>
+                                        <span>Solicitante</span>
+                                    </div>
+                                </th>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-tag" style="font-size: 1.2rem;"></i>
+                                        <span>Tipo</span>
+                                    </div>
+                                </th>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-exclamation-triangle" style="font-size: 1.2rem;"></i>
+                                        <span>Prioridad</span>
+                                    </div>
+                                </th>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-info-circle" style="font-size: 1.2rem;"></i>
+                                        <span>Estado</span>
+                                    </div>
+                                </th>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-calendar-alt" style="font-size: 1.2rem;"></i>
+                                        <span>Fecha Creación</span>
+                                    </div>
+                                </th>
+                                <th style="color: rgba(255, 255, 255, 0.9) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-cog" style="font-size: 1.2rem;"></i>
+                                        <span>Acciones</span>
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -87,7 +122,7 @@ body {
                                 <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">
                                     <strong>{{ ticket.codigo }}</strong>
                                 </td>
-                                <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">
+                                <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; text-align: left !important;">
                                     <i class="fas fa-user me-1" style="color: rgba(255, 255, 255, 0.6) !important;"></i>{{ ticket.empleado.nombre_completo }}
                                 </td>
                                 <td style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">{{ ticket.get_tipo_display }}</td>
@@ -152,13 +187,16 @@ body {
 <style>
 /* ===== ESTILOS GLOBALES DEL DASHBOARD ===== */
 .dashboard .card {
-    background: rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(20px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    background: rgba(60, 60, 60, 0.4) !important;
+    backdrop-filter: blur(25px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
     border: 1px solid rgba(255, 255, 255, 0.25) !important;
     border-radius: 20px !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
-                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 
+                0 4px 16px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    overflow: hidden !important;
+    position: relative !important;
 }
 
 .dashboard .card-body {
@@ -167,18 +205,25 @@ body {
 
 .dashboard-title {
     color: #ffffff !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 
+                 0 3px 12px rgba(0, 0, 0, 0.6),
+                 0 0 20px rgba(0, 0, 0, 0.5) !important;
     font-weight: 700 !important;
     margin-bottom: 0 !important;
+    font-family: 'Montserrat', sans-serif !important;
 }
 
 .gestion-tickets-card {
-    background: rgba(255, 255, 255, 0.08) !important;
-    backdrop-filter: blur(20px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    background: rgba(60, 60, 60, 0.4) !important;
+    backdrop-filter: blur(25px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
     border: 1px solid rgba(255, 255, 255, 0.25) !important;
     border-radius: 20px !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
-                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 
+                0 4px 16px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    overflow: hidden !important;
+    position: relative !important;
 }
 
 .gestion-section-title {
@@ -222,9 +267,9 @@ body {
 }
 
 .gestion-table-wrapper {
-    background: rgba(255, 255, 255, 0.05) !important;
+    background: transparent !important;
     padding: 1.5rem !important;
-    border-radius: 15px !important;
+    border-radius: 0 !important;
 }
 
 .gestion-table {
@@ -237,9 +282,17 @@ body {
 }
 
 .gestion-table thead th {
-    border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
-    padding: 1rem !important;
     background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    padding: 14px 12px !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+    border-radius: 0 !important;
+    letter-spacing: 0.3px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    text-align: center !important;
     border-top: none !important;
 }
 
@@ -247,132 +300,64 @@ body {
     background: transparent !important;
 }
 
-.gestion-table-row {
+/* Patrón zebra striping para gestion-table - ESTILO KARDEX */
+.gestion-table tbody tr:nth-child(odd) {
+    background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.gestion-table tbody tr:nth-child(even) {
     background: rgba(255, 255, 255, 0.08) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-    transition: all 0.3s ease !important;
+}
+
+.gestion-table-row {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border-radius: 0 !important;
+}
+
+.gestion-table tbody tr:last-child {
+    border-bottom: none !important;
 }
 
 .gestion-table-row:hover {
     background: rgba(255, 255, 255, 0.15) !important;
-    transform: translateY(-2px) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.3) !important;
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+    transform: translateY(-1px) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.25) !important;
 }
 
 .gestion-table tbody td {
     background: transparent !important;
-    padding: 1rem !important;
+    border: none !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
+    padding: 14px 12px !important;
+    color: #ffffff !important;
     vertical-align: middle !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7), 
+                 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+    border-radius: 0 !important;
+    font-weight: 400 !important;
+    font-family: 'Montserrat', sans-serif !important;
+    text-align: center !important;
     border-top: none !important;
 }
 
-/* Badges de Prioridad */
-.badge-prioridad-urgente {
-    background: linear-gradient(135deg, 
-        rgba(239, 68, 68, 0.3) 0%, 
-        rgba(220, 38, 38, 0.25) 100%) !important;
-    color: #ef4444 !important;
-    border: 1px solid rgba(239, 68, 68, 0.5) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
+.gestion-table tbody td:first-child,
+.gestion-table thead th:first-child {
+    border-left: none !important;
+    padding-left: 16px !important;
 }
 
-.badge-prioridad-alta {
-    background: linear-gradient(135deg, 
-        rgba(245, 158, 11, 0.3) 0%, 
-        rgba(217, 119, 6, 0.25) 100%) !important;
-    color: #f59e0b !important;
-    border: 1px solid rgba(245, 158, 11, 0.5) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
+.gestion-table tbody td:first-child {
+    text-align: left !important;
 }
 
-.badge-prioridad-media {
-    background: linear-gradient(135deg, 
-        rgba(59, 130, 246, 0.3) 0%, 
-        rgba(37, 99, 235, 0.25) 100%) !important;
-    color: #ffffff !important;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
-    border: 1px solid rgba(59, 130, 246, 0.5) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-}
-
-.badge-prioridad-baja {
-    background: linear-gradient(135deg, 
-        rgba(107, 114, 128, 0.3) 0%, 
-        rgba(75, 85, 99, 0.25) 100%) !important;
-    color: #9ca3af !important;
-    border: 1px solid rgba(107, 114, 128, 0.5) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-}
-
-/* Badges de Estado */
-.badge-estado-pendiente {
-    background: linear-gradient(135deg, 
-        rgba(245, 158, 11, 0.3) 0%, 
-        rgba(217, 119, 6, 0.25) 100%) !important;
-    color: #f59e0b !important;
-    border: 1px solid rgba(245, 158, 11, 0.5) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-}
-
-.badge-estado-proceso {
-    background: linear-gradient(135deg, 
-        rgba(59, 130, 246, 0.3) 0%, 
-        rgba(37, 99, 235, 0.25) 100%) !important;
-    color: #ffffff !important;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
-    border: 1px solid rgba(59, 130, 246, 0.5) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-}
-
-.badge-estado-resuelto {
-    background: linear-gradient(135deg, 
-        rgba(34, 197, 94, 0.3) 0%, 
-        rgba(22, 163, 74, 0.25) 100%) !important;
-    color: #ffffff !important;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;
-    border: 1px solid rgba(34, 197, 94, 0.5) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-}
-
-.badge-estado-cancelado {
-    background: linear-gradient(135deg, 
-        rgba(239, 68, 68, 0.3) 0%, 
-        rgba(220, 38, 38, 0.25) 100%) !important;
-    color: #ef4444 !important;
-    border: 1px solid rgba(239, 68, 68, 0.5) !important;
-    font-family: 'Montserrat', sans-serif !important;
-    padding: 0.5rem 0.75rem !important;
-    border-radius: 12px !important;
-    font-weight: 500 !important;
-    font-size: 0.875rem !important;
-}
+/* Badges de Prioridad y Estado - Estilo EXACTO del kardex */
+/* Los estilos globales en base.html ya aplican el diseño del kardex */
 
 /* ===== DISEÑO MODERNO DE BOTONES DE ACCIÓN ===== */
 .dashboard .action-buttons-group {
@@ -407,6 +392,27 @@ body {
     font-size: 0.875rem !important;
     z-index: 1 !important;
     position: relative !important;
+    text-shadow: none !important;
+}
+
+/* Iconos en gestion-table y gestion-tickets-card siempre sin sombra */
+.gestion-table .action-btn i,
+.gestion-tickets-card .action-btn i {
+    text-shadow: none !important;
+}
+
+/* Iconos en gestion-table y gestion-tickets-card - Sin sombra */
+.gestion-table i[class*="fa-"],
+.gestion-table td i[class*="fa-"],
+.gestion-table thead th i[class*="fa-"],
+.gestion-table .action-btn i,
+.gestion-table .btn i,
+.gestion-tickets-card i[class*="fa-"],
+.gestion-tickets-card .btn i[class*="fa-"],
+.gestion-tickets-card h1 i[class*="fa-"],
+.gestion-tickets-card h5 i[class*="fa-"],
+.gestion-section-title i[class*="fa-"] {
+    text-shadow: none !important;
 }
 
 .dashboard .action-btn::before {
