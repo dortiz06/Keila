@@ -589,14 +589,33 @@ class Perfil(models.Model):
                 self.procesar_acumulacion_anual()
         
         # Saldo de años anteriores (puede ser negativo o positivo)
+        # NOTA: Después de procesar_acumulacion_anual, el saldo incluye:
+        # - Saldo del año anterior (línea 738)
+        # - Días completos del nuevo año (línea 739)
         saldo = Decimal(str(self.saldo_vacaciones))
         
         # Días acumulados hasta hoy en el año actual (proporcional, se actualiza día con día)
+        # IMPORTANTE: calcular_dias_acumulados_hasta_hoy() calcula los días proporcionales desde el aniversario
+        # si ya pasó el aniversario, o desde el inicio del año si aún no ha cumplido años
         dias_acumulados_hasta_hoy = Decimal(str(self.calcular_dias_acumulados_hasta_hoy()))
         
-        # Total = Saldo (años anteriores) + Días acumulados (hasta hoy)
-        # Este cálculo se actualiza automáticamente día con día
-        total = saldo + dias_acumulados_hasta_hoy
+        # Si ya pasó el aniversario, el saldo ya incluye los días completos del nuevo año (sumados en procesar_acumulacion_anual)
+        # Pero necesitamos mostrar solo los días proporcionales acumulados desde el aniversario hasta hoy
+        # Por lo tanto: total = saldo - dias_anuales_completos + dias_acumulados_proporcionales
+        if hoy >= aniversario_este_ano:
+            # Obtener los días anuales del año actual
+            ano_laboral_actual = self.antiguedad_anos + 1
+            dias_anuales_completos = Decimal(str(self.calcular_dias_segun_ano_laboral(ano_laboral_actual)))
+            
+            # El saldo actual incluye: saldo_año_anterior + dias_anuales_completos
+            # Necesitamos: saldo_año_anterior + dias_acumulados_proporcionales (desde aniversario hasta hoy)
+            # Entonces: total = saldo - dias_anuales_completos + dias_acumulados_hasta_hoy
+            saldo_sin_dias_anuales = saldo - dias_anuales_completos
+            total = saldo_sin_dias_anuales + dias_acumulados_hasta_hoy
+        else:
+            # Aún no ha cumplido años, el saldo no incluye los días del nuevo año
+            # Sumar los días acumulados desde el inicio del año
+            total = saldo + dias_acumulados_hasta_hoy
         
         return round(total, 4)  # Permitir valores negativos
     
