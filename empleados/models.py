@@ -568,6 +568,26 @@ class Perfil(models.Model):
         if not self.fecha_contratacion:
             return Decimal('0')
         
+        # Verificar si el empleado cumplió años y procesar acumulación anual automáticamente
+        hoy = date.today()
+        
+        # Calcular el aniversario de este año
+        try:
+            aniversario_este_ano = date(hoy.year, self.fecha_contratacion.month, self.fecha_contratacion.day)
+        except ValueError:
+            # Si el día no existe en este año (ej: 29 de febrero), usar el último día del mes
+            from calendar import monthrange
+            ultimo_dia = monthrange(hoy.year, self.fecha_contratacion.month)[1]
+            aniversario_este_ano = date(hoy.year, self.fecha_contratacion.month, min(self.fecha_contratacion.day, ultimo_dia))
+        
+        # Verificar si ya pasó el aniversario este año
+        # Y si no se ha procesado este año (verificar por fecha, no solo por año)
+        if hoy >= aniversario_este_ano:
+            # Verificar si no se ha procesado después del aniversario de este año
+            if not self.ultimo_reset_vacaciones or self.ultimo_reset_vacaciones < aniversario_este_ano:
+                # Procesar acumulación anual automáticamente
+                self.procesar_acumulacion_anual()
+        
         # Saldo de años anteriores (puede ser negativo o positivo)
         saldo = Decimal(str(self.saldo_vacaciones))
         
@@ -634,23 +654,47 @@ class Perfil(models.Model):
         return True
     
     def procesar_acumulacion_anual(self):
-        """Procesa la acumulación de vacaciones al inicio del año"""
+        """Procesa la acumulación de vacaciones cuando el empleado cumple un año más"""
         from datetime import date
+        from calendar import monthrange
         
-        # Verificar si ya se procesó este año
-        if self.ultimo_reset_vacaciones and self.ultimo_reset_vacaciones.year == date.today().year:
+        if not self.fecha_contratacion:
             return False
         
-        # Guardar las extraordinarias del año anterior antes de resetear
+        hoy = date.today()
+        
+        # Calcular el aniversario de este año
+        try:
+            aniversario_este_ano = date(hoy.year, self.fecha_contratacion.month, self.fecha_contratacion.day)
+        except ValueError:
+            # Si el día no existe en este año (ej: 29 de febrero), usar el último día del mes
+            ultimo_dia = monthrange(hoy.year, self.fecha_contratacion.month)[1]
+            aniversario_este_ano = date(hoy.year, self.fecha_contratacion.month, min(self.fecha_contratacion.day, ultimo_dia))
+        
+        # Verificar si ya pasó el aniversario este año
+        if hoy < aniversario_este_ano:
+            return False  # Aún no ha cumplido años este año
+        
+        # Verificar si ya se procesó después del aniversario de este año
+        if self.ultimo_reset_vacaciones and self.ultimo_reset_vacaciones >= aniversario_este_ano:
+            return False  # Ya se procesó después del aniversario
+        
+        # Guardar valores del año anterior ANTES de resetear
         extraordinarias_ano_anterior = self.dias_vacaciones_extraordinarios
+        dias_con_derecho_ano_anterior = self.dias_vacaciones_anuales  # Días que tenía derecho el año anterior
+        dias_usados_ano_anterior = self.dias_vacaciones_usados  # Días normales usados
+        dias_extraordinarios_ano_anterior = self.dias_vacaciones_extraordinarios  # Días extraordinarios usados
         
-        # Calcular días no usados del año anterior
-        dias_no_usados = max(0, self.dias_vacaciones_anuales - self.dias_vacaciones_usados)
+        # Calcular el saldo del año anterior (puede ser negativo)
+        # Saldo = días con derecho - días usados (normales + extraordinarios)
+        dias_gastados_ano_anterior = dias_usados_ano_anterior + dias_extraordinarios_ano_anterior
+        saldo_ano_anterior = dias_con_derecho_ano_anterior - dias_gastados_ano_anterior
         
-        # Acumular TODOS los días no usados (sin límite)
+        # Calcular días no usados del año anterior (solo para compatibilidad)
+        dias_no_usados = max(0, dias_con_derecho_ano_anterior - dias_usados_ano_anterior)
         dias_a_acumular = dias_no_usados
         
-        # Actualizar días anuales según nueva antigüedad ANTES de resetear
+        # Actualizar días anuales según nueva antigüedad
         nuevos_dias_anuales_base = int(self.dias_vacaciones_segun_antiguedad)
         
         # Restar las vacaciones extraordinarias del año anterior de los nuevos días anuales
@@ -667,12 +711,6 @@ class Perfil(models.Model):
         
         # Resetear el contador de extraordinarias del año actual
         self.dias_vacaciones_extraordinarios = 0
-        
-        # Calcular el saldo: días no usados del año anterior - días usados (puede ser negativo)
-        # El saldo es: días con derecho del año anterior - días usados (normales + extraordinarios)
-        dias_con_derecho_ano_anterior = self.dias_vacaciones_anuales
-        dias_gastados_ano_anterior = self.dias_vacaciones_usados + self.dias_vacaciones_extraordinarios
-        saldo_ano_anterior = dias_con_derecho_ano_anterior - dias_gastados_ano_anterior
         
         # Sumar el saldo del año anterior al saldo total (acumulativo)
         self.saldo_vacaciones += saldo_ano_anterior
