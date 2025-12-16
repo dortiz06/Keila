@@ -377,53 +377,103 @@ class Perfil(models.Model):
     
     @property
     def antiguedad_detallada(self):
-        """Retorna antigüedad en formato: X años y Y meses"""
+        """Retorna antigüedad en formato: X años, Y meses y Z días"""
         if not self.fecha_contratacion:
             return "Sin fecha de contratación"
         
+        from datetime import date
+        
         today = date.today()
+        fecha_inicio = self.fecha_contratacion
         
         # Calcular años completos
-        years = today.year - self.fecha_contratacion.year
-        if today.month < self.fecha_contratacion.month or (today.month == self.fecha_contratacion.month and today.day < self.fecha_contratacion.day):
+        years = today.year - fecha_inicio.year
+        if today.month < fecha_inicio.month or (today.month == fecha_inicio.month and today.day < fecha_inicio.day):
             years -= 1
         
-        # Calcular meses adicionales
-        if today.month >= self.fecha_contratacion.month:
-            months = today.month - self.fecha_contratacion.month
-            if today.day < self.fecha_contratacion.day:
-                months -= 1
+        # Calcular la fecha del último aniversario (o fecha_inicio si tiene menos de 1 año)
+        if years >= 1:
+            if today.month < fecha_inicio.month or (today.month == fecha_inicio.month and today.day < fecha_inicio.day):
+                ultimo_aniversario = date(today.year - 1, fecha_inicio.month, fecha_inicio.day)
         else:
-            months = 12 + today.month - self.fecha_contratacion.month
-            if today.day < self.fecha_contratacion.day:
-                months -= 1
+                ultimo_aniversario = date(today.year, fecha_inicio.month, fecha_inicio.day)
+        else:
+            ultimo_aniversario = fecha_inicio
         
-        # Asegurar que los meses sean positivos
+        # Calcular meses desde el último aniversario
+        months = 0
+        fecha_temp = ultimo_aniversario
+        
+        # Avanzar mes por mes hasta llegar al mes actual
+        # Si estamos en el mismo mes, no hay meses completos
+        if fecha_temp.year < today.year or (fecha_temp.year == today.year and fecha_temp.month < today.month):
+            # Avanzar al siguiente mes
+            if fecha_temp.month == 12:
+                fecha_temp = date(fecha_temp.year + 1, 1, fecha_temp.day)
+            else:
+                fecha_temp = date(fecha_temp.year, fecha_temp.month + 1, fecha_temp.day)
+            
+            # Contar meses completos
+            while fecha_temp.year < today.year or (fecha_temp.year == today.year and fecha_temp.month < today.month):
+                months += 1
+                # Avanzar al siguiente mes
+                if fecha_temp.month == 12:
+                    fecha_temp = date(fecha_temp.year + 1, 1, fecha_temp.day)
+                else:
+                    fecha_temp = date(fecha_temp.year, fecha_temp.month + 1, fecha_temp.day)
+        
+        # Calcular días desde la última fecha calculada hasta today (inclusive)
+        if fecha_temp.year == today.year and fecha_temp.month == today.month:
+            # Estamos en el mismo mes, calcular días desde fecha_temp hasta today (inclusive)
+            days = (today - fecha_temp).days
+        elif fecha_temp.year < today.year or (fecha_temp.year == today.year and fecha_temp.month < today.month):
+            # Ya pasamos meses completos, calcular días del mes actual
+            # Días desde el día 1 del mes actual hasta today (inclusive)
+            days = today.day
+        else:
+            # No debería pasar, pero por seguridad
+            days = 0
+        
+        # Asegurar que los valores sean positivos
+        if years < 0:
+            years = 0
         if months < 0:
             months = 0
+        if days < 0:
+            days = 0
         
         # Formatear salida
-        if years == 0:
-            if months == 0:
-                return "Menos de 1 mes"
-            elif months == 1:
-                return "1 mes"
+        partes = []
+        
+        if years > 0:
+            if years == 1:
+                partes.append("1 año")
             else:
-                return f"{months} meses"
-        elif years == 1:
-            if months == 0:
-                return "1 año"
-            elif months == 1:
-                return "1 año y 1 mes"
+                partes.append(f"{years} años")
+        
+        if months > 0:
+            if months == 1:
+                partes.append("1 mes")
             else:
-                return f"1 año y {months} meses"
+                partes.append(f"{months} meses")
+        
+        if days > 0:
+            if days == 1:
+                partes.append("1 día")
         else:
-            if months == 0:
-                return f"{years} años"
-            elif months == 1:
-                return f"{years} años y 1 mes"
+                partes.append(f"{days} días")
+        
+        # Si no hay nada, significa que es menos de 1 día
+        if not partes:
+            return "Menos de 1 día"
+        
+        # Formatear según cantidad de partes
+        if len(partes) == 1:
+            return partes[0]
+        elif len(partes) == 2:
+            return f"{partes[0]} y {partes[1]}"
             else:
-                return f"{years} años y {months} meses"
+            return f"{partes[0]}, {partes[1]} y {partes[2]}"
     
     def es_jefe_area(self):
         return self.tipo_perfil == 'JEFE_AREA'
@@ -883,7 +933,7 @@ class SolicitudVacaciones(models.Model):
             self.empleado.dias_vacaciones_extraordinarios += self.dias_solicitados
         else:
             # Vacaciones normales
-            self.empleado.dias_vacaciones_usados += self.dias_solicitados
+        self.empleado.dias_vacaciones_usados += self.dias_solicitados
         
         self.empleado.save()
         
