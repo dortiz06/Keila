@@ -395,7 +395,7 @@ class Perfil(models.Model):
         if years >= 1:
             if today.month < fecha_inicio.month or (today.month == fecha_inicio.month and today.day < fecha_inicio.day):
                 ultimo_aniversario = date(today.year - 1, fecha_inicio.month, fecha_inicio.day)
-            else:
+        else:
                 ultimo_aniversario = date(today.year, fecha_inicio.month, fecha_inicio.day)
         else:
             ultimo_aniversario = fecha_inicio
@@ -405,22 +405,25 @@ class Perfil(models.Model):
         fecha_temp = ultimo_aniversario
         
         # Avanzar mes por mes hasta llegar al mes actual
-        # Si estamos en el mismo mes, no hay meses completos
-        if fecha_temp.year < today.year or (fecha_temp.year == today.year and fecha_temp.month < today.month):
+        # Contar meses completos: desde el mes siguiente al último aniversario hasta el mes actual
+        while True:
             # Avanzar al siguiente mes
             if fecha_temp.month == 12:
-                fecha_temp = date(fecha_temp.year + 1, 1, fecha_temp.day)
+                fecha_temp_siguiente = date(fecha_temp.year + 1, 1, fecha_temp.day)
             else:
-                fecha_temp = date(fecha_temp.year, fecha_temp.month + 1, fecha_temp.day)
+                fecha_temp_siguiente = date(fecha_temp.year, fecha_temp.month + 1, fecha_temp.day)
             
-            # Contar meses completos
-            while fecha_temp.year < today.year or (fecha_temp.year == today.year and fecha_temp.month < today.month):
-                months += 1
-                # Avanzar al siguiente mes
-                if fecha_temp.month == 12:
-                    fecha_temp = date(fecha_temp.year + 1, 1, fecha_temp.day)
-                else:
-                    fecha_temp = date(fecha_temp.year, fecha_temp.month + 1, fecha_temp.day)
+            # Si el siguiente mes ya pasó la fecha actual, detener
+            if fecha_temp_siguiente.year > today.year or (fecha_temp_siguiente.year == today.year and fecha_temp_siguiente.month > today.month):
+                break
+            # Si el siguiente mes es el mes actual y el día ya pasó, detener
+            if fecha_temp_siguiente.year == today.year and fecha_temp_siguiente.month == today.month:
+                if fecha_temp_siguiente.day > today.day:
+                    break
+            
+            # Contar este mes como completo
+            months += 1
+            fecha_temp = fecha_temp_siguiente
         
         # Calcular días desde la última fecha calculada hasta today (inclusive)
         if fecha_temp.year == today.year and fecha_temp.month == today.month:
@@ -442,6 +445,9 @@ class Perfil(models.Model):
         if days < 0:
             days = 0
         
+        # Calcular total de días exactos
+        total_dias = (today - fecha_inicio).days
+        
         # Formatear salida
         partes = []
         
@@ -460,20 +466,23 @@ class Perfil(models.Model):
         if days > 0:
             if days == 1:
                 partes.append("1 día")
-            else:
+        else:
                 partes.append(f"{days} días")
         
         # Si no hay nada, significa que es menos de 1 día
         if not partes:
-            return "Menos de 1 día"
+            return f"Menos de 1 día ({total_dias} días)"
         
         # Formatear según cantidad de partes
         if len(partes) == 1:
-            return partes[0]
+            resultado = partes[0]
         elif len(partes) == 2:
-            return f"{partes[0]} y {partes[1]}"
-        else:
-            return f"{partes[0]}, {partes[1]} y {partes[2]}"
+            resultado = f"{partes[0]} y {partes[1]}"
+            else:
+            resultado = f"{partes[0]}, {partes[1]} y {partes[2]}"
+        
+        # Agregar total de días entre paréntesis
+        return f"{resultado} ({total_dias} días)"
     
     def es_jefe_area(self):
         return self.tipo_perfil == 'JEFE_AREA'
@@ -558,10 +567,10 @@ class Perfil(models.Model):
             # Calcular días desde inicio del año
             inicio_ano = date(hoy.year, 1, 1)
             dias_transcurridos = (hoy - inicio_ano).days
-            dias_anuales_actuales = self.calcular_dias_segun_ano_laboral(ano_laboral_actual)
-            dias_por_dia = dias_anuales_actuales / 365
-            dias_acumulados = dias_por_dia * dias_transcurridos
-            return round(dias_acumulados, 4)
+        dias_anuales_actuales = self.calcular_dias_segun_ano_laboral(ano_laboral_actual)
+        dias_por_dia = dias_anuales_actuales / 365
+        dias_acumulados = dias_por_dia * dias_transcurridos
+        return round(dias_acumulados, 4)
     
     def calcular_total_disponible_proyectado(self):
         """
@@ -990,7 +999,7 @@ class SolicitudVacaciones(models.Model):
             self.empleado.saldo_vacaciones -= Decimal(str(self.dias_solicitados))
         else:
             # Vacaciones normales: se restan de los días usados del año
-            self.empleado.dias_vacaciones_usados += self.dias_solicitados
+        self.empleado.dias_vacaciones_usados += self.dias_solicitados
             # También se restan del saldo
             from decimal import Decimal
             self.empleado.saldo_vacaciones -= Decimal(str(self.dias_solicitados))

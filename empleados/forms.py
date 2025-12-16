@@ -222,11 +222,11 @@ class SolicitudVacacionesForm(forms.ModelForm):
                 else:
                     # Vacaciones normales: validar que tenga días disponibles
                     if dias_solicitados > self.empleado.dias_vacaciones_disponibles:
-                        raise forms.ValidationError(
-                            f'No tienes suficientes días de vacaciones disponibles. '
-                            f'Disponibles: {self.empleado.dias_vacaciones_disponibles} días. '
-                            f'Solicitaste: {dias_solicitados} días laborables ({dias_calendario} días totales - {domingos_excluidos} domingos)'
-                        )
+                raise forms.ValidationError(
+                    f'No tienes suficientes días de vacaciones disponibles. '
+                    f'Disponibles: {self.empleado.dias_vacaciones_disponibles} días. '
+                    f'Solicitaste: {dias_solicitados} días laborables ({dias_calendario} días totales - {domingos_excluidos} domingos)'
+                )
         
         return cleaned_data
 

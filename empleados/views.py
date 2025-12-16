@@ -1808,13 +1808,13 @@ def kardex_vacaciones(request):
     if orden == 'area':
         # Ordenar por área/departamento, luego alfabéticamente
         empleados = empleados.annotate(
-            orden_departamento=Case(
-                When(departamento__nombre__iexact='Ventas', then=Value(1)),
-                When(departamento__nombre__iexact='Conta', then=Value(2)),
-                When(departamento__isnull=True, then=Value(999)),
-                default=Value(3),
-                output_field=IntegerField()
-            )
+        orden_departamento=Case(
+            When(departamento__nombre__iexact='Ventas', then=Value(1)),
+            When(departamento__nombre__iexact='Conta', then=Value(2)),
+            When(departamento__isnull=True, then=Value(999)),
+            default=Value(3),
+            output_field=IntegerField()
+        )
         ).order_by('orden_departamento', 'departamento__nombre', 'usuario__first_name', 'usuario__last_name')
     elif orden == 'antiguedad':
         # Ordenar por antigüedad (más antiguos primero), luego alfabéticamente
@@ -2060,7 +2060,7 @@ def generar_excel_kardex(request):
         
         # Guardar workbook
         try:
-            wb.save(response)
+        wb.save(response)
         except Exception as save_error:
             import logging
             import traceback
