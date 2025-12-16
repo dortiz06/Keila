@@ -830,8 +830,8 @@ def generar_pdf_vacaciones(request, solicitud_id):
     empleado = solicitud.empleado
     fecha_presentarse = calcular_fecha_presentarse(solicitud.fecha_fin)
     ano_vacaciones = solicitud.fecha_fin.year
-    dias_usados_antes = empleado.dias_vacaciones_usados - solicitud.dias_solicitados
-    dias_pendientes = max(0, empleado.dias_vacaciones_anuales - dias_usados_antes)
+    # Días pendientes = saldo de la persona (saldo_vacaciones)
+    dias_pendientes = empleado.saldo_vacaciones
     
     context = {
         'solicitud': solicitud,
