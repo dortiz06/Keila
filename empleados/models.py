@@ -929,11 +929,18 @@ class SolicitudVacaciones(models.Model):
         
         # Actualizar días usados del empleado según el tipo de vacación
         if self.tipo == 'EXTRAORDINARIA' or self.tipo == 'EMERGENCIA':
-            # Las vacaciones extraordinarias se restan de las vacaciones del año
+            # Las vacaciones extraordinarias se restan directamente del saldo
+            # Solo se pueden tomar cuando el saldo es 0 o negativo
+            from decimal import Decimal
             self.empleado.dias_vacaciones_extraordinarios += self.dias_solicitados
+            # Restar del saldo (el saldo puede ser negativo)
+            self.empleado.saldo_vacaciones -= Decimal(str(self.dias_solicitados))
         else:
-            # Vacaciones normales
+            # Vacaciones normales: se restan de los días usados del año
             self.empleado.dias_vacaciones_usados += self.dias_solicitados
+            # También se restan del saldo
+            from decimal import Decimal
+            self.empleado.saldo_vacaciones -= Decimal(str(self.dias_solicitados))
         
         self.empleado.save()
         

@@ -538,10 +538,9 @@ def solicitar_vacaciones(request):
     ).order_by('-fecha_solicitud')[:5]
     
     # Verificar si puede solicitar vacaciones extraordinarias
-    puede_solicitar_extraordinarias = (
-        perfil.dias_vacaciones_disponibles >= 1 or 
-        perfil.dias_vacaciones_extraordinarios_disponibles >= 1
-    )
+    # Las vacaciones extraordinarias solo se pueden tomar cuando el saldo es 0 o negativo
+    saldo_total = perfil.calcular_total_disponible_proyectado()
+    puede_solicitar_extraordinarias = saldo_total <= 0
     
     # Verificar si puede solicitar vacaciones normales (antigüedad >= 1 año y días disponibles)
     puede_solicitar_normales = (
