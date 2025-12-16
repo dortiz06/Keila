@@ -75,15 +75,10 @@
                                 {% for solicitud in solicitudes %}
                                     <tr style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
                                         <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar me-3">
-                                                {{ solicitud.empleado.nombre|first }}{{ solicitud.empleado.apellido_paterno|first }}
-                                            </div>
-                                            <div>
-                                                    <strong style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">{{ solicitud.empleado.nombre_completo }}</strong><br>
-                                                    <small style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif;">{{ solicitud.empleado.puesto }}</small><br>
-                                                    <small style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif;">{{ solicitud.empleado.departamento.nombre }}</small>
-                                            </div>
+                                        <div>
+                                            <strong style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">{{ solicitud.empleado.nombre_completo }}</strong><br>
+                                            <small style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif;">{{ solicitud.empleado.puesto }}</small><br>
+                                            <small style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif;">{{ solicitud.empleado.departamento.nombre }}</small>
                                         </div>
                                     </td>
                                         <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
@@ -232,22 +227,7 @@
     background: rgba(255, 255, 255, 0.05) !important;
 }
 
-/* Avatar con glassmorphism */
-.avatar {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: rgba(37, 99, 235, 0.6) !important;
-    backdrop-filter: blur(10px) saturate(150%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-    color: white !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 16px;
-    font-family: 'Montserrat', sans-serif !important;
-}
+/* Avatar removido - estilos eliminados */
 
 /* Tabla completamente transparente - sin fondos blancos */
 .dashboard .table {

@@ -118,18 +118,10 @@
                                         {% for vacacion in vacaciones %}
                                         <tr>
                                             <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar me-3">
-                                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
-                                                             style="width: 40px; height: 40px;">
-                                                            {{ vacacion.empleado.nombre|first }}{{ vacacion.empleado.apellido_paterno|first }}
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <strong>{{ vacacion.empleado.nombre_completo }}</strong>
-                                                        <br>
-                                                        <small class="text-muted">{{ vacacion.empleado.puesto }}</small>
-                                                    </div>
+                                                <div>
+                                                    <strong>{{ vacacion.empleado.nombre_completo }}</strong>
+                                                    <br>
+                                                    <small class="text-muted">{{ vacacion.empleado.puesto }}</small>
                                                 </div>
                                             </td>
                                             <td>{{ vacacion.empleado.departamento.nombre }}</td>
@@ -180,19 +172,11 @@
                                     <div class="card h-100">
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between align-items-start mb-3">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="avatar me-3">
-                                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" 
-                                                             style="width: 50px; height: 50px;">
-                                                            {{ vacacion.empleado.nombre|first }}{{ vacacion.empleado.apellido_paterno|first }}
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <h6 class="mb-1">{{ vacacion.empleado.nombre_completo }}</h6>
-                                                        <small class="text-muted">{{ vacacion.empleado.puesto }}</small>
-                                                        <br>
-                                                        <small class="text-muted">{{ vacacion.empleado.departamento.nombre }}</small>
-                                                    </div>
+                                                <div>
+                                                    <h6 class="mb-1">{{ vacacion.empleado.nombre_completo }}</h6>
+                                                    <small class="text-muted">{{ vacacion.empleado.puesto }}</small>
+                                                    <br>
+                                                    <small class="text-muted">{{ vacacion.empleado.departamento.nombre }}</small>
                                                 </div>
                                                 {% if vacacion.estado == 'P' %}
                                                     <span class="badge badge-pendiente">{{ vacacion.get_estado_display }}</span>

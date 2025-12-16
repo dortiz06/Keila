@@ -105,15 +105,10 @@ body {
                             {% for usuario in usuarios %}
                                 <tr class="gestion-table-row">
                                     <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="gestion-avatar">
-                                                {{ usuario.usuario.first_name|first|default:usuario.usuario.username|first|upper }}
-                                            </div>
-                                            <div class="ms-2">
-                                                <strong style="color: #ffffff !important; font-weight: 500 !important;">{{ usuario.nombre_completo }}</strong>
-                                                <br>
-                                                <small style="color: rgba(255, 255, 255, 0.7) !important;">{{ usuario.usuario.username }}</small>
-                                            </div>
+                                        <div>
+                                            <strong style="color: #ffffff !important; font-weight: 500 !important;">{{ usuario.nombre_completo }}</strong>
+                                            <br>
+                                            <small style="color: rgba(255, 255, 255, 0.7) !important;">{{ usuario.usuario.username }}</small>
                                         </div>
                                     </td>
                                     <td>
@@ -238,21 +233,7 @@ body {
     letter-spacing: 0.3px !important;
 }
 
-/* Avatar */
-.gestion-avatar {
-    width: 40px !important;
-    height: 40px !important;
-    border-radius: 50% !important;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.8), rgba(37, 99, 235, 0.8)) !important;
-    color: #ffffff !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-family: 'Montserrat', sans-serif !important;
-    font-weight: 600 !important;
-    font-size: 14px !important;
-    border: 2px solid rgba(255, 255, 255, 0.2) !important;
-}
+/* Avatar removido - estilos eliminados */
 
 /* Tabla */
 .gestion-table-wrapper {

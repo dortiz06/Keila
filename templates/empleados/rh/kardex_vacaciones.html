@@ -5,9 +5,9 @@
 
 {% block content %}
 <style>
-/* Fondo similar al inventario */
+/* Fondo con imagen keila.jpg */
 body {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.65)), url('{% static "images/dash/mionca.jpg" %}') !important;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.65)), url('{% static "images/dash/keila.jpg" %}') !important;
     background-size: cover !important;
     background-position: center center !important;
     background-repeat: no-repeat !important;
@@ -126,17 +126,12 @@ body {
                             </thead>
                             <tbody>
                                 {% for data in empleados_data %}
-                                <tr style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
+                                <tr class="kardex-table-row">
                                     <td style="color: #ffffff !important;">
-                                        <div class="d-flex align-items-center">
-                                            <div class="kardex-avatar">
-                                                {{ data.empleado.nombre_completo|first|upper }}
-                                            </div>
-                                            <div class="ms-2">
-                                                <strong>{{ data.empleado.nombre_completo }}</strong>
-                                                <br>
-                                                <small>{{ data.empleado.puesto|default:"Sin puesto" }}</small>
-                                            </div>
+                                        <div>
+                                            <strong>{{ data.empleado.nombre_completo }}</strong>
+                                            <br>
+                                            <small style="color: rgba(255, 255, 255, 0.7) !important;">{{ data.empleado.puesto|default:"Sin puesto" }}</small>
                                         </div>
                                     </td>
                                     <td style="color: #ffffff !important; text-align: center !important;">{{ data.empleado.departamento.nombre|default:"Sin departamento" }}</td>
@@ -381,30 +376,35 @@ body {
 .dashboard .table tbody tr {
     background: transparent !important;
     border: none !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     border-radius: 0 !important;
 }
 
-/* Patrón zebra striping - alternar colores de fondo para mejor separación visual */
-.dashboard .table tbody tr:nth-child(odd) {
-    background: rgba(255, 255, 255, 0.04) !important;
+/* Efecto zebra striping sutil - alternar colores de fondo para diferenciar filas */
+.dashboard .table tbody tr.kardex-table-row:nth-child(odd) {
+    background: rgba(255, 255, 255, 0.02) !important; /* Fondo muy sutil para filas impares */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
-.dashboard .table tbody tr:nth-child(even) {
-    background: rgba(255, 255, 255, 0.08) !important;
+.dashboard .table tbody tr.kardex-table-row:nth-child(even) {
+    background: rgba(255, 255, 255, 0.05) !important; /* Fondo ligeramente más visible para filas pares */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
-.dashboard .table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.15) !important;
-    border-bottom-color: rgba(255, 255, 255, 0.3) !important;
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
+/* Asegurar que las celdas hereden el fondo de la fila */
+.dashboard .table tbody tr.kardex-table-row td {
+    background: inherit !important;
+}
+
+.dashboard .table tbody tr.kardex-table-row:hover {
+    background: rgba(255, 255, 255, 0.1) !important; /* Efecto hover más visible */
+    border-bottom-color: rgba(255, 255, 255, 0.2) !important;
     transform: translateY(-1px) !important;
-    border-bottom-color: rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
 }
 
-.dashboard .table tbody tr:last-child {
+.dashboard .table tbody tr.kardex-table-row:last-child {
     border-bottom: none !important;
 }
 
@@ -418,9 +418,9 @@ body {
 
 .dashboard .table tbody td {
     background: transparent !important;
-    border: none !important;
-    border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
     padding: 14px 12px !important;
+    border: none !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
     color: #ffffff !important;
     vertical-align: middle !important;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7), 
@@ -465,19 +465,7 @@ body {
     font-family: 'Montserrat', sans-serif !important;
 }
 
-/* Avatar para kardex */
-.kardex-avatar {
-    width: 40px !important;
-    height: 40px !important;
-    border-radius: 50% !important;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(37, 99, 235, 0.9)) !important;
-    color: #ffffff !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-family: 'Montserrat', sans-serif !important;
-    font-weight: 600 !important;
-    font-size: 14px !important;
+/* Avatar removido - estilos eliminados */
     border: 2px solid rgba(255, 255, 255, 0.25) !important;
     box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3) !important;
 }

@@ -5,6 +5,16 @@
 {% block title %}Panel Empleado{% endblock %}
 
 {% block content %}
+<style>
+/* Reducir oscuridad del fondo solo en el dashboard de empleado */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.4)), url('{% static "images/dash/dash1.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+</style>
 <div class="container-fluid dashboard">
     <div class="container">
         <!-- Header alineado con los cuadros -->

@@ -92,14 +92,9 @@
                                 {% for usuario in usuarios %}
                                 <tr>
                                     <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar me-3">
-                                                {{ usuario.first_name|first }}{{ usuario.last_name|first }}
-                                            </div>
-                                            <div>
-                                                <strong>{{ usuario.username }}</strong><br>
-                                                <small class="text-muted">ID: {{ usuario.id }}</small>
-                                            </div>
+                                        <div>
+                                            <strong>{{ usuario.username }}</strong><br>
+                                            <small class="text-muted">ID: {{ usuario.id }}</small>
                                         </div>
                                     </td>
                                     <td>
@@ -236,17 +231,7 @@
 </div>
 
 <style>
-.avatar {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 16px;
+/* Avatar removido - estilos eliminados */
 }
 
 .stats-card {

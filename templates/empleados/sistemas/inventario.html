@@ -117,7 +117,7 @@ body {
                         </thead>
                         <tbody>
                             {% for equipo in equipos %}
-                            <tr style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
+                            <tr class="inventario-table-row">
                                 <td style="color: #ffffff !important;"><strong>{{ equipo.codigo_inventario }}</strong></td>
                                 <td style="color: #ffffff !important;">
                                     <i class="fas {% categoria_icono equipo.categoria.nombre %} me-1"></i>
@@ -379,35 +379,35 @@ body {
 .dashboard .table tbody tr {
     background: transparent !important;
     border: none !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     border-radius: 0 !important;
 }
 
-/* Patrón zebra striping - alternar colores de fondo para mejor separación visual */
-.dashboard .table tbody tr:nth-child(odd) {
-    background: rgba(255, 255, 255, 0.04) !important;
+/* Patrón zebra striping - alternar colores de fondo para mejor separación visual entre filas */
+.dashboard .table tbody tr.inventario-table-row:nth-child(odd) {
+    background: rgba(255, 255, 255, 0.02) !important; /* Fondo muy sutil para filas impares */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
-.dashboard .table tbody tr:nth-child(even) {
-    background: rgba(255, 255, 255, 0.08) !important;
+.dashboard .table tbody tr.inventario-table-row:nth-child(even) {
+    background: rgba(255, 255, 255, 0.05) !important; /* Fondo ligeramente más visible para filas pares */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
-.dashboard .table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.15) !important;
-    border-bottom-color: rgba(255, 255, 255, 0.3) !important;
+/* Asegurar que las celdas hereden el fondo de la fila */
+.dashboard .table tbody tr.inventario-table-row td {
+    background: inherit !important;
 }
 
-.dashboard .table tbody tr:last-child {
-    border-bottom: none !important;
-}
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
+.dashboard .table tbody tr.inventario-table-row:hover {
+    background: rgba(255, 255, 255, 0.1) !important; /* Efecto hover más visible */
+    border-bottom-color: rgba(255, 255, 255, 0.2) !important;
     transform: translateY(-1px) !important;
-    border-bottom-color: rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
 }
 
-.dashboard .table tbody tr:last-child {
+.dashboard .table tbody tr.inventario-table-row:last-child {
     border-bottom: none !important;
 }
 

@@ -47,15 +47,8 @@ body {
                     </h5>
                 </div>
                 <div class="card-body text-center" style="background: transparent !important; padding: 2rem !important;">
-                    <div class="avatar mb-3">
-                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto" 
-                             style="width: 120px; height: 120px; font-size: 2rem;">
-                            {{ empleado.nombre|first }}{{ empleado.apellido_paterno|first }}
-                        </div>
-                    </div>
-                    
-                    <h4 style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important;">{{ empleado.nombre_completo }}</h4>
-                    <p style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important;">{{ empleado.puesto }}</p>
+                    <h4 style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; margin-bottom: 0.5rem !important;">{{ empleado.nombre_completo }}</h4>
+                    <p style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important; margin-bottom: 1.5rem !important;">{{ empleado.puesto }}</p>
                     
                     <div class="row text-center mb-3">
                         <div class="col-6">

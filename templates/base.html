@@ -93,6 +93,20 @@
             object-fit: contain;
         }
 
+        /* Aumentar tamaño de elementos de navegación para igualar "Sistema GK" */
+        .navbar-nav .nav-link {
+            font-size: 1.5rem !important; /* Igual que navbar-brand */
+            font-weight: 600 !important; /* Similar peso al navbar-brand */
+            display: flex;
+            align-items: center;
+        }
+
+        /* Aumentar tamaño de iconos en nav-link para que sean proporcionales */
+        .navbar-nav .nav-link i {
+            font-size: 1.4rem !important; /* Ligeramente más pequeño que el texto para proporción */
+            margin-right: 0.5rem !important;
+        }
+
         .card {
             border: 1px solid var(--border-color);
             border-radius: 18px;
@@ -455,6 +469,15 @@
         .navbar-brand {
             font-size: 1.2rem;
         }
+
+        /* Mantener tamaño grande de nav-link incluso en móvil */
+        .navbar-nav .nav-link {
+            font-size: 1.2rem !important; /* Proporcional al navbar-brand en móvil */
+        }
+
+        .navbar-nav .nav-link i {
+            font-size: 1.1rem !important; /* Iconos proporcionales en móvil */
+        }
         
         .page-header {
             padding: 2rem 0;
@@ -637,7 +660,11 @@
             
             .navbar-nav .nav-link {
                 padding: 0.5rem 0.75rem;
-                font-size: 0.9rem;
+                font-size: 1.1rem !important; /* Mantener tamaño grande incluso en móvil */
+            }
+
+            .navbar-nav .nav-link i {
+                font-size: 1rem !important; /* Iconos proporcionales en móvil */
             }
             
             .navbar-brand {
