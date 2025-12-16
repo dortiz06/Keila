@@ -906,10 +906,8 @@ class SolicitudVacaciones(models.Model):
     
     def puede_ser_aprobada_por_admin(self):
         """Verifica si puede ser aprobada por administrador"""
-        # El admin puede aprobar solicitudes de jefes de área que estén pendientes de admin o jefe
-        if self.empleado.es_jefe_area():
-            return self.estado in ['PENDIENTE_ADMIN', 'PENDIENTE_JEFE']
-        return self.estado == 'PENDIENTE_ADMIN'
+        # El admin puede aprobar cualquier solicitud que esté pendiente de admin o jefe
+        return self.estado in ['PENDIENTE_ADMIN', 'PENDIENTE_JEFE']
     
     def puede_ser_aprobada_por_rh(self):
         """Verifica si puede ser aprobada por RH"""
