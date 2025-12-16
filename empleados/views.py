@@ -267,9 +267,13 @@ def empleado_dashboard(request):
     # Tickets recientes (con slice para mostrar solo 5)
     tickets_recientes = tickets_empleado.order_by('-fecha_creacion')[:5]
     
-    # Estadísticas personales
+    # Estadísticas personales - Usar los mismos valores que el kardex
+    # Con Derecho: dias_vacaciones_anuales
+    # Saldo: saldo_vacaciones
+    # Acumulado Año Actual: calcular_dias_acumulados_hasta_hoy()
+    # Total Disponible: calcular_total_disponible_proyectado()
     stats = {
-        'dias_disponibles': perfil.dias_vacaciones_disponibles,
+        'dias_disponibles': perfil.calcular_total_disponible_proyectado(),  # Total Disponible del kardex
         'dias_usados': perfil.dias_vacaciones_usados,
         'solicitudes_pendientes': solicitudes.filter(
             estado__in=['PENDIENTE_JEFE', 'PENDIENTE_RH']
@@ -277,6 +281,11 @@ def empleado_dashboard(request):
         'solicitudes_aprobadas': solicitudes.filter(estado='APROBADO_RH').count(),
         'equipos_asignados': equipos_asignados.count(),
         'tickets_pendientes': tickets_empleado.filter(estado__in=['PENDIENTE', 'EN_PROCESO']).count(),
+        # Valores del kardex para mostrar en el dashboard
+        'con_derecho': perfil.dias_vacaciones_anuales,
+        'saldo': perfil.saldo_vacaciones,
+        'dias_acumulados_ano_actual': perfil.calcular_dias_acumulados_hasta_hoy(),
+        'total_disponible': perfil.calcular_total_disponible_proyectado(),
     }
     
     context = {
