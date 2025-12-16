@@ -106,7 +106,8 @@ body {
     flex-direction: column;
     min-height: 100vh;
     background-color: #0038A8; /* Azul rey corporativo */
-    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('../images/dash/dash1.jpg');
+    /* Fondo base ligeramente más oscuro para mejorar legibilidad en vistas genéricas */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.65)), url('../images/dash/dash1.jpg');
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;

@@ -2898,10 +2898,17 @@ def generar_excel_reporte_vacaciones_csv(request):
 def historial_vacaciones_lista(request):
     """Lista de empleados para ver su historial de vacaciones"""
     perfil = get_user_profile(request.user)
-    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+    if not perfil or not (perfil.es_rh() or perfil.es_admin() or perfil.es_jefe_area()):
         raise PermissionDenied
     
-    empleados = Perfil.objects.filter(activo=True).order_by('usuario__last_name', 'usuario__first_name')
+    # RH y Admin: ven a todos los empleados activos
+    empleados = Perfil.objects.filter(activo=True)
+
+    # Jefe de área: solo ve empleados que tiene asignados como supervisor
+    if perfil.es_jefe_area():
+        empleados = empleados.filter(supervisor=perfil)
+
+    empleados = empleados.order_by('usuario__last_name', 'usuario__first_name')
     
     # Buscar si hay un parámetro de búsqueda
     query = request.GET.get('q', '')
@@ -2924,10 +2931,14 @@ def historial_vacaciones_lista(request):
 def historial_vacaciones_empleado(request, empleado_id):
     """Ver historial de vacaciones de un empleado específico, agrupado por años"""
     perfil = get_user_profile(request.user)
-    if not perfil or not (perfil.es_rh() or perfil.es_admin()):
+    if not perfil or not (perfil.es_rh() or perfil.es_admin() or perfil.es_jefe_area()):
         raise PermissionDenied
     
     empleado = get_object_or_404(Perfil, pk=empleado_id)
+
+    # Si es jefe de área, solo puede ver historial de empleados que supervisa
+    if perfil.es_jefe_area() and empleado.supervisor_id != perfil.id:
+        raise PermissionDenied
     from datetime import date
     from collections import defaultdict
     
