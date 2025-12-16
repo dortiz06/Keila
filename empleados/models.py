@@ -395,7 +395,7 @@ class Perfil(models.Model):
         if years >= 1:
             if today.month < fecha_inicio.month or (today.month == fecha_inicio.month and today.day < fecha_inicio.day):
                 ultimo_aniversario = date(today.year - 1, fecha_inicio.month, fecha_inicio.day)
-        else:
+            else:
                 ultimo_aniversario = date(today.year, fecha_inicio.month, fecha_inicio.day)
         else:
             ultimo_aniversario = fecha_inicio
@@ -460,7 +460,7 @@ class Perfil(models.Model):
         if days > 0:
             if days == 1:
                 partes.append("1 día")
-        else:
+            else:
                 partes.append(f"{days} días")
         
         # Si no hay nada, significa que es menos de 1 día
@@ -472,7 +472,7 @@ class Perfil(models.Model):
             return partes[0]
         elif len(partes) == 2:
             return f"{partes[0]} y {partes[1]}"
-            else:
+        else:
             return f"{partes[0]}, {partes[1]} y {partes[2]}"
     
     def es_jefe_area(self):
@@ -933,7 +933,7 @@ class SolicitudVacaciones(models.Model):
             self.empleado.dias_vacaciones_extraordinarios += self.dias_solicitados
         else:
             # Vacaciones normales
-        self.empleado.dias_vacaciones_usados += self.dias_solicitados
+            self.empleado.dias_vacaciones_usados += self.dias_solicitados
         
         self.empleado.save()
         
