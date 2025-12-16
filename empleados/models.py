@@ -906,6 +906,9 @@ class SolicitudVacaciones(models.Model):
     
     def puede_ser_aprobada_por_admin(self):
         """Verifica si puede ser aprobada por administrador"""
+        # El admin puede aprobar solicitudes de jefes de área que estén pendientes de admin o jefe
+        if self.empleado.es_jefe_area():
+            return self.estado in ['PENDIENTE_ADMIN', 'PENDIENTE_JEFE']
         return self.estado == 'PENDIENTE_ADMIN'
     
     def puede_ser_aprobada_por_rh(self):
@@ -952,13 +955,22 @@ class SolicitudVacaciones(models.Model):
         if not self.puede_ser_aprobada_por_admin():
             return False
         
-        self.estado = 'APROBADO_ADMIN'
-        self.aprobado_por_admin = admin_user
-        self.comentarios_admin = comentario
-        self.fecha_aprobacion_admin = timezone.now()
-        
-        # Después de aprobar por admin, va a RH
-        self.estado = 'PENDIENTE_RH'
+        # Si está en PENDIENTE_JEFE, el admin puede aprobarla directamente (saltando la aprobación del jefe)
+        if self.estado == 'PENDIENTE_JEFE':
+            # El admin aprueba directamente y va a RH
+            self.estado = 'PENDIENTE_RH'
+            self.aprobado_por_admin = admin_user
+            self.comentarios_admin = comentario
+            self.fecha_aprobacion_admin = timezone.now()
+        else:
+            # Si está en PENDIENTE_ADMIN, sigue el flujo normal
+            self.estado = 'APROBADO_ADMIN'
+            self.aprobado_por_admin = admin_user
+            self.comentarios_admin = comentario
+            self.fecha_aprobacion_admin = timezone.now()
+            
+            # Después de aprobar por admin, va a RH
+            self.estado = 'PENDIENTE_RH'
         
         self.save()
         return True

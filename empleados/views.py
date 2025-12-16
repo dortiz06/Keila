@@ -717,11 +717,11 @@ def aprobar_admin(request, solicitud_id):
     
     solicitud = get_object_or_404(SolicitudVacaciones, id=solicitud_id)
     
-    # Solo se pueden aprobar solicitudes de jefes de área que estén pendientes de admin
+    # Solo se pueden aprobar solicitudes de jefes de área que estén pendientes de admin o jefe
     if not solicitud.empleado.es_jefe_area():
         raise PermissionDenied("Esta solicitud no requiere aprobación de administrador.")
     
-    if not solicitud.estado == 'PENDIENTE_ADMIN':
+    if solicitud.estado not in ['PENDIENTE_ADMIN', 'PENDIENTE_JEFE']:
         raise PermissionDenied("Esta solicitud no está pendiente de aprobación de administrador.")
     
     if request.method == 'POST':
