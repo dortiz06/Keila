@@ -2567,32 +2567,36 @@ def generar_pdf_reporte_vacaciones(request):
                 Paragraph(fecha_solicitud, cell_style),
             ])
         
-        # Crear tabla con estilo APA 7 - ajustar anchos para que quepa todo
+        # Crear tabla con estilo profesional y sencillo - ajustar anchos para que quepa todo
         # Ancho total disponible: A4 - márgenes = 21cm - 5.08cm = 15.92cm
         # Distribución optimizada: 3.5 + 2.5 + 3 + 1.2 + 3 + 2.72 = 15.92cm
         table = Table(data, colWidths=[3.5*cm, 2.5*cm, 3*cm, 1.2*cm, 3*cm, 2.72*cm])
         table.setStyle(TableStyle([
-            # Encabezado
-            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#000000')),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+            # Encabezado - fondo gris oscuro profesional con texto blanco bien visible
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#4a5568')),  # Gris oscuro profesional
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),  # Texto blanco para máximo contraste
             ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
             ('FONTNAME', (0, 0), (-1, 0), 'Times-Bold'),
-            ('FONTSIZE', (0, 0), (-1, 0), 10),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 8),
-            ('TOPPADDING', (0, 0), (-1, 0), 8),
+            ('FONTSIZE', (0, 0), (-1, 0), 11),  # Tamaño ligeramente mayor para mejor legibilidad
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 10),
+            ('TOPPADDING', (0, 0), (-1, 0), 10),
+            ('LEFTPADDING', (0, 0), (-1, 0), 6),
+            ('RIGHTPADDING', (0, 0), (-1, 0), 6),
             # Cuerpo de la tabla
             ('ALIGN', (0, 1), (-1, -1), 'LEFT'),
             ('ALIGN', (3, 1), (3, -1), 'CENTER'),  # Columna de Días centrada
             ('FONTNAME', (0, 1), (-1, -1), 'Times-Roman'),
             ('FONTSIZE', (0, 1), (-1, -1), 10),
-            ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
-            ('VALIGN', (0, 0), (-1, -1), 'TOP'),  # Alineación superior para mejor ajuste
-            ('LEFTPADDING', (0, 0), (-1, -1), 4),
-            ('RIGHTPADDING', (0, 0), (-1, -1), 4),
-            ('TOPPADDING', (0, 1), (-1, -1), 4),
-            ('BOTTOMPADDING', (0, 1), (-1, -1), 4),
+            ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),  # Texto negro en el cuerpo
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#e2e8f0')),  # Bordes grises claros
+            ('LINEBELOW', (0, 0), (-1, 0), 1.5, colors.HexColor('#2d3748')),  # Línea más gruesa bajo encabezado
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),  # Alineación vertical centrada
+            ('LEFTPADDING', (0, 1), (-1, -1), 6),
+            ('RIGHTPADDING', (0, 1), (-1, -1), 6),
+            ('TOPPADDING', (0, 1), (-1, -1), 6),
+            ('BOTTOMPADDING', (0, 1), (-1, -1), 6),
             # Filas alternadas para mejor legibilidad
-            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f5f5f5')]),
+            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f7fafc')]),
         ]))
         elements.append(table)
     else:

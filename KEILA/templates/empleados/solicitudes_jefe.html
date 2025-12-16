@@ -90,15 +90,10 @@ body {
                             {% for solicitud in solicitudes %}
                             <tr class="gestion-table-row">
                                 <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">
-                                    <div class="d-flex align-items-center">
-                                        <div class="avatar me-3">
-                                            {{ solicitud.empleado.nombre_completo|first|upper }}
-                                        </div>
-                                        <div>
-                                            <strong style="font-family: 'Montserrat', sans-serif !important;">{{ solicitud.empleado.nombre_completo }}</strong><br>
-                                            <small style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif !important;">{{ solicitud.empleado.puesto }}</small><br>
-                                            <small style="color: rgba(255, 255, 255, 0.6) !important; font-family: 'Montserrat', sans-serif !important;">{{ solicitud.empleado.departamento.nombre }}</small>
-                                        </div>
+                                    <div>
+                                        <strong style="font-family: 'Montserrat', sans-serif !important;">{{ solicitud.empleado.nombre_completo }}</strong><br>
+                                        <small style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif !important;">{{ solicitud.empleado.puesto }}</small><br>
+                                        <small style="color: rgba(255, 255, 255, 0.6) !important; font-family: 'Montserrat', sans-serif !important;">{{ solicitud.empleado.departamento.nombre }}</small>
                                     </div>
                                 </td>
                                 <td style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
@@ -230,20 +225,7 @@ body {
 }
 
 /* Avatar */
-.avatar {
-    width: 45px !important;
-    height: 45px !important;
-    border-radius: 50% !important;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.8), rgba(37, 99, 235, 0.9)) !important;
-    color: white !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-weight: bold !important;
-    font-size: 16px !important;
-    font-family: 'Montserrat', sans-serif !important;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
-}
+/* Avatar removido - estilos eliminados */
 
 /* Tabla con estilos de gestión */
 .gestion-table-wrapper {
