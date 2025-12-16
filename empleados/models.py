@@ -395,7 +395,7 @@ class Perfil(models.Model):
         if years >= 1:
             if today.month < fecha_inicio.month or (today.month == fecha_inicio.month and today.day < fecha_inicio.day):
                 ultimo_aniversario = date(today.year - 1, fecha_inicio.month, fecha_inicio.day)
-        else:
+            else:
                 ultimo_aniversario = date(today.year, fecha_inicio.month, fecha_inicio.day)
         else:
             ultimo_aniversario = fecha_inicio
@@ -478,7 +478,7 @@ class Perfil(models.Model):
             resultado = partes[0]
         elif len(partes) == 2:
             resultado = f"{partes[0]} y {partes[1]}"
-            else:
+        else:
             resultado = f"{partes[0]}, {partes[1]} y {partes[2]}"
         
         # Agregar total de días entre paréntesis
@@ -999,7 +999,7 @@ class SolicitudVacaciones(models.Model):
             self.empleado.saldo_vacaciones -= Decimal(str(self.dias_solicitados))
         else:
             # Vacaciones normales: se restan de los días usados del año
-        self.empleado.dias_vacaciones_usados += self.dias_solicitados
+            self.empleado.dias_vacaciones_usados += self.dias_solicitados
             # También se restan del saldo
             from decimal import Decimal
             self.empleado.saldo_vacaciones -= Decimal(str(self.dias_solicitados))

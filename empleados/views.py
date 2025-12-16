@@ -2060,7 +2060,7 @@ def generar_excel_kardex(request):
         
         # Guardar workbook
         try:
-        wb.save(response)
+            wb.save(response)
         except Exception as save_error:
             import logging
             import traceback
