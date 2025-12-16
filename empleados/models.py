@@ -516,7 +516,13 @@ class Perfil(models.Model):
         return round(dias_anuales / 365, 6)  # Días por día con 6 decimales
     
     def calcular_dias_acumulados_hasta_hoy(self):
-        """Calcula cuántos días ha acumulado hasta el día de hoy en el año actual (cálculo diario con decimales)"""
+        """
+        Calcula cuántos días ha acumulado hasta el día de hoy en el año actual (cálculo diario con decimales).
+        
+        IMPORTANTE: Si ya pasó el aniversario y se procesó la acumulación anual, el saldo ya incluye
+        los días completos del nuevo año. En este caso, este método calcula solo los días proporcionales
+        adicionales desde el aniversario hasta hoy.
+        """
         from datetime import date
         
         if not self.fecha_contratacion:
@@ -535,32 +541,36 @@ class Perfil(models.Model):
         # Determinar el año laboral actual (antiguedad + 1)
         ano_laboral_actual = self.antiguedad_anos + 1
         
-        # Si el aniversario ya pasó este año, calcular desde el aniversario
+        # Si el aniversario ya pasó este año
         if hoy >= fecha_aniversario:
-            # Calcular días transcurridos desde el aniversario
+            # Verificar si ya se procesó la acumulación anual este año
+            # Si se procesó, el saldo ya incluye los días completos del nuevo año
+            # Entonces calculamos los días proporcionales adicionales desde el aniversario hasta hoy
+            # Estos días adicionales se suman al saldo para obtener el total disponible
             dias_transcurridos = (hoy - fecha_aniversario).days
+            dias_anuales_actuales = self.calcular_dias_segun_ano_laboral(ano_laboral_actual)
+            dias_por_dia = dias_anuales_actuales / 365
+            dias_acumulados = dias_por_dia * dias_transcurridos
+            return round(dias_acumulados, 4)
         else:
             # El aniversario aún no llega, seguimos en el año laboral anterior
             ano_laboral_actual = self.antiguedad_anos
             # Calcular días desde inicio del año
             inicio_ano = date(hoy.year, 1, 1)
             dias_transcurridos = (hoy - inicio_ano).days
-        
-        # Calcular días correspondientes al año laboral actual
-        dias_anuales_actuales = self.calcular_dias_segun_ano_laboral(ano_laboral_actual)
-        dias_por_dia = dias_anuales_actuales / 365
-        
-        # Días acumulados (proporcional a días transcurridos)
-        # Mostrar CON DECIMALES exactos (4 decimales)
-        dias_acumulados = dias_por_dia * dias_transcurridos
-        
-        return round(dias_acumulados, 4)
+            dias_anuales_actuales = self.calcular_dias_segun_ano_laboral(ano_laboral_actual)
+            dias_por_dia = dias_anuales_actuales / 365
+            dias_acumulados = dias_por_dia * dias_transcurridos
+            return round(dias_acumulados, 4)
     
     def calcular_total_disponible_proyectado(self):
         """
         Calcula total de días disponibles día con día.
-        Fórmula: Saldo (años anteriores) + Días acumulados (hasta hoy)
-        El prorrateo se calcula dinámicamente según la fecha actual.
+        Fórmula simplificada: Saldo + Días acumulados (hasta hoy)
+        
+        - El saldo incluye: saldo de años anteriores + días con derecho del nuevo año (cuando cumple años)
+        - Los días acumulados son proporcionales desde el aniversario (si ya pasó) o desde inicio del año
+        - Total disponible = Saldo + Días acumulados del año en curso
         """
         from datetime import date
         from decimal import Decimal
@@ -586,36 +596,22 @@ class Perfil(models.Model):
             # Verificar si no se ha procesado después del aniversario de este año
             if not self.ultimo_reset_vacaciones or self.ultimo_reset_vacaciones < aniversario_este_ano:
                 # Procesar acumulación anual automáticamente
+                # Esto sumará al saldo: saldo_año_anterior + días_con_derecho_nuevo_año
                 self.procesar_acumulacion_anual()
         
-        # Saldo de años anteriores (puede ser negativo o positivo)
-        # NOTA: Después de procesar_acumulacion_anual, el saldo incluye:
-        # - Saldo del año anterior (línea 738)
-        # - Días completos del nuevo año (línea 739)
+        # Saldo actual (incluye saldo de años anteriores + días con derecho del nuevo año cuando cumple años)
+        # Ejemplo: si tiene 2 días de saldo del año anterior y cumple años con 32 días, el saldo será 34 días
         saldo = Decimal(str(self.saldo_vacaciones))
         
         # Días acumulados hasta hoy en el año actual (proporcional, se actualiza día con día)
-        # IMPORTANTE: calcular_dias_acumulados_hasta_hoy() calcula los días proporcionales desde el aniversario
-        # si ya pasó el aniversario, o desde el inicio del año si aún no ha cumplido años
+        # Si ya pasó el aniversario: calcula días proporcionales desde el aniversario
+        # Si aún no ha cumplido años: calcula días proporcionales desde el inicio del año
         dias_acumulados_hasta_hoy = Decimal(str(self.calcular_dias_acumulados_hasta_hoy()))
         
-        # Si ya pasó el aniversario, el saldo ya incluye los días completos del nuevo año (sumados en procesar_acumulacion_anual)
-        # Pero necesitamos mostrar solo los días proporcionales acumulados desde el aniversario hasta hoy
-        # Por lo tanto: total = saldo - dias_anuales_completos + dias_acumulados_proporcionales
-        if hoy >= aniversario_este_ano:
-            # Obtener los días anuales del año actual
-            ano_laboral_actual = self.antiguedad_anos + 1
-            dias_anuales_completos = Decimal(str(self.calcular_dias_segun_ano_laboral(ano_laboral_actual)))
-            
-            # El saldo actual incluye: saldo_año_anterior + dias_anuales_completos
-            # Necesitamos: saldo_año_anterior + dias_acumulados_proporcionales (desde aniversario hasta hoy)
-            # Entonces: total = saldo - dias_anuales_completos + dias_acumulados_hasta_hoy
-            saldo_sin_dias_anuales = saldo - dias_anuales_completos
-            total = saldo_sin_dias_anuales + dias_acumulados_hasta_hoy
-        else:
-            # Aún no ha cumplido años, el saldo no incluye los días del nuevo año
-            # Sumar los días acumulados desde el inicio del año
-            total = saldo + dias_acumulados_hasta_hoy
+        # Total disponible = Saldo + Días acumulados del año actual
+        # Fórmula simple: el saldo ya incluye los días completos del nuevo año (si ya cumplió años),
+        # y los días acumulados son los proporcionales adicionales desde el aniversario
+        total = saldo + dias_acumulados_hasta_hoy
         
         return round(total, 4)  # Permitir valores negativos
     
