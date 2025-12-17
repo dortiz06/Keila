@@ -148,12 +148,7 @@ class SolicitudVacacionesForm(forms.ModelForm):
                 self.fields['tipo'].choices = [
                     ('EXTRAORDINARIA', 'Vacación Extraordinaria'),
                 ]
-                meses_trabajados = ((timezone.now().date() - self.empleado.fecha_contratacion).days) / 30.44
-                self.fields['tipo'].help_text = (
-                    f'Tienes {antiguedad} año(s) de antigüedad ({meses_trabajados:.1f} meses). '
-                    f'Días acumulados: {dias_calculados:.2f}. '
-                    f'Días disponibles: {dias_disponibles}'
-                )
+                self.fields['tipo'].help_text = ''
             else:
                 # Para empleados con antigüedad >= 1
                 # Verificar si puede solicitar vacaciones extraordinarias (solo cuando saldo <= 0)
@@ -167,9 +162,9 @@ class SolicitudVacacionesForm(forms.ModelForm):
                 self.fields['tipo'].choices = opciones_tipo
                 
                 if saldo_total <= 0:
-                    self.fields['tipo'].help_text = f'Antigüedad: {antiguedad} años. Saldo disponible: {saldo_total:.2f} días. Puedes solicitar vacaciones extraordinarias.'
+                    self.fields['tipo'].help_text = 'Puedes solicitar vacaciones extraordinarias.'
                 else:
-                    self.fields['tipo'].help_text = f'Antigüedad: {antiguedad} años. Días disponibles: {dias_disponibles} días. Saldo: {saldo_total:.2f} días.'
+                    self.fields['tipo'].help_text = ''
     
     def clean(self):
         cleaned_data = super().clean()
@@ -226,7 +221,7 @@ class SolicitudVacacionesForm(forms.ModelForm):
                             f'No tienes suficientes días de vacaciones disponibles. '
                             f'Disponibles: {self.empleado.dias_vacaciones_disponibles} días. '
                             f'Solicitaste: {dias_solicitados} días laborables ({dias_calendario} días totales - {domingos_excluidos} domingos)'
-                        )
+                )
         
         return cleaned_data
 

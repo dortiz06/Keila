@@ -845,6 +845,13 @@ def generar_pdf_vacaciones(request, solicitud_id):
     # Días pendientes = saldo de la persona (saldo_vacaciones)
     dias_pendientes = empleado.saldo_vacaciones
     
+    # Datos del kardex/dashboard
+    con_derecho = empleado.dias_vacaciones_anuales
+    saldo = empleado.saldo_vacaciones
+    dias_acumulados_ano_actual = empleado.calcular_dias_acumulados_hasta_hoy()
+    total_disponible = empleado.calcular_total_disponible_proyectado()
+    antiguedad_detallada = empleado.antiguedad_detallada
+    
     context = {
         'solicitud': solicitud,
         'fecha_actual': timezone.now(),
@@ -852,6 +859,12 @@ def generar_pdf_vacaciones(request, solicitud_id):
         'ano_vacaciones': ano_vacaciones,
         'dias_pendientes': dias_pendientes,
         'perfil': perfil,
+        # Datos del kardex
+        'con_derecho': con_derecho,
+        'saldo': saldo,
+        'dias_acumulados_ano_actual': dias_acumulados_ano_actual,
+        'total_disponible': total_disponible,
+        'antiguedad_detallada': antiguedad_detallada,
     }
     
     return render(request, 'empleados/rh/vista_previa_vacaciones.html', context)

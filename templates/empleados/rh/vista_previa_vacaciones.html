@@ -475,5 +475,110 @@
         </div>
     </div>
 
+    <div class="fecha-ingreso">
+        <span>Fecha de ingreso</span>
+        <div class="date-box">Día/Mes/Año<br>{{ solicitud.empleado.fecha_contratacion|date:"d/m/Y"|default:"N/A" }}</div>
+    </div>
+    
+    <div class="fecha-ingreso" style="margin-top: 10px; flex-wrap: wrap;">
+        <span style="white-space: nowrap;">Antigüedad:</span>
+        <div class="line" style="flex-grow: 1; min-width: 400px; margin-left: 8px;">
+            <span style="margin-left: 5px; font-size: 13px; font-weight: normal;">{{ antiguedad_detallada }} (desde {{ solicitud.empleado.fecha_contratacion|date:"d/m/Y" }})</span>
+        </div>
+    </div>
+
+    <div class="fecha-ingreso" style="margin-top: 10px;">
+        <span>Vacaciones correspondientes al año</span>
+        <div class="short-line">
+            <span style="margin-left: 5px;">{{ ano_vacaciones }}</span>
+        </div>
+    </div>
+
+    <!-- Sección de días del kardex -->
+    <div class="dias-section" style="margin-top: 15px;">
+        <table class="dias-table">
+            <tr>
+                <td>Con Derecho</td>
+                <td>{{ con_derecho }}</td>
+            </tr>
+        </table>
+
+        <table class="dias-table">
+            <tr>
+                <td>Saldo</td>
+                <td>{{ saldo|floatformat:2 }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="dias-section" style="margin-top: 10px;">
+        <table class="dias-table">
+            <tr>
+                <td>Acumulado Año Actual</td>
+                <td>{{ dias_acumulados_ano_actual|floatformat:2 }}</td>
+            </tr>
+        </table>
+
+        <table class="dias-table">
+            <tr>
+                <td>Total Disponible</td>
+                <td>{{ total_disponible|floatformat:2 }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Sección de días de la solicitud -->
+    <div class="dias-section" style="margin-top: 10px;">
+        <table class="dias-table">
+            <tr>
+                <td>Días a disfrutar</td>
+                <td>{{ solicitud.dias_solicitados }}</td>
+            </tr>
+        </table>
+
+        <table class="dias-table">
+            <tr>
+                <td>Días pendientes</td>
+                <td>{{ dias_pendientes|floatformat:2 }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section-title" style="text-align:center; margin-top:20px;">Periodo de vacaciones</div>
+
+    <table class="periodo-table">
+        <tr>
+            <td>Fecha de inicio</td>
+            <td>Fecha de término</td>
+            <td>Fecha de presentarse</td>
+        </tr>
+        <tr>
+            <td>Día/Mes/Año<br>{{ solicitud.fecha_inicio|date:"d/m/Y" }}</td>
+            <td>Día/Mes/Año<br>{{ solicitud.fecha_fin|date:"d/m/Y" }}</td>
+            <td>Día/Mes/Año<br>{{ fecha_presentarse|date:"d/m/Y" }}</td>
+        </tr>
+    </table>
+
+    <div class="signature-section">
+        <div class="signature">
+            Colaborador<br>Nombre y firma
+            <div>{{ solicitud.empleado.nombre_completo }}</div>
+        </div>
+        <div class="signature">
+            Jefe de área<br>Nombre y firma
+            <div>{{ solicitud.aprobado_por_jefe.nombre_completo|default:"" }}</div>
+        </div>
+        <div class="signature">
+            Recursos Humanos<br>Nombre y firma
+            <div>{{ solicitud.aprobado_por_rh.nombre_completo|default:"" }}</div>
+        </div>
+    </div>
+
+    <script>
+        // Mejorar la experiencia de impresión
+        function imprimirPDF() {
+            window.print();
+        }
+    </script>
 </body>
 </html>

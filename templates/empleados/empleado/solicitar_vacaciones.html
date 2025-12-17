@@ -59,18 +59,18 @@
                         <div class="card-body">
                             <p><strong>Antigüedad:</strong> 
                                 {% if perfil.antiguedad_anos >= 1 %}
-                                    <span class="text-success" style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ perfil.antiguedad_anos }} año{{ perfil.antiguedad_anos|pluralize }}</span>
+                                    <span class="text-success" style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ perfil.antiguedad_detallada }}</span>
                                 {% else %}
-                                    <span class="text-warning" style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ perfil.antiguedad_anos }} año{{ perfil.antiguedad_anos|pluralize }}</span>
+                                    <span class="text-warning" style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ perfil.antiguedad_detallada }}</span>
                                 {% endif %}
                             </p>
-                            <p><strong>Días Anuales:</strong> <span style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 600 !important;">{{ perfil.dias_vacaciones_anuales }}</span></p>
-                            <p><strong>Días Usados:</strong> <span style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 600 !important;">{{ perfil.dias_vacaciones_usados }}</span></p>
-                            <p><strong>Días Disponibles:</strong> 
-                                {% if perfil.dias_vacaciones_disponibles > 0 %}
-                                    <span class="text-success" style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ perfil.dias_vacaciones_disponibles }}</span>
+                            <p><strong>Saldo:</strong> <span style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 600 !important;">{{ perfil.saldo_vacaciones|floatformat:2 }} días</span></p>
+                            <p><strong>Acumulado Este Año:</strong> <span style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 600 !important;">{{ perfil.calcular_dias_acumulados_hasta_hoy|floatformat:2 }} días</span></p>
+                            <p><strong>Total Proyectado Disponible:</strong> 
+                                {% if perfil.calcular_total_disponible_proyectado > 0 %}
+                                    <span class="text-success" style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ perfil.calcular_total_disponible_proyectado|floatformat:2 }} días</span>
                                 {% else %}
-                                    <span class="text-danger" style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ perfil.dias_vacaciones_disponibles }}</span>
+                                    <span class="text-danger" style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important;">{{ perfil.calcular_total_disponible_proyectado|floatformat:2 }} días</span>
                                 {% endif %}
                             </p>
                         </div>
