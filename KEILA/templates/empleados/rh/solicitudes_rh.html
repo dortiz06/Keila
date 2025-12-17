@@ -4,131 +4,182 @@
 {% block title %}Solicitudes de Vacaciones - Panel RH{% endblock %}
 
 {% block content %}
-<div class="container-fluid dashboard">
-    <!-- Header -->
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
-        <div>
-            <h1 class="dashboard-title" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                <i class="fas fa-clipboard-list me-3"></i>Solicitudes de Vacaciones
-            </h1>
-            <p class="dashboard-subtitle mb-0" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                Gestiona las solicitudes de vacaciones de todos los empleados
-            </p>
-        </div>
-    </div>
+<style>
+/* Fondo con imagen keila.jpg */
+body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.65)), url('{% static "images/dash/keila.jpg" %}') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+</style>
 
-    <div class="container-fluid">
-        <!-- Contenedor único con glassmorphism -->
-        <div class="card mb-4">
-            <div class="card-body">
+<div class="container-fluid dashboard">
+    <div class="container">
+        <div class="d-flex justify-content-between mb-4">
+            <div class="d-flex flex-column" style="justify-content: space-between;">
+                <h1 class="dashboard-title" style="color: #ffffff !important; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 0 3px 12px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 0, 0, 0.5) !important; margin-bottom: 0 !important;">
+                    <i class="fas fa-clipboard-list me-2"></i>Solicitudes de Vacaciones
+                </h1>
+                <p class="dashboard-subtitle mb-0" style="color: rgba(255, 255, 255, 0.9) !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6) !important; font-family: 'Montserrat', sans-serif !important; margin-top: 0.5rem !important;">
+                    Gestiona las solicitudes de vacaciones de todos los empleados
+                </p>
+            </div>
+            <div class="d-flex flex-column gap-2" style="align-items: flex-end; justify-content: space-between;">
+                <!-- Volver (arriba) -->
+                <a href="{% url 'empleados:rh_dashboard' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>Volver
+                </a>
+            </div>
+        </div>
+
+        <!-- Tabla de solicitudes -->
+        <div class="card" style="overflow: hidden !important; border-radius: 20px !important;">
+            <div class="card-body" style="background: transparent !important; padding: 0 !important; overflow: hidden !important; border-radius: 20px !important;">
                 <!-- Filtros -->
-                <div class="mb-4">
-                <form method="get" class="row g-3">
-                    <div class="col-md-4">
-                            <label for="estado" class="form-label" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">Estado</label>
-                            <select name="estado" id="estado" class="form-select" style="background: rgba(255, 255, 255, 0.15) !important; backdrop-filter: blur(20px) saturate(180%) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
+                <div class="mb-4" style="padding: 1.5rem 1.5rem 0 1.5rem;">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <label for="estado" class="form-label" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">Estado</label>
+                            <select name="estado" id="estado" class="form-select" style="background: rgba(255, 255, 255, 0.15) !important; backdrop-filter: blur(20px) saturate(180%) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">
                                 <option value="" style="background: rgba(0, 0, 0, 0.8); color: #ffffff;">Pendientes RH (por defecto)</option>
                                 <option value="P" {% if estado_actual == 'P' %}selected{% endif %} style="background: rgba(0, 0, 0, 0.8); color: #ffffff;">Pendiente RH</option>
                                 <option value="A" {% if estado_actual == 'A' %}selected{% endif %} style="background: rgba(0, 0, 0, 0.8); color: #ffffff;">Aprobadas</option>
                                 <option value="R" {% if estado_actual == 'R' %}selected{% endif %} style="background: rgba(0, 0, 0, 0.8); color: #ffffff;">Rechazadas</option>
                                 <option value="TODAS" {% if estado_actual == 'TODAS' %}selected{% endif %} style="background: rgba(0, 0, 0, 0.8); color: #ffffff;">Todas las solicitudes</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                            <label for="busqueda" class="form-label" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">Buscar empleado</label>
-                        <input type="text" name="busqueda" id="busqueda" class="form-control" 
-                                   placeholder="Nombre, apellido..." value="{{ busqueda_actual }}"
-                                   style="background: rgba(255, 255, 255, 0.15) !important; backdrop-filter: blur(20px) saturate(180%) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">&nbsp;</label>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-outline-primary">
-                                <i class="fas fa-search me-1"></i>Filtrar
-                            </button>
+                            </select>
                         </div>
-                    </div>
-                </form>
-        </div>
-
-        <!-- Lista de Solicitudes -->
-                <div>
-                    <h5 class="mb-3" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                    <i class="fas fa-list me-2"></i>
-                    Solicitudes de Vacaciones
-                </h5>
+                        <div class="col-md-6">
+                            <label for="busqueda" class="form-label" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">Buscar empleado</label>
+                            <input type="text" name="busqueda" id="busqueda" class="form-control" 
+                                   placeholder="Nombre, apellido..." value="{{ busqueda_actual }}"
+                                   style="background: rgba(255, 255, 255, 0.15) !important; backdrop-filter: blur(20px) saturate(180%) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif !important;">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">&nbsp;</label>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-outline-primary">
+                                    <i class="fas fa-search me-1"></i>Filtrar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
                 {% if solicitudes %}
-                    <div class="table-responsive">
-                        <table class="table table-hover">
+                    <div class="table-responsive" style="background: transparent !important; overflow-x: auto !important; overflow-y: hidden !important; border-radius: 0 !important; padding: 0 1.5rem 1.5rem 1.5rem !important;">
+                        <table class="table table-hover" style="width: 100% !important;">
                             <thead>
                                 <tr>
-                                        <th style="background: rgba(0, 56, 168, 0.4) !important; backdrop-filter: blur(20px) saturate(180%) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif; border: none;">Empleado</th>
-                                        <th style="background: rgba(0, 56, 168, 0.4) !important; backdrop-filter: blur(20px) saturate(180%) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif; border: none;">Período de Vacaciones</th>
-                                        <th style="background: rgba(0, 56, 168, 0.4) !important; backdrop-filter: blur(20px) saturate(180%) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif; border: none;">Días</th>
-                                        <th style="background: rgba(0, 56, 168, 0.4) !important; backdrop-filter: blur(20px) saturate(180%) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif; border: none;">Tipo</th>
-                                        <th style="background: rgba(0, 56, 168, 0.4) !important; backdrop-filter: blur(20px) saturate(180%) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif; border: none;">Estado</th>
-                                        <th style="background: rgba(0, 56, 168, 0.4) !important; backdrop-filter: blur(20px) saturate(180%) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif; border: none;">Fecha Solicitud</th>
-                                        <th style="background: rgba(0, 56, 168, 0.4) !important; backdrop-filter: blur(20px) saturate(180%) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif; border: none;">Acciones</th>
+                                    <th style="color: #ffffff !important;">
+                                        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                            <i class="fas fa-user" style="font-size: 1.2rem;"></i>
+                                            <span>Empleado</span>
+                                        </div>
+                                    </th>
+                                    <th style="color: #ffffff !important;">
+                                        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                            <i class="fas fa-calendar-alt" style="font-size: 1.2rem;"></i>
+                                            <span>Período de Vacaciones</span>
+                                        </div>
+                                    </th>
+                                    <th style="color: #ffffff !important;">
+                                        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                            <i class="fas fa-calendar-day" style="font-size: 1.2rem;"></i>
+                                            <span>Días</span>
+                                        </div>
+                                    </th>
+                                    <th style="color: #ffffff !important;">
+                                        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                            <i class="fas fa-tag" style="font-size: 1.2rem;"></i>
+                                            <span>Tipo</span>
+                                        </div>
+                                    </th>
+                                    <th style="color: #ffffff !important;">
+                                        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                            <i class="fas fa-info-circle" style="font-size: 1.2rem;"></i>
+                                            <span>Estado</span>
+                                        </div>
+                                    </th>
+                                    <th style="color: #ffffff !important;">
+                                        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                            <i class="fas fa-clock" style="font-size: 1.2rem;"></i>
+                                            <span>Fecha Solicitud</span>
+                                        </div>
+                                    </th>
+                                    <th style="color: #ffffff !important;">
+                                        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                            <i class="fas fa-cog" style="font-size: 1.2rem;"></i>
+                                            <span>Acciones</span>
+                                        </div>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for solicitud in solicitudes %}
-                                    <tr style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
-                                        <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
+                                <tr class="solicitudes-table-row">
+                                    <td style="color: #ffffff !important;">
                                         <div>
-                                            <strong style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">{{ solicitud.empleado.nombre_completo }}</strong><br>
-                                            <small style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif;">{{ solicitud.empleado.puesto }}</small><br>
-                                            <small style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif;">{{ solicitud.empleado.departamento.nombre }}</small>
+                                            <strong>{{ solicitud.empleado.nombre_completo }}</strong>
+                                            <br>
+                                            <small style="color: rgba(255, 255, 255, 0.7) !important;">{{ solicitud.empleado.puesto|default:"Sin puesto" }}</small>
+                                            <br>
+                                            <small style="color: rgba(255, 255, 255, 0.7) !important;">{{ solicitud.empleado.departamento.nombre|default:"Sin departamento" }}</small>
                                         </div>
                                     </td>
-                                        <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
+                                    <td style="color: #ffffff !important; text-align: center !important;">
                                         <div>
-                                                <strong style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">{{ solicitud.fecha_inicio|date:"d/m/Y" }}</strong><br>
-                                                <small style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif;">hasta {{ solicitud.fecha_fin|date:"d/m/Y" }}</small>
+                                            <strong>{{ solicitud.fecha_inicio|date:"d/m/Y" }}</strong>
+                                            <br>
+                                            <small style="color: rgba(255, 255, 255, 0.7) !important;">hasta {{ solicitud.fecha_fin|date:"d/m/Y" }}</small>
                                         </div>
                                     </td>
-                                        <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                            <span class="badge" style="background: rgba(37, 99, 235, 0.6) !important; backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif; font-size: 0.9rem; padding: 0.4em 0.8em;">{{ solicitud.dias_solicitados }}</span>
+                                    <td style="text-align: center !important;">
+                                        <span class="badge-vacaciones badge-dias">{{ solicitud.dias_solicitados }}</span>
                                     </td>
-                                        <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
+                                    <td style="text-align: center !important;">
                                         {% if solicitud.tipo == 'NORMAL' %}
-                                                <span class="badge" style="background: rgba(34, 197, 94, 0.6) !important; backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
+                                            <span class="badge-vacaciones badge-tipo-normal">
                                                 <i class="fas fa-check-circle me-1"></i>Normal
                                             </span>
                                         {% elif solicitud.tipo == 'EXTRAORDINARIA' %}
-                                                <span class="badge" style="background: rgba(245, 158, 11, 0.6) !important; backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
+                                            <span class="badge-vacaciones badge-tipo-extra">
                                                 <i class="fas fa-exclamation-triangle me-1"></i>Extraordinaria
                                             </span>
                                         {% else %}
-                                                <span class="badge" style="background: rgba(107, 114, 128, 0.6) !important; backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">{{ solicitud.get_tipo_display }}</span>
+                                            <span class="badge-vacaciones badge-tipo-default">{{ solicitud.get_tipo_display }}</span>
                                         {% endif %}
                                     </td>
-                                        <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
+                                    <td style="text-align: center !important;">
                                         {% if solicitud.estado == 'PENDIENTE_JEFE' %}
-                                                <span class="badge" style="background: rgba(245, 158, 11, 0.6) !important; backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
+                                            <span class="badge-vacaciones badge-estado-pendiente-jefe">
                                                 <i class="fas fa-clock me-1"></i>Pendiente Jefe
                                             </span>
                                         {% elif solicitud.estado == 'PENDIENTE_RH' %}
-                                                <span class="badge" style="background: rgba(59, 130, 246, 0.6) !important; backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
+                                            <span class="badge-vacaciones badge-estado-pendiente-rh">
                                                 <i class="fas fa-clock me-1"></i>Pendiente RH
                                             </span>
                                         {% elif solicitud.estado == 'APROBADO_RH' %}
-                                                <span class="badge" style="background: rgba(34, 197, 94, 0.6) !important; backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
+                                            <span class="badge-vacaciones badge-estado-aprobada">
                                                 <i class="fas fa-check me-1"></i>Aprobada
                                             </span>
                                         {% elif solicitud.estado == 'RECHAZADO_JEFE' or solicitud.estado == 'RECHAZADO_RH' %}
-                                                <span class="badge" style="background: rgba(239, 68, 68, 0.6) !important; backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
+                                            <span class="badge-vacaciones badge-estado-rechazada">
                                                 <i class="fas fa-times me-1"></i>Rechazada
                                             </span>
                                         {% else %}
-                                                <span class="badge" style="background: rgba(107, 114, 128, 0.6) !important; backdrop-filter: blur(10px) saturate(150%) !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; color: #ffffff !important; font-family: 'Montserrat', sans-serif;">{{ solicitud.get_estado_display }}</span>
+                                            <span class="badge-vacaciones badge-estado-default">{{ solicitud.get_estado_display }}</span>
                                         {% endif %}
                                     </td>
-                                        <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
-                                        {{ solicitud.fecha_solicitud|date:"d/m/Y" }}<br>
-                                            <small style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif;">{{ solicitud.fecha_solicitud|time:"H:i" }}</small>
+                                    <td style="color: #ffffff !important; text-align: center !important;">
+                                        <div>
+                                            {{ solicitud.fecha_solicitud|date:"d/m/Y" }}
+                                            <br>
+                                            <small style="color: rgba(255, 255, 255, 0.7) !important;">{{ solicitud.fecha_solicitud|time:"H:i" }}</small>
+                                        </div>
                                     </td>
-                                        <td style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">
+                                    <td style="text-align: center !important;">
                                         {% if solicitud.estado == 'PENDIENTE_RH' %}
                                             <a href="{% url 'empleados:aprobar_rh' solicitud.id %}" class="btn btn-sm btn-outline-primary">
                                                 <i class="fas fa-check me-1"></i>Revisar
@@ -140,8 +191,14 @@
                                                 </a>
                                             </div>
                                         {% else %}
-                                                <span style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif;">Procesada</span>
+                                            <span style="color: rgba(255, 255, 255, 0.7) !important;">Procesada</span>
                                         {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="7" class="text-center py-4">
+                                        <p style="color: rgba(255, 255, 255, 0.8) !important;">No hay solicitudes</p>
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -149,10 +206,10 @@
                         </table>
                     </div>
                 {% else %}
-                    <div class="text-center py-5">
-                            <i class="fas fa-clipboard-list fa-3x mb-3" style="color: rgba(255, 255, 255, 0.5) !important;"></i>
-                            <h5 style="color: #ffffff !important; font-family: 'Montserrat', sans-serif;">No hay solicitudes</h5>
-                            <p style="color: rgba(255, 255, 255, 0.7) !important; font-family: 'Montserrat', sans-serif;">
+                    <div class="text-center py-5" style="padding: 1.5rem;">
+                        <i class="fas fa-clipboard-list fa-3x mb-3" style="color: rgba(255, 255, 255, 0.5) !important;"></i>
+                        <h5 style="color: #ffffff !important;">No hay solicitudes</h5>
+                        <p style="color: rgba(255, 255, 255, 0.8) !important;">
                             {% if estado_actual or busqueda_actual %}
                                 No se encontraron solicitudes con los filtros aplicados.
                             {% else %}
@@ -166,111 +223,403 @@
                         {% endif %}
                     </div>
                 {% endif %}
-                </div>
-            </div>
-        </div>
-
-        <!-- Navegación -->
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="d-flex justify-content-between">
-                    <a href="{% url 'empleados:rh_dashboard' %}" class="btn btn-outline-primary">
-                        <i class="fas fa-arrow-left me-1"></i>Volver al Panel
-                    </a>
-                </div>
             </div>
         </div>
     </div>
 </div>
 
 <style>
-/* Asegurar que se use Montserrat en todo el dashboard */
-.dashboard {
-    font-family: 'Montserrat', sans-serif !important;
-}
-
-.dashboard * {
-    font-family: 'Montserrat', sans-serif !important;
-}
-
-/* Preservar iconos de Font Awesome */
-.dashboard i,
-.dashboard .fa,
-.dashboard [class*="fa-"] {
-    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro" !important;
-    font-weight: 900 !important;
-    font-style: normal !important;
-    color: #ffffff !important;
-}
-
-/* Glassmorphism para la card principal - completamente transparente */
+/* Aplicar estilos del dashboard a la vista de solicitudes - Igual que kardex */
 .dashboard .card {
-    background: rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(20px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    background: rgba(60, 60, 60, 0.4) !important;
+    backdrop-filter: blur(25px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
     border-radius: 20px !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 
+                0 4px 16px rgba(0, 0, 0, 0.3),
                 inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    overflow: hidden !important;
+    position: relative !important;
+}
+
+.dashboard .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 20px;
+    pointer-events: none;
+    z-index: 1;
 }
 
 .dashboard .card-body {
     background: transparent !important;
+    overflow: hidden !important;
+    border-radius: 20px !important;
+    position: relative !important;
+    z-index: 2 !important;
 }
 
-/* Eliminar cualquier fondo blanco de Bootstrap */
-.dashboard .table-striped tbody tr:nth-of-type(odd) {
-    background: transparent !important;
-}
-
-.dashboard .table-hover tbody tr:hover {
-    background: rgba(255, 255, 255, 0.05) !important;
-}
-
-/* Avatar removido - estilos eliminados */
-
-/* Tabla completamente transparente - sin fondos blancos */
-.dashboard .table {
-    background: transparent !important;
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-.dashboard .table thead {
-    background: transparent !important;
-}
-
-.dashboard .table thead th {
-    background: rgba(0, 56, 168, 0.4) !important;
-    backdrop-filter: blur(20px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-    border: none !important;
-    color: #ffffff !important;
-    font-family: 'Montserrat', sans-serif !important;
-}
-
-.dashboard .table tbody {
-    background: transparent !important;
-}
-
-.dashboard .table tbody tr {
-    background: transparent !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-    transition: all 0.2s ease;
-}
-
-.dashboard .table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.05) !important;
-    transform: translateY(-1px);
-}
-
-.dashboard .table tbody td {
-    background: transparent !important;
-    border: none !important;
+.dashboard .card-body > * {
+    position: relative !important;
+    z-index: 3 !important;
 }
 
 .dashboard .table-responsive {
     background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+    padding: 1.5rem !important;
+}
+
+.dashboard .table {
+    background: transparent !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    width: 100% !important;
+    margin-bottom: 0 !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+}
+
+.dashboard .table thead {
+    background: transparent !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+}
+
+.dashboard .table thead th {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    padding: 14px 12px !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+    border-radius: 0 !important;
+    letter-spacing: 0.3px !important;
+    font-family: 'Montserrat', sans-serif !important;
+    text-align: center !important;
+}
+
+.dashboard .table thead th:first-child,
+.dashboard .table thead th:last-child {
+    text-align: left !important;
+}
+
+.dashboard .table thead th:not(:first-child) {
+    border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
+    padding-left: 12px !important;
+}
+
+.dashboard .table tbody {
+    background: transparent !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+}
+
+.dashboard .table tbody tr {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border-radius: 0 !important;
+}
+
+/* Efecto zebra striping sutil - alternar colores de fondo para diferenciar filas */
+.dashboard .table tbody tr.solicitudes-table-row:nth-child(odd) {
+    background: rgba(255, 255, 255, 0.02) !important; /* Fondo muy sutil para filas impares */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.dashboard .table tbody tr.solicitudes-table-row:nth-child(even) {
+    background: rgba(255, 255, 255, 0.05) !important; /* Fondo ligeramente más visible para filas pares */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Asegurar que las celdas hereden el fondo de la fila */
+.dashboard .table tbody tr.solicitudes-table-row td {
+    background: inherit !important;
+}
+
+.dashboard .table tbody tr.solicitudes-table-row:hover {
+    background: rgba(255, 255, 255, 0.1) !important; /* Efecto hover más visible */
+    border-bottom-color: rgba(255, 255, 255, 0.2) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .table tbody tr.solicitudes-table-row:last-child {
+    border-bottom: none !important;
+}
+
+.dashboard .table tbody tr:first-child td {
+    padding-top: 16px !important;
+}
+
+.dashboard .table tbody tr:last-child td {
+    padding-bottom: 16px !important;
+}
+
+.dashboard .table tbody td {
+    background: transparent !important;
+    padding: 14px 12px !important;
+    border: none !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+    vertical-align: middle !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7), 
+                 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+    border-radius: 0 !important;
+    font-weight: 400 !important;
+    font-family: 'Montserrat', sans-serif !important;
+    text-align: center !important;
+}
+
+.dashboard .table tbody td:first-child,
+.dashboard .table tbody td:last-child {
+    text-align: left !important;
+}
+
+.dashboard .table tbody td:first-child,
+.dashboard .table thead th:first-child {
+    border-left: none !important;
+    padding-left: 16px !important;
+}
+
+.dashboard .table tbody td:last-child,
+.dashboard .table thead th:last-child {
+    padding-right: 16px !important;
+}
+
+.dashboard .table tbody td strong {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 
+                 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .table tbody td small {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard-title {
+    color: #ffffff !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 
+                 0 3px 12px rgba(0, 0, 0, 0.6),
+                 0 0 20px rgba(0, 0, 0, 0.5) !important;
+    font-weight: 700 !important;
+    margin-bottom: 0 !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard-subtitle {
+    color: rgba(255, 255, 255, 0.9) !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Badges de solicitudes - Estilo glassmorphism como kardex */
+.badge-vacaciones {
+    padding: 0.5rem 1rem !important;
+    border-radius: 50px !important;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    font-family: 'Montserrat', sans-serif !important;
+    display: inline-block !important;
+    color: #ffffff !important;
+    white-space: nowrap !important;
+    transition: all 0.2s ease !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(12px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.25),
+        0 2px 6px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    margin: 0 auto !important;
+}
+
+/* Highlight sutil en la parte superior */
+.badge-vacaciones::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 50% !important;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), transparent) !important;
+    pointer-events: none !important;
+    border-radius: 50px 50px 0 0 !important;
+}
+
+/* Días - Azul */
+.badge-dias {
+    background: rgba(59, 130, 246, 0.5) !important;
+}
+
+/* Tipo Normal - Verde */
+.badge-tipo-normal {
+    background: rgba(34, 197, 94, 0.5) !important;
+}
+
+/* Tipo Extraordinaria - Naranja */
+.badge-tipo-extra {
+    background: rgba(245, 158, 11, 0.5) !important;
+}
+
+/* Tipo Default - Gris */
+.badge-tipo-default {
+    background: rgba(107, 114, 128, 0.5) !important;
+}
+
+/* Estado Pendiente Jefe - Naranja */
+.badge-estado-pendiente-jefe {
+    background: rgba(245, 158, 11, 0.5) !important;
+}
+
+/* Estado Pendiente RH - Azul */
+.badge-estado-pendiente-rh {
+    background: rgba(59, 130, 246, 0.5) !important;
+}
+
+/* Estado Aprobada - Verde */
+.badge-estado-aprobada {
+    background: rgba(34, 197, 94, 0.5) !important;
+}
+
+/* Estado Rechazada - Rojo */
+.badge-estado-rechazada {
+    background: rgba(239, 68, 68, 0.5) !important;
+}
+
+/* Estado Default - Gris */
+.badge-estado-default {
+    background: rgba(107, 114, 128, 0.5) !important;
+}
+
+/* Efecto hover con glassmorphism */
+.badge-vacaciones:hover {
+    border-color: rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.3),
+        0 3px 8px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* ===== ESTILOS DE BOTONES DEL DASHBOARD ===== */
+.dashboard .btn-outline-primary {
+    background: linear-gradient(180deg, 
+        rgba(59, 130, 246, 0.95) 0%, 
+        rgba(37, 99, 235, 0.95) 50%,
+        rgba(29, 78, 216, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .btn-outline-primary:hover {
+    background: linear-gradient(180deg, 
+        rgba(96, 165, 250, 0.95) 0%, 
+        rgba(59, 130, 246, 0.95) 50%,
+        rgba(37, 99, 235, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-success {
+    background: linear-gradient(180deg, 
+        rgba(34, 197, 94, 0.95) 0%, 
+        rgba(22, 163, 74, 0.95) 50%,
+        rgba(15, 118, 50, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .btn-outline-success:hover {
+    background: linear-gradient(180deg, 
+        rgba(74, 222, 128, 0.95) 0%, 
+        rgba(34, 197, 94, 0.95) 50%,
+        rgba(22, 163, 74, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-outline-secondary {
+    background: linear-gradient(180deg, 
+        rgba(156, 163, 175, 0.95) 0%, 
+        rgba(107, 114, 128, 0.95) 50%,
+        rgba(75, 85, 99, 1) 100%) !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.3),
+        0 2px 6px rgba(0, 0, 0, 0.2),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 14px 24px !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .btn-outline-secondary:hover {
+    background: linear-gradient(180deg, 
+        rgba(209, 213, 219, 0.95) 0%, 
+        rgba(156, 163, 175, 0.95) 50%,
+        rgba(107, 114, 128, 1) 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.35),
+        0 3px 8px rgba(0, 0, 0, 0.25),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-sm {
+    padding: 10px 20px !important;
+    font-size: 0.85rem !important;
+    border-radius: 12px !important;
 }
 
 /* Inputs y selects con glassmorphism */
@@ -301,104 +650,49 @@
     font-family: 'Montserrat', sans-serif !important;
 }
 
-/* ===== ESTILO DE BOTONES MODERNO - Con luz arriba y sombra abajo ===== */
-.dashboard .btn,
-.dashboard .btn-primary,
-.dashboard .btn-success,
-.dashboard .btn-danger,
-.dashboard .btn-info,
-.dashboard .btn-warning,
-.dashboard .btn-outline-primary,
-.dashboard .btn-outline-danger,
-.dashboard .btn-outline-success,
-.dashboard .btn-outline-secondary {
-    border: none !important;
-    border-radius: 14px !important;
-    padding: 14px 32px !important;
-    font-weight: 600 !important;
-    font-size: 0.95rem !important;
-    font-family: 'Montserrat', sans-serif !important;
-    color: #ffffff !important;
-    transition: all 0.3s ease !important;
+/* Asegurar que los iconos Font Awesome usen su fuente correcta */
+.dashboard i,
+.dashboard .fa,
+.dashboard [class*="fa-"] {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Asegurar que el contenedor principal tenga padding lateral y límite de ancho */
+.dashboard > .container,
+.container-fluid.dashboard > .container {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    max-width: 1320px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    overflow-x: visible !important;
+}
+
+@media (min-width: 992px) and (max-width: 1399px) {
+    .dashboard > .container,
+    .container-fluid.dashboard > .container {
+        max-width: 1140px !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .dashboard > .container,
+    .container-fluid.dashboard > .container {
+        max-width: 100% !important;
+    }
+}
+
+/* Asegurar que las cards no se solapen */
+.dashboard .card {
+    margin-bottom: 1.5rem !important;
     position: relative !important;
-    overflow: hidden !important;
-}
-
-.dashboard .btn-sm {
-    padding: 10px 24px !important;
-    font-size: 0.85rem !important;
-    border-radius: 12px !important;
-}
-
-/* Botón Primary */
-.dashboard .btn-primary,
-.dashboard .btn-outline-primary {
-    background: linear-gradient(180deg, 
-        rgba(37, 99, 235, 0.95) 0%, 
-        rgba(0, 56, 168, 0.95) 50%,
-        rgba(0, 30, 100, 1) 100%) !important;
-    box-shadow: 
-        0 4px 12px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-}
-
-.dashboard .btn-primary:hover,
-.dashboard .btn-outline-primary:hover {
-    background: linear-gradient(180deg, 
-        rgba(59, 130, 246, 0.95) 0%, 
-        rgba(0, 56, 168, 0.95) 50%,
-        rgba(0, 56, 168, 1) 100%) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 
-        0 6px 16px rgba(0, 0, 0, 0.25),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-}
-
-/* Botón Success */
-.dashboard .btn-success,
-.dashboard .btn-outline-success {
-    background: linear-gradient(180deg, 
-        rgba(34, 197, 94, 0.95) 0%, 
-        rgba(22, 163, 74, 0.95) 50%,
-        rgba(15, 118, 50, 1) 100%) !important;
-    box-shadow: 
-        0 4px 12px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-}
-
-.dashboard .btn-success:hover,
-.dashboard .btn-outline-success:hover {
-    background: linear-gradient(180deg, 
-        rgba(74, 222, 128, 0.95) 0%, 
-        rgba(34, 197, 94, 0.95) 50%,
-        rgba(22, 163, 74, 1) 100%) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 
-        0 6px 16px rgba(0, 0, 0, 0.25),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-}
-
-/* Botón Secondary */
-.dashboard .btn-outline-secondary {
-    background: linear-gradient(180deg, 
-        rgba(107, 114, 128, 0.95) 0%, 
-        rgba(75, 85, 99, 0.95) 50%,
-        rgba(55, 65, 81, 1) 100%) !important;
-    box-shadow: 
-        0 4px 12px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-}
-
-.dashboard .btn-outline-secondary:hover {
-    background: linear-gradient(180deg, 
-        rgba(156, 163, 175, 0.95) 0%, 
-        rgba(107, 114, 128, 0.95) 50%,
-        rgba(75, 85, 99, 1) 100%) !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 
-        0 6px 16px rgba(0, 0, 0, 0.25),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    z-index: 1 !important;
 }
 </style>
 {% endblock %}
-

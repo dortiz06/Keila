@@ -398,17 +398,29 @@ def lista_empleados(request):
     
     departamentos = Departamento.objects.filter(activo=True)
     
+    # Ordenamiento
+    orden_actual = request.GET.get('orden', 'alfabetico')
+    if orden_actual == 'alfabetico':
+        empleados = empleados.order_by('usuario__first_name', 'usuario__last_name')
+    elif orden_actual == 'area':
+        empleados = empleados.order_by('departamento__nombre', 'usuario__first_name', 'usuario__last_name')
+    elif orden_actual == 'antiguedad':
+        empleados = empleados.order_by('-fecha_contratacion')
+    else:
+        empleados = empleados.order_by('usuario__first_name', 'usuario__last_name')
+    
     # Determinar permisos
     puede_editar = perfil.es_sistemas() or perfil.es_admin()
     puede_crear = perfil.es_sistemas() or perfil.es_admin()  # Solo Sistemas y Admin pueden crear
     es_gestion_completa = perfil.es_sistemas() or perfil.es_admin()  # Para mostrar columnas adicionales
     
     context = {
-        'empleados': empleados.order_by('usuario__first_name', 'usuario__last_name'),
+        'empleados': empleados,
         'departamentos': departamentos,
         'tipo_actual': tipo_perfil,
         'departamento_actual': departamento_id,
         'busqueda_actual': busqueda,
+        'orden_actual': orden_actual,
         'perfil': perfil,
         'puede_editar': puede_editar,
         'puede_crear': puede_crear,

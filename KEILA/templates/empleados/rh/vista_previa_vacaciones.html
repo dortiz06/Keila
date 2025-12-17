@@ -4,136 +4,314 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solicitud de Vacaciones - {{ solicitud.empleado.nombre_completo }}</title>
+    {% load static %}
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            width: 850px;
-            margin: 40px auto;
+            width: 8.5in;
+            height: 5.5in;
+            margin: 0 auto;
+            padding: 0.18in;
+            border: 3px solid #000;
+            background: #ffffff;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        * {
+            font-family: Arial, sans-serif !important;
+        }
+
+        .inner-border {
+            position: absolute;
+            top: 0.13in;
+            left: 0.13in;
+            right: 0.13in;
+            bottom: 0.13in;
             border: 2px solid #000;
-            padding: 20px 40px;
+            pointer-events: none;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Encabezado */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.06in;
+            padding-bottom: 0.05in;
+            border-bottom: 2px solid #000;
+        }
+
+        .header-logo {
+            flex: 0 0 auto;
+        }
+
+        .header-logo img {
+            height: 0.42in;
+            max-width: 100%;
+            filter: brightness(0);
         }
 
         h1 {
-            text-align: center;
-            margin-bottom: 15px;
-            font-size: 20px;
+            flex: 1;
+            text-align: right;
+            margin: 0;
+            font-size: 16pt;
             font-weight: bold;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding-left: 0.2in;
+            font-family: Arial, sans-serif;
         }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
+        /* Sección de información */
+        .info-section {
+            margin-bottom: 0.08in;
         }
 
         .section-title {
             font-weight: bold;
-            margin-bottom: 5px;
+            font-size: 12pt;
+            margin-bottom: 0.06in;
+            margin-top: 0.05in;
+            color: #000;
+            font-family: Arial, sans-serif;
         }
 
-        .field-line {
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.1in 0.15in;
+            margin-bottom: 0.06in;
+        }
+
+        .info-item {
             display: flex;
-            align-items: center;
-            margin-bottom: 5px;
+            align-items: baseline;
         }
 
-        .field-line span {
-            margin-right: 8px;
+        .info-item.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .info-label {
+            font-size: 12pt;
+            color: #666;
+            font-weight: normal;
+            margin-right: 0.08in;
             white-space: nowrap;
-            font-size: 14px;
+            flex-shrink: 0;
+            font-family: Arial, sans-serif;
         }
 
-        .line {
-            border-bottom: 1px solid #000;
-            flex-grow: 1;
-            height: 14px;
+        .info-value {
+            flex: 1;
+            border-bottom: 1.5px solid #000;
+            padding-bottom: 0.015in;
+            font-size: 12pt;
+            font-weight: bold;
+            color: #000;
+            min-height: 0.16in;
+            font-family: Arial, sans-serif;
         }
 
-        .short-line {
-            width: 140px;
-            border-bottom: 1px solid #000;
-            height: 14px;
-            display: inline-block;
-        }
-
-        .fecha-ingreso {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
+        .info-value.short {
+            max-width: 1.3in;
+            text-align: center;
         }
 
         .date-box {
-            border: 1px solid #000;
-            padding: 4px 10px;
-            margin: 0 6px;
-            font-size: 13px;
-        }
-
-        .dias-section {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            gap: 40px;
-        }
-
-        .dias-table {
-            width: 48%;
-            border-collapse: collapse;
-            border: 1px solid #000;
-            font-size: 15px;
-        }
-
-        .dias-table td {
-            border: 1px solid #000;
-            padding: 8px 10px;
-            height: 12px;
-            text-align: left;
-            padding-left: 30px;
-        }
-        
-        .dias-table td:last-child {
+            border: 1.5px solid #000;
+            padding: 0.035in 0.1in;
             text-align: center;
+            background: #f9f9f9;
+            display: inline-block;
+            min-width: 1.05in;
+        }
+
+        .date-box .format-text {
+            color: #666;
+            font-size: 12pt;
+            font-weight: normal;
+            display: block;
+            margin-bottom: 0.015in;
+            line-height: 1.1;
+            font-family: Arial, sans-serif;
+        }
+
+        .date-box .value-text {
+            color: #000;
             font-weight: bold;
+            font-size: 12pt;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Sección de días */
+        .dias-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.1in;
+            margin: 0.08in 0;
+        }
+
+        .dias-box {
+            border: 2px solid #000;
+            display: flex;
+            align-items: stretch;
+        }
+
+        .dias-label {
+            background: #f5f5f5;
+            color: #666;
+            font-weight: normal;
+            font-size: 12pt;
+            padding: 0.1in 0.08in;
+            border-right: 1px solid #000;
+            display: flex;
+            align-items: center;
+            width: 65%;
+            font-family: Arial, sans-serif;
+        }
+
+        .dias-value {
+            background: #ffffff;
+            color: #000;
+            font-weight: bold;
+            font-size: 14pt;
+            padding: 0.1in;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35%;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Tabla de período */
+        .section-title-center {
+            text-align: center;
+            margin: 0.08in 0 0.05in 0;
+            font-weight: bold;
+            font-size: 12pt;
+            font-family: Arial, sans-serif;
         }
 
         .periodo-table {
             width: 100%;
-            border: 1px solid #000;
+            border: 2px solid #000;
             border-collapse: collapse;
-            margin-top: 10px;
-            font-size: 14px;
+            margin-bottom: 0.08in;
         }
 
         .periodo-table td {
             border: 1px solid #000;
             text-align: center;
-            padding: 6px 4px;
-            height: 12px;
+            padding: 0.08in 0.04in;
+            vertical-align: middle;
         }
 
         .periodo-table tr:first-child td {
             font-weight: bold;
+            background: #f5f5f5;
+            color: #000;
+            font-size: 12pt;
+            padding: 0.09in 0.04in;
+            font-family: Arial, sans-serif;
         }
 
+        .periodo-table tr:last-child td {
+            background: #ffffff;
+        }
+
+        .periodo-table .format-text {
+            color: #666;
+            font-size: 12pt;
+            font-weight: normal;
+            display: block;
+            margin-bottom: 0.015in;
+            line-height: 1.1;
+            font-family: Arial, sans-serif;
+        }
+
+        .periodo-table .value-text {
+            color: #000;
+            font-weight: bold;
+            font-size: 12pt;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Sección de firmas */
         .signature-section {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.1in;
+            margin-top: 0.05in;
         }
 
         .signature {
-            width: 30%;
             text-align: center;
-            font-size: 14px;
+            font-size: 12pt;
+            overflow: hidden;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            font-family: Arial, sans-serif;
         }
 
-        .signature div {
-            margin-top: 40px;
-            border-top: 1px solid #000;
-            padding-top: 3px;
+        .signature .title {
+            font-weight: bold;
+            margin-bottom: 0.02in;
+            color: #000;
+            line-height: 1.1;
+            font-size: 12pt;
+            font-family: Arial, sans-serif;
+        }
+        
+        .signature .subtitle {
+            font-weight: normal;
+            margin-bottom: 0.08in;
+            color: #000;
+            line-height: 1.1;
+            font-size: 12pt;
+            font-family: Arial, sans-serif;
         }
 
-        /* Estilos para el botón de impresión (solo visible en pantalla) */
+        .signature .line {
+            margin-top: 0.2in;
+            border-top: 1.5px solid #000;
+            padding-top: 0.04in;
+            min-height: 0.4in;
+            width: 100%;
+        }
+
+        .signature .name {
+            color: #000;
+            font-weight: bold;
+            font-size: 12pt;
+            line-height: 1.25;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+            padding: 0 0.02in;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
         @media screen {
             .print-button {
                 position: fixed;
@@ -179,13 +357,17 @@
             }
             body {
                 margin: 0;
-                border: none;
-                padding: 20px 40px;
+                page-break-after: avoid;
+            }
+            @page {
+                size: 8.5in 5.5in;
+                margin: 0;
             }
         }
     </style>
 </head>
 <body>
+    <div class="inner-border"></div>
 
     <a href="{% url 'empleados:rh_dashboard' %}" class="back-button">
         ← Volver
@@ -195,91 +377,105 @@
         🖨️ Imprimir / Guardar PDF
     </button>
 
-    <h1>SOLICITUD DE VACACIONES</h1>
-
-    <div class="section-title">RECURSOS HUMANOS</div>
-
-    <div class="header">
-        <div class="field-line">
-            <span>Nombre</span>
-            <div class="line">
-                <span style="margin-left: 5px;">{{ solicitud.empleado.nombre_completo }}</span>
-            </div>
-        </div>
+    <div class="content-wrapper">
         <div>
-            <div class="field-line">
-                <span>Fecha</span>
-                <div class="short-line">
-                    <span style="margin-left: 5px;">{{ fecha_actual|date:"d/m/Y" }}</span>
+            <div class="header-container">
+                <div class="header-logo">
+                    <img src="{% static 'images/logos/logoN-keila.png' %}" alt="Grupo Keila" />
+                </div>
+                <h1>SOLICITUD DE VACACIONES</h1>
+            </div>
+
+            <div class="info-section">
+                <div class="section-title">RECURSOS HUMANOS</div>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Nombre:</span>
+                        <div class="info-value">{{ solicitud.empleado.nombre_completo }}</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Fecha:</span>
+                        <div class="info-value short">{{ fecha_actual|date:"d/m/Y" }}</div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Dpto:</span>
+                        <div class="info-value short">{{ solicitud.empleado.departamento.nombre|default:"N/A" }}</div>
+                    </div>
+                    <div class="info-item full-width">
+                        <span class="info-label">Fecha de ingreso:</span>
+                        <div class="date-box">
+                            <span class="format-text">Día/Mes/Año</span>
+                            <span class="value-text">{{ solicitud.empleado.fecha_contratacion|date:"d/m/Y"|default:"N/A" }}</span>
+                        </div>
+                        <span class="info-label" style="margin-left: 0.15in;">Vacaciones correspondientes al año:</span>
+                        <div class="info-value short" style="margin-left: 0.08in;">{{ ano_vacaciones }}</div>
+                    </div>
                 </div>
             </div>
-            <div class="field-line">
-                <span>Dpto</span>
-                <div class="short-line">
-                    <span style="margin-left: 5px;">{{ solicitud.empleado.departamento.nombre|default:"N/A" }}</span>
+
+            <div class="dias-section">
+                <div class="dias-box">
+                    <div class="dias-label">Días a disfrutar</div>
+                    <div class="dias-value">{{ solicitud.dias_solicitados }}</div>
+                </div>
+                <div class="dias-box">
+                    <div class="dias-label">Saldo</div>
+                    <div class="dias-value">{{ dias_pendientes }}</div>
                 </div>
             </div>
+
+            <div class="section-title-center">Periodo de vacaciones</div>
+
+            <table class="periodo-table">
+                <tr>
+                    <td>Fecha de inicio</td>
+                    <td>Fecha de término</td>
+                    <td>Fecha de presentarse</td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="format-text">Día/Mes/Año</span>
+                        <span class="value-text">{{ solicitud.fecha_inicio|date:"d/m/Y" }}</span>
+                    </td>
+                    <td>
+                        <span class="format-text">Día/Mes/Año</span>
+                        <span class="value-text">{{ solicitud.fecha_fin|date:"d/m/Y" }}</span>
+                    </td>
+                    <td>
+                        <span class="format-text">Día/Mes/Año</span>
+                        <span class="value-text">{{ fecha_presentarse|date:"d/m/Y" }}</span>
+                    </td>
+                </tr>
+            </table>
         </div>
-    </div>
 
-    <div class="fecha-ingreso">
-        <span>Fecha de ingreso</span>
-        <div class="date-box">Día/Mes/Año<br>{{ solicitud.empleado.fecha_contratacion|date:"d/m/Y"|default:"N/A" }}</div>
-        <span>Vacaciones correspondientes al año</span>
-        <div class="short-line">
-            <span style="margin-left: 5px;">{{ ano_vacaciones }}</span>
-        </div>
-    </div>
-
-    <!-- Sección de días -->
-    <div class="dias-section">
-        <table class="dias-table">
-            <tr>
-                <td>Días a disfrutar</td>
-                <td>{{ solicitud.dias_solicitados }}</td>
-            </tr>
-        </table>
-
-        <table class="dias-table">
-            <tr>
-                <td>Días pendientes</td>
-                <td>{{ dias_pendientes }}</td>
-            </tr>
-        </table>
-    </div>
-
-    <div class="section-title" style="text-align:center; margin-top:20px;">Periodo de vacaciones</div>
-
-    <table class="periodo-table">
-        <tr>
-            <td>Fecha de inicio</td>
-            <td>Fecha de término</td>
-            <td>Fecha de presentarse</td>
-        </tr>
-        <tr>
-            <td>Día/Mes/Año<br>{{ solicitud.fecha_inicio|date:"d/m/Y" }}</td>
-            <td>Día/Mes/Año<br>{{ solicitud.fecha_fin|date:"d/m/Y" }}</td>
-            <td>Día/Mes/Año<br>{{ fecha_presentarse|date:"d/m/Y" }}</td>
-        </tr>
-    </table>
-
-    <div class="signature-section">
-        <div class="signature">
-            Colaborador<br>Nombre y firma
-            <div>{{ solicitud.empleado.nombre_completo }}</div>
-        </div>
-        <div class="signature">
-            Jefe de área<br>Nombre y firma
-            <div>{{ solicitud.aprobado_por_jefe.nombre_completo|default:"" }}</div>
-        </div>
-        <div class="signature">
-            Recursos Humanos<br>Nombre y firma
-            <div>{{ solicitud.aprobado_por_rh.nombre_completo|default:"" }}</div>
+        <div class="signature-section">
+            <div class="signature">
+                <div class="title">Colaborador</div>
+                <div class="subtitle">Nombre y firma</div>
+                <div class="line">
+                    <div class="name">{{ solicitud.empleado.nombre_completo }}</div>
+                </div>
+            </div>
+            <div class="signature">
+                <div class="title">Jefe de área</div>
+                <div class="subtitle">Nombre y firma</div>
+                <div class="line">
+                    <div class="name">{{ solicitud.aprobado_por_jefe.nombre_completo|default:"" }}</div>
+                </div>
+            </div>
+            <div class="signature">
+                <div class="title">Recursos Humanos</div>
+                <div class="subtitle">Nombre y firma</div>
+                <div class="line">
+                    <div class="name">{{ solicitud.aprobado_por_rh.nombre_completo|default:"" }}</div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Mejorar la experiencia de impresión
         function imprimirPDF() {
             window.print();
         }
@@ -287,4 +483,3 @@
 
 </body>
 </html>
-

@@ -5,6 +5,7 @@
 
 {% block content %}
 <style>
+/* Fondo con imagen KC07.jpg - imagen original */
 body {
     background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.65)), url('{% static "images/dash/KC07.jpg" %}') !important;
     background-size: cover !important;
@@ -26,28 +27,28 @@ body {
             </div>
         </div>
 
-        <div class="card gestion-usuarios-card" style="overflow: hidden !important; border-radius: 20px !important;">
-            <div class="card-body" style="background: transparent !important; overflow: hidden !important; border-radius: 20px !important;">
-                <h5 class="gestion-section-title mb-3" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 0 1px 3px rgba(0, 0, 0, 0.6) !important;">
-                    <i class="fas fa-filter me-2"></i>Buscar Empleado
-                </h5>
-                
-                <form method="get" class="row g-3 mb-4">
-                    <div class="col-md-10">
-                        <input type="text" class="form-control gestion-input" name="q" 
-                               value="{{ query }}" placeholder="Buscar por nombre o número de empleado...">
-                    </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-outline-primary w-100">
-                            <i class="fas fa-search me-1"></i>Buscar
-                        </button>
-                    </div>
-                </form>
+        <div class="card" style="overflow: hidden !important; border-radius: 20px !important;">
+            <div class="card-body" style="background: transparent !important; padding: 0 !important; overflow: hidden !important; border-radius: 20px !important;">
+                <!-- Filtros -->
+                <div class="mb-4" style="padding: 1.5rem 1.5rem 0 1.5rem;">
+                    <h5 class="mb-3" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 0 1px 3px rgba(0, 0, 0, 0.6) !important;">
+                        <i class="fas fa-filter me-2"></i>Buscar Empleado
+                    </h5>
+                    <form method="get" class="row g-3">
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" name="q" 
+                                   value="{{ query }}" placeholder="Buscar por nombre o número de empleado...">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-search me-1"></i>Buscar
+                            </button>
+                        </div>
+                    </form>
+                </div>
 
-                <hr style="border-color: rgba(255, 255, 255, 0.15) !important; margin: 1.5rem 0 !important;">
-
-                <div class="table-responsive">
-                    <table class="table table-hover gestion-table">
+                <div class="table-responsive" style="background: transparent !important; overflow-x: auto !important; overflow-y: hidden !important; border-radius: 0 !important; padding: 0 1.5rem 1.5rem 1.5rem !important;">
+                    <table class="table table-hover" style="width: 100% !important;">
                         <thead>
                             <tr>
                                 <th style="color: #ffffff !important;">
@@ -56,7 +57,7 @@ body {
                                         <span>Número</span>
                                     </div>
                                 </th>
-                                <th style="color: #ffffff !important;" class="text-left-content">
+                                <th style="color: #ffffff !important;">
                                     <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
                                         <i class="fas fa-user" style="font-size: 1.2rem;"></i>
                                         <span>Nombre Completo</span>
@@ -84,13 +85,13 @@ body {
                         </thead>
                         <tbody>
                             {% for empleado in empleados %}
-                            <tr style="background: transparent !important; border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
-                                <td style="color: #ffffff !important; text-align: center !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7), 0 1px 2px rgba(0, 0, 0, 0.5) !important; font-family: 'Montserrat', sans-serif !important;">{{ empleado.numero_empleado }}</td>
-                                <td style="color: #ffffff !important; text-align: left !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7), 0 1px 2px rgba(0, 0, 0, 0.5) !important; font-family: 'Montserrat', sans-serif !important;">{{ empleado.nombre_completo }}</td>
-                                <td style="color: #ffffff !important; text-align: center !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7), 0 1px 2px rgba(0, 0, 0, 0.5) !important; font-family: 'Montserrat', sans-serif !important;">{% if empleado.departamento %}{{ empleado.departamento.nombre }}{% else %}Sin departamento{% endif %}</td>
-                                <td style="color: #ffffff !important; text-align: center !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7), 0 1px 2px rgba(0, 0, 0, 0.5) !important; font-family: 'Montserrat', sans-serif !important;">{{ empleado.puesto }}</td>
-                                <td>
-                                    <div class="btn-group" role="group">
+                            <tr class="historial-lista-row">
+                                <td style="color: #ffffff !important; text-align: center !important;">{{ empleado.numero_empleado }}</td>
+                                <td style="color: #ffffff !important;">{{ empleado.nombre_completo }}</td>
+                                <td style="color: #ffffff !important; text-align: center !important;">{% if empleado.departamento %}{{ empleado.departamento.nombre }}{% else %}Sin departamento{% endif %}</td>
+                                <td style="color: #ffffff !important; text-align: center !important;">{{ empleado.puesto|default:"Sin puesto" }}</td>
+                                <td style="text-align: center !important;">
+                                    <div class="d-flex gap-2 justify-content-center">
                                         <a href="{% url 'empleados:historial_vacaciones_empleado' empleado.id %}" 
                                            class="btn btn-sm btn-outline-primary">
                                             <i class="fas fa-eye me-1"></i>Historial
@@ -104,7 +105,9 @@ body {
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="5" class="text-center" style="color: rgba(255, 255, 255, 0.8) !important; padding: 2rem !important; font-family: 'Montserrat', sans-serif !important;">No se encontraron empleados</td>
+                                <td colspan="5" class="text-center py-4">
+                                    <p style="color: rgba(255, 255, 255, 0.8) !important;">No se encontraron empleados</p>
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -116,7 +119,7 @@ body {
 </div>
 
 <style>
-/* ===== ESTILOS KARDEX PARA HISTORIAL VACACIONES ===== */
+/* Aplicar estilos del dashboard a la vista de historial lista - Igual que kardex */
 .dashboard .card {
     background: rgba(60, 60, 60, 0.4) !important;
     backdrop-filter: blur(25px) saturate(180%) !important;
@@ -130,69 +133,60 @@ body {
     position: relative !important;
 }
 
+.dashboard .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 20px;
+    pointer-events: none;
+    z-index: 1;
+}
+
 .dashboard .card-body {
     background: transparent !important;
+    overflow: hidden !important;
+    border-radius: 20px !important;
+    position: relative !important;
+    z-index: 2 !important;
 }
 
-.dashboard-title {
-    color: #ffffff !important;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 
-                 0 3px 12px rgba(0, 0, 0, 0.6),
-                 0 0 20px rgba(0, 0, 0, 0.5) !important;
-    font-weight: 700 !important;
-    margin-bottom: 0 !important;
-    font-family: 'Montserrat', sans-serif !important;
+.dashboard .card-body > * {
+    position: relative !important;
+    z-index: 3 !important;
 }
 
-.gestion-usuarios-card {
-    background: rgba(60, 60, 60, 0.4) !important;
-    backdrop-filter: blur(25px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
-}
-
-.gestion-input {
-    background: rgba(255, 255, 255, 0.15) !important;
-    border: 1px solid rgba(255, 255, 255, 0.25) !important;
-    color: #ffffff !important;
-    border-radius: 12px !important;
-    padding: 0.75rem 1rem !important;
-    font-family: 'Montserrat', sans-serif !important;
-}
-
-.gestion-input:focus {
-    background: rgba(255, 255, 255, 0.2) !important;
-    border-color: rgba(255, 255, 255, 0.4) !important;
-    color: #ffffff !important;
-    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
-    outline: none !important;
-}
-
-.gestion-input::placeholder {
-    color: rgba(255, 255, 255, 0.6) !important;
-}
-
-.table-responsive {
+.dashboard .table-responsive {
     background: transparent !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
+    border: none !important;
+    box-shadow: none !important;
     border-radius: 0 !important;
+    overflow: hidden !important;
     padding: 1.5rem !important;
 }
 
-.gestion-table {
+.dashboard .table {
     background: transparent !important;
     border-collapse: separate !important;
     border-spacing: 0 !important;
     width: 100% !important;
     margin-bottom: 0 !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
 }
 
-.gestion-table thead {
+.dashboard .table thead {
     background: transparent !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
 }
 
-.gestion-table thead th {
+.dashboard .table thead th {
     background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     border: none !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
     color: #ffffff !important;
@@ -205,48 +199,70 @@ body {
     text-align: center !important;
 }
 
-.gestion-table thead th:first-child,
-.gestion-table thead th.text-left-content {
+.dashboard .table thead th:first-child,
+.dashboard .table thead th:last-child {
     text-align: left !important;
 }
 
-.gestion-table tbody {
+.dashboard .table thead th:not(:first-child) {
+    border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
+    padding-left: 12px !important;
+}
+
+.dashboard .table tbody {
     background: transparent !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
 }
 
-/* Patrón zebra striping - igual que kardex */
-.gestion-table tbody tr:nth-child(odd) {
-    background: rgba(255, 255, 255, 0.04) !important;
-}
-
-.gestion-table tbody tr:nth-child(even) {
-    background: rgba(255, 255, 255, 0.08) !important;
-}
-
-.gestion-table tbody tr {
+.dashboard .table tbody tr {
     background: transparent !important;
     border: none !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border-radius: 0 !important;
 }
 
-.gestion-table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.15) !important;
-    border-bottom-color: rgba(255, 255, 255, 0.3) !important;
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
+/* Efecto zebra striping sutil - alternar colores de fondo para diferenciar filas */
+.dashboard .table tbody tr.historial-lista-row:nth-child(odd) {
+    background: rgba(255, 255, 255, 0.02) !important; /* Fondo muy sutil para filas impares */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.dashboard .table tbody tr.historial-lista-row:nth-child(even) {
+    background: rgba(255, 255, 255, 0.05) !important; /* Fondo ligeramente más visible para filas pares */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Asegurar que las celdas hereden el fondo de la fila */
+.dashboard .table tbody tr.historial-lista-row td {
+    background: inherit !important;
+}
+
+.dashboard .table tbody tr.historial-lista-row:hover {
+    background: rgba(255, 255, 255, 0.1) !important; /* Efecto hover más visible */
+    border-bottom-color: rgba(255, 255, 255, 0.2) !important;
     transform: translateY(-1px) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
 }
 
-.gestion-table tbody tr:last-child {
+.dashboard .table tbody tr.historial-lista-row:last-child {
     border-bottom: none !important;
 }
 
-.gestion-table tbody td {
+.dashboard .table tbody tr:first-child td {
+    padding-top: 16px !important;
+}
+
+.dashboard .table tbody tr:last-child td {
+    padding-bottom: 16px !important;
+}
+
+.dashboard .table tbody td {
     background: transparent !important;
-    border: none !important;
-    border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
     padding: 14px 12px !important;
+    border: none !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
     color: #ffffff !important;
     vertical-align: middle !important;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7), 
@@ -257,13 +273,47 @@ body {
     text-align: center !important;
 }
 
-.gestion-table tbody td:first-child,
-.gestion-table thead th:first-child {
+.dashboard .table tbody td:first-child,
+.dashboard .table tbody td:last-child {
+    text-align: left !important;
+}
+
+.dashboard .table tbody td:first-child,
+.dashboard .table thead th:first-child {
     border-left: none !important;
     padding-left: 16px !important;
 }
 
-/* Botones estilo kardex */
+.dashboard .table tbody td:last-child,
+.dashboard .table thead th:last-child {
+    padding-right: 16px !important;
+}
+
+.dashboard .table tbody td strong {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 
+                 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .table tbody td small {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard-title {
+    color: #ffffff !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7), 
+                 0 3px 12px rgba(0, 0, 0, 0.6),
+                 0 0 20px rgba(0, 0, 0, 0.5) !important;
+    font-weight: 700 !important;
+    margin-bottom: 0 !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* ===== ESTILOS DE BOTONES DEL DASHBOARD ===== */
 .dashboard .btn-outline-primary {
     background: linear-gradient(180deg, 
         rgba(59, 130, 246, 0.95) 0%, 
@@ -297,16 +347,16 @@ body {
 
 .dashboard .btn-outline-warning {
     background: linear-gradient(180deg, 
-        rgba(245, 158, 11, 0.95) 0%, 
-        rgba(217, 119, 6, 0.95) 50%,
-        rgba(180, 83, 9, 1) 100%) !important;
+        rgba(251, 191, 36, 0.95) 0%, 
+        rgba(245, 158, 11, 0.95) 50%,
+        rgba(217, 119, 6, 1) 100%) !important;
     box-shadow: 
         0 4px 12px rgba(0, 0, 0, 0.3),
         0 2px 6px rgba(0, 0, 0, 0.2),
         inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
     border: none !important;
     border-radius: 14px !important;
-    padding: 10px 20px !important;
+    padding: 14px 24px !important;
     font-weight: 600 !important;
     color: #ffffff !important;
     transition: all 0.3s ease !important;
@@ -316,14 +366,93 @@ body {
 
 .dashboard .btn-outline-warning:hover {
     background: linear-gradient(180deg, 
-        rgba(251, 191, 36, 0.95) 0%, 
-        rgba(245, 158, 11, 0.95) 50%,
-        rgba(217, 119, 6, 1) 100%) !important;
+        rgba(253, 224, 71, 0.95) 0%, 
+        rgba(251, 191, 36, 0.95) 50%,
+        rgba(245, 158, 11, 1) 100%) !important;
     transform: translateY(-2px) !important;
     box-shadow: 
         0 6px 16px rgba(0, 0, 0, 0.35),
         0 3px 8px rgba(0, 0, 0, 0.25),
         inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+.dashboard .btn-sm {
+    padding: 10px 20px !important;
+    font-size: 0.85rem !important;
+    border-radius: 12px !important;
+}
+
+/* Inputs y selects con glassmorphism */
+.dashboard .form-control,
+.dashboard .form-select {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.dashboard .form-control:focus,
+.dashboard .form-select:focus {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+}
+
+.dashboard .form-label {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Asegurar que los iconos Font Awesome usen su fuente correcta */
+.dashboard i,
+.dashboard .fa,
+.dashboard [class*="fa-"] {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "Font Awesome 5 Free", "Font Awesome 5 Pro" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Asegurar que el contenedor principal tenga padding lateral y límite de ancho */
+.dashboard > .container,
+.container-fluid.dashboard > .container {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    max-width: 1320px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    overflow-x: visible !important;
+}
+
+@media (min-width: 992px) and (max-width: 1399px) {
+    .dashboard > .container,
+    .container-fluid.dashboard > .container {
+        max-width: 1140px !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .dashboard > .container,
+    .container-fluid.dashboard > .container {
+        max-width: 100% !important;
+    }
+}
+
+/* Asegurar que las cards no se solapen */
+.dashboard .card {
+    margin-bottom: 1.5rem !important;
+    position: relative !important;
+    z-index: 1 !important;
 }
 </style>
 {% endblock %}

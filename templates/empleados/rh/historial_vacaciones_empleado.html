@@ -5,7 +5,7 @@
 
 {% block content %}
 <style>
-/* Fondo igual al kardex */
+/* Fondo igual al kardex - mantener mionca.jpg */
 body {
     background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.65)), url('{% static "images/dash/mionca.jpg" %}') !important;
     background-size: cover !important;
@@ -48,10 +48,10 @@ body {
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <form method="get" action="{% url 'empleados:historial_vacaciones_empleado' empleado.id %}">
-                            <select name="año" class="form-select gestion-input" onchange="this.form.submit()" style="background: rgba(255, 255, 255, 0.15) !important; border: 1px solid rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; border-radius: 12px !important; padding: 0.75rem 1rem !important; font-family: 'Montserrat', sans-serif !important;">
-                                <option value="" style="background: rgba(60, 60, 60, 0.9) !important; color: #ffffff !important;">Todos los años</option>
+                            <select name="año" class="form-select" onchange="this.form.submit()">
+                                <option value="" style="background: rgba(0, 0, 0, 0.8); color: #ffffff;">Todos los años</option>
                                 {% for año in años_disponibles %}
-                                    <option value="{{ año }}" {% if año_seleccionado == año %}selected{% endif %} style="background: rgba(60, 60, 60, 0.9) !important; color: #ffffff !important;">
+                                    <option value="{{ año }}" {% if año_seleccionado == año %}selected{% endif %} style="background: rgba(0, 0, 0, 0.8); color: #ffffff;">
                                         {{ año }}
                                     </option>
                                 {% endfor %}
@@ -63,34 +63,59 @@ body {
                 <h6 class="mb-3" style="color: #ffffff !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7) !important;">
                     <i class="fas fa-chart-bar me-2"></i>Resumen por Años
                 </h6>
-                <div class="table-responsive" style="background: transparent !important; overflow-x: auto !important; overflow-y: hidden !important; border-radius: 0 !important; padding: 1.5rem !important;">
-                    <table class="table table-hover" style="width: 100% !important; background: transparent !important;">
+                <div class="table-responsive" style="background: transparent !important; overflow-x: auto !important; overflow-y: hidden !important; border-radius: 0 !important; padding: 0 1.5rem 1.5rem 1.5rem !important;">
+                    <table class="table table-hover" style="width: 100% !important;">
                         <thead>
                             <tr>
-                                <th style="color: #ffffff !important; font-weight: 600 !important; font-family: 'Montserrat', sans-serif !important; border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important; padding: 14px 12px !important; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8) !important;">Año</th>
-                                <th style="color: #ffffff !important; font-weight: 600 !important; font-family: 'Montserrat', sans-serif !important; border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important; padding: 14px 12px !important; text-align: right !important; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8) !important;">Vacaciones Normales</th>
-                                <th style="color: #ffffff !important; font-weight: 600 !important; font-family: 'Montserrat', sans-serif !important; border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important; padding: 14px 12px !important; text-align: right !important; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8) !important;">Vacaciones Extraordinarias</th>
-                                <th style="color: #ffffff !important; font-weight: 600 !important; font-family: 'Montserrat', sans-serif !important; border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important; padding: 14px 12px !important; text-align: right !important; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8) !important;">Días con Derecho</th>
-                                <th style="color: #ffffff !important; font-weight: 600 !important; font-family: 'Montserrat', sans-serif !important; border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important; padding: 14px 12px !important; text-align: right !important; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8) !important;">Saldo Final</th>
+                                <th style="color: #ffffff !important;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-calendar-alt" style="font-size: 1.2rem;"></i>
+                                        <span>Año</span>
+                                    </div>
+                                </th>
+                                <th style="color: #ffffff !important;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-calendar-check" style="font-size: 1.2rem;"></i>
+                                        <span>Vacaciones Normales</span>
+                                    </div>
+                                </th>
+                                <th style="color: #ffffff !important;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-star" style="font-size: 1.2rem;"></i>
+                                        <span>Vacaciones Extraordinarias</span>
+                                    </div>
+                                </th>
+                                <th style="color: #ffffff !important;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-gift" style="font-size: 1.2rem;"></i>
+                                        <span>Días con Derecho</span>
+                                    </div>
+                                </th>
+                                <th style="color: #ffffff !important;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-wallet" style="font-size: 1.2rem;"></i>
+                                        <span>Saldo Final</span>
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for año, resumen in resumen_por_ano.items %}
-                            <tr style="background: {% cycle 'rgba(255, 255, 255, 0.04)' 'rgba(255, 255, 255, 0.08)' %} !important; border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;">
-                                <td style="color: #ffffff !important; padding: 14px 12px !important; font-family: 'Montserrat', sans-serif !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7) !important; font-weight: 600 !important;">
+                            <tr class="historial-resumen-row">
+                                <td style="color: #ffffff !important; text-align: center !important;">
                                     <strong>{{ año }}</strong>
                                 </td>
-                                <td style="color: #ffffff !important; padding: 14px 12px !important; text-align: right !important; font-family: 'Montserrat', sans-serif !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7) !important;">
+                                <td style="color: #ffffff !important; text-align: center !important;">
                                     {{ resumen.total_normales|floatformat:3 }}
                                 </td>
-                                <td style="color: #ffffff !important; padding: 14px 12px !important; text-align: right !important; font-family: 'Montserrat', sans-serif !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7) !important;">
+                                <td style="color: #ffffff !important; text-align: center !important;">
                                     {{ resumen.total_extraordinarias|floatformat:3 }}
                                 </td>
-                                <td style="color: #ffffff !important; padding: 14px 12px !important; text-align: right !important; font-family: 'Montserrat', sans-serif !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7) !important;">
+                                <td style="color: #ffffff !important; text-align: center !important;">
                                     {{ resumen.total_con_derecho|floatformat:3 }}
                                 </td>
-                                <td style="padding: 14px 12px !important; text-align: right !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; color: {% if resumen.saldo_final >= 0 %}#ffffff{% else %}#ef4444{% endif %} !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7) !important;">
-                                    {{ resumen.saldo_final|floatformat:3 }}
+                                <td style="text-align: center !important; color: {% if resumen.saldo_final >= 0 %}#ffffff{% else %}#ef4444{% endif %} !important;">
+                                    <strong>{{ resumen.saldo_final|floatformat:3 }}</strong>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -104,8 +129,8 @@ body {
         <!-- Tabla de Historial -->
         <div class="card" style="overflow: hidden !important; border-radius: 20px !important;">
             <div class="card-body" style="background: transparent !important; padding: 0 !important; overflow: hidden !important; border-radius: 20px !important;">
-                <div class="table-responsive" style="background: transparent !important; overflow-x: auto !important; overflow-y: hidden !important; border-radius: 0 !important; padding: 1.5rem !important;">
-                    <table class="table table-hover" style="width: 100% !important; background: transparent !important;">
+                <div class="table-responsive" style="background: transparent !important; overflow-x: auto !important; overflow-y: hidden !important; border-radius: 0 !important; padding: 0 1.5rem 1.5rem 1.5rem !important;">
+                    <table class="table table-hover" style="width: 100% !important;">
                         <thead>
                             <tr>
                                 <th style="color: #ffffff !important; font-weight: 600 !important; font-family: 'Montserrat', sans-serif !important; border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important; padding: 14px 12px !important; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8) !important;">
@@ -154,34 +179,34 @@ body {
                         </thead>
                         <tbody>
                             {% for registro in historial %}
-                            <tr style="background: {% cycle 'rgba(255, 255, 255, 0.04)' 'rgba(255, 255, 255, 0.08)' %} !important; border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;">
-                                <td style="color: #ffffff !important; padding: 14px 12px !important; font-family: 'Montserrat', sans-serif !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7) !important;">
+                            <tr class="historial-table-row">
+                                <td style="color: #ffffff !important;">
                                     {{ registro.concepto }}
                                 </td>
-                                <td style="color: #ffffff !important; padding: 14px 12px !important; text-align: center !important; font-family: 'Montserrat', sans-serif !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7) !important;">
+                                <td style="color: #ffffff !important; text-align: center !important;">
                                     {{ registro.fecha_registro|date:"d/m/Y" }}
                                 </td>
-                                <td style="color: #ffffff !important; padding: 14px 12px !important; text-align: center !important; font-family: 'Montserrat', sans-serif !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7) !important;">
+                                <td style="color: #ffffff !important; text-align: center !important;">
                                     {% if registro.fecha_inicial %}{{ registro.fecha_inicial|date:"d/m/Y" }}{% else %}-{% endif %}
                                 </td>
-                                <td style="color: #ffffff !important; padding: 14px 12px !important; text-align: center !important; font-family: 'Montserrat', sans-serif !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7) !important;">
+                                <td style="color: #ffffff !important; text-align: center !important;">
                                     {% if registro.fecha_final %}{{ registro.fecha_final|date:"d/m/Y" }}{% else %}-{% endif %}
                                 </td>
-                                <td style="color: #ffffff !important; padding: 14px 12px !important; text-align: center !important; font-family: 'Montserrat', sans-serif !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7) !important;">
+                                <td style="text-align: center !important;">
                                     {% if registro.tomadas > 0 %}
                                         <span class="badge-vacaciones badge-saldo">{{ registro.tomadas|floatformat:3 }}</span>
                                     {% else %}
-                                        -
+                                        <span style="color: rgba(255, 255, 255, 0.7) !important;">-</span>
                                     {% endif %}
                                 </td>
-                                <td style="color: #ffffff !important; padding: 14px 12px !important; text-align: center !important; font-family: 'Montserrat', sans-serif !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7) !important;">
+                                <td style="text-align: center !important;">
                                     {% if registro.con_derecho > 0 %}
                                         <span class="badge-vacaciones badge-total">{{ registro.con_derecho|floatformat:3 }}</span>
                                     {% else %}
-                                        -
+                                        <span style="color: rgba(255, 255, 255, 0.7) !important;">-</span>
                                     {% endif %}
                                 </td>
-                                <td style="padding: 14px 12px !important; text-align: center !important; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; color: {% if registro.saldo >= 0 %}#ffffff{% else %}#ef4444{% endif %} !important; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7) !important;">
+                                <td style="text-align: center !important;">
                                     <span class="badge-vacaciones badge-saldo" style="color: {% if registro.saldo >= 0 %}#ffffff{% else %}#ef4444{% endif %} !important;">
                                         {{ registro.saldo|floatformat:3 }}
                                     </span>
@@ -189,8 +214,8 @@ body {
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="7" class="text-center py-4" style="color: rgba(255, 255, 255, 0.8) !important; font-family: 'Montserrat', sans-serif !important;">
-                                    No hay registros de historial.
+                                <td colspan="7" class="text-center py-4">
+                                    <p style="color: rgba(255, 255, 255, 0.8) !important;">No hay registros de historial.</p>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -203,7 +228,7 @@ body {
 </div>
 
 <style>
-/* Aplicar estilos del kardex a la vista de historial */
+/* Aplicar estilos del dashboard a la vista de historial - Igual que kardex */
 .dashboard .card {
     background: rgba(60, 60, 60, 0.4) !important;
     backdrop-filter: blur(25px) saturate(180%) !important;
@@ -217,12 +242,29 @@ body {
     position: relative !important;
 }
 
+.dashboard .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 20px;
+    pointer-events: none;
+    z-index: 1;
+}
+
 .dashboard .card-body {
     background: transparent !important;
     overflow: hidden !important;
     border-radius: 20px !important;
     position: relative !important;
     z-index: 2 !important;
+}
+
+.dashboard .card-body > * {
+    position: relative !important;
+    z-index: 3 !important;
 }
 
 .dashboard-title {
@@ -235,15 +277,16 @@ body {
     font-family: 'Montserrat', sans-serif !important;
 }
 
-.table-responsive {
+.dashboard .table-responsive {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
     border-radius: 0 !important;
     overflow: hidden !important;
+    padding: 1.5rem !important;
 }
 
-.table {
+.dashboard .table {
     background: transparent !important;
     border-collapse: separate !important;
     border-spacing: 0 !important;
@@ -253,13 +296,13 @@ body {
     overflow: hidden !important;
 }
 
-.table thead {
+.dashboard .table thead {
     background: transparent !important;
     border-radius: 0 !important;
     overflow: hidden !important;
 }
 
-.table thead th {
+.dashboard .table thead th {
     background: transparent !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
@@ -272,40 +315,78 @@ body {
     border-radius: 0 !important;
     letter-spacing: 0.3px !important;
     font-family: 'Montserrat', sans-serif !important;
+    text-align: center !important;
 }
 
-.table tbody {
+.dashboard .table thead th:first-child,
+.dashboard .table thead th:last-child {
+    text-align: left !important;
+}
+
+.dashboard .table thead th:not(:first-child) {
+    border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
+    padding-left: 12px !important;
+}
+
+.dashboard .table tbody {
     background: transparent !important;
     border-radius: 0 !important;
     overflow: hidden !important;
 }
 
-.table tbody tr {
+.dashboard .table tbody tr {
     background: transparent !important;
     border: none !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     border-radius: 0 !important;
 }
 
-.table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.15) !important;
-    border-bottom-color: rgba(255, 255, 255, 0.3) !important;
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
-    transform: translateY(-1px) !important;
-    border-bottom-color: rgba(255, 255, 255, 0.25) !important;
+/* Efecto zebra striping sutil - alternar colores de fondo para diferenciar filas */
+.dashboard .table tbody tr.historial-resumen-row:nth-child(odd),
+.dashboard .table tbody tr.historial-table-row:nth-child(odd) {
+    background: rgba(255, 255, 255, 0.02) !important; /* Fondo muy sutil para filas impares */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
-.table tbody tr:last-child {
+.dashboard .table tbody tr.historial-resumen-row:nth-child(even),
+.dashboard .table tbody tr.historial-table-row:nth-child(even) {
+    background: rgba(255, 255, 255, 0.05) !important; /* Fondo ligeramente más visible para filas pares */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Asegurar que las celdas hereden el fondo de la fila */
+.dashboard .table tbody tr.historial-resumen-row td,
+.dashboard .table tbody tr.historial-table-row td {
+    background: inherit !important;
+}
+
+.dashboard .table tbody tr.historial-resumen-row:hover,
+.dashboard .table tbody tr.historial-table-row:hover {
+    background: rgba(255, 255, 255, 0.1) !important; /* Efecto hover más visible */
+    border-bottom-color: rgba(255, 255, 255, 0.2) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dashboard .table tbody tr.historial-resumen-row:last-child,
+.dashboard .table tbody tr.historial-table-row:last-child {
     border-bottom: none !important;
 }
 
-.table tbody td {
+.dashboard .table tbody tr:first-child td {
+    padding-top: 16px !important;
+}
+
+.dashboard .table tbody tr:last-child td {
+    padding-bottom: 16px !important;
+}
+
+.dashboard .table tbody td {
     background: transparent !important;
-    border: none !important;
-    border-left: 1px solid rgba(255, 255, 255, 0.15) !important;
     padding: 14px 12px !important;
+    border: none !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
     color: #ffffff !important;
     vertical-align: middle !important;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7), 
@@ -313,15 +394,40 @@ body {
     border-radius: 0 !important;
     font-weight: 400 !important;
     font-family: 'Montserrat', sans-serif !important;
+    text-align: center !important;
 }
 
-.table tbody td:first-child,
-.table thead th:first-child {
+.dashboard .table tbody td:first-child,
+.dashboard .table tbody td:last-child {
+    text-align: left !important;
+}
+
+.dashboard .table tbody td:first-child,
+.dashboard .table thead th:first-child {
     border-left: none !important;
     padding-left: 16px !important;
 }
 
-/* Badges de vacaciones - Estilo igual al kardex */
+.dashboard .table tbody td:last-child,
+.dashboard .table thead th:last-child {
+    padding-right: 16px !important;
+}
+
+.dashboard .table tbody td strong {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), 
+                 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .table tbody td small {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6) !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+/* Badges de vacaciones - Estilo glassmorphism como la imagen */
 .badge-vacaciones {
     padding: 0.5rem 1rem !important;
     border-radius: 50px !important;
@@ -367,6 +473,17 @@ body {
     font-weight: 700 !important;
 }
 
+/* Efecto hover con glassmorphism */
+.badge-vacaciones:hover {
+    border-color: rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 
+        0 6px 16px rgba(0, 0, 0, 0.3),
+        0 3px 8px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1) !important;
+    transform: translateY(-1px) !important;
+}
+
 /* Botón Volver - Estilo igual al kardex */
 .dashboard .btn-outline-secondary {
     background: linear-gradient(180deg, 
@@ -399,6 +516,34 @@ body {
         inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
 }
 
+/* Inputs y selects con glassmorphism */
+.dashboard .form-control,
+.dashboard .form-select {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+.dashboard .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.dashboard .form-control:focus,
+.dashboard .form-select:focus {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+}
+
+.dashboard .form-label {
+    color: #ffffff !important;
+    font-family: 'Montserrat', sans-serif !important;
+}
+
 /* Asegurar que los iconos Font Awesome usen su fuente correcta */
 .dashboard i,
 .dashboard .fa,
@@ -410,6 +555,38 @@ body {
     text-rendering: auto !important;
     -webkit-font-smoothing: antialiased !important;
     -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Asegurar que el contenedor principal tenga padding lateral y límite de ancho */
+.dashboard > .container,
+.container-fluid.dashboard > .container {
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    max-width: 1320px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    overflow-x: visible !important;
+}
+
+@media (min-width: 992px) and (max-width: 1399px) {
+    .dashboard > .container,
+    .container-fluid.dashboard > .container {
+        max-width: 1140px !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .dashboard > .container,
+    .container-fluid.dashboard > .container {
+        max-width: 100% !important;
+    }
+}
+
+/* Asegurar que las cards no se solapen */
+.dashboard .card {
+    margin-bottom: 1.5rem !important;
+    position: relative !important;
+    z-index: 1 !important;
 }
 </style>
 {% endblock %}
