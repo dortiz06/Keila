@@ -267,9 +267,13 @@ def empleado_dashboard(request):
     # Tickets recientes (con slice para mostrar solo 5)
     tickets_recientes = tickets_empleado.order_by('-fecha_creacion')[:5]
     
-    # Estadísticas personales
+    # Estadísticas personales - Usar los mismos valores que el kardex
+    # Con Derecho: dias_vacaciones_anuales
+    # Saldo: saldo_vacaciones
+    # Acumulado Año Actual: calcular_dias_acumulados_hasta_hoy()
+    # Total Disponible: calcular_total_disponible_proyectado()
     stats = {
-        'dias_disponibles': perfil.dias_vacaciones_disponibles,
+        'dias_disponibles': perfil.calcular_total_disponible_proyectado(),  # Total Disponible del kardex
         'dias_usados': perfil.dias_vacaciones_usados,
         'solicitudes_pendientes': solicitudes.filter(
             estado__in=['PENDIENTE_JEFE', 'PENDIENTE_RH']
@@ -277,6 +281,11 @@ def empleado_dashboard(request):
         'solicitudes_aprobadas': solicitudes.filter(estado='APROBADO_RH').count(),
         'equipos_asignados': equipos_asignados.count(),
         'tickets_pendientes': tickets_empleado.filter(estado__in=['PENDIENTE', 'EN_PROCESO']).count(),
+        # Valores del kardex para mostrar en el dashboard
+        'con_derecho': perfil.dias_vacaciones_anuales,
+        'saldo': perfil.saldo_vacaciones,
+        'dias_acumulados_ano_actual': perfil.calcular_dias_acumulados_hasta_hoy(),
+        'total_disponible': perfil.calcular_total_disponible_proyectado(),
     }
     
     context = {
@@ -550,10 +559,9 @@ def solicitar_vacaciones(request):
     ).order_by('-fecha_solicitud')[:5]
     
     # Verificar si puede solicitar vacaciones extraordinarias
-    puede_solicitar_extraordinarias = (
-        perfil.dias_vacaciones_disponibles >= 1 or 
-        perfil.dias_vacaciones_extraordinarios_disponibles >= 1
-    )
+    # Las vacaciones extraordinarias solo se pueden tomar cuando el saldo es 0 o negativo
+    saldo_total = perfil.calcular_total_disponible_proyectado()
+    puede_solicitar_extraordinarias = saldo_total <= 0
     
     # Verificar si puede solicitar vacaciones normales (antigüedad >= 1 año y días disponibles)
     puede_solicitar_normales = (
@@ -730,11 +738,8 @@ def aprobar_admin(request, solicitud_id):
     
     solicitud = get_object_or_404(SolicitudVacaciones, id=solicitud_id)
     
-    # Solo se pueden aprobar solicitudes de jefes de área que estén pendientes de admin
-    if not solicitud.empleado.es_jefe_area():
-        raise PermissionDenied("Esta solicitud no requiere aprobación de administrador.")
-    
-    if not solicitud.estado == 'PENDIENTE_ADMIN':
+    # El admin puede aprobar cualquier solicitud que esté pendiente de admin o jefe
+    if solicitud.estado not in ['PENDIENTE_ADMIN', 'PENDIENTE_JEFE']:
         raise PermissionDenied("Esta solicitud no está pendiente de aprobación de administrador.")
     
     if request.method == 'POST':
@@ -837,8 +842,8 @@ def generar_pdf_vacaciones(request, solicitud_id):
     empleado = solicitud.empleado
     fecha_presentarse = calcular_fecha_presentarse(solicitud.fecha_fin)
     ano_vacaciones = solicitud.fecha_fin.year
-    dias_usados_antes = empleado.dias_vacaciones_usados - solicitud.dias_solicitados
-    dias_pendientes = max(0, empleado.dias_vacaciones_anuales - dias_usados_antes)
+    # Días pendientes = saldo de la persona (saldo_vacaciones)
+    dias_pendientes = empleado.saldo_vacaciones
     
     context = {
         'solicitud': solicitud,
@@ -1821,13 +1826,13 @@ def kardex_vacaciones(request):
     if orden == 'area':
         # Ordenar por área/departamento, luego alfabéticamente
         empleados = empleados.annotate(
-            orden_departamento=Case(
-                When(departamento__nombre__iexact='Ventas', then=Value(1)),
-                When(departamento__nombre__iexact='Conta', then=Value(2)),
-                When(departamento__isnull=True, then=Value(999)),
-                default=Value(3),
-                output_field=IntegerField()
-            )
+        orden_departamento=Case(
+            When(departamento__nombre__iexact='Ventas', then=Value(1)),
+            When(departamento__nombre__iexact='Conta', then=Value(2)),
+            When(departamento__isnull=True, then=Value(999)),
+            default=Value(3),
+            output_field=IntegerField()
+        )
         ).order_by('orden_departamento', 'departamento__nombre', 'usuario__first_name', 'usuario__last_name')
     elif orden == 'antiguedad':
         # Ordenar por antigüedad (más antiguos primero), luego alfabéticamente
@@ -1837,6 +1842,9 @@ def kardex_vacaciones(request):
         empleados = empleados.order_by('usuario__first_name', 'usuario__last_name')
     
     # Preparar datos de vacaciones para cada empleado
+    from empleados.models import HistorialVacaciones
+    from decimal import Decimal
+    
     empleados_data = []
     for empleado in empleados:
         # Vacaciones del año actual
@@ -1847,6 +1855,23 @@ def kardex_vacaciones(request):
         # Calcular total disponible: Saldo + Días acumulados año actual
         total_disponible = empleado.calcular_total_disponible_proyectado()
         
+        # Obtener historial de deducciones (registros donde se restaron días)
+        historial_deducciones = HistorialVacaciones.objects.filter(
+            empleado=empleado,
+            tomadas__gt=0  # Solo registros donde se restaron días
+        ).order_by('-fecha_registro', '-fecha_creacion')[:10]  # Últimas 10 deducciones
+        
+        # Preparar lista de deducciones para mostrar
+        deducciones_lista = []
+        for registro in historial_deducciones:
+            deducciones_lista.append({
+                'fecha': registro.fecha_registro,
+                'concepto': registro.concepto,
+                'dias': float(registro.tomadas),
+                'tipo': registro.tipo_movimiento,
+                'saldo_despues': float(registro.saldo) if registro.saldo else None,
+            })
+        
         empleados_data.append({
             'empleado': empleado,
             'dias_anuales': dias_anuales,
@@ -1854,6 +1879,8 @@ def kardex_vacaciones(request):
             'dias_acumulados_ano_actual': round(dias_acumulados_ano_actual, 2),
             'total_disponible': round(total_disponible, 2),
             'antiguedad': empleado.antiguedad_detallada,
+            'deducciones': deducciones_lista,
+            'total_deducciones': len(deducciones_lista),
         })
     
     context = {
@@ -1922,11 +1949,14 @@ def generar_excel_kardex(request):
         ws = wb.active
         ws.title = "Kardex Vacaciones"
         
-        # Estilos
+        # Estilos - Crear una vez y reutilizar
         header_fill = PatternFill(start_color="F97316", end_color="EA580C", fill_type="solid")  # Naranja como en la imagen
         header_font = Font(bold=True, color="FFFFFF", size=11, name="Arial")
         title_font = Font(bold=True, size=12, name="Arial")
         value_font = Font(size=11, name="Arial")
+        value_font_bold = Font(bold=True, size=11, name="Arial")
+        value_font_bold_red = Font(bold=True, size=11, name="Arial", color="DC2626")
+        value_font_bold_green = Font(bold=True, size=11, name="Arial", color="059669")
         border_style = Border(
             left=Side(style='thin'),
             right=Side(style='thin'),
@@ -1935,6 +1965,13 @@ def generar_excel_kardex(request):
         )
         center_alignment = Alignment(horizontal='center', vertical='center')
         left_alignment = Alignment(horizontal='left', vertical='center')
+        
+        # Patrones de relleno reutilizables
+        fill_azul_claro = PatternFill(start_color="DBEAFE", end_color="BFDBFE", fill_type="solid")
+        fill_naranja_claro = PatternFill(start_color="FED7AA", end_color="FDBA74", fill_type="solid")
+        fill_verde_claro = PatternFill(start_color="D1FAE5", end_color="A7F3D0", fill_type="solid")
+        fill_rojo_claro = PatternFill(start_color="FEE2E2", end_color="FECACA", fill_type="solid")
+        header_fill_blue = PatternFill(start_color="3B82F6", end_color="2563EB", fill_type="solid")
         
         # Título general del documento
         row = 1
@@ -1969,95 +2006,8 @@ def generar_excel_kardex(request):
             # Verificar si ha cumplido un año completo (usar la propiedad del modelo)
             ha_cumplido_ano = empleado.antiguedad_anos >= 1
             
-            # Calcular antigüedad exacta con años, meses y días trabajados
-            # Contando desde la fecha de contratación (inclusive) hasta hoy (inclusive)
-            from datetime import date, timedelta
-            from calendar import monthrange
-            
-            fecha_actual = date.today()
-            fecha_contratacion = empleado.fecha_contratacion
-            
-            if fecha_contratacion:
-                years = empleado.antiguedad_anos
-                
-                # Si tiene menos de 1 año, calcular desde fecha_contratacion
-                # Si tiene 1+ años, calcular desde el último aniversario
-                if years < 1:
-                    fecha_inicio = fecha_contratacion
-                else:
-                    # Calcular la fecha del último aniversario
-                    if fecha_actual.month < fecha_contratacion.month or (fecha_actual.month == fecha_contratacion.month and fecha_actual.day < fecha_contratacion.day):
-                        fecha_inicio = date(fecha_actual.year - 1, fecha_contratacion.month, fecha_contratacion.day)
-                    else:
-                        fecha_inicio = date(fecha_actual.year, fecha_contratacion.month, fecha_contratacion.day)
-                
-                # Calcular meses calendario trabajados y días
-                # Contar meses calendario en los que trabajó (septiembre, octubre, noviembre, etc.)
-                # Si trabajó en septiembre (parcial), octubre (completo) y noviembre (completo) = 3 meses
-                months = 0
-                days = 0
-                
-                # Si estamos en el mismo mes y año
-                if fecha_inicio.year == fecha_actual.year and fecha_inicio.month == fecha_actual.month:
-                    # Contar días desde fecha_inicio hasta fecha_actual (ambos inclusive)
-                    days = (fecha_actual - fecha_inicio).days + 1
-                else:
-                    # El mes inicial siempre cuenta como 1 mes si tiene días trabajados
-                    dias_en_mes_inicial = monthrange(fecha_inicio.year, fecha_inicio.month)[1]
-                    dias_mes_inicial = dias_en_mes_inicial - fecha_inicio.day + 1  # +1 porque fecha_inicio es inclusive
-                    if dias_mes_inicial > 0:
-                        months += 1  # El mes inicial cuenta como 1 mes
-                    
-                    # Contar meses calendario completos trabajados (meses enteros entre el mes inicial y el actual)
-                    # Avanzar al primer día del siguiente mes
-                    if fecha_inicio.month == 12:
-                        fecha_temp = date(fecha_inicio.year + 1, 1, 1)
-                    else:
-                        fecha_temp = date(fecha_inicio.year, fecha_inicio.month + 1, 1)
-                    
-                    # Contar cada mes calendario completo trabajado
-                    while fecha_temp.year < fecha_actual.year or (fecha_temp.year == fecha_actual.year and fecha_temp.month < fecha_actual.month):
-                        months += 1
-                        
-                        # Avanzar al siguiente mes
-                        if fecha_temp.month == 12:
-                            fecha_temp = date(fecha_temp.year + 1, 1, 1)
-                        else:
-                            fecha_temp = date(fecha_temp.year, fecha_temp.month + 1, 1)
-                    
-                    # Contar días del mes actual (desde el día 1 hasta fecha_actual, inclusive)
-                    # El mes actual NO se cuenta como mes completo, solo se muestran sus días
-                    if fecha_temp.year == fecha_actual.year and fecha_temp.month == fecha_actual.month:
-                        days = fecha_actual.day  # Días del 1 al día actual (inclusive)
-                    else:
-                        # Si no hay mes actual (no debería pasar), mantener días del mes inicial
-                        days = dias_mes_inicial
-                
-                # Formatear antigüedad con años, meses y días
-                partes = []
-                if years > 0:
-                    partes.append(f'{years} año{"s" if years != 1 else ""}')
-                
-                # Mostrar meses completos
-                if months > 0:
-                    partes.append(f'{months} mes{"es" if months != 1 else ""}')
-                
-                # Mostrar días trabajados solo si NO hay meses (empleado muy nuevo)
-                # Si hay meses, no mostrar días adicionales del mes actual
-                if days > 0 and months == 0:
-                    partes.append(f'{days} día{"s" if days != 1 else ""}')
-                
-                if partes:
-                    if len(partes) == 1:
-                        antiguedad = partes[0]
-                    elif len(partes) == 2:
-                        antiguedad = f'{partes[0]} y {partes[1]}'
-                    else:
-                        antiguedad = f'{partes[0]}, {partes[1]} y {partes[2]}'
-                else:
-                    antiguedad = '0 días'
-            else:
-                antiguedad = 'Sin fecha de contratación'
+            # Usar la propiedad antiguedad_detallada del modelo (ya optimizada)
+            antiguedad = empleado.antiguedad_detallada
             
             # Título del empleado (número, nombre, área y antigüedad)
             area_nombre = empleado.departamento.nombre if empleado.departamento else "Sin área asignada"
@@ -2071,7 +2021,6 @@ def generar_excel_kardex(request):
             row += 1
             
             # Encabezado de la tabla (azul como en la imagen)
-            header_fill_blue = PatternFill(start_color="3B82F6", end_color="2563EB", fill_type="solid")
             headers_tabla = ['Con Derecho', 'Saldo', 'Acumulado Año Actual', 'Total Disponible']
             for col_num, header in enumerate(headers_tabla, 1):
                 cell = ws.cell(row=row, column=col_num)
@@ -2088,41 +2037,38 @@ def generar_excel_kardex(request):
             dias_anuales_display = 0 if not ha_cumplido_ano else dias_anuales
             cell = ws.cell(row=row, column=1)
             cell.value = f'{dias_anuales_display} días'
-            cell.font = Font(bold=True, size=11, name="Arial")
+            cell.font = value_font_bold
             cell.border = border_style
             cell.alignment = center_alignment
-            cell.fill = PatternFill(start_color="DBEAFE", end_color="BFDBFE", fill_type="solid")  # Azul claro
+            cell.fill = fill_azul_claro
             
             # Columna 2: Saldo (naranja) - puede ser negativo o positivo
             cell = ws.cell(row=row, column=2)
             saldo_str = f'{saldo:.2f} días' if saldo != 0 else '0.00 días'
             cell.value = saldo_str
-            cell.font = Font(bold=True, size=11, name="Arial", color="DC2626" if saldo < 0 else "059669")
+            cell.font = value_font_bold_red if saldo < 0 else value_font_bold_green
             cell.border = border_style
             cell.alignment = center_alignment
-            cell.fill = PatternFill(start_color="FED7AA", end_color="FDBA74", fill_type="solid")  # Naranja claro
+            cell.fill = fill_naranja_claro
             
             # Columna 3: Acumulado Año Actual (naranja)
             cell = ws.cell(row=row, column=3)
             acumulado_str = f'{dias_acumulados_ano_actual:.2f} días' if dias_acumulados_ano_actual != 0 else '0.00 días'
             cell.value = acumulado_str
-            cell.font = Font(bold=True, size=11, name="Arial")
+            cell.font = value_font_bold
             cell.border = border_style
             cell.alignment = center_alignment
-            cell.fill = PatternFill(start_color="FED7AA", end_color="FDBA74", fill_type="solid")  # Naranja claro
+            cell.fill = fill_naranja_claro
             
-            # Columna 4: Total Disponible (verde)
+            # Columna 4: Total Disponible (verde o rojo)
             cell = ws.cell(row=row, column=4)
             total_str = f'{total_disponible:.2f} días'
             cell.value = total_str
-            cell.font = Font(bold=True, size=11, name="Arial")
+            cell.font = value_font_bold
             cell.border = border_style
             cell.alignment = center_alignment
-            # Verde claro para positivo
-            if total_disponible > 0:
-                cell.fill = PatternFill(start_color="D1FAE5", end_color="A7F3D0", fill_type="solid")
-            else:
-                cell.fill = PatternFill(start_color="FEE2E2", end_color="FECACA", fill_type="solid")  # Rojo si negativo
+            # Verde claro para positivo, rojo si negativo
+            cell.fill = fill_verde_claro if total_disponible > 0 else fill_rojo_claro
             row += 1
         
         # Ajustar ancho de columnas

@@ -319,7 +319,7 @@ body {
                                             {% endif %}
                                         </td>
                                         <td style="padding: 0.4rem 0.3rem !important; text-align: center !important;">
-                                            {% if solicitud.estado == 'PENDIENTE_ADMIN' %}
+                                            {% if solicitud.estado == 'PENDIENTE_ADMIN' or solicitud.estado == 'PENDIENTE_JEFE' %}
                                                 <a href="{% url 'empleados:aprobar_admin' solicitud.id %}" class="btn btn-sm btn-outline-primary" style="font-size: 0.65rem !important; padding: 0.15rem 0.4rem !important; white-space: nowrap !important;">Revisar</a>
                                             {% else %}
                                                 <span style="color: rgba(255, 255, 255, 0.3) !important; font-size: 0.7rem !important;">-</span>

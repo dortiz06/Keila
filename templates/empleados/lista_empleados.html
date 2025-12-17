@@ -224,11 +224,7 @@ body {
                                 </td>
                                 {% if es_gestion_completa %}
                                 <td style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
-                                    {% if empleado.antiguedad_anos >= 1 %}
-                                        <span style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 500 !important;">{{ empleado.antiguedad_anos }} año{{ empleado.antiguedad_anos|pluralize }}</span>
-                                    {% else %}
-                                        <span style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 500 !important;">{{ empleado.antiguedad_anos }} año{{ empleado.antiguedad_anos|pluralize }}</span>
-                                    {% endif %}
+                                    <span style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 500 !important;">{{ empleado.antiguedad_detallada }}</span>
                                 </td>
                                 <td style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">
                                     {% if empleado.activo %}
@@ -334,17 +330,10 @@ body {
                             {% if es_gestion_completa %}
                             <div class="mb-3">
                                 <div class="mb-2">
-                                    {% if empleado.antiguedad_anos >= 1 %}
                                         <span style="color: #22C55E !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">
                                             <i class="fas fa-clock me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>
-                                            {{ empleado.antiguedad_anos }} año{{ empleado.antiguedad_anos|pluralize }}
+                                        {{ empleado.antiguedad_detallada }}
                                         </span>
-                                    {% else %}
-                                        <span style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 500 !important; font-family: 'Montserrat', sans-serif !important;">
-                                            <i class="fas fa-clock me-1" style="font-family: 'Font Awesome 6 Free' !important; font-weight: 900 !important;"></i>
-                                            {{ empleado.antiguedad_anos }} año{{ empleado.antiguedad_anos|pluralize }}
-                                        </span>
-                                    {% endif %}
                                 </div>
                                 <div>
                                     {% if empleado.activo %}

@@ -377,53 +377,112 @@ class Perfil(models.Model):
     
     @property
     def antiguedad_detallada(self):
-        """Retorna antigüedad en formato: X años y Y meses"""
+        """Retorna antigüedad en formato: X años, Y meses y Z días"""
         if not self.fecha_contratacion:
             return "Sin fecha de contratación"
         
+        from datetime import date
+        
         today = date.today()
+        fecha_inicio = self.fecha_contratacion
         
         # Calcular años completos
-        years = today.year - self.fecha_contratacion.year
-        if today.month < self.fecha_contratacion.month or (today.month == self.fecha_contratacion.month and today.day < self.fecha_contratacion.day):
+        years = today.year - fecha_inicio.year
+        if today.month < fecha_inicio.month or (today.month == fecha_inicio.month and today.day < fecha_inicio.day):
             years -= 1
         
-        # Calcular meses adicionales
-        if today.month >= self.fecha_contratacion.month:
-            months = today.month - self.fecha_contratacion.month
-            if today.day < self.fecha_contratacion.day:
-                months -= 1
+        # Calcular la fecha del último aniversario (o fecha_inicio si tiene menos de 1 año)
+        if years >= 1:
+            if today.month < fecha_inicio.month or (today.month == fecha_inicio.month and today.day < fecha_inicio.day):
+                ultimo_aniversario = date(today.year - 1, fecha_inicio.month, fecha_inicio.day)
+            else:
+                ultimo_aniversario = date(today.year, fecha_inicio.month, fecha_inicio.day)
         else:
-            months = 12 + today.month - self.fecha_contratacion.month
-            if today.day < self.fecha_contratacion.day:
-                months -= 1
+            ultimo_aniversario = fecha_inicio
         
-        # Asegurar que los meses sean positivos
+        # Calcular meses desde el último aniversario
+        months = 0
+        fecha_temp = ultimo_aniversario
+        
+        # Avanzar mes por mes hasta llegar al mes actual
+        # Contar meses completos: desde el mes siguiente al último aniversario hasta el mes actual
+        while True:
+            # Avanzar al siguiente mes
+            if fecha_temp.month == 12:
+                fecha_temp_siguiente = date(fecha_temp.year + 1, 1, fecha_temp.day)
+            else:
+                fecha_temp_siguiente = date(fecha_temp.year, fecha_temp.month + 1, fecha_temp.day)
+            
+            # Si el siguiente mes ya pasó la fecha actual, detener
+            if fecha_temp_siguiente.year > today.year or (fecha_temp_siguiente.year == today.year and fecha_temp_siguiente.month > today.month):
+                break
+            # Si el siguiente mes es el mes actual y el día ya pasó, detener
+            if fecha_temp_siguiente.year == today.year and fecha_temp_siguiente.month == today.month:
+                if fecha_temp_siguiente.day > today.day:
+                    break
+            
+            # Contar este mes como completo
+            months += 1
+            fecha_temp = fecha_temp_siguiente
+        
+        # Calcular días desde la última fecha calculada hasta today (inclusive)
+        if fecha_temp.year == today.year and fecha_temp.month == today.month:
+            # Estamos en el mismo mes, calcular días desde fecha_temp hasta today (inclusive)
+            days = (today - fecha_temp).days
+        elif fecha_temp.year < today.year or (fecha_temp.year == today.year and fecha_temp.month < today.month):
+            # Ya pasamos meses completos, calcular días del mes actual
+            # Días desde el día 1 del mes actual hasta today (inclusive)
+            days = today.day
+        else:
+            # No debería pasar, pero por seguridad
+            days = 0
+        
+        # Asegurar que los valores sean positivos
+        if years < 0:
+            years = 0
         if months < 0:
             months = 0
+        if days < 0:
+            days = 0
+        
+        # Calcular total de días exactos
+        total_dias = (today - fecha_inicio).days
         
         # Formatear salida
-        if years == 0:
-            if months == 0:
-                return "Menos de 1 mes"
-            elif months == 1:
-                return "1 mes"
+        partes = []
+        
+        if years > 0:
+            if years == 1:
+                partes.append("1 año")
             else:
-                return f"{months} meses"
-        elif years == 1:
-            if months == 0:
-                return "1 año"
-            elif months == 1:
-                return "1 año y 1 mes"
+                partes.append(f"{years} años")
+        
+        if months > 0:
+            if months == 1:
+                partes.append("1 mes")
             else:
-                return f"1 año y {months} meses"
+                partes.append(f"{months} meses")
+        
+        if days > 0:
+            if days == 1:
+                partes.append("1 día")
         else:
-            if months == 0:
-                return f"{years} años"
-            elif months == 1:
-                return f"{years} años y 1 mes"
-            else:
-                return f"{years} años y {months} meses"
+                partes.append(f"{days} días")
+        
+        # Si no hay nada, significa que es menos de 1 día
+        if not partes:
+            return f"Menos de 1 día ({total_dias} días)"
+        
+        # Formatear según cantidad de partes
+        if len(partes) == 1:
+            resultado = partes[0]
+        elif len(partes) == 2:
+            resultado = f"{partes[0]} y {partes[1]}"
+        else:
+            resultado = f"{partes[0]}, {partes[1]} y {partes[2]}"
+        
+        # Agregar total de días entre paréntesis
+        return f"{resultado} ({total_dias} días)"
     
     def es_jefe_area(self):
         return self.tipo_perfil == 'JEFE_AREA'
@@ -466,7 +525,13 @@ class Perfil(models.Model):
         return round(dias_anuales / 365, 6)  # Días por día con 6 decimales
     
     def calcular_dias_acumulados_hasta_hoy(self):
-        """Calcula cuántos días ha acumulado hasta el día de hoy en el año actual (cálculo diario con decimales)"""
+        """
+        Calcula cuántos días ha acumulado hasta el día de hoy en el año actual (cálculo diario con decimales).
+        
+        IMPORTANTE: Si ya pasó el aniversario y se procesó la acumulación anual, el saldo ya incluye
+        los días completos del nuevo año. En este caso, este método calcula solo los días proporcionales
+        adicionales desde el aniversario hasta hoy.
+        """
         from datetime import date
         
         if not self.fecha_contratacion:
@@ -485,32 +550,36 @@ class Perfil(models.Model):
         # Determinar el año laboral actual (antiguedad + 1)
         ano_laboral_actual = self.antiguedad_anos + 1
         
-        # Si el aniversario ya pasó este año, calcular desde el aniversario
+        # Si el aniversario ya pasó este año
         if hoy >= fecha_aniversario:
-            # Calcular días transcurridos desde el aniversario
+            # Verificar si ya se procesó la acumulación anual este año
+            # Si se procesó, el saldo ya incluye los días completos del nuevo año
+            # Entonces calculamos los días proporcionales adicionales desde el aniversario hasta hoy
+            # Estos días adicionales se suman al saldo para obtener el total disponible
             dias_transcurridos = (hoy - fecha_aniversario).days
+            dias_anuales_actuales = self.calcular_dias_segun_ano_laboral(ano_laboral_actual)
+            dias_por_dia = dias_anuales_actuales / 365
+            dias_acumulados = dias_por_dia * dias_transcurridos
+            return round(dias_acumulados, 4)
         else:
             # El aniversario aún no llega, seguimos en el año laboral anterior
             ano_laboral_actual = self.antiguedad_anos
             # Calcular días desde inicio del año
             inicio_ano = date(hoy.year, 1, 1)
             dias_transcurridos = (hoy - inicio_ano).days
-        
-        # Calcular días correspondientes al año laboral actual
         dias_anuales_actuales = self.calcular_dias_segun_ano_laboral(ano_laboral_actual)
         dias_por_dia = dias_anuales_actuales / 365
-        
-        # Días acumulados (proporcional a días transcurridos)
-        # Mostrar CON DECIMALES exactos (4 decimales)
         dias_acumulados = dias_por_dia * dias_transcurridos
-        
         return round(dias_acumulados, 4)
     
     def calcular_total_disponible_proyectado(self):
         """
         Calcula total de días disponibles día con día.
-        Fórmula: Saldo (años anteriores) + Días acumulados (hasta hoy)
-        El prorrateo se calcula dinámicamente según la fecha actual.
+        Fórmula simplificada: Saldo + Días acumulados (hasta hoy)
+        
+        - El saldo incluye: saldo de años anteriores + días con derecho del nuevo año (cuando cumple años)
+        - Los días acumulados son proporcionales desde el aniversario (si ya pasó) o desde inicio del año
+        - Total disponible = Saldo + Días acumulados del año en curso
         """
         from datetime import date
         from decimal import Decimal
@@ -518,14 +587,39 @@ class Perfil(models.Model):
         if not self.fecha_contratacion:
             return Decimal('0')
         
-        # Saldo de años anteriores (puede ser negativo o positivo)
+        # Verificar si el empleado cumplió años y procesar acumulación anual automáticamente
+        hoy = date.today()
+        
+        # Calcular el aniversario de este año
+        try:
+            aniversario_este_ano = date(hoy.year, self.fecha_contratacion.month, self.fecha_contratacion.day)
+        except ValueError:
+            # Si el día no existe en este año (ej: 29 de febrero), usar el último día del mes
+            from calendar import monthrange
+            ultimo_dia = monthrange(hoy.year, self.fecha_contratacion.month)[1]
+            aniversario_este_ano = date(hoy.year, self.fecha_contratacion.month, min(self.fecha_contratacion.day, ultimo_dia))
+        
+        # Verificar si ya pasó el aniversario este año
+        # Y si no se ha procesado este año (verificar por fecha, no solo por año)
+        if hoy >= aniversario_este_ano:
+            # Verificar si no se ha procesado después del aniversario de este año
+            if not self.ultimo_reset_vacaciones or self.ultimo_reset_vacaciones < aniversario_este_ano:
+                # Procesar acumulación anual automáticamente
+                # Esto sumará al saldo: saldo_año_anterior + días_con_derecho_nuevo_año
+                self.procesar_acumulacion_anual()
+        
+        # Saldo actual (incluye saldo de años anteriores + días con derecho del nuevo año cuando cumple años)
+        # Ejemplo: si tiene 2 días de saldo del año anterior y cumple años con 32 días, el saldo será 34 días
         saldo = Decimal(str(self.saldo_vacaciones))
         
         # Días acumulados hasta hoy en el año actual (proporcional, se actualiza día con día)
+        # Si ya pasó el aniversario: calcula días proporcionales desde el aniversario
+        # Si aún no ha cumplido años: calcula días proporcionales desde el inicio del año
         dias_acumulados_hasta_hoy = Decimal(str(self.calcular_dias_acumulados_hasta_hoy()))
         
-        # Total = Saldo (años anteriores) + Días acumulados (hasta hoy)
-        # Este cálculo se actualiza automáticamente día con día
+        # Total disponible = Saldo + Días acumulados del año actual
+        # Fórmula simple: el saldo ya incluye los días completos del nuevo año (si ya cumplió años),
+        # y los días acumulados son los proporcionales adicionales desde el aniversario
         total = saldo + dias_acumulados_hasta_hoy
         
         return round(total, 4)  # Permitir valores negativos
@@ -584,23 +678,47 @@ class Perfil(models.Model):
         return True
     
     def procesar_acumulacion_anual(self):
-        """Procesa la acumulación de vacaciones al inicio del año"""
+        """Procesa la acumulación de vacaciones cuando el empleado cumple un año más"""
         from datetime import date
+        from calendar import monthrange
         
-        # Verificar si ya se procesó este año
-        if self.ultimo_reset_vacaciones and self.ultimo_reset_vacaciones.year == date.today().year:
+        if not self.fecha_contratacion:
             return False
         
-        # Guardar las extraordinarias del año anterior antes de resetear
+        hoy = date.today()
+        
+        # Calcular el aniversario de este año
+        try:
+            aniversario_este_ano = date(hoy.year, self.fecha_contratacion.month, self.fecha_contratacion.day)
+        except ValueError:
+            # Si el día no existe en este año (ej: 29 de febrero), usar el último día del mes
+            ultimo_dia = monthrange(hoy.year, self.fecha_contratacion.month)[1]
+            aniversario_este_ano = date(hoy.year, self.fecha_contratacion.month, min(self.fecha_contratacion.day, ultimo_dia))
+        
+        # Verificar si ya pasó el aniversario este año
+        if hoy < aniversario_este_ano:
+            return False  # Aún no ha cumplido años este año
+        
+        # Verificar si ya se procesó después del aniversario de este año
+        if self.ultimo_reset_vacaciones and self.ultimo_reset_vacaciones >= aniversario_este_ano:
+            return False  # Ya se procesó después del aniversario
+        
+        # Guardar valores del año anterior ANTES de resetear
         extraordinarias_ano_anterior = self.dias_vacaciones_extraordinarios
+        dias_con_derecho_ano_anterior = self.dias_vacaciones_anuales  # Días que tenía derecho el año anterior
+        dias_usados_ano_anterior = self.dias_vacaciones_usados  # Días normales usados
+        dias_extraordinarios_ano_anterior = self.dias_vacaciones_extraordinarios  # Días extraordinarios usados
         
-        # Calcular días no usados del año anterior
-        dias_no_usados = max(0, self.dias_vacaciones_anuales - self.dias_vacaciones_usados)
+        # Calcular el saldo del año anterior (puede ser negativo)
+        # Saldo = días con derecho - días usados (normales + extraordinarios)
+        dias_gastados_ano_anterior = dias_usados_ano_anterior + dias_extraordinarios_ano_anterior
+        saldo_ano_anterior = dias_con_derecho_ano_anterior - dias_gastados_ano_anterior
         
-        # Acumular TODOS los días no usados (sin límite)
+        # Calcular días no usados del año anterior (solo para compatibilidad)
+        dias_no_usados = max(0, dias_con_derecho_ano_anterior - dias_usados_ano_anterior)
         dias_a_acumular = dias_no_usados
         
-        # Actualizar días anuales según nueva antigüedad ANTES de resetear
+        # Actualizar días anuales según nueva antigüedad
         nuevos_dias_anuales_base = int(self.dias_vacaciones_segun_antiguedad)
         
         # Restar las vacaciones extraordinarias del año anterior de los nuevos días anuales
@@ -617,12 +735,6 @@ class Perfil(models.Model):
         
         # Resetear el contador de extraordinarias del año actual
         self.dias_vacaciones_extraordinarios = 0
-        
-        # Calcular el saldo: días no usados del año anterior - días usados (puede ser negativo)
-        # El saldo es: días con derecho del año anterior - días usados (normales + extraordinarios)
-        dias_con_derecho_ano_anterior = self.dias_vacaciones_anuales
-        dias_gastados_ano_anterior = self.dias_vacaciones_usados + self.dias_vacaciones_extraordinarios
-        saldo_ano_anterior = dias_con_derecho_ano_anterior - dias_gastados_ano_anterior
         
         # Sumar el saldo del año anterior al saldo total (acumulativo)
         self.saldo_vacaciones += saldo_ano_anterior
@@ -794,7 +906,8 @@ class SolicitudVacaciones(models.Model):
     
     def puede_ser_aprobada_por_admin(self):
         """Verifica si puede ser aprobada por administrador"""
-        return self.estado == 'PENDIENTE_ADMIN'
+        # El admin puede aprobar cualquier solicitud que esté pendiente de admin o jefe
+        return self.estado in ['PENDIENTE_ADMIN', 'PENDIENTE_JEFE']
     
     def puede_ser_aprobada_por_rh(self):
         """Verifica si puede ser aprobada por RH"""
@@ -840,13 +953,22 @@ class SolicitudVacaciones(models.Model):
         if not self.puede_ser_aprobada_por_admin():
             return False
         
-        self.estado = 'APROBADO_ADMIN'
-        self.aprobado_por_admin = admin_user
-        self.comentarios_admin = comentario
-        self.fecha_aprobacion_admin = timezone.now()
-        
-        # Después de aprobar por admin, va a RH
-        self.estado = 'PENDIENTE_RH'
+        # Si está en PENDIENTE_JEFE, el admin puede aprobarla directamente (saltando la aprobación del jefe)
+        if self.estado == 'PENDIENTE_JEFE':
+            # El admin aprueba directamente y va a RH
+            self.estado = 'PENDIENTE_RH'
+            self.aprobado_por_admin = admin_user
+            self.comentarios_admin = comentario
+            self.fecha_aprobacion_admin = timezone.now()
+        else:
+            # Si está en PENDIENTE_ADMIN, sigue el flujo normal
+            self.estado = 'APROBADO_ADMIN'
+            self.aprobado_por_admin = admin_user
+            self.comentarios_admin = comentario
+            self.fecha_aprobacion_admin = timezone.now()
+            
+            # Después de aprobar por admin, va a RH
+            self.estado = 'PENDIENTE_RH'
         
         self.save()
         return True
@@ -879,11 +1001,18 @@ class SolicitudVacaciones(models.Model):
         
         # Actualizar días usados del empleado según el tipo de vacación
         if self.tipo == 'EXTRAORDINARIA' or self.tipo == 'EMERGENCIA':
-            # Las vacaciones extraordinarias se restan de las vacaciones del año
+            # Las vacaciones extraordinarias se restan directamente del saldo
+            # Solo se pueden tomar cuando el saldo es 0 o negativo
+            from decimal import Decimal
             self.empleado.dias_vacaciones_extraordinarios += self.dias_solicitados
+            # Restar del saldo (el saldo puede ser negativo)
+            self.empleado.saldo_vacaciones -= Decimal(str(self.dias_solicitados))
         else:
-            # Vacaciones normales
+            # Vacaciones normales: se restan de los días usados del año
             self.empleado.dias_vacaciones_usados += self.dias_solicitados
+            # También se restan del saldo
+            from decimal import Decimal
+            self.empleado.saldo_vacaciones -= Decimal(str(self.dias_solicitados))
         
         self.empleado.save()
         

@@ -155,12 +155,21 @@ class SolicitudVacacionesForm(forms.ModelForm):
                     f'Días disponibles: {dias_disponibles}'
                 )
             else:
-                # Para empleados con antigüedad >= 1, mostrar solo TIPOS (sin legacy) para evitar duplicados
-                self.fields['tipo'].choices = [
-                    ('NORMAL', 'Vacación Normal'),
-                    ('EXTRAORDINARIA', 'Vacación Extraordinaria'),
-                ]
-                self.fields['tipo'].help_text = f'Antigüedad: {antiguedad} años. Días disponibles: {dias_disponibles}'
+                # Para empleados con antigüedad >= 1
+                # Verificar si puede solicitar vacaciones extraordinarias (solo cuando saldo <= 0)
+                saldo_total = self.empleado.calcular_total_disponible_proyectado()
+                opciones_tipo = [('NORMAL', 'Vacación Normal')]
+                
+                # Solo mostrar extraordinarias si el saldo es 0 o negativo
+                if saldo_total <= 0:
+                    opciones_tipo.append(('EXTRAORDINARIA', 'Vacación Extraordinaria'))
+                
+                self.fields['tipo'].choices = opciones_tipo
+                
+                if saldo_total <= 0:
+                    self.fields['tipo'].help_text = f'Antigüedad: {antiguedad} años. Saldo disponible: {saldo_total:.2f} días. Puedes solicitar vacaciones extraordinarias.'
+                else:
+                    self.fields['tipo'].help_text = f'Antigüedad: {antiguedad} años. Días disponibles: {dias_disponibles} días. Saldo: {saldo_total:.2f} días.'
     
     def clean(self):
         cleaned_data = super().clean()
@@ -199,13 +208,25 @@ class SolicitudVacacionesForm(forms.ModelForm):
             dias_calendario = (fecha_fin - fecha_inicio).days + 1
             domingos_excluidos = dias_calendario - dias_solicitados
             
-            # Validar días disponibles
-            if self.empleado and dias_solicitados > self.empleado.dias_vacaciones_disponibles:
-                raise forms.ValidationError(
-                    f'No tienes suficientes días de vacaciones disponibles. '
-                    f'Disponibles: {self.empleado.dias_vacaciones_disponibles} días. '
-                    f'Solicitaste: {dias_solicitados} días laborables ({dias_calendario} días totales - {domingos_excluidos} domingos)'
-                )
+            # Validar días disponibles según el tipo de vacación
+            tipo_vacacion = cleaned_data.get('tipo')
+            if self.empleado:
+                if tipo_vacacion == 'EXTRAORDINARIA' or tipo_vacacion == 'EMERGENCIA':
+                    # Las vacaciones extraordinarias solo se pueden tomar cuando el saldo es 0 o negativo
+                    saldo_total = self.empleado.calcular_total_disponible_proyectado()
+                    if saldo_total > 0:
+                        raise forms.ValidationError(
+                            f'Las vacaciones extraordinarias solo se pueden solicitar cuando el saldo es 0 o negativo. '
+                            f'Tu saldo actual es: {saldo_total:.2f} días.'
+                        )
+                else:
+                    # Vacaciones normales: validar que tenga días disponibles
+                    if dias_solicitados > self.empleado.dias_vacaciones_disponibles:
+                        raise forms.ValidationError(
+                            f'No tienes suficientes días de vacaciones disponibles. '
+                            f'Disponibles: {self.empleado.dias_vacaciones_disponibles} días. '
+                            f'Solicitaste: {dias_solicitados} días laborables ({dias_calendario} días totales - {domingos_excluidos} domingos)'
+                        )
         
         return cleaned_data
 
