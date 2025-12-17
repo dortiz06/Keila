@@ -690,8 +690,8 @@ class Equipo(models.Model):
     
     @property
     def asignacion_actual(self):
-        """Retorna la asignación activa si existe"""
-        return self.asignaciones.filter(fecha_devolucion__isnull=True).first()
+        """Retorna la asignación activa más reciente si existe"""
+        return self.asignaciones.filter(fecha_devolucion__isnull=True).order_by('-fecha_asignacion', '-fecha_creacion').first()
     
     @property
     def empleado_asignado(self):
