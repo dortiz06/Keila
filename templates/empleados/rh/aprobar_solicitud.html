@@ -71,17 +71,19 @@
                                     </p>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label fw-bold" style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">Días Disponibles del Empleado</label>
+                                    <label class="form-label fw-bold" style="color: rgba(255, 255, 255, 0.9) !important; font-family: 'Montserrat', sans-serif !important;">Saldo</label>
                                     <p class="form-control-plaintext">
                                         <span class="badge" style="background: linear-gradient(180deg, rgba(59, 130, 246, 0.9) 0%, rgba(37, 99, 235, 0.9) 50%, rgba(29, 78, 216, 1) 100%) !important; color: #ffffff !important; font-size: 1rem !important; padding: 0.5rem 1rem !important; font-weight: 700 !important; font-family: 'Montserrat', sans-serif !important;">
-                                        <span style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 600 !important;">{{ solicitud.empleado.dias_vacaciones_disponibles }}</span> días
-                                    </span>
-                                    {% if solicitud.dias_solicitados > solicitud.empleado.dias_vacaciones_disponibles %}
-                                    <br><small style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif !important; margin-top: 0.5rem !important; display: block;">
-                                        <i class="fas fa-exclamation-triangle"></i> El empleado no tiene suficientes días disponibles
-                                    </small>
-                                    {% endif %}
-                                </p>
+                                            <span style="color: #ffffff !important; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5) !important; font-weight: 600 !important;">{{ solicitud.empleado.saldo_vacaciones|floatformat:2 }}</span> días
+                                        </span>
+                                        {% with total_disponible=solicitud.empleado.calcular_total_disponible_proyectado %}
+                                        {% if solicitud.dias_solicitados > total_disponible %}
+                                        <br><small style="color: #ef4444 !important; font-family: 'Montserrat', sans-serif !important; margin-top: 0.5rem !important; display: block;">
+                                            <i class="fas fa-exclamation-triangle"></i> El empleado no tiene suficientes días disponibles (Total disponible: {{ total_disponible|floatformat:2 }} días)
+                                        </small>
+                                        {% endif %}
+                                        {% endwith %}
+                                    </p>
                                 </div>
                             </div>
                         </div>
