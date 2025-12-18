@@ -842,8 +842,6 @@ def generar_pdf_vacaciones(request, solicitud_id):
     empleado = solicitud.empleado
     fecha_presentarse = calcular_fecha_presentarse(solicitud.fecha_fin)
     ano_vacaciones = solicitud.fecha_fin.year
-    # Días pendientes = saldo de la persona (saldo_vacaciones)
-    dias_pendientes = empleado.saldo_vacaciones
     
     # Datos del kardex/dashboard
     con_derecho = empleado.dias_vacaciones_anuales
@@ -851,6 +849,11 @@ def generar_pdf_vacaciones(request, solicitud_id):
     dias_acumulados_ano_actual = empleado.calcular_dias_acumulados_hasta_hoy()
     total_disponible = empleado.calcular_total_disponible_proyectado()
     antiguedad_detallada = empleado.antiguedad_detallada
+    
+    # Días pendientes = total disponible - días solicitados
+    from decimal import Decimal
+    dias_solicitados_decimal = Decimal(str(solicitud.dias_solicitados))
+    dias_pendientes = max(Decimal('0'), Decimal(str(total_disponible)) - dias_solicitados_decimal)
     
     context = {
         'solicitud': solicitud,
